@@ -1,0 +1,76 @@
+.custom-skeleton {
+  ul {
+    li {
+      list-style: none;
+    }
+  }
+}
+
+.pretty {
+  width: 100%;
+  overflow-x: scroll;
+}
+
+.metadata-content{
+    position: relative;
+    .show{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 100;
+    }
+    .metadata {
+        ul {
+          li {
+            //display: flex;
+            h6 {
+              float: left;
+              margin-right: 5px;
+            }
+            clear: both;
+          }
+        }
+      }
+}
+
+.code{
+  width: 100%;
+  resize: none;
+  cursor: text;
+}
+
+p-message{
+  z-index: 100;
+}
+
+
+
+.itemTotal{
+  padding: 10px 10px;
+  text-align: center;
+}
+
+.forms{
+  padding: 10px 0px;
+}
+
+th{
+  color: #495d77;
+  padding: 5px 5px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+td{
+  text-align: center;
+  background-color: var(--primary-color) ;
+  color: white;
+  padding: 5px 5px;
+  border-radius: 5px;
+
+}
+
+.tableP{
+padding: 10px 10px;
+width: 100%;
+}

@@ -1,0 +1,83 @@
+.about-us {
+  margin-bottom: 50px;
+  img {
+    width: 100%;
+  }
+  .content-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+  }
+}
+
+.card-about {
+  text-align: center;
+  padding: 15px 5px;
+  border-radius: 25px;
+  border-bottom: 3px solid #18a4fb;
+  .icon {
+    i {
+      font-size: 4em;
+      color: #18a4fb;
+    }
+  }
+  .title {
+    h2 {
+      text-transform: uppercase;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+  }
+}
+
+.yellow {
+  border-bottom: 3px solid #ffd100;
+  .icon {
+    i {
+      font-size: 4em;
+      color: #ffd100;
+    }
+  }
+}
+.red {
+  border-bottom: 3px solid #ff005a;
+  .icon {
+    i {
+      font-size: 4em;
+      color: #ff005a;
+    }
+  }
+}
+.purple {
+  border-bottom: 3px solid #7e57c2;
+  .icon {
+    i {
+      font-size: 4em;
+      color: #7e57c2;
+    }
+  }
+}
+
+:host ::ng-deep .p-card-title {
+  font-size: 1em;
+}
+
+:host ::ng-deep .p-card-footer {
+  i {
+    color: var(--primary-color);
+    margin-right: 5px;
+  }
+}
+
+:host ::ng-deep .p-card-shadow {
+  height: 100%;
+}
+
+.email {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  //background-color: red;
+}

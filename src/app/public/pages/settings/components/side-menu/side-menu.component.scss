@@ -1,0 +1,30 @@
+:host ::ng-deep .side-menu {
+  //background-color: royalblue;
+  display: block;
+  width: 100%;
+}
+
+.btm-menu-mobile {
+  display: none;
+}
+
+:host ::ng-deep .p-menuitem-link-active {
+  background-color: var(--primary-color);
+  span {
+    color: #fff !important;
+  }
+  &:hover {
+    background-color: var(--primary-color) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  :host ::ng-deep .side-menu {
+    //background-color: royalblue;
+    display: none;
+  }
+  .btm-menu-mobile {
+    display: block;
+    width: 100%;
+  }
+}

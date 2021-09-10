@@ -1,0 +1,54 @@
+.about-us {
+  img {
+    width: 100%;
+  }
+  .content-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+  }
+}
+
+:host ::ng-deep .p-card-title {
+  font-size: 1em;
+}
+
+:host ::ng-deep .p-card-footer {
+  i {
+    color: var(--primary-color);
+    margin-right: 5px;
+  }
+}
+
+:host ::ng-deep .p-card-shadow {
+  height: 100%;
+}
+
+.email {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  /*background-color: red;*/
+}
+
+.card-about {
+  text-align: center;
+  padding: 15px 5px;
+  border-radius: 25px;
+  border-bottom: 3px solid #51749e;
+  .icon {
+    i {
+      font-size: 4em;
+      color: #51749e;
+    }
+  }
+  .title {
+    h2 {
+      text-transform: uppercase;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+  }
+}

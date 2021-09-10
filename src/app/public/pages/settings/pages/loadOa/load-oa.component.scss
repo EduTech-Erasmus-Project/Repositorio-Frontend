@@ -1,0 +1,26 @@
+textarea {
+  resize: vertical;
+}
+
+.radio-buttons {
+  display: flex;
+  .p-field-radiobutton {
+    margin-right: 10px;
+  }
+}
+
+:host ::ng-deep .p-slider {
+  margin: 10px 0;
+}
+
+.spinner{
+  //background-color: royalblue;
+  width: 100%;
+  position: relative;
+  transform: none;
+  top: 200px;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

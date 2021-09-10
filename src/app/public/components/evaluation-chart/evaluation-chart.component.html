@@ -1,0 +1,141 @@
+<div class="accordion-body" *ngIf="data_graf && data_options">
+    <div class="p-grid">
+        <div class="p-col-12 p-md-8">
+            <div class="main-content" *ngIf="valid=='experto'">
+                <p-chart type="radar" [data]="data_graf" [options]="data_options" height="57vh"></p-chart>
+            </div>
+            <div class="main-content" *ngIf="valid=='student'">
+                <br>
+                <p-chart type="radar" [data]="data_graf" [options]="data_options" height="51vh"><br></p-chart>
+            </div>
+            <div class="main-content" *ngIf="valid=='automatic'">
+                <p-chart type="radar" [data]="data_graf" [options]="data_options" height="59vh"></p-chart>
+            </div>
+        </div>
+        <div class="p-col-12 p-md-4">
+            <div *ngIf="resultsEvAut && ( resultsEvAut.length > 0)">
+                <h5 align="center">Calificación Previa: {{ratingAutomatic | number:'1.1-2'}}</h5>
+                <h6 align="center">Accesibilidad</h6>
+                <p-knob align="center" [(ngModel)]="valueratingAutomatic" valueTemplate="{value}%" [size]="100" [readonly]="true"></p-knob>
+                
+                <p align="justify">
+                    El resultado de esta evaluacion preliminar basada en los metadatos que contiene su objeto de aprendizaje y aquellos metadatos
+                    establecidos para una correcta evaluacion de calidad que contemple accesibilidad y adaptabilidad, representa un puntaje previo
+                    acorde a lo mencionado.
+                </p>
+                <div *ngFor="let item of resultsEvAut " class="tableP">
+                    <table class="table table-bordered" *ngFor="let item2 of item.metadata_concept_evaluations" style="width: auto;">
+                        <thead>
+                            <tr>
+                                <td  scope="col"><b>{{item2.evaluationConcept}}: </b>{{item2.average | number:'1.1-2'}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div align="center" >
+                    <p-button (click)="showBasicDialogSchema()" icon="pi pi-external-link" label="ver Resultados Metadatos"></p-button>
+                </div> 
+                <div>
+                    <p-dialog header="Metadatos Evaluacion Preliminar" [(visible)]="displayWindowSchema" [style]="{width: '50vw'}"[baseZIndex]="10000">
+                        
+                        <h5 align="center"><a>Resultado Evaluacion Metadatos</a></h5>
+                        <div *ngFor="let item of resultsEvAut">
+                            <div *ngFor="let item2 of item.metadata_concept_evaluations">
+                                <div class="labelQu">
+                                    <h6>{{item2.evaluationConcept}}</h6>
+                                </div>
+                                <!--
+                                    <div class="buttonIncog">
+                                        <p-button icon="pi pi-question-circle" (click)="op.toggle($event)"></p-button>
+                                        <p-overlayPanel #op [showCloseIcon]="true" style="width: 1px;">
+                                            <ng-template pTemplate>
+                                                <h6>{{'object.description'|translate}}:</h6>
+                                                <label>{{item2.evaluationConcept}}</label>
+                                            </ng-template>
+                                        </p-overlayPanel>
+                                    </div>
+                                -->
+                                <div *ngFor="let item3 of item2.metadata_evaluations">
+                                    <ng-container *ngIf="item3.qualification=='1'">
+                                        <ul>
+                                            <li>
+                                                <a>{{item3.schema}}. ✔</a><br>
+                                                <a><b>Descripcion:-></b>{{item3.description}} </a>
+                                                
+                                            </li>
+                                        </ul>
+                                    </ng-container> 
+                                    <ng-container *ngIf="item3.qualification=='0'">
+                                        <ul>
+                                            <li>
+                                                <a>{{item3.schema}}. ❌</a><br>
+                                                
+                                                    
+                                                
+                                                <a><b>Descripcion:-></b>{{item3.description}} </a><br>
+                                                
+                                            </li>
+                                        </ul>
+                                    </ng-container> 
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <ng-template pTemplate="footer">
+                            <p-button icon="pi pi-check" (click)="displayWindowSchema=false" label="Ok"
+                            styleClass="p-button-text"></p-button>
+                        </ng-template>
+                    </p-dialog>
+                </div>
+
+
+
+            </div>
+            <div *ngIf="resultEv && ( resultEv.length > 0)">
+                <h5 align="center">Calificación: {{rating | number:'1.1-2'}}</h5>
+                <h6 align="center">Accesibilidad</h6>
+                <p-knob align="center" [(ngModel)]="valueratingExpert" valueTemplate="{value}%" [size]="100" [readonly]="true"></p-knob>
+                <p align="justify">
+                    La evaluacion reliazada por el experto colaborador a su objeto de aprendizaje se basa estándares técnicos estables y de referencia
+                    donde se contemplan las pautas de accesibilidad para un contenido web más accesible a personas con discapacidad.
+                </p>
+            
+                <div *ngFor="let item of resultEv " class="tableP">
+                    <table class="table table-bordered" *ngFor="let item2 of item.concepts" style="width: auto;">
+                        <thead>
+                            <tr>
+                                <td  scope="col"><b>{{item2.concepto.concept}}: </b>{{item2.total | number:'1.1-2'}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="resultsEvStudent && ( resultsEvStudent.length > 0)">
+                <h5 align="center">Calificación: {{resultsEvStudent[0].rating_student | number:'1.1-2'}}</h5>
+                <h6 align="center">Adaptabilidad</h6>
+                <p-knob align="center" [(ngModel)]="valueratingStudent" valueTemplate="{value}%" [size]="100" [readonly]="true"></p-knob>
+                <p align="justify">
+                    La evaluacion del estudiante se enfoca mayoritariamente en su adaptabilidad es decir los esfuerzos metodológicos que emplea 
+                    la corriente de aprendizaje de  los estudiantes y potencializa la construcción de materiales flexibles, técnicas y estrategias 
+                    orientadas a un  mayor número de usuarios
+                   
+                </p>
+                <div *ngFor="let item of resultsEvStudent " class="tableP">
+                    <table class="table table-bordered" *ngFor="let item2 of item.evaluation_students" style="width: auto;">
+                        <thead>
+                            <tr>
+                                <td  scope="col"><b>{{item2.evaluation_principle.principle}}: </b>{{item2.average_principle | number:'1.1-2'}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

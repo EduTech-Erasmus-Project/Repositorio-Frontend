@@ -1,0 +1,109 @@
+<form [formGroup]="metadataForm" (ngSubmit)="onEditmetadata()">
+    <div class="content">
+
+        <h6>General</h6>
+        <ul>
+            <li>Catalog: <input pInputText type="text" formControlName="general_catalog" name="general_catalog" /></li>
+            <li>Coverage: <input pInputText type="text" formControlName="general_coverage" name="general_coverage"/> </li>
+            <li>Entry: <input pInputText type="text" formControlName="general_entry" name="general_entry" /> </li>
+            <li>Keyword: <input pInputText type="text" formControlName="general_keyword" name="general_keyword"/> </li>
+            <li>Language: <input pInputText type="text" formControlName="general_language" name="general_language" /> </li>
+            <li>Structure: <input pInputText type="text" formControlName="general_structure" name="general_structure"/> </li>
+        </ul>
+        <p-divider layout="horizontal" align="left"></p-divider>
+        <h6>Life Cycle</h6>
+        <ul>
+            <li><strong>{{object.life_cycle_description||"unknown"}}: </strong>
+                {{object.life_cycle_dateTime | date:'medium'}}</li>
+            <li>Role: <input pInputText type="text" formControlName="life_cycle_role" name="life_cycle_role"/></li>
+            <li>Version: <input pInputText type="text" formControlName="life_cycle_version" name="life_cycle_version" /></li>
+        </ul>
+        <p-divider layout="horizontal" align="left"></p-divider>
+        <h6>Meta-Metadata</h6>
+        <ul>
+            <li>Catalog: <input pInputText type="text" formControlName="meta_metadata_catalog" name="meta_metadata_catalog" /> </li>
+            <li>Description: <input pInputText type="text" formControlName="meta_metadata_description" name="meta_metadata_description" />
+                {{object.meta_metadata_dateTime | date:'medium'}}</li>
+        </ul>
+        <p-divider layout="horizontal" align="left"></p-divider>
+        <h6>Technical</h6>
+        <ul>
+            <li>Description: <input pInputText type="text" formControlName="technical_description" name="technical_description" /> </li>
+            <li>Format: <input pInputText type="text" formControlName="technical_format" name="technical_format" /> </li>
+            <li>Installation remarks: <input pInputText type="text" formControlName="technical_installationRremarks" name="technical_installationRremarks" />
+            </li>
+            <li>Location: <input pInputText type="text" formControlName="technical_location" /> </li>
+        </ul>
+        <p-divider layout="horizontal" align="left"></p-divider>
+        <h6>Educational</h6>
+        <ul>
+            <li>Description: <input pInputText type="text" formControlName="educational_description" name="educational_description" /> </li>
+            <li>difficulty: <input pInputText type="text" formControlName="educational_difficulty" name="educational_difficulty" /> </li>
+            <li>Language: <input pInputText type="text" formControlName="educational_language" name="educational_language" /> </li>
+            <li>Learning resource Type: <input pInputText type="text"
+                    formControlName="educational_learningResourceType" />
+            </li>
+            <li>Procces cognitve: <input pInputText type="text" formControlName="educational_procces_cognitve" name="educational_procces_cognitve" /> </li>
+            <!-- <li>Typical age range: <input  pInputText type="text" 
+            formControlName="educational_typicalAgeRange" />  </li> -->
+            <li>Description: <input pInputText type="text"
+                    formControlName="educational_typicalLearningTime_description" />
+            </li>
+        </ul>
+        <p-divider layout="horizontal" align="left"></p-divider>
+        <h6>Rights</h6>
+        <ul>
+            <li>Copyright and Other Restrictions: <input pInputText type="text"
+                    formControlName="rights_copyrightAndOtherRestrictions" name="rights_copyrightAndOtherRestrictions" />
+            </li>
+            <li>Cost: <input pInputText type="text" formControlName="rights_cost" name="rights_cost" /> </li>
+        </ul>
+        <p-divider layout="horizontal" align="left"></p-divider>
+        <h6>Annotation</h6>
+        <ul>
+            <li>Annotation date: <input pInputText type="text" placeholder="Description"
+                    formControlName="annotation_date_description" name="annotation_date_description" /> | <input pInputText type="text" placeholder="Date"
+                    formControlName="annotation_date_dateTime" name="annotation_date_dateTime" /> </li>
+            <li>Description: <input pInputText type="text" formControlName="annotation_description" name="annotation_description" /> </li>
+            <li>Entity: <input pInputText type="text" formControlName="annotation_entity" name="annotation_entity" /> </li>
+            <li>Modeaccess: <input pInputText type="text" formControlName="annotation_modeaccess" name="annotation_modeaccess" /> </li>
+            <li>Modeaccess sufficient: <input pInputText type="text"
+                    formControlName="annotation_modeaccesssufficient" name="annotation_modeaccesssufficient" />
+            </li>
+            <li>Rol: <input pInputText type="text" formControlName="annotation_rol" name="annotation_rol" /> </li>
+        </ul>
+        <p-divider layout="horizontal" align="left"></p-divider>
+        <h6>Relation</h6>
+        <ul>
+            <li>Catalog: <input pInputText type="text" formControlName="relation_catalog" name="relation_catalog" /> </li>
+            <li>Description: <input pInputText type="text" formControlName="relation_description" name="relation_description" /> </li>
+            <li>Kind: <input pInputText type="text" formControlName="relation_kind" name="relation_kind" /> </li>
+            <li>Entry: <input pInputText type="text" formControlName="relation_entry" name="relation_entry" /> </li>
+        </ul>
+        <p-divider layout="horizontal" align="left"></p-divider>
+        <h6>Classification</h6>
+        <ul>
+            <li>Description: <input pInputText type="text" formControlName="classification_description" name="classification_description" /> </li>
+            <li>Keyword: <input pInputText type="text" formControlName="classification_keyword" name="classification_keyword" /> </li>
+            <li>Purpose: <input pInputText type="text" formControlName="classification_purpose" name="classification_purpose" /> </li>
+            <li>TaxonPath_source: <input pInputText type="text" formControlName="classification_taxonPath_source" name="classification_taxonPath_source" />
+            </li>
+            <li>TaxonPath_taxon: <input pInputText type="text" formControlName="classification_taxonPath_taxon" name="classification_taxonPath_taxon" /> </li>
+        </ul>
+        <p-divider layout="horizontal" align="left"></p-divider>
+        <h6>Accessibility</h6>
+        <ul>
+            <li>Summary: <input pInputText type="text" formControlName="accesibility_summary" name="accesibility_summary" /> </li>
+            <li>Features: <input pInputText type="text" formControlName="accesibility_features" name="accesibility_features" /> </li>
+            <li>Hazard: <input pInputText type="text" formControlName="accesibility_hazard" name="accesibility_hazard" /> </li>
+            <li>Control:<input pInputText type="text" formControlName="accesibility_control" name="accesibility_control" /> </li>
+            <li>Api: <input pInputText type="text" formControlName="accesibility_api" name="accesibility_api" /> </li>
+        </ul>
+
+    </div>
+
+    <div class="buttons">
+        <p-button type="submit" label="Actualizar" styleClass="p-button-text"></p-button>
+        <p-button (click)="onClouceWindow()" label="Cancelar" styleClass="p-button-text"></p-button>
+    </div>
+</form>

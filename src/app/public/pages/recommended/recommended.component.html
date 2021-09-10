@@ -1,0 +1,34 @@
+<div class="main-content">
+    <ng-container *ngIf="!loading; else elseTemplate">
+        <h5>{{'recommended.recommended' | translate}}</h5>
+    <div class="p-grid card-content">
+        <ng-container *ngIf="recommended?.length > 0; else recomTemplate">
+            <div class="p-col-12 p-md-6 p-lg-2" *ngFor="let recom of recommended">
+                <app-card [object]='recom'></app-card>
+            </div>
+        </ng-container>
+        <ng-template #recomTemplate>
+            <p>{{'recommended.recommendedMsj' | translate}}</p>
+        </ng-template>
+    </div>
+
+    <h5>{{'recommended.populars' | translate}}</h5>
+    <div class="p-grid card-content">
+        <ng-container *ngIf="populars?.length > 0; else popuTemplate">
+            <div class="p-col-12 p-md-6 p-lg-2" *ngFor="let popu of populars">
+                <app-card [object]='popu'></app-card>
+            </div>
+        </ng-container>
+        <ng-template #popuTemplate>
+            <p>{{'recommended.popularsMsj' | translate}}</p>
+        </ng-template>
+    </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+        <div class="spinner">
+            <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner"
+                strokeWidth="4" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
+        </div>
+    </ng-template>
+    
+</div>

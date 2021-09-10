@@ -1,0 +1,8 @@
+<div class="content" loading="lazy">
+    <div class="info">
+        <h1>{{'home.banerName' | translate}}</h1>
+        <p>{{'home.baneDescription' | translate}}</p>
+        <a *ngIf="!user" routerLink="login" pButton type="button" [label]="'home.btnLogin' | translate"
+            class="p-button-outlined p-button-rounded"></a>
+    </div>
+</div>

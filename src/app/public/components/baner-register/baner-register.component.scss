@@ -1,0 +1,22 @@
+.content {
+  background-image: url("/assets/img/bg-baner.jpg");
+  background-size: 50%;
+  //padding: 20px 0;
+  background-repeat: no-repeat;
+  background-position: right;
+  -webkit-box-shadow: inset 60vw 0px 58px -13px rgba(236, 239, 244, 1);
+  -moz-box-shadow: inset 60vw 0px 58px -13px rgba(236, 239, 244, 1);
+  box-shadow: inset 60vw 0px 58px -13px rgba(236, 239, 244, 1);
+  //background-attachment: fixed;
+}
+.content{
+  height: 100%;
+  .info{
+    padding: 50px 0;
+  }
+
+  
+}
+
+
+

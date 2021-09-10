@@ -1,0 +1,17 @@
+<!-- <div class="login-body" [ngClass]="{'layout-dark': dark, 'layout-light': !dark}"> -->
+    <div class="login-body layout-light">
+        <div class="login-content animate__animated animate__fadeIn">
+            <!-- <div class="night-switch">
+                        <p-button styleClass="dark-switch"  icon="pi pi-circle-on" (click)="dartActive(true)"></p-button>
+                        <p-button styleClass="light-switch"  icon="pi pi-circle-off" (click)="dartActive(false)"></p-button>
+                    </div> -->
+            <div class="login-panel" style="width: 100%;">
+                <div class="login-panel-content">
+                   <!--- <h3>{{'login.resetPass' | translate}}</h3>-->
+                    <h2>{{'login.emailConfirm' | translate}}</h2>
+                    <a pButton pRipple type="button" [label]="'menu.login' | translate" class="p-button-text"
+                            [routerLink]="[ '/login' ]" routerLinkActive="p-menuitem-link-active" ></a>
+                </div>
+            </div>
+        </div>
+    </div>

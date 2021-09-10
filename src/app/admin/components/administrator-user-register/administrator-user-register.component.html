@@ -1,0 +1,78 @@
+<div class="p-grid">
+	<div class="p-col-12">
+		<div class="card">
+			<form autocomplete="off" [formGroup]="registerForm" (ngSubmit)="crearUsuario()" id="crearUsuario">
+				<h5>{{'admin.newAdminUser'| translate }}</h5>
+				<div class="p-fluid p-formgrid p-grid">
+					<div class="p-field p-col-12 p-md-6">
+						<label for="nombre">{{'admin.first_name'| translate }} *</label>
+						<input id="nombre" type="text" pInputText formControlName="first_name">
+						<p-message severity="error" text="El nombre es obligatorio" *ngIf="campoNoValido('first_name')">
+						</p-message>
+					</div>
+
+					<div class="p-field p-col-12 p-md-6">
+						<label for="apellido">{{'admin.last_name'| translate }} *</label>
+						<input id="apellido" type="text" pInputText formControlName="last_name">
+						<p-message severity="error" text="El apellido es obligatorio"
+							*ngIf="campoNoValido('last_name')"></p-message>
+					</div>
+					<div class="p-field p-col-12 p-md-6">
+						<label for="correo">{{'admin.email'| translate }} *</label>
+						<input id="correo" type="email" pInputText formControlName="email">
+						<p-message severity="error" text="El correo es obligatorio y tiene que ser válido"
+							*ngIf="campoNoValido('email')"></p-message>
+					</div>
+					<div class="p-field p-col-12 p-md-6">
+						<label for="telefono">{{'admin.phone'| translate }} *</label>
+						<input id="telefono" type="text" pInputText formControlName="phone">
+						<p-message severity="error" text="El teléfono es obligatorio" *ngIf="campoNoValido('phone')">
+						</p-message>
+					</div>
+					<div class="p-field p-col-12 p-md-6">
+						<label for="password">{{'admin.password'| translate }} *</label>
+						<input id="password" type="password" pInputText formControlName="password">
+						<p-message severity="error" text="La contraseña es obligatorio"
+							*ngIf="campoNoValido('password')"></p-message>
+					</div>
+					<div class="p-field p-col-12 p-md-6">
+						<label for="password2">{{'admin.passwprd2'| translate }} *</label>
+						<input id="password2" type="password" pInputText formControlName="password2">
+						<p-message severity="error" text="Campo obligatorio" *ngIf="campoNoValido('password2')">
+						</p-message>
+					</div>
+					<div class="p-field p-col-12 p-md-6">
+						<label for="pais">{{'admin.country'| translate }} *</label>
+						<input id="pais" type="text" pInputText formControlName="country">
+						<p-message severity="error" text="Campo obligatorio" *ngIf="campoNoValido('country')">
+						</p-message>
+					</div>
+					<div class="p-field p-col-12 p-md-6">
+						<label for="city">{{'admin.city'| translate }} *</label>
+						<input id="city" type="text" pInputText formControlName="city">
+						<p-message severity="error" text="Campo obligatorio" *ngIf="campoNoValido('city')"></p-message>
+					</div>
+					<!-- <div class="p-field p-col-12">
+						<label for="observacion">Observación</label>
+						<textarea id="observacion" type="text" rows="4" pInputTextarea
+							formControlName="observation"></textarea>
+					</div> -->
+				</div>
+				<p-message severity="error" text="Las Contraseñas deben de ser iguales" *ngIf="passwordsInvalid()">
+				</p-message>
+				<div class="p-fluid p-grid p-mb-3"></div>
+				<div class="p-fluid p-grid p-mb-3"></div>
+				<div class="p-fluid p-grid">
+					<div class="p-field p-col-12 p-md-6">
+
+						<button pButton pRipple type="submit" label="{{'admin.save'| translate }}"
+							class="p-button-success p-mr-2 p-mb-0"></button>
+					</div>
+					<div class="p-field p-col-12 p-md-6">
+							<button (click)="resetValue()" pButton pRipple type="button" label="{{'admin.cancel'| translate }}" class="p-button-danger p-mr-0 p-mb-0"></button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

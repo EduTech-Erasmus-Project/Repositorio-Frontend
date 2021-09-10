@@ -1,0 +1,178 @@
+<div class="content">
+    <h5>{{'search.sidebarTitle' | translate}}</h5>
+    <div class="p-grid">
+        <div class="p-col-12 p-md-12 p-lg-12">
+            <p-accordion [multiple]="true">
+
+                <p-accordionTab #acordingExpert aria-hidden="true" *ngIf="loginService.user?.roles.includes('expert')"
+                    [header]="'search.qualifyOA' | translate" [selected]="querySearchService.queryParams.is_evaluated">
+                    <div aria-hidden="true" class="box">
+                        <div class="p-field-radiobutton">
+                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (click)="calificate = true"
+                                name="rated" value="False" [(ngModel)]="querySearchService.queryParams.is_evaluated"
+                                inputId="enr">
+                            </p-radioButton>
+                            <label for="enr">Sin calificar</label>
+                        </div>
+                        <div class="p-field-radiobutton">
+                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (click)="calificate = true"
+                                name="rated" value="True" [(ngModel)]="querySearchService.queryParams.is_evaluated"
+                                inputId="er">
+                            </p-radioButton>
+                            <label for="er">Calificados</label>
+                        </div>
+
+                        <div class="btn" *ngIf="calificate">
+                            <button [tabindex]="acordingExpert?.selected ? 0 : -1"
+                                (click)="calificate = false; submitSearch()" pButton pRipple type="button"
+                                [label]="'search.btnApply' | translate" class="p-button-sm"></button>
+                        </div>
+                    </div>
+                </p-accordionTab>
+
+                <p-accordionTab #acordingAreas aria-hidden="true" [header]="'search.interestAreas' | translate"
+                    [selected]="querySearchService.queryParams.knowledge_area__name">
+                    <div class="box">
+                        <div class="p-field-radiobutton" *ngFor="let area of areas">
+                            <p-radioButton [tabindex]="acordingAreas?.selected ? 0 : -1" (click)="areasBtn = true"
+                                [name]="area.name" [value]="area.name"
+                                [(ngModel)]="querySearchService.queryParams.knowledge_area__name" [inputId]="area.name">
+                            </p-radioButton>
+                            <label [for]="area.name">{{area.name}}</label>
+                        </div>
+
+                        <div class="btn" *ngIf="areasBtn">
+                            <button [tabindex]="acordingAreas?.selected ? 0 : -1"
+                                (click)="areasBtn = false; submitSearch()" pButton pRipple type="button"
+                                [label]="'search.btnApply' | translate" class="p-button-sm"></button>
+                        </div>
+
+                    </div>
+                </p-accordionTab>
+
+                <p-accordionTab #acordingLevel aria-hidden="true" [header]="'search.educationLevel' | translate"
+                    [selected]="querySearchService.queryParams.education_levels__description">
+                    <div class="box">
+                        <div class="p-field-radiobutton" *ngFor="let level of levels">
+
+                            <p-radioButton [tabindex]="acordingLevel?.selected ? 0 : -1" (click)="levelsBtn = true"
+                                [name]="level.description" [value]="level.description"
+                                [(ngModel)]="querySearchService.queryParams.education_levels__description"
+                                [inputId]="level.description">
+                            </p-radioButton>
+                            <label [for]="level.description">{{level.description}}</label>
+                        </div>
+
+                        <div class="btn" *ngIf="levelsBtn">
+                            <button [tabindex]="acordingLevel?.selected ? 0 : -1"
+                                (click)="levelsBtn = false; submitSearch()" pButton pRipple type="button"
+                                [label]="'search.btnApply' | translate" class="p-button-sm"></button>
+                        </div>
+
+                    </div>
+                </p-accordionTab>
+
+                <p-accordionTab  #acordingPreferences aria-hidden="true" [header]="'search.preferences' | translate"
+                    [selected]="selectedPreferences">
+                    <div class="box">
+
+                        <div class="preferences" *ngIf="preferences">
+                            <div class="p-field-radiobutton" *ngFor="let preference of getPreferencesGroup('accesibility_features')">
+                                <p-checkbox [tabindex]="acordingPreferences?.selected ? 0 : -1"
+                                    (click)="preferencesBtn = true" name="accesibility_features"
+                                    [(ngModel)]="querySearchService.queryParams.accesibility_features"
+                                    [value]="preference.search_value" [inputId]="preference.search_value">
+                                </p-checkbox>
+                                <!--  [(ngModel)]="queryParams.preferences__description"  (onChange)="changePreferences(preference)"-->
+                                <label [for]="preference.search_value">{{preference.preferences}}</label>
+                            </div>
+
+                            <div class="p-field-radiobutton" *ngFor="let preference of getPreferencesGroup('annotation_modeaccess')">
+                                <p-checkbox [tabindex]="acordingPreferences?.selected ? 0 : -1"
+                                    (click)="preferencesBtn = true" name="annotation_modeaccess"
+                                    [(ngModel)]="querySearchService.queryParams.annotation_modeaccess"
+                                    [value]="preference.search_value" [inputId]="preference.search_value">
+                                </p-checkbox>
+                                <!--  [(ngModel)]="queryParams.preferences__description"  (onChange)="changePreferences(preference)"-->
+                                <label [for]="preference.search_value">{{preference.preferences}}</label>
+                            </div>
+
+                            <div class="p-field-radiobutton" *ngFor="let preference of getPreferencesGroup('accesibility_hazard')">
+                                <p-checkbox [tabindex]="acordingPreferences?.selected ? 0 : -1"
+                                    (click)="preferencesBtn = true" name="accesibility_hazard"
+                                    [(ngModel)]="querySearchService.queryParams.accesibility_hazard"
+                                    [value]="preference.search_value" [inputId]="preference.search_value">
+                                </p-checkbox>
+                                <!--  [(ngModel)]="queryParams.preferences__description"  (onChange)="changePreferences(preference)"-->
+                                <label [for]="preference.search_value">{{preference.preferences}}</label>
+                            </div>
+
+                            <div class="p-field-radiobutton" *ngFor="let preference of getPreferencesGroup('key_preferences')">
+                                <p-checkbox [tabindex]="acordingPreferences?.selected ? 0 : -1"
+                                    (click)="preferencesBtn = true" name="key_preferences"
+                                    [(ngModel)]="querySearchService.queryParams.key_preferences"
+                                    [value]="preference.search_value" [inputId]="preference.search_value">
+                                </p-checkbox>
+                                <!--  [(ngModel)]="queryParams.preferences__description"  (onChange)="changePreferences(preference)"-->
+                                <label [for]="preference.search_value">{{preference.preferences}}</label>
+                            </div>
+                        </div>
+
+                        <div class="btn" *ngIf="preferencesBtn">
+                            <button [tabindex]="acordingPreferences?.selected ? 0 : -1"
+                                (click)="preferencesBtn = false; submitSearch()" pButton pRipple type="button"
+                                [label]="'search.btnApply' | translate" class="p-button-sm"></button>
+                        </div>
+
+                    </div>
+                </p-accordionTab>
+
+                <p-accordionTab #acordingLicence aria-hidden="true" [header]="'search.lisence' | translate"
+                    [selected]="querySearchService.queryParams.license__description">
+                    <div class="box">
+
+                        <div class="p-field-radiobutton" *ngFor="let lisence of licenses">
+                            <p-radioButton [tabindex]="acordingLicence?.selected ? 0 : -1" (click)="lisenceBtn = true"
+                                name="lisence" [value]="lisence.description"
+                                [(ngModel)]="querySearchService.queryParams.license__description"
+                                [inputId]="lisence.description">
+                            </p-radioButton>
+                            <label [for]="lisence.description">{{lisence.description}}</label>
+                        </div>
+
+
+                        <div class="btn" *ngIf="lisenceBtn">
+                            <button [tabindex]="acordingLicence?.selected ? 0 : -1"
+                                (click)="lisenceBtn = false; submitSearch()" pButton pRipple type="button"
+                                [label]="'search.btnApply' | translate" class="p-button-sm"></button>
+                        </div>
+                    </div>
+                </p-accordionTab>
+
+                <p-accordionTab #acordingYear aria-hidden="true" [header]="'search.publicationYear' | translate"
+                    [selected]="querySearchService.queryParams.created__year">
+                    <div class="box">
+
+                        <div class="p-field-radiobutton" *ngFor="let year of years">
+                            <p-radioButton [tabindex]="acordingYear?.selected ? 0 : -1" aria-hidden="true"
+                                (click)="yearsBtn = true" [name]="year.created" [value]="year.created"
+                                [(ngModel)]="querySearchService.queryParams.created__year" [inputId]="year.created">
+                            </p-radioButton>
+                            <label [for]="year.created">{{year.created}}</label>
+                        </div>
+
+                        <div class="btn" *ngIf="yearsBtn">
+                            <button [tabindex]="acordingYear?.selected ? 0 : -1"
+                                (click)="yearsBtn = false; submitSearch()" pButton pRipple type="button"
+                                [label]="'search.btnApply' | translate" class="p-button-sm"></button>
+                        </div>
+                    </div>
+                </p-accordionTab>
+            </p-accordion>
+
+            <!-- <button *ngIf="loginService.validateRole('student')" (click)="onRecommended()" pButton pRipple type="button"
+                label="Recomendados para ti" class="p-button-rounded p-button-outlined recommended"></button> -->
+
+        </div>
+    </div>
+</div>

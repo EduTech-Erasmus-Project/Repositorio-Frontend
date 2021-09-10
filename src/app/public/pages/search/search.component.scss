@@ -1,0 +1,47 @@
+.sidebar {
+  //background-color: royalblue;
+  padding: 25px 0;
+}
+
+.content {
+  //background-color: saddlebrown;
+  padding: 25px 0;
+  min-height: 125vh;
+  //margin-bottom: 25px;
+  //background-color: red;
+}
+
+:host ::ng-deep .p-chip.custom-chip {
+  background: var(--primary-color);
+  color: var(--primary-color-text);
+  //background-color: royalblue;
+}
+
+.card-content {
+  margin-top: 15px;
+}
+
+.input-search {
+  display: flex;
+  margin-bottom: 10px;
+  input {
+    //background-color: red;
+    width: 100%;
+  }
+  p-button {
+    margin-left: 5px;
+  }
+}
+
+.spinner{
+    //background-color: royalblue;
+    height: 55vh;
+    width: 100%;
+    position: relative;
+    transform: none;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

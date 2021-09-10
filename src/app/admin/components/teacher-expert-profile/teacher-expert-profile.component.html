@@ -1,0 +1,43 @@
+<div class="p-grid">
+
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+            <app-loading *ngIf="!isLoading"></app-loading>
+            <div class="p-col-3 overview-box-icon">
+                <img src="{{user.image_url}}" alt="mirage-layout" />
+            </div>
+            <h5>{{user.first_name}} {{user.last_name}}</h5>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <strong>{{'admin.email' | translate}}</strong>
+            <p>{{user.email}}</p>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <strong >{{rolText}}</strong>
+            <ul *ngFor="let role of rolesList; index as i">
+                <li>{{i+1}}.- {{ role | upperCapilal}}</li>
+            </ul>
+            <div *ngIf="expert !== null">
+                <p-divider layout="horizontal" align="left"></p-divider>
+                <strong>{{'admin.profile' | translate}}</strong>
+                <p>{{expert.academic_profile}}</p>
+                <strong>{{'admin.expertLevel' | translate}}</strong>
+                <p>{{expert.expert_level}}</p>
+                <strong *ngIf="expert.web !== null">{{'admin.web' | translate}}</strong>
+                <p *ngIf="expert.web !== null">{{expert.web}}</p>
+            </div>
+            <div *ngIf="teacher !== null">
+                <p-divider layout="horizontal" align="left"></p-divider>
+                <strong>{{'admin.profesions' | translate}}</strong>
+                <p *ngFor="let prof of teacher.professions">{{prof.description}}</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- <div class="p-col-12 p-md-4"> -->
+        <!-- <div class="card">
+            <h5>Roles</h5>
+            <strong>{{lolesList[0]}}</strong>
+            <strong>{{lolesList[0]}}</strong>
+        </div> -->
+    <!-- </div> -->
+</div>

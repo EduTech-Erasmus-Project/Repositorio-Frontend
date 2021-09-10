@@ -1,0 +1,31 @@
+.labelQu {
+  background-color: var(--primary-color);
+  padding: 9px 9px;
+  border-radius: 5px;
+}
+.labelQT {
+  color: white;
+}
+.itemTotal {
+  padding: 10px 10px;
+  text-align: center;
+}
+
+th {
+  color: #495d77;
+  padding: 5px 5px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+td {
+  text-align: center;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 5px 5px;
+  border-radius: 5px;
+}
+
+.tableP {
+  padding: 10px 10px;
+}

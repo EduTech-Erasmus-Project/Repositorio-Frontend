@@ -1,0 +1,109 @@
+.sidebar {
+  //background-color: royalblue;
+}
+:host ::ng-deep .p-rating {
+  
+  span{
+    font-size: 0.9em;
+  }
+}
+
+:host ::ng-deep .p-scrollpanel {
+  p {
+    padding: 0.5rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  &.side-bar {
+    //background-color: royalblue;
+    width: 100%;
+    height: 100vh;
+    overflow-x: hidden;
+
+    .p-scrollpanel-wrapper {
+      border-right: 9px solid var(--layer-1);
+    }
+
+    .p-scrollpanel-bar {
+      background-color: var(--primary-color);
+      opacity: 1;
+      transition: background-color 0.2s;
+
+      // background-color: #007ad9;
+
+      &:hover {
+        background-color: #007ad9;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .p-input-icon-left {
+  width: 100%;
+}
+
+.input-search {
+  display: flex;
+  margin-bottom: 10px;
+  width: 100%;
+  input {
+    width: 100%;
+  }
+  p-button {
+    margin-left: 5px;
+  }
+}
+
+:host ::ng-deep .p-ripple {
+  width: 100%;
+  height: 100%;
+}
+
+:host ::ng-deep .item-object {
+  //background-color: seagreen;
+  cursor: pointer;
+  margin-bottom: 10px;
+  display: flex;
+  padding: 10px 5px;
+  //width: 10rem;
+  .p-ripple {
+    width: 100%;
+    //background-color: seagreen;
+  }
+  .p-card-title {
+    font-size: 0.8em;
+    //margin-left: 5px;
+  }
+  .p-card-content {
+    padding: 0;
+  }
+  .p-card-body {
+    padding: 0 5px;
+    width: 100%;
+  }
+
+  .detail {
+    //margin-left: 5px;
+    h6 {
+      margin: 0;
+      font-size: 0.8em;
+    }
+    .categorie {
+      display: block;
+      width: 100%;
+      text-align: right;
+      font-size: 0.8em;
+      margin: 5px 0;
+      opacity: 0.5;
+    }
+  }
+  img {
+    width: 100px;
+    border-radius: 3px;
+  }
+
+  .user {
+    text-transform: capitalize;
+  }
+}

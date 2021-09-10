@@ -1,0 +1,112 @@
+<div class="animate__animated animate__fadeIn card-content">
+    <p-card [header]="object.general_title"
+        [subheader]="(object.user_created?.first_name || '')+' '+(object.user_created?.last_name || '')"
+        styleClass="p-card-shadow" [style]="{width: '100%'}">
+        <ng-template pTemplate="header">
+            <img loading="lazy" [alt]="object.general_title" [src]="object.avatar">
+        </ng-template>
+
+        <!--<button pButton type="button" class="classBut" label="{{'object.averageRating' | translate}}" > <i class="pi pi-angle-double-down"> &nbsp;</i> </button>
+        -->
+
+        <div class="accordion" id="accordionExample" *ngIf="resultsEv && (resultsEv.length > 0)">
+            <div class="accordion-item">
+
+                <!--<p>holaaaa</p>-->
+
+                <button pButton type="button" label="{{'object.averageRating' | translate}}" (click)="show=!show"
+                    style="width: 100%;">
+                    <i [ngClass]="{'pi-angle-down':!show,'pi-angle-up':show}" class="pi"> &nbsp;</i>
+                </button>
+
+                <div id="formsAr" *ngIf="show">
+                    <div class="accordion-body">
+                        <app-view-evaluacions *ngIf="object" [resultsEv]="resultsEv" [roleExpert]="roleExpert">
+                        </app-view-evaluacions>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p-divider></p-divider>
+        <p>{{object.knowledge_area.name}}</p>
+        <ng-container *ngIf="object.observation">
+            <h6>{{'object.Observations' | translate}}</h6>
+            <p>{{object.observation}}</p>
+        </ng-container>
+        <ng-template pTemplate="footer">
+            <div *ngIf="(teacherOptions && teacherOptions===true)">
+                <div class="buttons">
+
+                    <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
+                        class="p-button-rounded p-button-outlined"></button>
+                         
+                    <!-- 
+                    <ng-container *ngIf="resultsEv && (resultsEv.length > 0) ; else editTemplate">
+                        <button (click)="confirmDelete($event)" pButton pRipple type="button" icon="pi pi-trash"
+                        class="p-button-rounded p-button-danger p-button-outlined"></button> 
+                    </ng-container>
+                    <ng-template #editTemplate>
+                        <p>Este objeto de aprendizaje está en revisión.</p>
+                    </ng-template>
+                    -->
+                    <ng-container *ngIf="resultsEv && (resultsEv.length > 0) ; else editTemplate">
+                        <br><br>
+                        <ng-container *ngIf="resultsEv && (resultsEv.length > 0)">
+                            <div>
+                                <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="display" [style]="{width: '75vw',height: '557px'}" >
+                                    <div>
+                                        <app-evaluation-chart [resultEv]="resultsEv" [rating]="object.rating" idexpe="docente"></app-evaluation-chart>
+                                    </div>
+                                    <p-footer *ngIf="resultsEv?.length>0">
+                                        <button (click)="navigateToReport(false)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                                        </button>
+                                    </p-footer>            
+                                </p-dialog>
+                                <p-button (click)="showDialog()"  icon="pi pi-external-link" label="Evaluacion Experto"></p-button> 
+                            </div><br>
+                        </ng-container>
+                        <ng-container *ngIf="resultsEvStudent && (resultsEvStudent.length > 0) ; else editTemplate">
+                            <div>
+                                <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="displaystudent" [style]="{width: '68vw',height: '575px'}">
+                                    <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante"></app-evaluation-chart>
+                                    <p-footer>
+                                        <button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                                        </button>
+                                    </p-footer>
+                                </p-dialog>
+                                <p-button (click)="showDialogstudent()" icon="pi pi-external-link" label="Evaluacion Estudiante"></p-button> 
+                            </div>
+                        </ng-container>
+                        <ng-template #editTemplate>
+                            <p>Este objeto de aprendizaje aun no fue revisado por el estudiante.</p>
+                        </ng-template>
+                    </ng-container>
+                    <ng-template #editTemplate>
+                        <br><br>
+                        <p-dialog *ngIf="displayautomatic" header="Resumen Evaluacion Preliminar" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="displayautomatic" [style]="{width: '78vw',height: '42vw'}" >
+                            <app-evaluation-chart [resultsEvAut]="resultsEvAut" idexpe="automatic"></app-evaluation-chart>
+                            <p-footer>
+                                <!--<button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                                </button>-->
+                            </p-footer>
+                        </p-dialog>
+                        <p-button (click)="showDialogautomatic()"  icon="pi pi-external-link" label="Evaluación Preliminar"></p-button>
+                        <br><br><p>Este objeto de aprendizaje está en revisión.</p>
+                    </ng-template>
+                </div>
+                <p-toast></p-toast>
+                <p-confirmPopup></p-confirmPopup>
+            </div>
+
+            <button (click)="navigateTo()" pButton pRipple type="button" label="Leer más"
+                class="p-button-rounded p-button-outlined button-read">
+                <i class="pi pi-arrow-right"></i>
+            </button>
+        </ng-template>
+
+        <div *ngIf="object.rating && (resultsEv && (resultsEv.length > 0))" class="rating">
+            <i class="pi pi-star"></i> <span>{{object.rating | number:'1.1-2'}}</span>
+        </div>
+    </p-card>
+</div>

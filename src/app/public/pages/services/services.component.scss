@@ -1,0 +1,17 @@
+.service-content{
+    .bg{
+       height: 90vh;
+       width: 100%;
+       background-size: cover;
+       background-repeat: no-repeat;
+    }
+    background-color: #FFF;
+    .main-content{
+        margin: 0;
+    }
+    .content-image{
+        img{
+            width: 100%;
+        }
+    }
+}

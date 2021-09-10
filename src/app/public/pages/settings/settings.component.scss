@@ -1,0 +1,25 @@
+.profile{
+    margin: 20px 0;
+    //background-color: royalblue;
+    min-height: 84vh;
+    .profile-user{
+        display: flex;
+        margin: 15px 0;
+        img{
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+        }
+        .user-name{
+            margin-left: 5px;
+            h5{
+                margin-bottom: 5px;
+                text-transform: capitalize;
+            }
+            p{
+                font-size: 0.9em;
+                opacity: .5;
+            }
+        }
+    }
+}

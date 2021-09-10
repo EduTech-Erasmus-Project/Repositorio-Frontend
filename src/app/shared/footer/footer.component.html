@@ -1,0 +1,51 @@
+<div class="p-grid layout-footer main-content">
+    <div class="p-col-12 p-md-4 p-lg-3">
+        <div class="box content">
+            <div class="logo-text">
+
+                <div class="image">
+                    <img loading="lazy" src="assets/img/image2vector.svg" alt="mirage-layout" />
+                </div>
+
+                <div class="text">
+                    <h1>Proyecto EduTech</h1>
+                    <!-- <p-dropdown [options]="countries" [(ngModel)]="selectedCountry"
+                                    placeholder="Seleccione un idioma" optionLabel="name" [showClear]="true">
+                                </p-dropdown> -->
+
+
+                    <!-- <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name"  filterBy="name" [showClear]="true" placeholder="Seleccione un idioma">
+                                        <ng-template pTemplate="selectedItem">
+                                            <div class="country-item country-item-value"  *ngIf="selectedCountry">
+                                                <img loading="lazy" src="assets/demo/flags/flag_placeholder.png" [class]="'flag flag-' + selectedCountry.code.toLowerCase()" />
+                                                <div>{{selectedCountry.name}}</div>
+                                            </div>
+                                        </ng-template>
+                                        <ng-template let-country pTemplate="item">
+                                            <div class="country-item">
+                                                <img loading="lazy" src="assets/demo/flags/flag_placeholder.png" [class]="'flag flag-' + country.code.toLowerCase()" />
+                                                <div>{{country.name}}</div>
+                                            </div>
+                                        </ng-template>
+                                    </p-dropdown> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-col-12 p-md-4 p-lg-6">
+        <div class="box content copy-content">
+            <a class="footer-img" target="_blank" href="https://catedraunescoinclusion.org/"><img src="assets/img/logos/unitwin_ec_salesiana_sp.png" alt="Catedara Unesco"></a>
+            <div class="copy">
+                <p>&copy; {{currentYear}} Todos los derechos reservados | Developed By <span>EduTech</span></p>
+                <p><a [routerLink]="['terms-and-conditions']">Términos y condiciones</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-col-12 p-md-4 p-lg-3">
+        <div class="box content">
+            <img class="logo" src="assets/img/logos/cofinanciado_derecha.png" alt="Erasmus+">
+        </div>
+    </div>
+</div>

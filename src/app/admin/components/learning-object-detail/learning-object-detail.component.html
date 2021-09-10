@@ -1,0 +1,41 @@
+
+
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <!-- <img [src]="learningobjectdetail.avatar"  class="p-col-4" alt="Cinque Terre"> -->
+            <iframe [src]="index_url | sanitizerurl" class="p-col-12" height="450"></iframe>
+            <h4>{{learningobjectdetail.general_title || ' '}}</h4>
+            <p-divider layout="horizontal" align="left">
+            </p-divider>
+            <p>
+                {{learningobjectdetail.general_description}}
+            </p>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <button (click)="onClick()" *ngIf="readMore" pButton pRipple type="button" label="Expandir metadatos ..." class="p-button-info p-button-text p-mr-2 p-mb-2"></button>
+            <p-divider *ngIf="readMore" layout="horizontal" align="left"></p-divider>
+            <div class="card" *ngIf="!readMore">
+               <app-metadata *ngIf="learningobjectdetail" [learningobjectdetail]="learningobjectdetail"></app-metadata>
+            </div>
+            <p-divider *ngIf="!readMore" layout="horizontal" align="left"></p-divider>
+            <button (click)="onClick()" *ngIf="!readMore" pButton pRipple type="button" label="Ver menos ..." class="p-button-info p-button-text p-mr-2 p-mb-2"></button>
+            <p>
+                {{learningobjectdetail.created | date:'medium' }}
+            </p>
+            <p-divider layout="horizontal" align="left">
+            </p-divider>
+            <p>
+                <span class="p-tag">Autor: </span>
+                {{ autor.first_name }} {{ autor.last_name }}
+            </p>
+            <div *ngIf="!statusUpdate" class="card">
+                <p-toast></p-toast>
+                <button (click)="confirm2($event)" pButton icon="pi pi-check" label="Aprobar"></button>
+                <p-confirmPopup key="confirm2"></p-confirmPopup>
+            </div>
+            <!-- <button pButton pRipple type="button" label="Success" class="p-button-success p-button-text p-mr-2 p-mb-2"></button> -->
+            <!-- <a [href]="learningobjectdetail.learning_object_file.url" target="_blank">Ver objeto de aprendizaje...</a> -->
+        </div>
+    </div>
+</div>
+

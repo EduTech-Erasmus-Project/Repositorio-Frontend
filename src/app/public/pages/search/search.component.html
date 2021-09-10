@@ -1,0 +1,56 @@
+<div class="main-content">
+    <div class="p-grid">
+        <div class="p-col-12 p-md-4 p-lg-3 ">
+            <div class="box sidebar">
+                <div class="input-search">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input [(ngModel)]="querySearchService.queryParams.general_title" type="text" pInputText
+                            [placeholder]="'input.search' | translate" />
+                    </span>
+                    <p-button (click)="onSearch()" [label]="'input.search' | translate"></p-button>
+                </div>
+                <app-sidebar-search></app-sidebar-search>
+                <!-- [queryParams]="queryParams" -->
+            </div>
+        </div>
+
+        <div class="p-col-12 p-md-8 p-lg-9 ">
+
+            <div class="box content">
+
+                <div class="header-search">
+                    <div class="p-d-flex p-ai-center">
+                        <p-chip label="Todo" styleClass="p-mr-2 custom-chip"></p-chip>
+                        <!--  <ng-container *ngIf="chipsSearch.length > 0">
+                            <p-chip *ngFor="let chip of chipsSearch; let i = index" [label]="chip.value"
+                                (onRemove)="removeChip(i)" [removable]="true"
+                                styleClass="p-mr-2 custom-chip animate__animated animate__fadeIn"></p-chip>
+                        </ng-container> -->
+                        <p-button *ngIf="idQueryEmpty" (click)="onClearFilters()" label="Limpiar filtros"
+                            icon="pi pi-sliders-v" iconPos="right"></p-button>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="loading; else loadingTemplate">
+                    <div class="spinner">
+                        <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner"
+                            strokeWidth="4" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
+                    </div>
+                </ng-container>
+                <ng-template #loadingTemplate>
+                    <div class="p-grid card-content">
+                        <ng-container *ngIf="objects?.length > 0">
+                            <div class="p-col-12 p-md-6 p-lg-3" *ngFor="let object of objects">
+                                <app-card [object]="object"></app-card>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="objects?.length === 0">
+                            <h5>{{'search.noResults' | translate}}</h5>
+                        </ng-container>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

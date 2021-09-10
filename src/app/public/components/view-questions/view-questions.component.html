@@ -1,0 +1,28 @@
+<form autocomplete="off" [formGroup]="angForm" id="loginForm" id="loginForm">
+    <div *ngFor="let item of groupedQuestions">
+        <div class="forms">
+            <label >{{item.label}}</label>
+            <ul>
+                <li *ngFor="let itemQ of item.items">
+                   <div class="labelQu">
+                    <label class="labelQT">{{itemQ.label}}.</label>
+                    </div>
+                    <div class="p-grid" style="padding: 10px 10px 10px;">
+                        <div class="p-col"> {{'object.agree'| translate}}</div>
+                        <div class="p-col">
+                            <p-rating [cancel]="false" formControlName="{{itemQ.value}}"></p-rating>
+                        </div>
+                        <div class="p-col"> {{'object.disagreement' | translate}}</div>
+                        <div class="p-col">
+                            <h1><span class="blue">{{getNumber(itemQ.value)}}</span></h1>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div style="text-align: right;">
+        <p-button icon="pi pi-check" type="submit" label="Ok" styleClass="p-button-text">
+        </p-button>
+    </div>
+</form>

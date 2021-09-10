@@ -1,0 +1,41 @@
+<div class="p-grid">
+	<div class="p-col-12 p-lg-4">
+		<div class="box animate__animated animate__fadeIn">
+			<figure>
+				<img loading="lazy" loading="lazy" src="assets/img/student.png" [alt]="'home.student.altImage' | translate">
+			</figure>
+			<h3>{{'home.student.title' | translate}}</h3>
+			<p>{{'home.student.description' | translate}}</p>
+			<div class="buttons" *ngIf="!user">
+				<button (click)="onClickRegister('student')" pButton pRipple type="button" label="Registrate como estudiante" class="p-button-text"></button>
+				<!-- <button (click)="onClickLogin()" pButton pRipple type="button" label="Inicia sesión" class="p-button-text"></button> -->
+			</div>
+		</div>
+	</div>
+	<div class="p-col-12 p-lg-4">
+		<div class="box animate__animated animate__fadeIn">
+			<figure>
+				<img loading="lazy" loading="lazy" src="assets/img/teacherf.png" [alt]="'home.teacher.altImage' | translate">
+			</figure>
+			<h3>{{'home.teacher.title' | translate}}</h3>
+			<p>{{'home.teacher.description' | translate}}</p>
+			<div class="buttons" *ngIf="!user">
+				<button (click)="onClickRegister('teacher')" pButton pRipple type="button" label="Registrate como docente" class="p-button-text"></button>
+				<!-- <button (click)="onClickLogin()" pButton pRipple type="button" label="Inicia sesión" class="p-button-text"></button> -->
+			</div>
+		</div>
+	</div>
+	<div class="p-col-12  p-lg-4">
+		<div class="box animate__animated animate__fadeIn">
+			<figure>
+				<img loading="lazy" loading="lazy" src="assets/img/expert.png" [alt]="'home.expert.altImage' | translate">
+			</figure>
+			<h3>{{'home.expert.title' | translate}}</h3>
+			<p>{{'home.expert.description' | translate}}</p>
+			<div class="buttons" *ngIf="!user">
+				<button (click)="onClickRegister('expert')" pButton pRipple type="button" label="Registrate como docente experto" class="p-button-text"></button>
+				<!-- <button (click)="onClickLogin()" pButton pRipple type="button" label="Inicia sesión" class="p-button-text"></button> -->
+			</div>
+		</div>
+	</div>
+</div>

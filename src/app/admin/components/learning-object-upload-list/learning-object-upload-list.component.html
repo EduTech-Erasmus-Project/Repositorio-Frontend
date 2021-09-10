@@ -1,0 +1,57 @@
+<div class="p-grid table-demo">
+	<div class="p-col-12">
+		<app-loading *ngIf="!isLoading"></app-loading>
+		<div *ngIf="isLoading" class="card">
+			<p-table #dt [value]="learningobjects" [(selection)]="learningobjectsSelected" dataKey="id" 
+			styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [paginator]="true" [filterDelay]="0" [globalFilterFields]="['general_title']">
+				<ng-template pTemplate="caption">
+					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+						{{'admin.oaUpload' | translate }}
+						<span class="p-input-icon-left">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+								placeholder="Buscar" />
+						</span>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="width: 8rem">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.avatar' | translate }}
+							</div>
+						</th>
+						<th>
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.title' | translate }}
+							</div>
+						</th>
+						<th style="width: 10rem">{{'admin.detail' | translate}}</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-oa>
+					<tr class="p-selectable-row">
+						<td>
+							<img src="{{oa.avatar}}" alt="avatar" width="75">
+						</td>
+						<td>
+							<h4>{{oa.general_title}}</h4>
+                            <p>
+                                {{oa.general_description | slice:0:500}}
+                            </p>
+						</td>
+						<td>
+							<button (click)="getLearningObjectDetail(oa.slug)" pButton pRipple type="button"
+								label="Ver detalle" class="p-button-info p-mr-2 p-mb-2"></button>
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">{{'admin.emptyOaUpload' | translate }}</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	</div>
+</div>
