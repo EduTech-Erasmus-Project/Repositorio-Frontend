@@ -38,7 +38,7 @@ export class ViewQuestionsExpertComponent implements OnInit {
     private learningObject: LearningObjectService,
     private loginService: LoginService,
     private messageServicee: MessageService
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
     this.subscribes.forEach((subscription) => {
@@ -54,7 +54,8 @@ export class ViewQuestionsExpertComponent implements OnInit {
   createForm() {
     if (this.flagQuestionsEx == false) {
       this.angForm = this.fb.group({
-        observation: [null, [Validators.required]],
+        //observation: [null, [Validators.required]],
+        observation: [null,Validators.required],
       });
     } else if (this.flagQuestionsEx == true) {
       this.angForm = this.fb.group({});
@@ -69,7 +70,8 @@ export class ViewQuestionsExpertComponent implements OnInit {
       let groupedQex = await this.searchService
         .geQuestionsExpert()
         .subscribe((res) => {
-          this.groupedQuestionsEx = res.results.map((item: any) => {
+          console.log(res);
+          this.groupedQuestionsEx = res.map((item: any) => {
             return {
               value: item.id,
               label: item.concept,
@@ -102,8 +104,8 @@ export class ViewQuestionsExpertComponent implements OnInit {
       let resultsEval = await this.learningObject
         .getObjectResultsEvaluation(this.object.id)
         .subscribe((res) => {
-          //console.log("Ayuda",res)
-          this.groupedQuestionsEx = res.results.map((item: any) => {
+          console.log("Ayuda", res)
+          this.groupedQuestionsEx = res.map((item: any) => {
             return {
               conceptEvaluations: item.concept_evaluations.map((item1: any) => {
                 return {
@@ -155,6 +157,7 @@ export class ViewQuestionsExpertComponent implements OnInit {
       });*/
 
       if (this.flagQuestionsEx == false) {
+
         let vectAux = Object.entries(this.angForm.value);
         let vectRe = [];
         vectAux.forEach((item) => {
@@ -192,6 +195,7 @@ export class ViewQuestionsExpertComponent implements OnInit {
           );
         this.subscribes.push(sendEval);
         this.angForm.reset();
+
       } else if (this.flagQuestionsEx == true) {
         let vectAux = Object.entries(this.angForm.value);
         let vectRe = [];

@@ -87,7 +87,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     let preferencesSub = await this.searchService
       .getPreferences()
       .subscribe((res) => {
-        this.preferencesData = res.results.map((res) => {
+        this.preferencesData = res.map((res) => {
           return { name: res.description, code: res.id };
         });
       });
@@ -95,15 +95,15 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     let educationLevelsSub = await this.searchService
       .getLevelEducation()
       .subscribe((res) => {
-        this.educationLevels = res.results.map((res) => {
-          return { name: res.description, code: res.id };
+        this.educationLevels = res.values.map((res) => {
+          return { name: res.name, code: res.id };
         });
       });
 
     let knowledgeAreaSub = await this.searchService
       .getInterestAreas()
       .subscribe((res) => {
-        this.knowledgeArea = res.map((res) => {
+        this.knowledgeArea = res.values.map((res) => {
           return { name: res.name, code: res.id };
         });
       });
@@ -111,8 +111,8 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     let licensesSub = await this.searchService
       .getLicenses()
       .subscribe((res: any) => {
-        this.licenses = res.results.map((res) => {
-          return { name: res.description, code: res.id };
+        this.licenses = res.values.map((res) => {
+          return { name: res.name, code: res.id };
         });
       });
 
@@ -180,11 +180,12 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   }
 
   onError(evt) {
-    //console.log("on error upload", evt);
+    console.log("on error upload", evt.error.error.message);
+    let message : string = evt.error.error.message;
     this.messageService.add({
       severity: "error",
       summary: "Error",
-      detail: "Se ha producido un error al subir el archivo intente de nuevo",
+      detail: message,
     });
   }
 
@@ -211,7 +212,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
         .addMetadata(this.object)
         .subscribe(
           (res) => {
-            //console.log('res send data', res);
             this.messageService.add({
               severity: "success",
               summary: "Success",
@@ -225,12 +225,11 @@ export class LoadOaComponent implements OnInit, OnDestroy {
             this.loading = false;
           },
           (err) => {
-            //console.log("err", err);
             this.messageService.add({
               severity: "error",
               summary: "Error",
               detail:
-                "Se ah producido un error al guardar los datos, intente de nuevo",
+                "Se ha producido un error al guardar los datos, intente de nuevo",
             });
             this.loading = false;
           }

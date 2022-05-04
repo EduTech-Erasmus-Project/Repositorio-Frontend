@@ -116,7 +116,7 @@ export class StudentQuestionCreateListComponent implements OnInit {
     this.administratorServices
       .getEvaluationStudent()
       .subscribe((result: any) => {
-        this.principleList = result.results;
+        this.principleList = result;
       });
   }
   openNew() {

@@ -46,13 +46,12 @@ export class ViewQuestionsComponent implements OnInit {
 
   async loadData() {
     if (
-      this.loginService.validateRole("student") ||
-      this.loginService.validateRole("teacher")
+      this.loginService.validateRole("student")
     ) {
       let groupedQes = await this.searchService
         .geQuestionsStudent()
         .subscribe((res) => {
-          this.groupedQuestions = res.results.map((item: any) => {
+          this.groupedQuestions = res.map((item: any) => {
             return {
               value: item.id,
               label: item.principle,

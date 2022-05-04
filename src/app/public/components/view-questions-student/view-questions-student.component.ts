@@ -62,10 +62,13 @@ export class ViewQuestionsStudentComponent implements OnInit {
   }
 
   async loadData() {
-    if((this.loginService.validateRole('student') || this.loginService.validateRole('teacher')) && !this.flagQuestionsEst){
+    if((this.loginService.validateRole('student') ) && !this.flagQuestionsEst){
       let groupedQes = await this.searchService.geQuestionsStudent().subscribe(
       res => {
-        this.groupedQuestionsSTUDENT = res.results.map((item: any) => { return { value: item.id, label: item.principle, items: item.guidelines.map((item: any) => { return { value: item.id, label: item.guideline ,question:item.questions} }) } });
+        console.log(res)
+        this.groupedQuestionsSTUDENT = res.map((item: any) => 
+        { return { value: item.id, label: item.principle, items: item.guidelines.map((item: any) =>
+           { return { value: item.id, label: item.guideline ,question:item.questions} }) } });
         this.groupedQuestionsSTUDENT = this.groupedQuestionsSTUDENT;
         this.groupedQuestionsSTUDENT.forEach((preguntas)=>{
           preguntas.items.forEach((element)=>{
@@ -83,7 +86,8 @@ export class ViewQuestionsStudentComponent implements OnInit {
     }else if (this.flagQuestionsEst) {
       let groupUpdate= await this.searchService.getObjectResultsEvaluationStudent(this.object.id).subscribe(
         res =>{
-          this.groupedQuestionsUpdate=res.results.map((item1: any) => 
+          console.log('res', res);
+          this.groupedQuestionsUpdate=res.map((item1: any) => 
           {return{
             id:item1.id,
             observation: item1.observation,
@@ -180,7 +184,9 @@ export class ViewQuestionsStudentComponent implements OnInit {
             //console.log("respuesta del sendEvaluacion", res);
             this.commentEmit1.emit(true);
             this.flagConfirmSt = true;
+            this.angForm2.reset();
             this.ngOnInit();
+            this.closeView2();
             this.showSuccess('Datos enviados con exito, gracias por realizar la evaluacion');
           }, error => {
             //console.log("err", error)
@@ -188,7 +194,7 @@ export class ViewQuestionsStudentComponent implements OnInit {
           }
         );
         //console.log("servicio---",sendEvalSt)
-        this.angForm2.reset();
+        //this.angForm2.reset();
       }else{
       this.markTouchForm();
       this.showError('Llenar todos los campos requeridos');

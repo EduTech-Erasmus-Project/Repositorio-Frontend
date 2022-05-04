@@ -50,15 +50,24 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .footer-img{
-    //background-color: red;
-    text-align: center;
-    img{
-      width: 70%;
-    }
+  
+}
+
+.footer-img{
+  //background-color: red;
+  text-align: center;
+  img{
+    width: 100%;
   }
 }
 
+.footer-imgUE{
+  //background-color: red;
+  text-align: center;
+  img{
+    width: 40%;
+  }
+}
 
 @media (max-width: 765px) {
   .box {

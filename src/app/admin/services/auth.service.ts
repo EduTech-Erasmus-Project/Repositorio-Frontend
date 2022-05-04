@@ -70,6 +70,7 @@ export class AuthService {
 
   registerUser(data:UserGeneral){
     //let formData = serialize(data);
+    console.log(data);
     return this.http.post(`${baseUrl}/user-management/`, data);
   }
 }

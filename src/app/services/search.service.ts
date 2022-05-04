@@ -73,7 +73,7 @@ export class SearchService {
   }
 
   getgetFilterArea(){
-    return this.http.get(`${ baseUrl }/learning-object/filters/area/`);
+    return this.http.get(`${ baseUrl }/learning-object/filters/area`);
   }
   getObjectResultsEvaluationStudent(id){
     return this.http.get(`${baseUrl}/learning-objects/student/result-to-student/${id}/`).pipe(map((data: any) => data));

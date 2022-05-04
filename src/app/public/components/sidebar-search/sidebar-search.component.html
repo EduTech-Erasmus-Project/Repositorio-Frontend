@@ -56,11 +56,11 @@
                         <div class="p-field-radiobutton" *ngFor="let level of levels">
 
                             <p-radioButton [tabindex]="acordingLevel?.selected ? 0 : -1" (click)="levelsBtn = true"
-                                [name]="level.description" [value]="level.description"
+                                [name]="level.name" [value]="level.name"
                                 [(ngModel)]="querySearchService.queryParams.education_levels__description"
-                                [inputId]="level.description">
+                                [inputId]="level.name">
                             </p-radioButton>
-                            <label [for]="level.description">{{level.description}}</label>
+                            <label [for]="level.name">{{level.name}}</label>
                         </div>
 
                         <div class="btn" *ngIf="levelsBtn">
@@ -133,11 +133,11 @@
 
                         <div class="p-field-radiobutton" *ngFor="let lisence of licenses">
                             <p-radioButton [tabindex]="acordingLicence?.selected ? 0 : -1" (click)="lisenceBtn = true"
-                                name="lisence" [value]="lisence.description"
+                                name="lisence" [value]="lisence.name"
                                 [(ngModel)]="querySearchService.queryParams.license__description"
-                                [inputId]="lisence.description">
+                                [inputId]="lisence.name">
                             </p-radioButton>
-                            <label [for]="lisence.description">{{lisence.description}}</label>
+                            <label [for]="lisence.name">{{lisence.name}}</label>
                         </div>
 
 

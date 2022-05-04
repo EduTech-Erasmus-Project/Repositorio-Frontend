@@ -101,8 +101,9 @@
     "modalSelect":"Seleccionar ...",
     "terms":"Aceptar términos y condiciones",
     "partially":"Parcialmente",
+    "notApply":"No aplica",
     "termsCond":"Por favor acepte los términos y condiciones",
-    "registerSuccessful":"Se ah creado su cuenta por favor inicie sesion con su correo y contraseña que acaba de registrar."
+    "registerSuccessful":"Se ha creado su cuenta con exito por favor inicie sesión con su correo y contraseña que acaba de registrar."
 
   },
   
@@ -120,7 +121,8 @@
     "passMinu":"Debe haber 1 letra minúscula ASCII letra",
     "passMayu":"Debe haber 1 letra mayúscula ASCII letra",
     "passChar":"Cualquier 8 a 30 caracteres distintos de los caracteres de salto de línea",
-    "emailValid":"El correo electronico que ingreso no se encuentra registrado"
+    "emailValid":"El correo electronico que ingreso no se encuentra registrado",
+    "alertEmail":"Su correo electrónico no es institucional, una vez registrado espere que el administrador lo apruebe"
   },
 
   "search":{
@@ -164,10 +166,10 @@
       "btnSubmit": "Guardar"
     },
     "messages":{
-      "successFile": "El archivo se ah subido con éxito",
+      "successFile": "El archivo se ha subido con éxito",
       "errorFile": "Se ha producido un error al subir el archivo intente de nuevo",
       "successMetadata": "Tu archivo se ha enviado para revisión",
-      "errorMetadata": "Se ah producido un error al guardar los datos, intente de nuevo"
+      "errorMetadata": "Se ha producido un error al guardar los datos, intente de nuevo"
     },
     "errors":{
       "title": "El título es requerido",
@@ -302,7 +304,8 @@
     "profesions":"Profesión",
     "web":"Sitio web",
     "expertLevel":"Nivel de experto",
-    "profile":"Perfil académico"
+    "profile":"Perfil académico",
+    "users":"Usuarios por aprobar"
   },
   "recommended":{
     "recommended": "Recomendados para ti",

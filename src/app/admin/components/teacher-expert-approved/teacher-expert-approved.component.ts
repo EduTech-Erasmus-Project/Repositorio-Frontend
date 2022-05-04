@@ -45,9 +45,10 @@ export class TeacherExpertApprovedComponent implements OnInit {
   getTeacherExpertAproved(){
     this.administratorService.getTeacherAndExpertAproved().subscribe((user:any) => {
       this.isLoading=true;
-      this.user_student_teacher_lists=user.results;
+      this.user_student_teacher_lists=user;
     })
   }
+  
   getProfile(id:number){
     this.router.navigate([`/admin/teacher/request/approved/teacher-expert-profile/${id}/approved`]);
   }

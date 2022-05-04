@@ -57,7 +57,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     let subscribeAreas = await this.searchService
       .getInterestAreas()
       .subscribe((res) => {
-        res.forEach((item) => {
+        //console.log(res);
+        res.values.forEach((item) => {
           this.interestAreas.push({
             label: item.name,
             value: { id: item.id, name: item.name },

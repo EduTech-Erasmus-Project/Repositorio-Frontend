@@ -65,8 +65,9 @@ export class ObjectComponent implements OnInit, OnDestroy {
   async getObjectDetail(slug: string) {
     let detailSub = await this.objectService.getObjectDetail(slug).subscribe(
       (res: any) => {
+        
         //console.log('res typeof', typeof(this.objectData))
-
+       
         this.objectData = res;
         this.loadData();
         //this.metadata = this.objectData.getMetadataFormat();
@@ -76,7 +77,7 @@ export class ObjectComponent implements OnInit, OnDestroy {
         //console.log("metadata", this.metadata);
       },
       (err) => {
-        console.log("err", err);
+       
         this.router.navigateByUrl("/**");
       }
     );
@@ -88,13 +89,13 @@ export class ObjectComponent implements OnInit, OnDestroy {
       .getComments(id)
       .subscribe((res: any) => {
         this.commentsData = res;
-        //console.log("commets", res);
+      
       });
     this.subscribes.push(commentSub);
   }
 
   coutComment(evt) {
-    //console.log("event emit", evt);
+   
     this.commentsData.count += evt;
   }
 
@@ -121,7 +122,7 @@ export class ObjectComponent implements OnInit, OnDestroy {
 
   coutComment1(evt) {
     if(evt==true){
-      console.log("Se actualiza ")
+    
     this.loadData();
     }
   }
@@ -131,8 +132,8 @@ export class ObjectComponent implements OnInit, OnDestroy {
     if (this.roleStudent && (!this.roleExpert && !this.roleTeacher)) {     
       let resultsAns = await this.objectService
         .getResultsEvaluation(this.objectData.id)
-        .subscribe((res) => {         
-          this.resultsEva = res.results.map((item: any) => {
+        .subscribe((res) => {   
+          this.resultsEva = res.map((item: any) => {
             return {
               concepts: item.concept_evaluations.map((aux: any) => {
                 return { concepto: aux.evaluation_concept, total: aux.average };
@@ -140,36 +141,38 @@ export class ObjectComponent implements OnInit, OnDestroy {
             };
           });
           this.resultsEva = this.resultsEva;
-          // console.log("Pregun",this.resultsEv);
+         
         });
       this.subscribes.push(resultsAns);
     } else if (this.roleExpert) {
       let resultsEval = await this.objectService
         .getObjectResultsEvaluation(this.objectData.id)
         .subscribe((res) => {
-          this.groupedQuestionsEx = res.results.map((item: any) => {
-            return {
-              conceptEvaluations: item.concept_evaluations.map((item1: any) => {
-                return {
-                  evaluationConcept: item1.evaluation_concept.concept,
-                  average: item1.average,
-                  questionEvaluations: item1.question_evaluations.map(
-                    (item2: any) => {
-                      return {
-                        value: item2.id,
-                        questions: item2.question,
-                        qualification: item2.qualification,
-                      };
-                    }
-                  ),
-                };
-              }),
-              observation: item.observation,
-              id: item.id,
-            };
-          });
-
-          //this.commentEmit.emit(true);
+      
+          if(res.length > 0) {
+            this.groupedQuestionsEx = res.map((item: any) => {
+              return {
+                conceptEvaluations: item.concept_evaluations.map((item1: any) => {
+                  return {
+                    evaluationConcept: item1.evaluation_concept.concept,
+                    average: item1.average,
+                    questionEvaluations: item1.question_evaluations.map(
+                      (item2: any) => {
+                        return {
+                          value: item2.id,
+                          questions: item2.question,
+                          qualification: item2.qualification,
+                        };
+                      }
+                    ),
+                  };
+                }),
+                observation: item.observation,
+                id: item.id,
+              };
+            });
+            
+              //this.commentEmit.emit(true);
           this.groupedQuestionsEx = this.groupedQuestionsEx;
           this.groupedQuestionsEx.forEach((element) => {
             element.conceptEvaluations.forEach((element1) => {
@@ -192,6 +195,10 @@ export class ObjectComponent implements OnInit, OnDestroy {
               this.flagConfirm = false;
             }
           });
+          
+          }
+
+        
         });
 
       this.subscribes.push(resultsEval);
@@ -199,7 +206,7 @@ export class ObjectComponent implements OnInit, OnDestroy {
       let resultsTeacher = await this.objectService
         .getResultsEvaluation(this.objectData.id)
         .subscribe((res) => {
-          this.groupedQuestionsTeacher = res.results.map((item: any) => {
+          this.groupedQuestionsTeacher = res.map((item: any) => {
             return {
               conceptEvaluations: item.concept_evaluations.map((item1: any) => {
                 return {

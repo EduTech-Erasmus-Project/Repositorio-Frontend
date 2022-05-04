@@ -52,11 +52,13 @@ export class SignUpComponent implements OnInit, OnDestroy {
  
 
   public registred: boolean = false;
-  public patternV: string =
-    "^([a-zA-Z0-9_' - '.]+)@([a-zA-Z0-9_' - '.]+).([a-zA-Z]{2,5})$";
-
+  //public patternV: string =
+   // "^([a-zA-Z0-9_' - '.]+)@([a-zA-Z0-9_' - '.]+).([a-zA-Z]{2,5})$";
+  public patternCorreo: string =
+  `^([a-zA-Z0-9]+)@((?!hotmail|gmail|yahoo|outlook)(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$`;
   private typeRegister: string;
 
+  public validateEmailPattern = false;
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
@@ -109,7 +111,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
         null,
         [
           Validators.required,
-          Validators.pattern(this.patternV),
+          //Validators.pattern(this.patternCorreo),
+          Validators.email
           /*^[a-z]+(@)+[u]+[p]+[s]+.+[e]+[d]+[u]+.+[e]+[c]*/
         ],
       ],
@@ -195,8 +198,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
       new FormControl(null, Validators.required)
     );
 
-    this.removeEmail();   
-      this.addEmailPathTeacherAndExpert();
+   // this.removeEmail();   
+   //   this.addEmailPathTeacherAndExpert();
 
   }
 
@@ -229,8 +232,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
       ])
     );
 
-    this.removeEmail();   
-    this.addEmailPathTeacherAndExpert();
+  //  this.removeEmail();   
+  //  this.addEmailPathTeacherAndExpert();
     
   }
 
@@ -256,8 +259,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
     let levelSub = await this.searchService
       .getLevelEducation()
       .subscribe((res) => {
-        this.levelsEdications = res.results.map((item: any) => {
-          return { id: item.id, name: item.description };
+        this.levelsEdications = res.values.map((item: any) => {
+          return { id: item.id, name: item.name };
         });
         this.levelsEdications = this.levelsEdications;
       });
@@ -266,7 +269,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     let preferencesSub = await this.searchService
       .getPreferencesArea()
       .subscribe((res) => {
-        this.preferenceAreas = res.results.map((item: any) => {
+        this.preferenceAreas = res.map((item: any) => {
           return {
             value: item.id,
             label: item.preferences_are,
@@ -281,7 +284,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     let interestingsSub = await this.searchService
       .getInterestAreas()
       .subscribe((res) => {
-        this.areasInterestings = res.map((item: any) => {
+        this.areasInterestings = res.values.map((item: any) => {
           return { id: item.id, name: item.name };
         });
         this.areasInterestings = this.areasInterestings;
@@ -393,8 +396,9 @@ addEmailPathTeacherAndExpert(){
     "email",
     new FormControl(null, [
       Validators.required,
-      Validators.pattern("^[A-Za-z\\d]+(@)+[u]+[p]+[s]+.+[e]+[d]+[u]+.+[e]+[c]"),
-      /*^[a-z]+(@)+[u]+[p]+[s]+.+[e]+[d]+[u]+.+[e]+[c]*/
+      Validators.email
+     // Validators.pattern(this.patternCorreo),
+      /*^[A-Za-z\\d]+(@)+[u]+[p]+[s]+.+[e]+[d]+[u]+.+[e]+[c]*/
     ],)
   );
 }
@@ -437,7 +441,9 @@ addEmailPathTeacherAndExpert(){
   }
 
   async validateUser() {
-    //console.log("Form register", this.angForm);
+    this.angForm.markAllAsTouched();
+    this.angForm.updateValueAndValidity();
+    
     if (this.checkTe || this.checkEx || this.checkEs) {
       //console.log("Si paso1")
       if (this.angForm.valid) {
@@ -484,6 +490,7 @@ addEmailPathTeacherAndExpert(){
       this.validateRole = true;
       this.markTouchForm();
     }
+
   }
 
  
@@ -576,4 +583,21 @@ addEmailPathTeacherAndExpert(){
       profession: evt.value,
     });
   }
+  
+  //Generamos la consulta para obtener el mensaje. 
+  validateEmailPatter() {
+    
+    let campo = this.angForm.controls['email']?.value;
+    let emailRegex = /^([a-zA-Z0-9]+)@((?!hotmail|gmail|yahoo|outlook)(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    //Se muestra un texto a modo de ejemplo, luego va a ser un icono
+    if (emailRegex.test(campo)) {
+
+      this.validateEmailPattern = false;
+      //return true;
+    } else {
+      this.validateEmailPattern = true;
+      //return false;
+    }
+  }
+
 }

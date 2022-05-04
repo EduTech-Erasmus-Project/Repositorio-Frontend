@@ -68,9 +68,10 @@ export class EditObjectComponent implements OnInit, OnDestroy {
   async getObjectDetail(id: number) {
     let detailSub = await this.objectService.getObjectDetailById(id).subscribe(
       (res: any) => {
+        console.log(res)
         this.object = res;
         this.currentFile = res.learning_object_file;
-        this.currentImg = res.avatar;
+        this.currentImg =res.avatar;
         this.loadForm();
         this.loading = false;
       },
@@ -89,7 +90,7 @@ export class EditObjectComponent implements OnInit, OnDestroy {
     let preferencesSub = await this.searchService
       .getPreferences()
       .subscribe((res) => {
-        this.preferencesData = res.results.map((res) => {
+        this.preferencesData = res.map((res) => {
           return { name: res.description, code: res.id };
         });
       });
@@ -97,15 +98,15 @@ export class EditObjectComponent implements OnInit, OnDestroy {
     let educationLevelsSub = await this.searchService
       .getLevelEducation()
       .subscribe((res) => {
-        this.educationLevels = res.results.map((res) => {
-          return { name: res.description, code: res.id };
+        this.educationLevels = res.values.map((res) => {
+          return { name: res.name, code: res.id };
         });
       });
 
     let knowledgeAreaSub = await this.searchService
       .getInterestAreas()
       .subscribe((res) => {
-        this.knowledgeArea = res.map((res) => {
+        this.knowledgeArea = res.values.map((res) => {
           return { name: res.name, code: res.id };
         });
       });
@@ -113,8 +114,8 @@ export class EditObjectComponent implements OnInit, OnDestroy {
     let licensesSub = await this.searchService
       .getLicenses()
       .subscribe((res: any) => {
-        this.licenses = res.results.map((res) => {
-          return { name: res.description, code: res.id };
+        this.licenses = res.values.map((res) => {
+          return { name: res.name, code: res.id };
         });
       });
 
@@ -204,8 +205,6 @@ export class EditObjectComponent implements OnInit, OnDestroy {
         .editMetadata(data)
         .subscribe(
           (res: any) => {
-            //console.log("res send data", res);
-            //this.getObjectDetail(this.object.id);
             this.object = res;
             this.currentImg = res.avatar;
             this.messageService.add({

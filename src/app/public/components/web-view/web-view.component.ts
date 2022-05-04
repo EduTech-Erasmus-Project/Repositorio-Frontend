@@ -40,7 +40,8 @@ export class WebViewComponent implements OnInit {
   constructor(
     private loginService: LoginService,
     private learningObject: LearningObjectService
-  ) {}
+  ) {
+  }
 
   ngOnDestroy(): void {
     this.subscribes.forEach((subscription) => {
@@ -87,11 +88,14 @@ export class WebViewComponent implements OnInit {
       let resultsEval = await this.learningObject
         .getObjectResultsEvaluation(this.object.id)
         .subscribe((res) => {
-          if (res.results.length == 0) {
-            this.flagQuestionsEx = false;
-          } else {
-            this.flagQuestionsEx = true;
+          if(res.length > 0) {
+            if (res.length == 0) {
+              this.flagQuestionsEx = false;
+            } else {
+              this.flagQuestionsEx = true;
+            }
           }
+         
           //console.log("Viene akias", res)
         });
       this.subscribes.push(resultsEval);
@@ -228,6 +232,7 @@ export class WebViewComponent implements OnInit {
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   coutCommentstudent(evt) {
     this.displayFormRatingStudent = evt;
+
     //console.log("evento--",evt)
   }
   coutComments(evt) {
@@ -241,17 +246,21 @@ export class WebViewComponent implements OnInit {
   }
   async loadDataStudentEvaluation() {
     //error => { console.log("err", error)}
+    console. log("User", this.roleUser)
     if (this.roleUser) {
       let resultsEvalStudent = await this.learningObject.getObjectResultsEvaluationStudent(this.object.id).subscribe(res => {
         //console.log(">>>>>>>>>>>>>>>>>qqq", res)
-        if (res.results.length == 0) {
-          this.flagQuestionsEst = false;
-          console.log("objeto - - - falsoooooo",res.results.length)
-        } else {
-          this.flagQuestionsEst = true;
-          console.log("objeto - - - true",res.results.length)
+        console.log("Student",res.length)
+        if(res.length > 0) {
+          if (res.length == 0) {
+            this.flagQuestionsEst = false;
+          } else {
+            this.flagQuestionsEst = true;
+          
+          }
+          
         }
-        
+     
       });
       //this.subscribes.push(resultsEval);
     }

@@ -95,7 +95,7 @@ export class MetadataQuestionCreateListComponent implements OnInit {
     this.administratorServices
       .getEvaluationAutomatic()
       .subscribe((result: any) => {
-        this.conceptList = result.results;
+        this.conceptList = result;
       });
   }
   openNew() {

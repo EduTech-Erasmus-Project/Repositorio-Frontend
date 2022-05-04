@@ -5,7 +5,7 @@
 
         <span class="p-buttonset">
             <button [disabled]="!commentDescription || loadingComment" (click)="onComment()" pButton pRipple [label]="'object.btnSubmit' | translate"
-                [icon]=" loadingComment ? 'pi pi-spin pi-spinner' : 'pi pi-check'"></button>
+                [icon]=" loadingComment ? 'pi pi-spin pi-spinner' : 'pi pi-check'"></button> &nbsp;
             <button (click)="commentView = false" pButton pRipple [label]="'object.btnCancel' | translate" icon="pi pi-times"></button>
         </span>
     </div>

@@ -94,7 +94,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     let levelSub = await this.searchService
       .getLevelEducation()
       .subscribe((res) => {
-        this.levelsEdications = res.results.map((item: any) => {
+        this.levelsEdications = res.values.map((item: any) => {
           return { id: item.id, name: item.description };
         });
         this.levelsEdications = this.levelsEdications;
@@ -104,7 +104,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     let preferencesSub = await this.searchService
       .getPreferencesArea()
       .subscribe((res) => {
-        this.preferenceAreas = res.results.map((item: any) => {
+        this.preferenceAreas = res.map((item: any) => {
           return {
             value: item.id,
             label: item.preferences_are,
@@ -119,7 +119,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     let interestingsSub = await this.searchService
       .getInterestAreas()
       .subscribe((res) => {
-        this.areasInterestings = res.map((item: any) => {
+        this.areasInterestings = res.values.map((item: any) => {
           return { id: item.id, name: item.name };
         });
         this.areasInterestings = this.areasInterestings;

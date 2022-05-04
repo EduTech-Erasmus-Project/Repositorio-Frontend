@@ -47,7 +47,7 @@ export class TeacherExpertPendingComponent implements OnInit {
   getTeacherAndExpert(){
     this.administratorService.getTeacherAndExpertToAprove().subscribe((user:any) => {
       this.isLoading = true;
-      this.user_student_teacher_list=user.results;
+      this.user_student_teacher_list=user;
     })
   }
 

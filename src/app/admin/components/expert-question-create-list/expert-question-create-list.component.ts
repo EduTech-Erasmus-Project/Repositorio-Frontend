@@ -93,7 +93,7 @@ export class ExpertQuestionCreateListComponent implements OnInit {
     this.administratorServices
       .getEvaluationExpert()
       .subscribe((result: any) => {
-        this.conceptList = result.results;
+        this.conceptList = result;
       });
   }
   openNew() {

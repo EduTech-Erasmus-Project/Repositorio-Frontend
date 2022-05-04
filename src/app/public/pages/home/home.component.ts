@@ -26,7 +26,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private objectService: LearningObjectService,
     private loginService: LoginService
-  ) {}
+  ) {
+  }
   ngOnDestroy(): void {
     this.subscribes.forEach((sub) => {
       sub.unsubscribe();

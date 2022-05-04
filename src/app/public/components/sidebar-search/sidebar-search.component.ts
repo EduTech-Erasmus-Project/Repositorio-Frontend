@@ -48,13 +48,13 @@ export class SidebarSearchComponent implements OnInit, OnDestroy {
     let areaSubcription = await this.searchService
       .getInterestAreas()
       .subscribe((res) => {
-        this.areas = res;
+        this.areas = res.values;
       });
 
     let levelSubcription = await this.searchService
       .getLevelEducation()
       .subscribe((res) => {
-        this.levels = res.results;
+        this.levels = res.values;
       });
 
     // let preferenceSubcription = await this.searchService
@@ -83,7 +83,7 @@ export class SidebarSearchComponent implements OnInit, OnDestroy {
       .getLicenses()
       .subscribe((res: any) => {
         //console.log("licenses res", res.results)
-        this.licenses = res.results;
+        this.licenses = res.values;
       });
 
     let filterAreaaSub = await this.searchService

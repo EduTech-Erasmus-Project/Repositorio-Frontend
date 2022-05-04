@@ -76,7 +76,7 @@ export class SecurityComponent implements OnInit {
         .subscribe(
           (res) => {
             if (
-              res.details.old_password.old_password ==
+              res.error.details.old_password.old_password ==
               "Old password is not correct"
             ) {
               this.showError("La contraseña actual es incorrecta");

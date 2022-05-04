@@ -19,7 +19,7 @@
                                             <input id="firstname4" type="text"
                                                 placeholder="{{'register.name'|translate}}"
                                                 maxlength="{{getErrorNumber('name')}}" formControlName="name"
-                                                onkeypress="return getErrorNumber('name')"
+                                                (keypress)="getErrorNumber('name')"
                                                 [ngClass]="{'ng-dirty':name.invalid && (name.dirty || name.touched)}"
                                                 pInputText>
 
@@ -43,7 +43,7 @@
                                             <input id="lastname4" type="text" formControlName="lastname"
                                                 maxlength="{{getErrorNumber('lastname')}}"
                                                 placeholder="{{'register.lastName'|translate}}"
-                                                onkeypress="return getErrorNumber('lastname')"
+                                                (keypress)="getErrorNumber('lastname')"
                                                 [ngClass]="{'ng-dirty':lastname.invalid && (lastname.dirty || lastname.touched)}"
                                                 pInputText>
 
@@ -336,17 +336,20 @@
                                         <div class="p-field p-fluid">
                                             <label for="email">{{'register.email'|translate}}*</label>
                                             <input id="email" type="text" formControlName="email"
-                                                [ngClass]="{'ng-dirty ng-invalid':(email.invalid && (email.dirty || email.touched) )|| validateEmail}"
+                                            (keyup)="validateEmailPatter()"
+                                                [ngClass]="{'ng-dirty ng-invalid':(email.invalid && (email.dirty || email.touched) )}"
                                                 placeholder="{{'register.email'|translate}}" pInputText>
                                             <div *ngIf="email.invalid && (email.dirty || email.touched)">
                                                 <small id="email" class="p-error"
                                                     *ngIf="email.errors.required">{{'validation.obligatoryCamp'|translate}}</small>
-                                                <small id="email" class="p-error"
-                                                    *ngIf="email.errors.pattern && !checkEx && !checkTe ">{{'validation.errorEmail'|translate}}</small>
-                                                <small id="email" class="p-error"
-                                                    *ngIf="email.errors.pattern && (checkEx || checkTe) ">{{'validation.invalidEmail'|translate}}</small>
+
+                                              <small id="email" class="p-error"
+                                                    *ngIf="email.errors.email && (checkEx || checkTe || checkEs)">{{'validation.errorEmail'|translate}}</small>
                                                 <!-- hasError -->
+                                             <br>
                                             </div>
+                                            <small id="email" style="color:orange"
+                                            *ngIf="validateEmailPattern && (checkEx || checkTe || checkEs)">{{'validation.alertEmail'|translate}}</small>
                                             <small id="email" class="p-error"
                                                 *ngIf="validateEmail && !flagAlert">{{'validation.invalidEmail'|translate}}</small>
                                             <small id="email" class="p-error"
