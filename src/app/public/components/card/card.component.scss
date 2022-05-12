@@ -86,3 +86,15 @@
 .buttons{
   margin-bottom: 10px;
 }
+
+.expert-view-eavluation{
+  text-align: center;
+}
+
+.student-view-evaluation{
+  text-align: center;
+}
+
+:host ::ng-deep .button-read{
+  width: 100%;
+}

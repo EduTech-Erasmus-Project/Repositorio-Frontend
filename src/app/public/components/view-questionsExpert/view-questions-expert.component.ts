@@ -70,7 +70,6 @@ export class ViewQuestionsExpertComponent implements OnInit {
       let groupedQex = await this.searchService
         .geQuestionsExpert()
         .subscribe((res) => {
-          console.log(res);
           this.groupedQuestionsEx = res.map((item: any) => {
             return {
               value: item.id,
@@ -104,7 +103,6 @@ export class ViewQuestionsExpertComponent implements OnInit {
       let resultsEval = await this.learningObject
         .getObjectResultsEvaluation(this.object.id)
         .subscribe((res) => {
-          console.log("Ayuda", res)
           this.groupedQuestionsEx = res.map((item: any) => {
             return {
               conceptEvaluations: item.concept_evaluations.map((item1: any) => {
@@ -180,21 +178,20 @@ export class ViewQuestionsExpertComponent implements OnInit {
           .sendQualificationExpert(this.answers)
           .subscribe(
             (res) => {
-              //console.log("por", res);
               this.commentEmit1.emit(true);
               this.flagConfirm = true;
               this.ngOnInit();
               this.showSuccess(
                 "Datos enviados con exito, gracias por realizar la evaluacion"
               );
+               this.angForm.reset();
             },
             (error) => {
-              //console.log("err", error)
               this.flagConfirm = false;
             }
           );
         this.subscribes.push(sendEval);
-        this.angForm.reset();
+       
 
       } else if (this.flagQuestionsEx == true) {
         let vectAux = Object.entries(this.angForm.value);
@@ -217,8 +214,6 @@ export class ViewQuestionsExpertComponent implements OnInit {
           observation: this.angForm.get("observation").value,
         };
 
-        //console.log("Respuestas", this.answers);
-        //console.log("RespuestasID", this.groupedQuestionsEx[0].id);
 
         let sendEvalUpdate = await this.learningObject
           .sendQualificationExpertUpdate(
@@ -227,12 +222,10 @@ export class ViewQuestionsExpertComponent implements OnInit {
           )
           .subscribe(
             (res) => {
-              //console.log("por", res);
               this.showSuccess("Los datos se actualizaron con exito");
               this.commentEmit.emit(false);
             },
             (error) => {
-              console.log("err", error);
               this.showError(
                 "No se pudo actualizar la informacion correctamente"
               );

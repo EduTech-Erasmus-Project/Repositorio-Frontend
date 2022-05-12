@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnDestroy } from "@angular/core";
 import { MenuItem, Message } from "primeng/api";
 import { LoginService } from "../../../services/login.service";
 import { TranslateService } from "@ngx-translate/core";
@@ -11,7 +11,7 @@ import { Subscription } from "rxjs";
   templateUrl: "./web-view.component.html",
   styleUrls: ["./web-view.component.scss"],
 })
-export class WebViewComponent implements OnInit {
+export class WebViewComponent implements OnInit, OnDestroy {
   @ViewChild("webView") webView: ElementRef;
   @Input() object: ObjectLearning;
   @Output() commentEmit1 = new EventEmitter<boolean>();
@@ -50,8 +50,6 @@ export class WebViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //console.log("url", this.objectFile)
-    //console.log("object param", this.object.id)
     this.items = [
       {
         label: "Facebook",
@@ -83,7 +81,7 @@ export class WebViewComponent implements OnInit {
   }
 
   async loadDataExpertEvaluation() {
-    //error => { console.log("err", error)}
+
     if (this.roleExpert) {
       let resultsEval = await this.learningObject
         .getObjectResultsEvaluation(this.object.id)
@@ -95,8 +93,6 @@ export class WebViewComponent implements OnInit {
               this.flagQuestionsEx = true;
             }
           }
-         
-          //console.log("Viene akias", res)
         });
       this.subscribes.push(resultsEval);
     }
@@ -109,12 +105,10 @@ export class WebViewComponent implements OnInit {
         .validateLike(this.object.id)
         .subscribe(
           (res: any) => {
-            //console.log("interaction", res);
             this.liked = res.liked; //verificar url de servidor
             this.interaction = res;
           },
           (err) => {
-            //console.log("err", err);
             this.liked = false;
           }
         );
@@ -154,7 +148,7 @@ export class WebViewComponent implements OnInit {
     this.displayFormRatingExpertUpdate = true;
   }
   onDownloadFile(url: string) {
-    window.open(url, "_blank");
+    window.open(url);
   }
 
   get roleExpert() {
@@ -197,12 +191,9 @@ export class WebViewComponent implements OnInit {
       .interactionLike(this.interaction)
       .subscribe(
         (res) => {
-          //console.log("res like", res);
         },
         (err) => {
           this.liked = !this.liked;
-          //console.log(err);
-          //mesage error user.
         }
       );
     this.subscribes.push(likeSub);
@@ -215,12 +206,10 @@ export class WebViewComponent implements OnInit {
           .interactionView({ viewed: true, learning_object: this.object.id })
           .subscribe(
             (res) => {
-              //console.log("res", res);
               this.interaction = res;
             },
             (err) => {
               this.loadData();
-              //console.log("err", err);
             }
           );
         this.subscribes.push(viewSub);
@@ -228,41 +217,34 @@ export class WebViewComponent implements OnInit {
     } catch (error) {}
   }
 
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   coutCommentstudent(evt) {
     this.displayFormRatingStudent = evt;
-
-    //console.log("evento--",evt)
+    this.flagQuestionsEst = true;
   }
+
   coutComments(evt) {
     this.displayFormRatingStudent = evt;
     if( this.flagQuestionsEst == true){
       this.displayFormRatingStudentUpdate = evt;
     }
   }
+
   showFormRatingStudentUpdate() {
     this.displayFormRatingStudentUpdate = true;
   }
+
   async loadDataStudentEvaluation() {
-    //error => { console.log("err", error)}
-    console. log("User", this.roleUser)
     if (this.roleUser) {
       let resultsEvalStudent = await this.learningObject.getObjectResultsEvaluationStudent(this.object.id).subscribe(res => {
-        //console.log(">>>>>>>>>>>>>>>>>qqq", res)
-        console.log("Student",res.length)
         if(res.length > 0) {
           if (res.length == 0) {
             this.flagQuestionsEst = false;
           } else {
             this.flagQuestionsEst = true;
-          
-          }
-          
-        }
-     
+          } 
+        }     
       });
-      //this.subscribes.push(resultsEval);
+      this.subscribes.push(resultsEvalStudent);
     }
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

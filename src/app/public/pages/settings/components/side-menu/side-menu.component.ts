@@ -47,10 +47,19 @@ export class SideMenuComponent implements OnInit {
     //console.log("role student", this.loginService.user)
 
     if (this.loginService.validateRole("student")) {
-      this.items.splice(2, 0, {
+      this.items.splice(3, 0, {
         label: "Vistos por mi",
         icon: "pi pi-fw pi-list",
         routerLink: "my-views",
+        routerLinkActiveOptions: {
+          exact: true,
+          styleClass: "router-active",
+        },
+      });
+      this.items.splice(2, 0, {
+        label: "Calificados por mi",
+        icon: "pi pi-fw pi-check",
+        routerLink: "objects-qualified",
         routerLinkActiveOptions: {
           exact: true,
           styleClass: "router-active",
@@ -78,6 +87,18 @@ export class SideMenuComponent implements OnInit {
           styleClass: "router-active",
         },
       });
+    }
+    
+    if (this.loginService.validateRole("expert")) {
+        this.items.splice(1, 0, {
+          label: "Objetos de aprendizaje calificados",
+        icon: "pi pi-fw pi-check",
+        routerLink: "objects-qualified",
+        routerLinkActiveOptions: {
+          exact: true,
+          styleClass: "router-active",
+        },
+        })
     }
   }
   onQuit() {

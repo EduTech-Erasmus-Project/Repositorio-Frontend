@@ -29,18 +29,67 @@
         </div>
 
         <p-divider></p-divider>
+
+           <!-- Visualizacion de boton de evalucion para el estudiante -->
+           <div class="student-view-evaluation" style="margin: 0px 0px 5px" *ngIf="(studentOptions) || (studentOptionsView)">
+            <ng-container *ngIf="resultsEvStudent && (resultsEvStudent.length > 0)">
+                <div>
+                    <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad" [draggable]="false"
+                        [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="displaystudent"
+                        [style]="{width: '68vw',height: '575px'}">
+                        <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
+                        </app-evaluation-chart>
+                        <p-footer  *ngIf="resultsEvStudent?.length>0 && !studentOptions">
+                            <button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más"
+                                class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                            </button>
+                        </p-footer>
+                    </p-dialog>
+                    <button (click)="showDialogstudent()"   class="button-read" 
+                    pButton pRipple type="button"
+                    icon="pi pi-external-link" label="Evaluacion Estudiante">
+                    </button>
+                </div>
+            </ng-container>
+        </div>
+
+        <!--  Visualizar boton de evalucion para el experto-->
+        <div class="expert-view-eavluation" *ngIf="(expertOptions) || (expertOptionsView)">
+            <ng-container *ngIf="resultsEvViewExpert && (resultsEvViewExpert.length > 0)">
+                <div>
+                    <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad" [draggable]="false"
+                        [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="display"
+                        [style]="{width: '75vw',height: '557px'}">
+                        <div>
+                            <app-evaluation-chart [resultEv]="resultsEvViewExpert" [rating]="object.rating"
+                                idexpe="docente"></app-evaluation-chart>
+                        </div>
+                        <p-footer *ngIf="resultsEvViewExpert?.length>0 && !expertOptions">
+                            <button (click)="navigateToReport(false)" pButton pRipple type="button" label="Leer más"
+                                class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                            </button>
+                        </p-footer>
+                    </p-dialog>
+                    <button (click)="showDialog()" icon="pi pi-external-link" pButton pRipple type="button"
+                        class="button-read" label="Evaluacion Experto"></button>
+                </div><br>
+            </ng-container>
+        </div>
+
+        
         <p>{{object.knowledge_area.name}}</p>
         <ng-container *ngIf="object.observation">
             <h6>{{'object.Observations' | translate}}</h6>
             <p>{{object.observation}}</p>
         </ng-container>
+
         <ng-template pTemplate="footer">
-            <div *ngIf="(teacherOptions && teacherOptions===true)">
+            <div *ngIf="(teacherOptions)">
                 <div class="buttons">
 
                     <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
                         class="p-button-rounded p-button-outlined"></button>
-                         
+
                     <!-- 
                     <ng-container *ngIf="resultsEv && (resultsEv.length > 0) ; else editTemplate">
                         <button (click)="confirmDelete($event)" pButton pRipple type="button" icon="pi pi-trash"
@@ -54,28 +103,41 @@
                         <br><br>
                         <ng-container *ngIf="resultsEv && (resultsEv.length > 0)">
                             <div>
-                                <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="display" [style]="{width: '75vw',height: '557px'}" >
+                                <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad"
+                                    [draggable]="false" [resizable]="false" appendTo="body" draggable="false"
+                                    modal="false" [(visible)]="display" [style]="{width: '75vw',height: '557px'}">
                                     <div>
-                                        <app-evaluation-chart [resultEv]="resultsEv" [rating]="object.rating" idexpe="docente"></app-evaluation-chart>
+                                        <app-evaluation-chart [resultEv]="resultsEv" [rating]="object.rating"
+                                            idexpe="docente"></app-evaluation-chart>
                                     </div>
                                     <p-footer *ngIf="resultsEv?.length>0">
-                                        <button (click)="navigateToReport(false)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                                        <button (click)="navigateToReport(false)" pButton pRipple type="button"
+                                            label="Leer más" class="p-button-rounded p-button-outlined button-read"><i
+                                                class="pi pi-arrow-right"></i>
                                         </button>
-                                    </p-footer>            
+                                    </p-footer>
                                 </p-dialog>
-                                <p-button (click)="showDialog()"  icon="pi pi-external-link" label="Evaluacion Experto"></p-button> 
+                                <p-button (click)="showDialog()" icon="pi pi-external-link" label="Evaluacion Experto">
+                                </p-button>
                             </div><br>
                         </ng-container>
                         <ng-container *ngIf="resultsEvStudent && (resultsEvStudent.length > 0) ; else editTemplate">
                             <div>
-                                <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="displaystudent" [style]="{width: '68vw',height: '575px'}">
-                                    <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante"></app-evaluation-chart>
+                                <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad"
+                                    [draggable]="false" [resizable]="false" appendTo="body" draggable="false"
+                                    modal="false" [(visible)]="displaystudent"
+                                    [style]="{width: '68vw',height: '575px'}">
+                                    <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
+                                    </app-evaluation-chart>
                                     <p-footer>
-                                        <button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                                        <button (click)="navigateToReport(true)" pButton pRipple type="button"
+                                            label="Leer más" class="p-button-rounded p-button-outlined button-read"><i
+                                                class="pi pi-arrow-right"></i>
                                         </button>
                                     </p-footer>
                                 </p-dialog>
-                                <p-button (click)="showDialogstudent()" icon="pi pi-external-link" label="Evaluacion Estudiante"></p-button> 
+                                <p-button (click)="showDialogstudent()" icon="pi pi-external-link"
+                                    label="Evaluacion Estudiante"></p-button>
                             </div>
                         </ng-container>
                         <ng-template #editTemplate>
@@ -84,15 +146,20 @@
                     </ng-container>
                     <ng-template #editTemplate>
                         <br><br>
-                        <p-dialog *ngIf="displayautomatic" header="Resumen Evaluacion Preliminar" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="displayautomatic" [style]="{width: '78vw',height: '42vw'}" >
-                            <app-evaluation-chart [resultsEvAut]="resultsEvAut" idexpe="automatic"></app-evaluation-chart>
+                        <p-dialog *ngIf="displayautomatic" header="Resumen Evaluacion Preliminar" [draggable]="false"
+                            [resizable]="false" appendTo="body" draggable="false" modal="false"
+                            [(visible)]="displayautomatic" [style]="{width: '78vw',height: '42vw'}">
+                            <app-evaluation-chart [resultsEvAut]="resultsEvAut" idexpe="automatic">
+                            </app-evaluation-chart>
                             <p-footer>
                                 <!--<button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
                                 </button>-->
                             </p-footer>
                         </p-dialog>
-                        <p-button (click)="showDialogautomatic()"  icon="pi pi-external-link" label="Evaluación Preliminar"></p-button>
-                        <br><br><p>Este objeto de aprendizaje está en revisión.</p>
+                        <p-button (click)="showDialogautomatic()" icon="pi pi-external-link"
+                            label="Evaluación Preliminar"></p-button>
+                        <br><br>
+                        <p>Este objeto de aprendizaje está en revisión.</p>
                     </ng-template>
                 </div>
                 <p-toast></p-toast>
