@@ -5,6 +5,7 @@ import { SettingsComponent } from "./settings.component";
 import { TeacherGuard } from "../../../guards/teacher.guard";
 import { StudentGuard } from "../../../guards/student.guard";
 import { ExpertGuard } from "src/app/guards/expert.guard";
+import { ExpertAndStudentGuard } from "src/app/guards/expert-student.guard";
 
 const routes: Routes = [
   {
@@ -64,7 +65,7 @@ const routes: Routes = [
           import("./pages/my-qualified-oa/my-qualified-oa.module").then(
             (m) => m.MyQualifiedOaModule
           ),
-        canActivate: [ExpertGuard],
+        canActivate: [ExpertAndStudentGuard],
         data: {
           breadcrumb: "Objetos de aprendizaje calificados por mi"
         },

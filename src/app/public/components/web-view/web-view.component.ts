@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnDestroy } from "@angular/core";
 import { MenuItem, Message } from "primeng/api";
 import { LoginService } from "../../../services/login.service";
 import { TranslateService } from "@ngx-translate/core";
@@ -11,7 +11,7 @@ import { Subscription } from "rxjs";
   templateUrl: "./web-view.component.html",
   styleUrls: ["./web-view.component.scss"],
 })
-export class WebViewComponent implements OnInit {
+export class WebViewComponent implements OnInit, OnDestroy {
   @ViewChild("webView") webView: ElementRef;
   @Input() object: ObjectLearning;
   @Output() commentEmit1 = new EventEmitter<boolean>();
@@ -217,20 +217,22 @@ export class WebViewComponent implements OnInit {
     } catch (error) {}
   }
 
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   coutCommentstudent(evt) {
     this.displayFormRatingStudent = evt;
+    this.flagQuestionsEst = true;
   }
+
   coutComments(evt) {
     this.displayFormRatingStudent = evt;
     if( this.flagQuestionsEst == true){
       this.displayFormRatingStudentUpdate = evt;
     }
   }
+
   showFormRatingStudentUpdate() {
     this.displayFormRatingStudentUpdate = true;
   }
+
   async loadDataStudentEvaluation() {
     if (this.roleUser) {
       let resultsEvalStudent = await this.learningObject.getObjectResultsEvaluationStudent(this.object.id).subscribe(res => {
@@ -239,13 +241,10 @@ export class WebViewComponent implements OnInit {
             this.flagQuestionsEst = false;
           } else {
             this.flagQuestionsEst = true;
-          
-          }
-          
-        }
-     
+          } 
+        }     
       });
-      //this.subscribes.push(resultsEval);
+      this.subscribes.push(resultsEvalStudent);
     }
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

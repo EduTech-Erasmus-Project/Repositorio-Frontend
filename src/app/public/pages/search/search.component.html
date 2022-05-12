@@ -47,7 +47,7 @@
                                     <app-card [object]="object" [expertOptions]="true"></app-card>
                                 </div>
                                 <div class="rol-student" *ngIf="roleStudent">
-                                    <app-card [object]="object"></app-card>
+                                    <app-card [object]="object" [studentOptions]="true"></app-card>
                                 </div>
                                 <div class="rol-others" *ngIf="!roleExpert && !roleStudent">
                                     <app-card [object]="object"></app-card>

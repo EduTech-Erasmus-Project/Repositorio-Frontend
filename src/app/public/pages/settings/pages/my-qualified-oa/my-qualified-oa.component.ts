@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ObjectLearning } from 'src/app/core/interfaces/ObjectLearning';
 import { LearningObjectService } from 'src/app/services/learning-object.service';
+import { LoginService } from 'src/app/services/login.service';
 import { SearchService } from 'src/app/services/search.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class MyQualifiedOaComponent implements OnInit, OnDestroy {
   private suscribes: Subscription[] = [];
 
   constructor(
-    private searchService: SearchService
+    private searchService: SearchService,
+    private loginService: LoginService
   ) { }
   
   ngOnDestroy(): void {
@@ -33,7 +35,6 @@ export class MyQualifiedOaComponent implements OnInit, OnDestroy {
     .search(true)
     .subscribe(
       (res: any) => {
-        console.log(res.results)
         //console.log("params", this.querySearchService.queryParams)
         //console.log("results",res)
         this.objects = res.results;
@@ -45,5 +46,18 @@ export class MyQualifiedOaComponent implements OnInit, OnDestroy {
     );
   this.suscribes.push(searchSub);
   }
+
+  get roleStudent() {
+    return this.loginService.validateRole("student");
+  }
+
+  get roleExpert() {
+    return this.loginService.validateRole("expert");
+  }
+
+  get roleTeacher() {
+    return this.loginService.validateRole("teacher");
+  }
+
 
 }

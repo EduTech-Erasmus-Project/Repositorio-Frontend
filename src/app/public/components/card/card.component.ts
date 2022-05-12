@@ -16,8 +16,12 @@ import { LoginService } from "src/app/services/login.service";
 export class CardComponent implements OnInit {
   @Input() object: ObjectLearning;
   @Input() teacherOptions?: boolean;
+  //Opciones de visualizacion para el experto
   @Input() expertOptions?: boolean;
   @Input() expertOptionsView?: boolean;
+  //Opciones de visuzalizacion para el estudiante
+  @Input() studentOptions?: boolean;
+  @Input() studentOptionsView?: boolean;
 
   public show: boolean = false;
   public showFla: boolean = false;

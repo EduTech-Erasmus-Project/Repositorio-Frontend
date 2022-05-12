@@ -7,6 +7,7 @@ import { StudentGuard } from "../guards/student.guard";
 import { PasswordResedComponent } from "../auth/password-resed/password-resed.component";
 import { TeacherGuard } from "../guards/teacher.guard";
 import { ExpertAndTeacherGuard } from "../guards/expert-teacher.guard";
+import { ExpertAndStudentGuardAndTeacher } from "../guards/expert-student-teacher.guard";
 
 const routes: Routes = [
   {
@@ -133,7 +134,7 @@ const routes: Routes = [
         path: 'report', 
         loadChildren: () => 
         import('./pages/reports/reports.module').then(m => m.ReportsModule), 
-        canActivate: [ExpertAndTeacherGuard],
+        canActivate: [ExpertAndStudentGuardAndTeacher],
         data: {
           breadcrumb: "Reporte Objeto de Aprendizaje",
         },

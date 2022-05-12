@@ -95,7 +95,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .getLevelEducation()
       .subscribe((res) => {
         this.levelsEdications = res.values.map((item: any) => {
-          return { id: item.id, name: item.description };
+          return { id: item.id, name: item.name };
         });
         this.levelsEdications = this.levelsEdications;
       });
