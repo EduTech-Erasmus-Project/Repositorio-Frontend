@@ -29,13 +29,32 @@
         </div>
 
         <p-divider></p-divider>
+
+        <div class="expert-view-eavluation" *ngIf="(expertOptions) || (expertOptionsView)">
+            <ng-container *ngIf="resultsEvViewExpert && (resultsEvViewExpert.length > 0)">
+                <div>
+                    <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="display" [style]="{width: '75vw',height: '557px'}" >
+                        <div>
+                            <app-evaluation-chart [resultEv]="resultsEvViewExpert"  [rating]="object.rating" idexpe="docente"></app-evaluation-chart>
+                        </div>
+                        <p-footer *ngIf="resultsEvViewExpert?.length>0 && !expertOptions">
+                            <button (click)="navigateToReport(false)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                            </button>
+                        </p-footer>            
+                    </p-dialog>
+                    <button (click)="showDialog()"  icon="pi pi-external-link" pButton pRipple type="button" class="button-read" label="Evaluacion Experto"></button> 
+                </div><br>
+            </ng-container>
+        </div>
+
         <p>{{object.knowledge_area.name}}</p>
         <ng-container *ngIf="object.observation">
             <h6>{{'object.Observations' | translate}}</h6>
             <p>{{object.observation}}</p>
         </ng-container>
+
         <ng-template pTemplate="footer">
-            <div *ngIf="(teacherOptions && teacherOptions===true)">
+            <div *ngIf="(teacherOptions)">
                 <div class="buttons">
 
                     <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
@@ -104,7 +123,7 @@
                 <i class="pi pi-arrow-right"></i>
             </button>
         </ng-template>
-
+       
         <div *ngIf="object.rating && (resultsEv && (resultsEv.length > 0))" class="rating">
             <i class="pi pi-star"></i> <span>{{object.rating | number:'1.1-2'}}</span>
         </div>

@@ -26,6 +26,10 @@
                                         <p-radioButton formControlName="{{itemt.id}}" group="button"value="Parcialmente"></p-radioButton>
                                         <label for="group1">{{'register.partially' |translate}}</label>
                                     </div>
+                                    <div class="p-field-radiobutton" style="padding: 0px 10px;">
+                                        <p-radioButton formControlName="{{itemt.id}}" group="button" value="No aplica"></p-radioButton>
+                                        <label for="group1">{{'register.notApply' |translate}}</label>
+                                    </div>
                                 </div>
                             </ul>
                         </div>
@@ -34,7 +38,7 @@
             </div>
         </div>
 
-        <div class="forms" *ngIf="flagQuestionsEst==false">
+        <div class="forms">
             <h6>Observaciones</h6>
             <textarea rows="5" cols="30" style="width: 100%;" placeholder="Observaciones.."
                 formControlName="observation"
@@ -84,16 +88,20 @@
                                 <p-radioButton formControlName="{{item4.question_id}}" group="button" value="Parcialmente"></p-radioButton>
                                 <label for="group1">{{'register.partially' |translate}}</label>
                             </div>
+                            <div class="p-field-radiobutton" style="padding: 0px 10px;">
+                                <p-radioButton formControlName="{{item4.question_id}}" group="button" value="No aplica"></p-radioButton>
+                                <label for="group1">{{'register.notApply' |translate}}</label>
+                            </div>
                         </div>
                     </ul>
                 </ul>
             </ul>
         </div>
-        <div class="forms" *ngIf="flagQuestionsEst==true">
+        <div class="forms">
             <h6>Observaciones</h6>
             <textarea rows="5" cols="30" style="width: 100%;" placeholder="observaciones.."
                 formControlName="observation"
-                [ngClass]="{'ng-dirty':observation.invalid && (observation.dirty || observation.touched)}"
+               
                 pInputTextarea></textarea>
             <div *ngIf="observation.invalid && (observation.dirty || observation.touched)">
                 <small id="observation " class="p-error"

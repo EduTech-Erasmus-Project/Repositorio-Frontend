@@ -79,6 +79,18 @@ export class SideMenuComponent implements OnInit {
         },
       });
     }
+    
+    if (this.loginService.validateRole("expert")) {
+        this.items.splice(1, 0, {
+          label: "Objetos de aprendizaje calificados",
+        icon: "pi pi-fw pi-check",
+        routerLink: "objects-qualified",
+        routerLinkActiveOptions: {
+          exact: true,
+          styleClass: "router-active",
+        },
+        })
+    }
   }
   onQuit() {
     //console.log("quit")

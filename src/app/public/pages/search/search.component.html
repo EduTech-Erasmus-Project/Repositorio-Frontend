@@ -42,7 +42,16 @@
                     <div class="p-grid card-content">
                         <ng-container *ngIf="objects?.length > 0">
                             <div class="p-col-12 p-md-6 p-lg-3" *ngFor="let object of objects">
-                                <app-card [object]="object"></app-card>
+                                <!--[teacherOptions]="true"--->
+                                <div class="rol-expert" *ngIf="roleExpert">
+                                    <app-card [object]="object" [expertOptions]="true"></app-card>
+                                </div>
+                                <div class="rol-student" *ngIf="roleStudent">
+                                    <app-card [object]="object"></app-card>
+                                </div>
+                                <div class="rol-others" *ngIf="!roleExpert && !roleStudent">
+                                    <app-card [object]="object"></app-card>
+                                </div>
                             </div>
                         </ng-container>
                         <ng-container *ngIf="objects?.length === 0">

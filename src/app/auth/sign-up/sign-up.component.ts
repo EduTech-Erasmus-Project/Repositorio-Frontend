@@ -467,6 +467,7 @@ addEmailPathTeacherAndExpert(){
               Swal.close();
             },
             (err) => {
+              console.log("Ad",err);
               if (err.error.email[0] == "El correo debe ser institucionals") {      
                this.showError('El correo electronico debe ser institucional');
               } else if (err.error.email[0] == "This field must be unique.") {

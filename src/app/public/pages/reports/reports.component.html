@@ -43,7 +43,7 @@
             <div *ngIf="!validtotal">
                 <div class="card">
                     <p-tabView>
-                        <p-tabPanel leftIcon="pi pi-comments" header="Bueno" tooltip="{{topyes}}">
+                        <p-tabPanel leftIcon="pi pi-comments" header="Excelente" tooltip="{{topyes}}">
                             <h5><a>Aspectos Positivos de la Evaluacion</a></h5>
                                 <div *ngFor="let item of resultsEv">
                                     <div *ngFor="let item2 of item.concept_evaluations">
@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                         </p-tabPanel>
-                        <p-tabPanel leftIcon="pi pi-comments" header="Malo" tooltip="{{topno}}">
+                        <p-tabPanel leftIcon="pi pi-comments" header="Por alcanzar" tooltip="{{topno}}">
                             <h5><a>Aspectos de la Evaluacion mal implementados </a></h5>
                             <div *ngFor="let item of resultsEv">
                                 <div *ngFor="let item2 of item.concept_evaluations">
@@ -129,7 +129,7 @@
                                                 <div *ngFor="let item of resultsEv">
                                                     <div *ngFor="let item2 of item.concept_evaluations">
                                                         <div *ngFor="let item3 of item2.question_evaluations">
-                                                            <ng-container *ngIf="item3.schema.includes('accessibilityHazard:') ; else editTemplate">
+                                                            <ng-container *ngIf="item3.schema?.includes('accessibilityHazard:') ; else editTemplate">
                                                                 <ul>
                                                                     <li>
                                                                         <a>{{item3.schema}}.</a>
@@ -192,7 +192,7 @@
             <div *ngIf="validtotal">
                 <h5>Estudiante</h5>
                     <p-tabView>
-                        <p-tabPanel header="Bueno" leftIcon="pi pi-comments" tooltip="{{Stopyes}}">
+                        <p-tabPanel header="Excelente" leftIcon="pi pi-comments" tooltip="{{Stopyes}}">
                             <h5><a>Aspectos Positivos de la Evaluacion del alumno</a></h5>
                                 <div *ngFor="let item of resultsEvStudent">
                                     <div *ngFor="let item2 of item.evaluation_students">
@@ -235,7 +235,7 @@
                                     </div>
                                 </div>
                         </p-tabPanel>
-                        <p-tabPanel header="Malo" leftIcon="pi pi-comments" tooltip="{{Stopno}}">
+                        <p-tabPanel header="Por alcanzar" leftIcon="pi pi-comments" tooltip="{{Stopno}}">
                             <h5><a>Aspectos negativos identificados por el estudiante</a></h5>
                                 <div *ngFor="let item of resultsEvStudent">
                                     <div *ngFor="let item2 of item.evaluation_students">

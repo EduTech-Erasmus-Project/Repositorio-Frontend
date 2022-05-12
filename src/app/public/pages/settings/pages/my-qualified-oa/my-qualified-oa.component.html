@@ -1,0 +1,21 @@
+<div class="content">
+    <ng-container *ngIf="objects; else elseTemplate">
+        <div class="p-grid card-content">
+            <ng-container *ngIf="objects?.length > 0">
+                <div class="p-col-12 p-md-6 p-lg-4" *ngFor="let object of objects">
+                    <app-card [object]="object" [expertOptionsView]="true"></app-card>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="objects?.length === 0">
+                <h5>{{'object.uploadObject' | translate}}</h5>
+            </ng-container>
+        </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+        <div class="spinner">
+            <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner"
+                strokeWidth="4" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
+        </div>
+    </ng-template>
+    
+</div>

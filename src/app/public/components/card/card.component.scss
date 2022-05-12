@@ -86,3 +86,11 @@
 .buttons{
   margin-bottom: 10px;
 }
+
+.expert-view-eavluation{
+  text-align: center;
+}
+
+:host ::ng-deep .button-read{
+  width: 100%;
+}

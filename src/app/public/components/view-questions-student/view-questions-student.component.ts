@@ -25,7 +25,6 @@ export class ViewQuestionsStudentComponent implements OnInit {
   public resultquestions: any[];
   public subscribes: Subscription[] = [];
   public angForm2: FormGroup;
-  public myform: FormControl;
   public answerEV:any
   public flagConfirmSt: boolean; 
 
@@ -51,6 +50,8 @@ export class ViewQuestionsStudentComponent implements OnInit {
         });
     } else if (this.flagQuestionsEst) {
       this.angForm2 = this.fb2.group({
+        observation:
+        [null, [Validators.required]]
       });
     }
   }
@@ -65,7 +66,6 @@ export class ViewQuestionsStudentComponent implements OnInit {
     if((this.loginService.validateRole('student') ) && !this.flagQuestionsEst){
       let groupedQes = await this.searchService.geQuestionsStudent().subscribe(
       res => {
-        console.log(res)
         this.groupedQuestionsSTUDENT = res.map((item: any) => 
         { return { value: item.id, label: item.principle, items: item.guidelines.map((item: any) =>
            { return { value: item.id, label: item.guideline ,question:item.questions} }) } });
@@ -80,13 +80,12 @@ export class ViewQuestionsStudentComponent implements OnInit {
             });
           });
         })
-        //console.log("-------",this.groupedQuestionsSTUDENT)
       });
       this.subscribes.push(groupedQes);
     }else if (this.flagQuestionsEst) {
       let groupUpdate= await this.searchService.getObjectResultsEvaluationStudent(this.object.id).subscribe(
         res =>{
-          console.log('res', res);
+          console.log(res)
           this.groupedQuestionsUpdate=res.map((item1: any) => 
           {return{
             id:item1.id,
@@ -106,12 +105,8 @@ export class ViewQuestionsStudentComponent implements OnInit {
             }})
           }})
           this.groupedQuestionsUpdate =  this.groupedQuestionsUpdate; 
-          
-          //console.log("--222222---", this.groupedQuestionsUpdate[0].id)
           this.groupedQuestionsUpdate.forEach(element => {
-            //console.log("---333",element.evaluation_principle)
             element.evaluation_students.forEach(element2 => {
-              //console.log("---333",element2.evaluation_principle)
               element2.principle_gl.forEach(element3 => {
                 element3.guideline_evaluations.forEach(element4 => {
                   //element4.question_id,
@@ -121,19 +116,20 @@ export class ViewQuestionsStudentComponent implements OnInit {
                     element4.question_id,
                     new FormControl(element4.qualification, Validators.required)
                   );
-                  //console.log("---333",element4.question_id,element4.qualification)
                 });
               });
             });
-            this.angForm2.addControl(
+           /* this.angForm2.addControl(
               "observation",
               new FormControl(element.observation, [Validators.required])
-            );
+            );*/
+            this.angForm2.controls['observation'].setValue(element.observation);
           });
           this.subscribes.push(groupUpdate);
         }
       )
     }
+   
   }
   closeView() {
     if(this.flagQuestionsEst == false){
@@ -152,7 +148,6 @@ export class ViewQuestionsStudentComponent implements OnInit {
     this.commentEmit1.emit(false);
   }
   getNumber(event){
-    //console.log('Numb', event)
     return this.angForm2.get(String(event)).value
   }
   
@@ -162,7 +157,6 @@ export class ViewQuestionsStudentComponent implements OnInit {
   }
 
   async sendAnswersStudent(){
-    //console.log("en el metodo------------",this.angForm2)
     if(!this.flagQuestionsEst){
       if (this.angForm2.valid){
         let vecansw=Object.entries(this.angForm2.value)
@@ -172,16 +166,13 @@ export class ViewQuestionsStudentComponent implements OnInit {
           resp.push(regresar)
         });
         resp.pop();
-        //console.log("primera vez",this.angForm.value)
         this.answerEV={
           "learning_object": this.object.id,
           "results": resp,
           "observation": this.angForm2.get('observation').value
         }
-        //console.log("-------aaaa",this.answerEV)
         let sendEvalSt = await this.learningObject.sendQualificationStudent(this.answerEV).subscribe(
           res => {
-            //console.log("respuesta del sendEvaluacion", res);
             this.commentEmit1.emit(true);
             this.flagConfirmSt = true;
             this.angForm2.reset();
@@ -189,12 +180,9 @@ export class ViewQuestionsStudentComponent implements OnInit {
             this.closeView2();
             this.showSuccess('Datos enviados con exito, gracias por realizar la evaluacion');
           }, error => {
-            //console.log("err", error)
             this.flagConfirmSt = false;
           }
         );
-        //console.log("servicio---",sendEvalSt)
-        //this.angForm2.reset();
       }else{
       this.markTouchForm();
       this.showError('Llenar todos los campos requeridos');
@@ -208,25 +196,21 @@ export class ViewQuestionsStudentComponent implements OnInit {
           resp.push(regresar)
         });
         resp.pop();
-        //console.log("-------resp",resp)
         this.answerEV={
           "id":this.groupedQuestionsUpdate[0].id,
           "learning_object": this.object.id,
           "results": resp,
           "observation": this.angForm2.get('observation').value
         }
-        //console.log("----actualiza",this.answerEV)
         ////enviar nuevo path
         let sendEvalSt = await this.learningObject.sendQualificationStudentUpdate(this.answerEV,this.groupedQuestionsUpdate[0].id).subscribe(
           res => {
-            console.log("respuesta del sendEvaluacion", res);
             this.commentEmit.emit(false);
             this.commentEmit1.emit(false);
             this.flagConfirmSt = true;
             this.ngOnInit();  
             this.showSuccess('Datos enviados con exito, gracias por realizar la evaluacion');
           }, error => {
-            console.log("err", error)
             this.flagConfirmSt = false;
           }
         );

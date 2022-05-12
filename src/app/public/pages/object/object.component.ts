@@ -65,16 +65,12 @@ export class ObjectComponent implements OnInit, OnDestroy {
   async getObjectDetail(slug: string) {
     let detailSub = await this.objectService.getObjectDetail(slug).subscribe(
       (res: any) => {
-        
-        //console.log('res typeof', typeof(this.objectData))
-       
         this.objectData = res;
         this.loadData();
         //this.metadata = this.objectData.getMetadataFormat();
 
         this.embedCode = `<iframe id='roa_iframe' src='${this.objectData.learning_object_file.url}' style='border:0; width:100%; height:100%' iframeborder='0' frameborder='0' iframeElement.frameBorder = 0; webkitallowfullscreen mozallowfullscreen allowfullscreen ></iframe>`;
         this.loadComments(res.id);
-        //console.log("metadata", this.metadata);
       },
       (err) => {
        

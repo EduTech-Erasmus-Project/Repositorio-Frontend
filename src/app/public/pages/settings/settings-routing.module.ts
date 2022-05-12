@@ -4,6 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { SettingsComponent } from "./settings.component";
 import { TeacherGuard } from "../../../guards/teacher.guard";
 import { StudentGuard } from "../../../guards/student.guard";
+import { ExpertGuard } from "src/app/guards/expert.guard";
 
 const routes: Routes = [
   {
@@ -55,6 +56,17 @@ const routes: Routes = [
         canActivate: [TeacherGuard],
         data: {
           breadcrumb: "Objetos de aprendizaje sibidos por mi"
+        },
+      },
+      {
+        path: "objects-qualified",
+        loadChildren: () =>
+          import("./pages/my-qualified-oa/my-qualified-oa.module").then(
+            (m) => m.MyQualifiedOaModule
+          ),
+        canActivate: [ExpertGuard],
+        data: {
+          breadcrumb: "Objetos de aprendizaje calificados por mi"
         },
       },
       {

@@ -16,12 +16,15 @@ import { LoginService } from "src/app/services/login.service";
 export class CardComponent implements OnInit {
   @Input() object: ObjectLearning;
   @Input() teacherOptions?: boolean;
+  @Input() expertOptions?: boolean;
+  @Input() expertOptionsView?: boolean;
 
   public show: boolean = false;
   public showFla: boolean = false;
 
   private subscribes: Subscription[] = [];
   public resultsEv: any[];
+  public resultsEvViewExpert: any[];
 
   //>>>>>>>>>>>>>>>>>>>>
   public display: boolean = false;
@@ -92,21 +95,30 @@ export class CardComponent implements OnInit {
             }
           });
         }
-       
       });
       this.subscribes.push(resultsEval);
-    } else {
+    } else{
       let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
-     
         if(res.length >0){
           this.resultsEv = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEv = this.resultsEv;
          
         }
-     
       });
       this.subscribes.push(resultsAns);
     }
+
+    if(this.expertOptions || this.expertOptionsView) {
+      let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
+        if(res.length >0){
+          this.resultsEvViewExpert = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
+          this.resultsEvViewExpert = this.resultsEvViewExpert;
+         
+        }
+      });
+      this.subscribes.push(resultsAns);
+    }
+
   }
 
   get objectId() {

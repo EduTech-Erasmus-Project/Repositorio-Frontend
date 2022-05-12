@@ -8,7 +8,7 @@ import { SharedModule } from 'primeng/api';
 
 
 @NgModule({
-  declarations: [SettingsComponent],
+  declarations: [SettingsComponent,],
   imports: [
     CommonModule,
     SettingsRoutingModule,

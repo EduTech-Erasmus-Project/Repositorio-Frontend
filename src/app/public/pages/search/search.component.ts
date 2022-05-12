@@ -124,4 +124,16 @@ export class SearchComponent implements OnInit, OnDestroy {
       ? true
       : false;
   }
+  get roleExpert() {
+    return this.loginService.validateRole("expert");
+  }
+
+  get roleTeacher() {
+    return this.loginService.validateRole("teacher");
+  }
+
+  get roleStudent() {
+    return this.loginService.validateRole("student");
+  }
+
 }
