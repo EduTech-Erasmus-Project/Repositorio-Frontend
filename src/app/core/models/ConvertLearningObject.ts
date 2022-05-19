@@ -14,13 +14,22 @@ export class ConvertLearningObject {
   toJsonLearningObject(lom: any): ObjectLearning {
     var objectData;
     //console.log("property", lom);
+    let description_aux : any;
+    if(lom?.general?.description){
+      if (lom?.general?.description.length > 0){
+        description_aux = lom?.general?.description.map(res => res.string["#text"]).join(", ");
+       }else{
+         description_aux = lom?.general?.description?.string["#text"] || "" ;
+       }
+      }
+      
     try {
       objectData = {
         general_catalog: lom?.general?.identifier?.catalog || "",
         general_entry: lom?.general?.identifier?.entry || "",
         general_title: lom?.general?.title?.string["#text"] || "",
         general_language: lom?.general?.language || "",
-        general_description: lom?.general?.description?.string["#text"] || "",
+        general_description: description_aux ,
         general_keyword: this?.getStringData(lom?.general?.keyword?.string),
         general_coverage: lom?.general?.coverage?.string || "",
         general_structure: lom?.general?.structure?.value || "",
@@ -138,7 +147,7 @@ export class ConvertLearningObject {
         ),
       };
     } catch (error) {
-      //console.log("Error load oa", error)
+      console.log("Error load oa", error)
     }
 
     return objectData;

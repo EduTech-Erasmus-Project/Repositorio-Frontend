@@ -112,6 +112,10 @@ export class LearningObjectService {
     return this.http.get(`${baseUrl}/learning-objects/observation/`);
   }
 
+  deleteObjestTeacher(id:number){
+    return this.http.delete(`${baseUrl}/learning-object-file-delete/${id}`);
+  }
+
   getObjectsViewed(){
     return this.http.get(`${baseUrl}/learning-objects/viewed/`);
   }

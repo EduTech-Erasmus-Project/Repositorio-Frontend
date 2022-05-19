@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { NavigationExtras, Router } from "@angular/router";
 import { ObjectLearning } from "../../../core/interfaces/ObjectLearning";
 import { ConfirmationService, MessageService } from "primeng/api";
@@ -22,6 +22,7 @@ export class CardComponent implements OnInit {
   //Opciones de visuzalizacion para el estudiante
   @Input() studentOptions?: boolean;
   @Input() studentOptionsView?: boolean;
+  @Output() deleteOptions = new EventEmitter<boolean>();
 
   public show: boolean = false;
   public showFla: boolean = false;
@@ -46,7 +47,7 @@ export class CardComponent implements OnInit {
     private objectService: LearningObjectService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private loginService: LoginService
+    private loginService: LoginService, 
   ) { }
 
   ngOnInit(): void {
@@ -250,4 +251,24 @@ export class CardComponent implements OnInit {
       this.router.navigate(['/report', this.object.slug])
     }
   }
+
+  deleteLearningObject(){
+    let eliminar = this.objectService.deleteObjestTeacher(this.object.learning_object_file.id).subscribe(
+      (result:any) => {
+        if(result.code === 200){
+          this.loadData();
+          this.loadDataAutomatic();
+          this.loadstudent();
+          this.showSuccess('Se Elimino el registro correctamente');
+          this.deleteOptions.emit(true);
+        }
+      }
+    )
+  }
+
+  showSuccess(message) {
+    this.messageService.add({severity:'success', summary: 'Success', detail: message});
+}
+
+
 }

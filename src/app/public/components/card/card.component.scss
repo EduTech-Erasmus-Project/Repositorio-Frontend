@@ -97,4 +97,15 @@
 
 :host ::ng-deep .button-read{
   width: 100%;
+  
+}
+
+:host ::ng-deep .button-danger{
+  color :red;
+  margin: 0px 5px;
+}
+
+:host ::ng-deep .button-edit{
+  color :#28a745;
+  margin: 0px 5px;
 }
