@@ -3,7 +3,7 @@
         <div class="p-grid card-content">
             <ng-container *ngIf="objects?.length > 0">
                 <div class="p-col-12 p-md-6 p-lg-4" *ngFor="let object of objects">
-                    <app-card [object]="object" [teacherOptions]="true"></app-card>
+                    <app-card [object]="object" (deleteOptions)="reloadData($event)" [teacherOptions]="true"></app-card>
                 </div>
             </ng-container>
             <ng-container *ngIf="objects?.length === 0">

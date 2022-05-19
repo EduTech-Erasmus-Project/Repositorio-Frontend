@@ -161,6 +161,9 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   }
 
   onUpload(evt: any) {
+    
+    console.log("onUpload", evt);
+
     let lom = evt.originalEvent.body.metadata.lom;
     this.metaData = evt.originalEvent.body;
     this.file = evt.files[0];
@@ -168,8 +171,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
 
     let convert = new ConvertLearningObject();
     this.object = convert.toJsonLearningObject(lom);
-
-    //console.log(this.object)
 
     this.messageService.add({
       severity: "success",
@@ -206,8 +207,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       this.object.license = this.objectForm.value.license;
       this.object.general_language = this.objectForm.value.language;
       this.object.avatar = this.objectForm.value.img;
-
-      //console.log("Enviado", this.object);
+      
       let addMetadataSub = await this.learningObjectService
         .addMetadata(this.object)
         .subscribe(

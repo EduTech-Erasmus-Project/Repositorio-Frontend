@@ -38,4 +38,9 @@ export class MyObjectsComponent implements OnInit, OnDestroy {
       );
     this.suscribes.push(objectTeacher);
   }
+  public reloadData(evt){
+    if(evt){
+      this.loadData();
+    }
+  }
 }

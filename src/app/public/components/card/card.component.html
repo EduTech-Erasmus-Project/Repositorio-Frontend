@@ -30,8 +30,9 @@
 
         <p-divider></p-divider>
 
-           <!-- Visualizacion de boton de evalucion para el estudiante -->
-           <div class="student-view-evaluation" style="margin: 0px 0px 5px" *ngIf="(studentOptions) || (studentOptionsView)">
+        <!-- Visualizacion de boton de evalucion para el estudiante -->
+        <div class="student-view-evaluation" style="margin: 0px 0px 5px"
+            *ngIf="(studentOptions) || (studentOptionsView)">
             <ng-container *ngIf="resultsEvStudent && (resultsEvStudent.length > 0)">
                 <div>
                     <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad" [draggable]="false"
@@ -39,15 +40,14 @@
                         [style]="{width: '68vw',height: '575px'}">
                         <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
                         </app-evaluation-chart>
-                        <p-footer  *ngIf="resultsEvStudent?.length>0 && !studentOptions">
+                        <p-footer *ngIf="resultsEvStudent?.length>0 && !studentOptions">
                             <button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más"
                                 class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
                             </button>
                         </p-footer>
                     </p-dialog>
-                    <button (click)="showDialogstudent()"   class="button-read" 
-                    pButton pRipple type="button"
-                    icon="pi pi-external-link" label="Evaluacion Estudiante">
+                    <button (click)="showDialogstudent()" class="button-read" pButton pRipple type="button"
+                        icon="pi pi-external-link" label="Evaluacion Estudiante">
                     </button>
                 </div>
             </ng-container>
@@ -76,7 +76,7 @@
             </ng-container>
         </div>
 
-        
+
         <p>{{object.knowledge_area.name}}</p>
         <ng-container *ngIf="object.observation">
             <h6>{{'object.Observations' | translate}}</h6>
@@ -86,9 +86,14 @@
         <ng-template pTemplate="footer">
             <div *ngIf="(teacherOptions)">
                 <div class="buttons">
-
-                    <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
-                        class="p-button-rounded p-button-outlined"></button>
+                    
+                        <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
+                            title="Editar Objeto de Aprendizaje" class="p-button-rounded p-button-outlined button-edit"></button>
+                   
+                        <button (click)="deleteLearningObject()" pButton pRipple type="button" icon="pi pi-trash"
+                            title="Eliminar Objeto de Aprendizaje"
+                            class="p-button-rounded p-button-outlined button-danger"></button>
+                  
 
                     <!-- 
                     <ng-container *ngIf="resultsEv && (resultsEv.length > 0) ; else editTemplate">
