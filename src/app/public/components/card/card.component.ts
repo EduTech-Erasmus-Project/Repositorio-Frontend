@@ -252,18 +252,30 @@ export class CardComponent implements OnInit {
     }
   }
 
-  deleteLearningObject(){
-    let eliminar = this.objectService.deleteObjestTeacher(this.object.learning_object_file.id).subscribe(
-      (result:any) => {
-        if(result.code === 200){
-          this.loadData();
-          this.loadDataAutomatic();
-          this.loadstudent();
-          this.showSuccess('Se Elimino el registro correctamente');
-          this.deleteOptions.emit(true);
-        }
+  deleteLearningObject(event){
+    this.confirmationService.confirm({
+      target: event.target,
+      message: 'Esta seguro que desea eliminar el OA?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          //confirm action
+          let eliminar = this.objectService.deleteObjestTeacher(this.object.learning_object_file.id).subscribe(
+            (result:any) => {
+              if(result.code === 200){
+                this.loadData();
+                this.loadDataAutomatic();
+                this.loadstudent();
+                this.showSuccess('Se Elimino el registro correctamente');
+                this.deleteOptions.emit(true);
+              }
+            }
+          );
+      },
+      reject: () => {
+          //reject action
       }
-    )
+  });
+
   }
 
   showSuccess(message) {

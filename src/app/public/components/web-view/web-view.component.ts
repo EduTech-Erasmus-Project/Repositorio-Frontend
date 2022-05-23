@@ -147,7 +147,7 @@ export class WebViewComponent implements OnInit, OnDestroy {
   showFormRatingExpertUpdate() {
     this.displayFormRatingExpertUpdate = true;
   }
-  onDownloadFile(url: string) {
+  onDownloadFile(url: any){
     window.open(url);
   }
 

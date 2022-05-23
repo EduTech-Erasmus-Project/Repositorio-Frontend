@@ -55,7 +55,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   //public patternV: string =
    // "^([a-zA-Z0-9_' - '.]+)@([a-zA-Z0-9_' - '.]+).([a-zA-Z]{2,5})$";
   public patternCorreo: string =
-  `^([a-zA-Z0-9]+)@((?!hotmail|gmail|yahoo|outlook)(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$`;
+  `^([a-zA-Z0-9]+.+)@((?!hotmail|gmail|yahoo|outlook)(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$`;
   private typeRegister: string;
 
   public validateEmailPattern = false;
@@ -382,8 +382,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
     if (this.checkEs) {
       this.addStudentControls();
       this.validateRole = false;
+
+      this.angForm.get('checkTe').disable();
+      this.angForm.get('checkEx').disable();
     } else {
       this.removeStudentControls();
+      
+      this.angForm.get('checkTe').enable();
+      this.angForm.get('checkEx').enable();
     }
   }
 async removeEmail(){
@@ -403,32 +409,28 @@ addEmailPathTeacherAndExpert(){
   );
 }
    onChangeTypeTeacher(evt) {
-    //this.patternV="^[a-z]+(@)+[u]+[p]+[s]+.+[e]+[d]+[u]+.+[e]+[c]";
-    //console.log("change teacher ", evt);
     if (this.checkTe) {
       this.addProfesionControl();
       this.validateRole = false;
-      if(this.checkEs){
-        this.removeEmail();   
-        this.addEmailPathTeacherAndExpert();
-       }
+      this.angForm.get('check').disable();
+      this.angForm.get('checkEx').disable();
     }else {
       this.removeProfesionControl();
-     // console.log("Se removio")
+      this.angForm.get('check').enable();
+      this.angForm.get('checkEx').enable();
     }   
   }
 
   onChangeTypeExpert(evt) {
-    //console.log("teacher", this.checkTe);
     if (this.checkEx) {
       this.addExpertControls();
       this.validateRole = false;
-      if(this.checkEs){
-        this.removeEmail();   
-        this.addEmailPathTeacherAndExpert();
-       }
+      this.angForm.get('checkTe').disable();
+      this.angForm.get('check').disable();
     } else {
       this.removeExpertControls();
+      this.angForm.get('checkTe').enable();
+      this.angForm.get('check').enable();
     }
   }
 
@@ -441,27 +443,27 @@ addEmailPathTeacherAndExpert(){
   }
 
   async validateUser() {
+    
     this.angForm.markAllAsTouched();
     this.angForm.updateValueAndValidity();
     
     if (this.checkTe || this.checkEx || this.checkEs) {
       //console.log("Si paso1")
       if (this.angForm.valid) {
-        this.validateRole = false;
-        Swal.fire({
-          allowOutsideClick: false,
-          icon: "info",
-          text: "Registrando...",
-        });
-        Swal.showLoading();
         //console.log("Si paso")
         if (this.angForm.value.terms) {
+       
+          this.validateRole = false;
+          Swal.fire({
+            allowOutsideClick: false,
+            icon: "info",
+            text: "Registrando...",
+          });
+          Swal.showLoading();
           this.getDataMaped();
 
-          //console.log("user send", this.user);
           let registerSub = await this.auth.registerUser(this.user).subscribe(
             (res) => {
-              //console.log("Ad",res)
               this.registred = true;
               this.validateEmail = false;
               Swal.close();
@@ -473,7 +475,6 @@ addEmailPathTeacherAndExpert(){
               } else if (err.error.email[0] == "This field must be unique.") {
                 this.showError('El correo que ingreso ya se encuentra registrado');
                 this.flagAlert = true;
-                
               }
               this.validateEmail = true;
               Swal.close();

@@ -47,7 +47,7 @@ export class SideMenuComponent implements OnInit {
     //console.log("role student", this.loginService.user)
 
     if (this.loginService.validateRole("student")) {
-      this.items.splice(3, 0, {
+      this.items.splice(2, 0, {
         label: "Vistos por mi",
         icon: "pi pi-fw pi-list",
         routerLink: "my-views",
@@ -56,7 +56,7 @@ export class SideMenuComponent implements OnInit {
           styleClass: "router-active",
         },
       });
-      this.items.splice(2, 0, {
+      this.items.splice(1, 0, {
         label: "Calificados por mi",
         icon: "pi pi-fw pi-check",
         routerLink: "objects-qualified",

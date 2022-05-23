@@ -161,9 +161,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   }
 
   onUpload(evt: any) {
-    
-    console.log("onUpload", evt);
-
     let lom = evt.originalEvent.body.metadata.lom;
     this.metaData = evt.originalEvent.body;
     this.file = evt.files[0];

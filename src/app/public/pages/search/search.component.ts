@@ -59,7 +59,6 @@ export class SearchComponent implements OnInit, OnDestroy {
       .subscribe(
         (res: any) => {
           //console.log("params", this.querySearchService.queryParams)
-          //console.log("results",res)
           this.objects = res.results;
           this.loading = false;
         },
