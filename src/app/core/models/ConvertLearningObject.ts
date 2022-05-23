@@ -13,21 +13,31 @@ export class ConvertLearningObject {
 
   toJsonLearningObject(lom: any): ObjectLearning {
     var objectData;
-    //console.log("property", lom);
+    
+    console.log("property", lom);
+
     let description_aux : any;
     if(lom?.general?.description){
       if (lom?.general?.description.length > 0){
         description_aux = lom?.general?.description.map(res => res.string["#text"]).join(", ");
-       }else{
+       }else if(lom?.general?.description?.hasOwnProperty("#text")){
          description_aux = lom?.general?.description?.string["#text"] || "" ;
        }
       }
-      
+    
+      let title_aux :any;
+      if(lom?.general?.title?.hasOwnProperty("#text")){
+        title_aux =lom?.general?.title?.string["#text"] || "" ;
+      }else if(lom?.general?.title?.langstring){
+        title_aux = lom?.general?.title?.langstring;
+      }
+
     try {
+      
       objectData = {
         general_catalog: lom?.general?.identifier?.catalog || "",
         general_entry: lom?.general?.identifier?.entry || "",
-        general_title: lom?.general?.title?.string["#text"] || "",
+        general_title: title_aux,
         general_language: lom?.general?.language || "",
         general_description: description_aux ,
         general_keyword: this?.getStringData(lom?.general?.keyword?.string),

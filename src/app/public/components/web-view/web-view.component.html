@@ -30,9 +30,10 @@
                 [ngClass]="{'p-button-outlined': !liked, 'p-button-danger': liked}" class="p-button-rounded"
                 [pTooltip]="'Me gusta'"></button>
 
-            <button aria-label="Boton de descarga" (click)="onDownloadFile(object.learning_object_file.file)" pButton pRipple type="button"
-                icon="pi pi-download" class="p-button-rounded p-button-outlined"
-                [pTooltip]="'object.btnDownload'| translate "></button>
+            <a aria-label="Boton de descarga" href="{{object.learning_object_file.file}}" pButton pRipple type="button"
+                icon="pi pi-download" class="p-button-rounded p-button-outlined" title="Descargar Objeto de Apredizjae"
+                download="{{object.learning_object_file.file}}"
+                [pTooltip]="'object.btnDownload'| translate "></a>
             
                 <button aria-label="Boton de pantalla completa" *ngIf="!fullScreen" (click)="openFullscreen()" pButton pRipple type="button"
                 icon="pi pi-window-maximize" class="p-button-rounded p-button-outlined"

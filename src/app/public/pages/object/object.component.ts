@@ -65,7 +65,13 @@ export class ObjectComponent implements OnInit, OnDestroy {
   async getObjectDetail(slug: string) {
     let detailSub = await this.objectService.getObjectDetail(slug).subscribe(
       (res: any) => {
+        let data = res;
+        //Comentar estas dos lineas de codigo cuando se trabaja con el proyecto de manera local 
+        data.avatar = res.avatar.replace('http://', 'https://');
+        data.learning_object_file.file = res.learning_object_file.file.replace('http://', 'https://');
+        data.learning_object_file.url = res.learning_object_file.url.replace('http://', 'https://');
         this.objectData = res;
+        
         this.loadData();
         //this.metadata = this.objectData.getMetadataFormat();
 

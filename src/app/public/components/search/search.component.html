@@ -2,7 +2,6 @@
     <h3><label for="searchValue">{{ 'home.tittle' | translate }}</label></h3>
     
     <form class="search-bar" [formGroup]="formSearch" (ngSubmit)="onSearch()">
-        <label for="dropdown" class="sr-only">Search</label>
         <p-dropdown id="dropdown" name="dropdown" formControlName="dropdownValue" [options]="interestAreas"
         [placeholder]="'input.dropdown' | translate" [showClear]="true"></p-dropdown>
         
