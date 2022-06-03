@@ -18,7 +18,7 @@ export class MenuPublicComponent implements OnInit {
   public countries: any[];
   public loged: boolean;
   //private queryParams: QuerySearch = {};
-
+  public role_name: string='';
   constructor(
     public appMain: PublicComponent,
     private languageService: LanguageService,
@@ -33,7 +33,21 @@ export class MenuPublicComponent implements OnInit {
     }
   }
 
+  getROLE(role: string) {
+    switch (role) {
+      case 'teacher':
+        return 'Prof.'
+      case "expert":
+        return 'Exp.'
+      case "student":
+        return 'Est.'
+    }
+  }
   ngOnInit(): void {
+    if (this.loginService.user) {
+      this.role_name = this.getROLE(this.loginService.user.roles[0]);
+    }
+
     this.translate = this.languageService.translate;
     this.loadMenu();
 

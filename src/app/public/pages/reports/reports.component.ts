@@ -217,10 +217,29 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  public viewSubtitle(array, field) {
+    let variable = array.map((value) =>
+      value.qualification == field
+    )
+    return variable.includes(true);
+  }
+  
+  public viewSubtitleEst(array, field) {
+    let variable = array.map((value) => {
+      let arrayV = value.guideline_evaluations.map((valueEs) =>
+      valueEs.qualification == field
+      )
+      return arrayV.includes(true);
+    }
+    )
+    return variable.includes(true);
+  }
+
+  
   async loadstudent(id: number) {
     let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudent(id).subscribe(
       res => {
-        
+
         if (res.length > 0) {
           this.resultsEvStudent = res.map((item: any) => {
             return {

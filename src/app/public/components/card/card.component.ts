@@ -84,7 +84,6 @@ export class CardComponent implements OnInit {
   async loadData() {
     if (this.roleExpert) {
       let resultsEval = await this.objectService.getObjectResultsEvaluation(this.object.id).subscribe(res => {
-      
         if (res.length > 0) {
           this.resultsEv = res.map((item: any) => {
             return {
@@ -161,7 +160,6 @@ export class CardComponent implements OnInit {
   async loadDataAutomatic() {
     let resultsEvalAutomatic = await this.objectService.getObjectResultsEvaluationAutomatic(this.object.id).subscribe(
       res => {
-        
         this.resultsEvAut = res.map((item: any) => {
           return {
             rating: item.rating_schema,
@@ -181,7 +179,6 @@ export class CardComponent implements OnInit {
             })
           }
         });
-        
         this.resultsEvAut = this.resultsEvAut
       
       }
@@ -189,7 +186,6 @@ export class CardComponent implements OnInit {
     this.subscribes.push(resultsEvalAutomatic);
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
   async loadstudent() {
     let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudent(this.object.id).subscribe(
       res => {
@@ -223,9 +219,6 @@ export class CardComponent implements OnInit {
             }
           });
         }
-
-        this.resultsEvStudent = this.resultsEvStudent
-     
         let test = []
         if(this.resultsEvStudent != null) {
           this.resultsEvStudent.forEach(element => {
@@ -237,8 +230,7 @@ export class CardComponent implements OnInit {
       
       }
     );
-    this.subscribes.push(dataSstudent);
-
+  this.subscribes.push(dataSstudent);
   }
 
   navigateToReport(valid: boolean) {

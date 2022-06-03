@@ -146,6 +146,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   }
 
   getRageAge() {
+    console.log(this.object)
     if (this.object.educational_typicalAgeRange) {
       let range = this.object?.educational_typicalAgeRange.split("-");
       if (range?.length > 2) {
@@ -161,7 +162,8 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   }
 
   onUpload(evt: any) {
-    let lom = evt.originalEvent.body.metadata.lom;
+    console.log('upload', evt);
+    let lom = JSON.parse(evt.originalEvent.body.metadata);
     this.metaData = evt.originalEvent.body;
     this.file = evt.files[0];
     this.objectUrl = evt.originalEvent.body.oa_file.url;
