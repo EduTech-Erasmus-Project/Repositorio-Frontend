@@ -225,8 +225,20 @@ export class ExpertQuestionCreateListComponent implements OnInit {
     // console.log(this.questionSelect);
     this.administratorServices
       .updateQuestionExpert(this.questionSelect)
-      .subscribe((data) => {
-        //console.log(data);
+      .subscribe((data:any) => {
+        if(data.message =="success"){
+          this.messageService.add({
+            severity: "success",
+            summary: "Actualizado",
+            detail: "Actualizado correctamente",
+          });
+        }else{
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: "No se pudo actualizar el registro",
+          });
+        }
       });
   }
   getRetrieveQuestion(id: number) {

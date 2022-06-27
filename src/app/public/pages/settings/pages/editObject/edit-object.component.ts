@@ -68,7 +68,7 @@ export class EditObjectComponent implements OnInit, OnDestroy {
   async getObjectDetail(id: number) {
     let detailSub = await this.objectService.getObjectDetailById(id).subscribe(
       (res: any) => {
-        console.log(res)
+        //console.log(res)
         this.object = res;
         this.currentFile = res.learning_object_file;
         this.currentImg =res.avatar;

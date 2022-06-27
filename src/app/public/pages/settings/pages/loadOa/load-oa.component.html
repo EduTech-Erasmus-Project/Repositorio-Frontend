@@ -227,7 +227,22 @@
                                         translate}}</small>
                         </div>
 
-                        <p-button type="submit" [label]="'newObject.form.btnSubmit' | translate"></p-button>
+                        <div class="p-field p-fluid">
+                                <label for="fileImage">Fichero fuente eXeLearning</label>
+                                <p-fileUpload id="fileImage" name="fileImage"
+                                        [chooseLabel]="'newObject.form.imgSelect' | translate"
+                                        [showUploadButton]="false"
+                                        [cancelLabel]="'newObject.form.imgCancel' | translate"
+                                        (onSelect)="onSelectFile($event)"
+                                        [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
+                                        [multiple]="false" accept=".elp" aria-describedby="img-help">
+                                </p-fileUpload>
+                                <small *ngIf="getErrorFormRequired('img')" id="img-help"
+                                        class="p-error">{{'newObject.errors.imgHelp' |
+                                        translate}}</small>
+                        </div>
+
+                        <p-button type="submit" title="Guardar" [label]="'newObject.form.btnSubmit' | translate"></p-button>
                 </form>
 
 

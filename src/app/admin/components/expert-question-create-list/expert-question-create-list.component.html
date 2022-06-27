@@ -56,10 +56,13 @@
 						<input [(ngModel)]="question.interpreter_no" type="text" pInputText id="interpreter_no" required autofocus />
 					</div>
 					<div class="p-field">
-						<label for="value_importance">Peso</label>
-						<input [(ngModel)]="question.value_importance" type="text" pInputText id="value_importance" required autofocus />
+						<label for="weight">Peso</label>
+						<input [(ngModel)]="question.weight" type="text" pInputText id="weight" required autofocus />
 					</div>
-				
+					<div class="p-field">
+						<label for="relevance">Relevancia</label>
+						<input [(ngModel)]="question.relevance" type="text" pInputText id="relevance" required autofocus />
+					</div>
 					<div class="p-field">
 						<label for="description">{{ 'admin.description' | translate }}</label>
 						<textarea [(ngModel)]="question.description" id="description" pInputTextarea required rows="3"
@@ -110,13 +113,14 @@
 							autofocus />
 					</div>
 					<div class="p-field">
-						<label for="value_importanceU">Peso</label>
-						<input [(ngModel)]="questionSelect.value_importance" type="text" pInputText id="value_importanceU" required
+						<label for="relevanceU">Relevancia</label>
+						<input [(ngModel)]="questionSelect.relevance" type="text" pInputText id="relevanceU" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="weightU">Peso</label>
+						<input [(ngModel)]="questionSelect.weight" type="number" pInputText id="weightU" required
 							autofocus />
 					</div>
-
-
-
 					<div class="p-field">
 						<label for="descriptionU">{{ 'admin.description' | translate }}</label>
 						<textarea [(ngModel)]="questionSelect.description" id="descriptionU" pInputTextarea required
@@ -251,8 +255,11 @@
 								<p>{{question.interpreter_partially}}</p>
 								<strong>Especificación->"Malo"</strong>
 								<p>{{question.interpreter_no}}</p>
+								<strong>Relevancia</strong>
+								<p>{{question.relevance}}</p>
 								<strong>Peso</strong>
-								<p>{{question.value_importance}}</p>
+								<p>{{question.weight}}</p>
+								
 							</td>
 							<td style="text-align: center">
 								<button (click)="openEditQuestionDialog(question)" pButton type="button"

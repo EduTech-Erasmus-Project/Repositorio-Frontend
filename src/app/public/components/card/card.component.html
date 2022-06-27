@@ -8,17 +8,17 @@
 
         <!--<button pButton type="button" class="classBut" label="{{'object.averageRating' | translate}}" > <i class="pi pi-angle-double-down"> &nbsp;</i> </button>
         -->
+        <div class="field col-12 md:col-6" *ngIf="resultsEv == null && resultEvalCero != true && !expertOptionsView">
+            <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
+        </div>
 
         <div class="accordion" id="accordionExample" *ngIf="resultsEv && (resultsEv.length > 0)">
             <div class="accordion-item">
-
                 <!--<p>holaaaa</p>-->
-
                 <button pButton type="button" label="{{'object.averageRating' | translate}}" (click)="show=!show"
                     style="width: 100%;">
                     <i [ngClass]="{'pi-angle-down':!show,'pi-angle-up':show}" class="pi"> &nbsp;</i>
                 </button>
-
                 <div id="formsAr" *ngIf="show">
                     <div class="accordion-body">
                         <app-view-evaluacions *ngIf="object" [resultsEv]="resultsEv" [roleExpert]="roleExpert">
@@ -55,6 +55,12 @@
 
         <!--  Visualizar boton de evalucion para el experto-->
         <div class="expert-view-eavluation" *ngIf="(expertOptions) || (expertOptionsView)">
+            
+            <div class="field col-12 md:col-6" *ngIf="resultsEvViewExpert == null && resultEvalCeroExpert != true">
+                <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
+            </div>
+
+            
             <ng-container *ngIf="resultsEvViewExpert && (resultsEvViewExpert.length > 0)">
                 <div>
                     <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad" [draggable]="false"

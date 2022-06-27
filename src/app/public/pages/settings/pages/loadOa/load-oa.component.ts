@@ -134,6 +134,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       keywords: [this.object?.general_keyword || null, [Validators.required]],
       adaptations: ["yes", [Validators.required]],
       img: [null, [Validators.required]],
+      sourceFile:[null],
       language: [null, [Validators.required]],
       age: [
         this.getRageAge() || [5, 100],
@@ -146,7 +147,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   }
 
   getRageAge() {
-    console.log(this.object)
     if (this.object.educational_typicalAgeRange) {
       let range = this.object?.educational_typicalAgeRange.split("-");
       if (range?.length > 2) {
@@ -162,7 +162,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   }
 
   onUpload(evt: any) {
-    console.log('upload', evt);
     let lom = JSON.parse(evt.originalEvent.body.metadata);
     this.metaData = evt.originalEvent.body;
     this.file = evt.files[0];
@@ -190,7 +189,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
-    //console.log("this.objectForm", this.objectForm);
 
     if (this.objectForm.valid) {
       this.loading = true;
@@ -206,6 +204,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       this.object.license = this.objectForm.value.license;
       this.object.general_language = this.objectForm.value.language;
       this.object.avatar = this.objectForm.value.img;
+      this.object.source_file = this.objectForm.value.sourceFile;
       
       let addMetadataSub = await this.learningObjectService
         .addMetadata(this.object)
@@ -248,6 +247,12 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   onSelectImage(evet: any) {
     this.objectForm.patchValue({
       img: evet.currentFiles[0],
+    });
+  }
+
+  onSelectFile(event:any){
+    this.objectForm.patchValue({
+      sourceFile: event.currentFiles[0],
     });
   }
 

@@ -221,7 +221,7 @@ export class ViewQuestionsExpertComponent implements OnInit {
             this.groupedQuestionsEx[0].id
           )
           .subscribe(
-            (res) => {
+            (res) =>{
               this.showSuccess("Los datos se actualizaron con exito");
               this.commentEmit.emit(false);
             },

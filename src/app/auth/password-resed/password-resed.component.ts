@@ -125,7 +125,7 @@ export class PasswordResedComponent implements OnInit {
                 Swal.close();
                 this.router.navigateByUrl("/reset/confirm");
             },(err)=>{
-              console.log("Err",err);
+             // console.log("Err",err);
               this.showError("No se puedo cambiar la contraseña")
               Swal.close();
             });

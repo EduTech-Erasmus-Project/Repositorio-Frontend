@@ -28,11 +28,15 @@ export class WebViewComponent implements OnInit, OnDestroy {
   public liked: boolean = false;
   private interaction: any;
   public flagQuestionsEx: boolean = false;
+  public flagQuestionsExNumber: number = -1;
+  
   public flagConfirm: boolean = false;
   public msgs1: Message[];
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>
   public flagQuestionsEst:boolean=false;
+  public flagQuestionsEstNumber:number=-1;
+  
   public displayFormRatingStudent: boolean = false; 
   public displayFormRatingStudentUpdate: boolean = false;
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -89,9 +93,14 @@ export class WebViewComponent implements OnInit, OnDestroy {
           if(res.length > 0) {
             if (res.length == 0) {
               this.flagQuestionsEx = false;
+              this.flagQuestionsExNumber = 0;
             } else {
               this.flagQuestionsEx = true;
+              this.flagQuestionsExNumber = 1;
             }
+          }else{
+            this.flagQuestionsEx = false;
+            this.flagQuestionsExNumber = 0;
           }
         });
       this.subscribes.push(resultsEval);
@@ -239,9 +248,14 @@ export class WebViewComponent implements OnInit, OnDestroy {
         if(res.length > 0) {
           if (res.length == 0) {
             this.flagQuestionsEst = false;
+            this.flagQuestionsEstNumber = 0;
           } else {
             this.flagQuestionsEst = true;
+            this.flagQuestionsEstNumber=1;
           } 
+        }else{
+          this.flagQuestionsEst = false;
+          this.flagQuestionsEstNumber = 0;
         }     
       });
       this.subscribes.push(resultsEvalStudent);

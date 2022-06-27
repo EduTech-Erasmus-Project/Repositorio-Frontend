@@ -30,7 +30,8 @@ export class CardComponent implements OnInit {
   private subscribes: Subscription[] = [];
   public resultsEv: any[];
   public resultsEvViewExpert: any[];
-
+public resultEvalCero: boolean = false;
+public resultEvalCeroExpert: boolean = false;
   //>>>>>>>>>>>>>>>>>>>>
   public display: boolean = false;
   public displayautomatic: boolean = false;
@@ -103,11 +104,13 @@ export class CardComponent implements OnInit {
       this.subscribes.push(resultsEval);
     } else{
       let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
-        if(res.length >0){
+        if(res.length >0){ 
           this.resultsEv = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEv = this.resultsEv;
-         
+        }else{
+         this.resultEvalCero = true;
         }
+
       });
       this.subscribes.push(resultsAns);
     }
@@ -117,7 +120,8 @@ export class CardComponent implements OnInit {
         if(res.length >0){
           this.resultsEvViewExpert = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEvViewExpert = this.resultsEvViewExpert;
-         
+        }else{
+          this.resultEvalCeroExpert = true;
         }
       });
       this.subscribes.push(resultsAns);

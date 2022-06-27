@@ -30,7 +30,6 @@ export class MyQualifiedOaComponent implements OnInit, OnDestroy {
 
   
   async loadData() {
-    console.log('Loading');
     let searchSub = await this.searchService
     .search(true)
     .subscribe(
