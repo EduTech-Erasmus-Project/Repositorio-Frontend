@@ -212,7 +212,10 @@ export class StudentQuestionCreateListComponent implements OnInit {
   }
   ////////////////////////////editar pregunta
   openEditquestionGuidelineDialog(question: QuestionStudent) {
+   
     this.questionSelect = question;
+    console.log(question);
+    console.log(this.questionSelect);
     this.submitted = false;
     this.updateQuestionDialog = true;
   }
@@ -240,7 +243,7 @@ export class StudentQuestionCreateListComponent implements OnInit {
 
   saveQuestion() {
     this.question.guideline = this.guidelineSelect.id;
-    console.log("----pregunta student",this.question.guideline)
+   // console.log("----pregunta student",this.question.guideline)
     this.administratorServices.postQuestionStudent(this.question).subscribe(
       (result) => {
         this.question = new QuestionStudent();
@@ -283,6 +286,7 @@ export class StudentQuestionCreateListComponent implements OnInit {
     this.administratorServices
       .retrieveEvaluationStudentquestions(id)
       .subscribe((data: any) => {
+        console.log(data)
         this.questionList = data.questions;
         this.idGuidelinePrinciple = id;
       });
@@ -299,7 +303,7 @@ export class StudentQuestionCreateListComponent implements OnInit {
         this.principle = new Principle();
       },
       (err: any) => {
-        console.log(err);
+     //   console.log(err);
       }
     );
   }
@@ -327,7 +331,20 @@ export class StudentQuestionCreateListComponent implements OnInit {
     // console.log(this.questionSelect);
     this.administratorServices
       .updateQuestionStudent(this.questionSelect)
-      .subscribe((data) => {
+      .subscribe((data:any) => {
+        if(data.message === "success"){
+          this.messageService.add({
+            severity: "success",
+            summary: "Actualizado",
+            detail: "Actualizado correctamente",
+          });
+        }else{
+          this.messageService.add({
+            severity: "error",
+            summary: "Error",
+            detail: "Error al actualizar el registro",
+          });
+        }
         //console.log(data);
       });
   }

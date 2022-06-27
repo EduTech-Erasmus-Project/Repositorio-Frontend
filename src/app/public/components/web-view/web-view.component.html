@@ -3,38 +3,36 @@
     <div class="controls">
         <h3>{{object.general_title}}</h3>
         <div class="buttons">
-
-            <!-- <p-rating [(ngModel)]="rating" [cancel]="false"></p-rating> -->
-            <p-button  *ngIf="roleExpert && !flagQuestionsEx" (click)="displayFormRatingExpert=true"
+            <p-button  *ngIf="roleExpert && !flagQuestionsEx && flagQuestionsExNumber == 0" (click)="displayFormRatingExpert=true"
                 [label]="'object.btnEvaluateExpert'| translate "></p-button>
-                <p-button  *ngIf="roleExpert && flagQuestionsEx" (click)="displayFormRatingExpertUpdate=true"
-                [label]="'object.objectQualification'| translate "><i class="pi pi-pencil">&nbsp;</i></p-button>
+            
+            <p-button  *ngIf="roleExpert && flagQuestionsEx && flagQuestionsExNumber == 1" (click)="displayFormRatingExpertUpdate=true"
+                [label]="'object.objectQualification'| translate " title="Editar evaluacion" ><i class="pi pi-pencil">&nbsp;</i></p-button>
             
                 <button aria-label="Boton para calificar este objeto de aprendizaje" *ngIf="roleUser" (click)="displayFormRating=true" pButton pRipple type="button" icon="pi pi-star-o"
                 class="p-button-rounded p-button-outlined" [pTooltip]="'object.btnEvaluate'| translate "></button>
             <!--   NUEVO BOTON     -->
-            <button aria-label="Boton para calificar " *ngIf="roleUser && !flagQuestionsEst"  (click)="displayFormRatingStudent=true" pButton pRipple type="button"
+
+            <button aria-label="Boton para calificar " *ngIf="roleUser && !flagQuestionsEst && flagQuestionsEstNumber == 0"  (click)="displayFormRatingStudent=true" pButton pRipple type="button"
             class="p-button-rounded p-button-outlined" [label]="'registesest.btnEva'| translate "></button>
-            <button aria-label="Boton para calificar actualizar" *ngIf="roleUser && flagQuestionsEst"  (click)="displayFormRatingStudentUpdate=true" pButton pRipple type="button"
-            class="p-button-rounded p-button-outlined" [label]="'registesest.btnEvaU'| translate "></button>
 
-
+            <button aria-label="Boton para calificar actualizar" *ngIf="roleUser && flagQuestionsEst && flagQuestionsEstNumber == 1"  (click)="displayFormRatingStudentUpdate=true" pButton pRipple type="button"
+            class="p-button-rounded p-button-outlined" title="Actualizar calificacion" [label]="'registesest.btnEvaU'| translate "></button>
 
             <!--   NUEVO BOTON     -->
-
-
-
-
 
             <button *ngIf="roleUser" aria-label="Boton me gusta"  (click)="onLike()" pButton pRipple type="button" icon="pi pi-heart"
                 [ngClass]="{'p-button-outlined': !liked, 'p-button-danger': liked}" class="p-button-rounded"
                 [pTooltip]="'Me gusta'"></button>
 
-            <a aria-label="Boton de descarga" href="{{object.learning_object_file.file}}" pButton pRipple type="button"
-                icon="pi pi-download" class="p-button-rounded p-button-outlined" title="Descargar Objeto de Apredizjae"
-                download="{{object.learning_object_file.file}}"
-                [pTooltip]="'object.btnDownload'| translate "></a>
-            
+                <button aria-label="Boton de descarga" (click)="onDownloadFile(object.learning_object_file.file) " pButton pRipple type="button"
+                icon="pi pi-download" class="p-button-rounded p-button-outlined" 
+                [pTooltip]="'object.btnDownload'| translate "></button>
+
+            <button aria-label="Boton de descarga" *ngIf="object.source_file" (click)="onDownloadFile(object.source_file) " pButton pRipple type="button"
+                icon="pi pi-cloud-download" class="p-button-rounded p-button-outlined"
+                [pTooltip]="'Descargar el fichero fuente de eXeLearning'"></button>
+
                 <button aria-label="Boton de pantalla completa" *ngIf="!fullScreen" (click)="openFullscreen()" pButton pRipple type="button"
                 icon="pi pi-window-maximize" class="p-button-rounded p-button-outlined"
                 [pTooltip]="'object.btnFullScreen'| translate "></button>

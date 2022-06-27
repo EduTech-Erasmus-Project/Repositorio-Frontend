@@ -6,7 +6,6 @@
             </a>
         </ng-template>
         <ng-template pTemplate="end">
-
             <ng-container *ngIf="loginService.user; else loginTemplate">
                 <div class="layout-topbar">
                     <div class="layout-topbar-wrapper">
@@ -21,7 +20,7 @@
                                                 [alt]="loginService.user.first_name" />
                                         </span>
                                         <span class="profile-info-wrapper">
-                                            <h3 class="name-user">{{loginService.user.first_name+'
+                                            <h3 class="name-user">{{role_name}}{{loginService.user.first_name+'
                                                 '+loginService.user.last_name}}</h3>
                                             <span>{{loginService.user.email}}</span>
                                         </span>

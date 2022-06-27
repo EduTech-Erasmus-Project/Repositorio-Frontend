@@ -33,6 +33,7 @@ export class LoginService {
     this.storageService.saveCookieItem("current_user", this.currUser as any);
   }
   get user() {
+   
     return this.currUser;
   }
 

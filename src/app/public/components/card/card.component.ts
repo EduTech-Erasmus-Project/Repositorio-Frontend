@@ -30,7 +30,8 @@ export class CardComponent implements OnInit {
   private subscribes: Subscription[] = [];
   public resultsEv: any[];
   public resultsEvViewExpert: any[];
-
+public resultEvalCero: boolean = false;
+public resultEvalCeroExpert: boolean = false;
   //>>>>>>>>>>>>>>>>>>>>
   public display: boolean = false;
   public displayautomatic: boolean = false;
@@ -84,7 +85,6 @@ export class CardComponent implements OnInit {
   async loadData() {
     if (this.roleExpert) {
       let resultsEval = await this.objectService.getObjectResultsEvaluation(this.object.id).subscribe(res => {
-      
         if (res.length > 0) {
           this.resultsEv = res.map((item: any) => {
             return {
@@ -104,11 +104,13 @@ export class CardComponent implements OnInit {
       this.subscribes.push(resultsEval);
     } else{
       let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
-        if(res.length >0){
+        if(res.length >0){ 
           this.resultsEv = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEv = this.resultsEv;
-         
+        }else{
+         this.resultEvalCero = true;
         }
+
       });
       this.subscribes.push(resultsAns);
     }
@@ -118,7 +120,8 @@ export class CardComponent implements OnInit {
         if(res.length >0){
           this.resultsEvViewExpert = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEvViewExpert = this.resultsEvViewExpert;
-         
+        }else{
+          this.resultEvalCeroExpert = true;
         }
       });
       this.subscribes.push(resultsAns);
@@ -161,7 +164,6 @@ export class CardComponent implements OnInit {
   async loadDataAutomatic() {
     let resultsEvalAutomatic = await this.objectService.getObjectResultsEvaluationAutomatic(this.object.id).subscribe(
       res => {
-        
         this.resultsEvAut = res.map((item: any) => {
           return {
             rating: item.rating_schema,
@@ -181,7 +183,6 @@ export class CardComponent implements OnInit {
             })
           }
         });
-        
         this.resultsEvAut = this.resultsEvAut
       
       }
@@ -189,7 +190,6 @@ export class CardComponent implements OnInit {
     this.subscribes.push(resultsEvalAutomatic);
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
   async loadstudent() {
     let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudent(this.object.id).subscribe(
       res => {
@@ -223,9 +223,6 @@ export class CardComponent implements OnInit {
             }
           });
         }
-
-        this.resultsEvStudent = this.resultsEvStudent
-     
         let test = []
         if(this.resultsEvStudent != null) {
           this.resultsEvStudent.forEach(element => {
@@ -237,8 +234,7 @@ export class CardComponent implements OnInit {
       
       }
     );
-    this.subscribes.push(dataSstudent);
-
+  this.subscribes.push(dataSstudent);
   }
 
   navigateToReport(valid: boolean) {

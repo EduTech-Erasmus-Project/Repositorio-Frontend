@@ -85,7 +85,7 @@ export class ViewQuestionsStudentComponent implements OnInit {
     }else if (this.flagQuestionsEst) {
       let groupUpdate= await this.searchService.getObjectResultsEvaluationStudent(this.object.id).subscribe(
         res =>{
-          console.log(res)
+          //console.log(res)
           this.groupedQuestionsUpdate=res.map((item1: any) => 
           {return{
             id:item1.id,

@@ -28,6 +28,8 @@ export class QuestionStudent{
     interpreter_st_partially:string;
     value_st_importance:number;
     guideline:number;
+    weight: number;
+    relevance:string;
 }
 export class QuestionStudentUpdate{
     id?:number;
@@ -39,6 +41,8 @@ export class QuestionStudentUpdate{
     interpreter_st_no:string;
     interpreter_st_partially:string;
     value_st_importance:number;
+    weight: number;
+    relevance:string;
 }
 //////////////////////////////////////
 ///nuevos datos
@@ -53,6 +57,8 @@ export class Question{
     interpreter_partially:string;
     value_importance:number;
     evaluation_concept:number;
+    weight: number;
+    relevance:string;
 }
 export class QuestionUpdate{
     id?:number;
@@ -64,6 +70,8 @@ export class QuestionUpdate{
     interpreter_no:string;
     interpreter_partially:string;
     value_importance:number;
+    weight: number;
+    relevance:string;
 }
 //////////////Nuevo modelo metadata
 export class Metadata{

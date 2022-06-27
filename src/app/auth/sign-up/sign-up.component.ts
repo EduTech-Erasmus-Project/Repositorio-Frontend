@@ -226,10 +226,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
     );
     this.angForm.addControl(
       "academic",
-      new FormControl(null, [
-
-        Validators.pattern("[a-zA-ZñÑáéíóúÁÉÍÓÚ\s ]+"),
-      ])
+      new FormControl(null
+        )
     );
 
   //  this.removeEmail();   

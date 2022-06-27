@@ -78,8 +78,12 @@
 						<input [(ngModel)]="question.interpreter_st_partially" type="text" pInputText id="interpreter_st_partially" required autofocus />
 					</div>
 					<div class="p-field">
-						<label for="value_st_importance">Peso</label>
-						<input [(ngModel)]="question.value_st_importance" type="text" pInputText id="value_st_importance" required autofocus />
+						<label for="relevance">Relevancia</label>
+						<input [(ngModel)]="question.relevance" type="text" pInputText id="relevance" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="weight">Peso</label>
+						<input [(ngModel)]="question.weight" type="text" pInputText id="weight" required autofocus />
 					</div>
 					<div class="p-field">
 						<label for="description">Descripcion</label>
@@ -125,9 +129,12 @@
 							autofocus />
 					</div>
 					<div class="p-field">
-						<label for="pesoU">Peso</label>
-						<input [(ngModel)]="questionSelect.value_st_importance" type="text" pInputText id="pesoU" required
-							autofocus />
+						<label for="relevanceU">Relevancia</label>
+						<input [(ngModel)]="questionSelect.relevance" type="text" pInputText id="relevanceU" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="weightU">Peso</label>
+						<input [(ngModel)]="questionSelect.weight" type="text" pInputText id="weightU" required autofocus />
 					</div>
 					<div class="p-field">
 						<label for="descriptionU">Descripcion</label>
@@ -345,8 +352,10 @@
 								<p>{{question.interpreter_st_no}}</p>
 								<strong>Especificación->"Parcial"</strong>
 								<p>{{question.interpreter_st_partially}}</p>
+								<strong>Relevancia</strong>
+								<p>{{question.relevance}}</p>
 								<strong>Peso</strong>
-								<p>{{question.value_st_importance}}</p>
+								<p>{{question.weight}}</p>
 								<strong>Descripcion</strong>
 								<p>{{question.description}}</p>
 								

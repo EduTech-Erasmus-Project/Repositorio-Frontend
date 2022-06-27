@@ -16,6 +16,7 @@ export class ConvertLearningObject {
     
     console.log("property", lom);
 
+    /*
     let description_aux : any;
     if(lom?.general?.description){
       if (lom?.general?.description.length > 0){
@@ -30,137 +31,98 @@ export class ConvertLearningObject {
         title_aux =lom?.general?.title?.string["#text"] || "" ;
       }else if(lom?.general?.title?.langstring){
         title_aux = lom?.general?.title?.langstring;
-      }
-
+      }*/
     try {
       
       objectData = {
-        general_catalog: lom?.general?.identifier?.catalog || "",
-        general_entry: lom?.general?.identifier?.entry || "",
-        general_title: title_aux,
-        general_language: lom?.general?.language || "",
-        general_description: description_aux ,
-        general_keyword: this?.getStringData(lom?.general?.keyword?.string),
-        general_coverage: lom?.general?.coverage?.string || "",
-        general_structure: lom?.general?.structure?.value || "",
-        general_aggregation_Level: lom?.general?.aggregationLevel?.value || "",
-        life_cycle_version: lom?.lifeCycle?.version?.string["@language"] || "",
-        life_cycle_status: lom?.lifeCycle?.status?.value || "",
-        life_cycle_role: lom?.lifeCycle?.contribute
-          ? lom?.lifeCycle?.contribute[0]?.role?.value
-          : "",
-        life_cycle_entity: lom?.lifeCycle?.contribute
-          ? lom?.lifeCycle?.contribute[0]?.entity
-          : "",
-        life_cycle_dateTime: lom?.lifeCycle?.contribute
-          ? lom?.lifeCycle?.contribute[0]?.date?.dateTime
-          : "",
-        life_cycle_description: lom?.lifeCycle?.contribute
-          ? lom?.lifeCycle?.contribute[0]?.date?.description?.string
-          : "",
-        meta_metadata_catalog: lom?.metaMetadata?.identifier?.catalog || "",
-        meta_metadata_entry: lom?.metaMetadata?.identifier?.entry || "",
-        meta_metadata_role: lom?.metaMetadata?.contribute?.role?.value || "",
-        meta_metadata_entity: lom?.metaMetadata?.contribute?.entity || "",
-        meta_metadata_dateTime:
-          lom?.metaMetadata?.contribute?.date?.dateTime || "",
-        meta_metadata_description:
-          lom?.metaMetadata?.contribute?.date?.description?.string || "",
-        technical_format: lom?.technical?.format || "",
-        technical_size: parseInt(lom?.technical?.size) || 0,
-        technical_location: lom?.technical?.location || "",
-        technical_requirement_type:
-          lom?.technical?.requirement?.orComposite?.type?.value || "",
-        technical_requirement_name:
-          lom?.technical?.requirement?.orComposite?.name?.value || "",
-        technical_requirement_minimumVersion:
-          lom?.technical?.requirement?.orComposite?.minimumVersion || "",
-        technical_installationRremarks:
-          lom?.technical?.installationRemarks?.string["#text"] || "",
-        technical_otherPlatformRequirements:
-          lom?.technical?.otherPlatformRequirements?.string["#text"] || "",
+        general_catalog: this.methodCodification(lom?.general?.identifier?.catalog) || "",
+        general_entry: this.methodCodification(lom?.general?.identifier?.entry) || "",
+        general_title: this.methodCodification(lom?.general?.title?.title),
+        general_language: lom?.general?.language?.language || "",
+        general_description: this.methodCodification(lom?.general?.description?.description) || "",
+        general_keyword: lom?.general?.keyword?.keyword.join(", ") || "",
+        general_coverage: this.methodCodification(lom?.general?.coverage?.coverage) || "",
+        general_structure: this.methodCodification(lom?.general?.structure?.value) || "",
+        general_aggregation_Level: this.methodCodification(lom?.general?.aggregationLevel?.value) || "",
+        life_cycle_version: this.methodCodification(lom?.lifeCycle?.version?.version) || "",
+        life_cycle_status: this.methodCodification(lom?.lifeCycle?.status?.value) || "",
+        life_cycle_role: this.methodCodification(lom?.lifeCycle?.contribute?.role) || "",
+        life_cycle_entity: this.methodCodification(lom?.lifeCycle?.contribute?.entity)|| "",
+        life_cycle_dateTime: this.methodCodification(lom?.lifeCycle?.contribute?.dateTime) || "",
+        life_cycle_description: this.methodCodification(lom?.lifeCycle?.contribute?.description) || "",
+        meta_metadata_catalog: this.methodCodification(lom?.metaMetadata?.identifier?.catalog) || "",
+        meta_metadata_entry: this.methodCodification(lom?.metaMetadata?.identifier?.entry) || "",
+        meta_metadata_role: this.methodCodification(lom?.metaMetadata?.contribute?.value) || "",
+        meta_metadata_entity: this.methodCodification(lom?.metaMetadata?.contribute?.entity) || "",
+        meta_metadata_dateTime: this.methodCodification(lom?.metaMetadata?.contribute?.date) || "",
+        meta_metadata_description:  lom?.metaMetadata?.contribute?.description.join(", ") || "",
+        technical_format: this.methodCodification(lom?.technical?.format.format) || "",
+        technical_size: this.methodCodification(lom?.technical?.size.size) || 0,
+        technical_location: this.methodCodification(lom?.technical?.location?.location) || "",
+        technical_requirement_type: this.methodCodification(lom?.technical?.requirement?.typeValue) || "",
+        technical_requirement_name: this.methodCodification(lom?.technical?.requirement?.nameValue) || "",
+        technical_requirement_minimumVersion: this.methodCodification(lom?.technical?.requirement?.minVersion) || "",
+        technical_installationRremarks: this.methodCodification(lom?.technical?.installationRemarks?.installationRemarks) || "",
+        technical_otherPlatformRequirements:this.methodCodification(lom?.technical?.otherPlatformRequirements?.otherPlatformRequirements) || "",
+        //Para revision con otros objetos de aprendizaje
         technical_dateTime: lom?.technical?.contribute?.date?.dateTime || "",
-        technical_description:
-          lom?.technical?.contribute?.date?.description?.string || "",
-        educational_interactivityType:
-          lom?.educational?.interactivityType?.value || "",
-        educational_learningResourceType:
-          lom?.educational?.learningResourceType?.value || "",
-        educational_interactivityLevel:
-          lom?.educational?.interactivityLevel?.value || "",
-        educational_semanticDensity:
-          lom?.educational?.semanticDensity?.value || "",
-        educational_intendedEndUserRole:
-          lom?.educational?.intendedEndUserRole?.value || "",
-        educational_context: lom?.educational?.context?.value || "",
-        educational_typicalAgeRange: lom?.educational?.typicalAgeRange
-          ? lom.educational.typicalAgeRange[0]?.string["#text"]
-          : "",
-        educational_difficulty: lom?.educational?.difficulty?.value || "",
-        educational_typicalLearningTime_dateTime:
-          lom?.educational?.typicalLearningTime?.duration || "",
-        educational_typicalLearningTime_description:
-          lom?.educational?.typicalLearningTime?.description?.string["#text"] ||
-          "",
-        educational_description: lom?.educational?.description?.string || "",
-        educational_language: lom?.educational?.language || "",
-        educational_procces_cognitve:
-          lom?.educational?.educational_procces_cognitve || "", //revisar la respuesta
+        //Para revision con otros objeto de aprendizaje
+        technical_description:lom?.technical?.contribute?.date?.description?.string || "",
+        educational_interactivityType:this.methodCodification(lom?.educational?.interactivityType?.value)|| "",
+        educational_learningResourceType: this.methodCodification(lom?.educational?.learningResourceType?.value) || "",
+        educational_interactivityLevel: this.methodCodification(lom?.educational?.interactivityLevel?.value) || "",
+        educational_semanticDensity: this.methodCodification(lom?.educational?.semanticDensity?.value) || "",
+        educational_intendedEndUserRole: this.methodCodification(lom?.educational?.intendedEndUserRole?.value) || "",
+        educational_context: this.methodCodification(lom?.educational?.context?.value) || "",
+        educational_typicalAgeRange: this.methodCodification(lom.educational.typicalAgeRange?.typicalAgeRange) || "",
+        educational_difficulty: this.methodCodification(lom?.educational?.difficulty?.value) || "",
+        educational_typicalLearningTime_dateTime: this.methodCodification(lom?.educational?.typicalLearningTime?.duration)|| "",
+        educational_typicalLearningTime_description:lom?.educational?.typicalLearningTime?.description?.join(", ") || "",
+        educational_description: this.methodCodification(lom?.educational?.description?.description) || "",
+        educational_language: this.methodCodification(lom?.educational?.language?.language) || "",
+        //Revisar con otros obejtos de aprendizaje
+        educational_procces_cognitve: lom?.educational?.educational_procces_cognitve || "", 
         rights_cost: lom?.rights?.cost?.value || "",
-        rights_copyrightAndOtherRestrictions:
-          lom?.rights?.copyrightAndOtherRestrictions?.value || "",
-        rights_description: lom?.rights?.description?.string || "",
-        relation_kind: lom?.relation?.kind?.value || "",
-        relation_catalog: lom?.relation?.resource?.identifier?.catalog || "",
-        relation_entry: lom?.relation?.resource?.identifier?.entry || "", //revisar la respuesta
-        relation_description:
-          lom?.relation?.resource?.description?.string || "",
-        annotation_entity: lom?.annotation?.entity || "",
-        annotation_date_dateTime: lom?.annotation?.date?.dateTime || "",
-        annotation_date_description:
-          lom?.annotation?.date?.description?.string["#text"] || "",
-        annotation_description:
-          lom?.annotation?.description?.string["#text"] || "",
-        annotation_modeaccess: lom?.annotation?.modeaccess?.value || "",
-        annotation_modeaccesssufficient:
-          lom?.annotation?.modeaccesssufficient?.value || "",
-        annotation_rol: lom?.annotation?.Rol?.value,
-        classification_purpose: lom?.classification?.purpose?.value || "",
-        classification_taxonPath_source: lom?.classification?.taxonPath
-          ? lom?.classification?.taxonPath[0]?.source?.string["#text"]
-          : "",
-        classification_taxonPath_taxon:
-          lom?.classification?.taxonPath &&
-          lom?.classification?.taxonPath[0]?.taxon
-            ? lom?.classification?.taxonPath[0]?.taxon[0]?.entry?.string[
-                "#text"
-              ]
-            : "",
-        classification_description:
-          lom?.classification?.description?.string["#text"] || "",
-        classification_keyword: this?.getStringData(
-          lom?.classification?.keyword?.string
-        ),
-        accesibility_summary: lom?.accesibility?.description?.string || "",
-        accesibility_features: this?.getStringDataConcat(
-          lom?.accesibility?.accessibilityfeatures?.resourcecontent?.br
-        ),
-        accesibility_hazard: this?.getStringDataConcat(
-          lom?.accesibility?.accessibilityhazard?.properties?.br
-        ),
-        accesibility_control: this?.getStringDataConcat(
-          lom?.accesibility?.accessibilitycontrol?.methods?.br
-        ),
-
-        accesibility_api: this?.getStringDataConcat(
-          lom?.accesibility?.accessibilityAPI?.compatibleresource?.br
-        ),
+        rights_copyrightAndOtherRestrictions:lom?.rights?.copyrightAndOtherRestrictions?.value || "",
+        rights_description: this.methodCodification(lom?.rights?.description) || "",
+        relation_kind: this.methodCodification(lom?.relation?.kind?.value) || "",
+        relation_catalog: this.methodCodification(lom?.relation?.resource?.catalog) || "",
+        relation_entry: this.methodCodification(lom?.relation?.resource?.entry) || "", 
+        relation_description:this.methodCodification(lom?.relation?.resource?.description) || "",
+        annotation_entity: this.methodCodification(lom?.annotation?.entity?.entity) || "",
+        annotation_date_dateTime: this.methodCodification(lom?.annotation?.date?.dateTime) || "",
+        annotation_date_description:lom?.annotation?.date?.description.join(", ") || "",
+        annotation_description: this.methodCodification(lom?.annotation?.description?.description) || "",
+        annotation_modeaccess:  this.methodCodification(lom?.annotation?.accessmode?.value) || "",
+        annotation_modeaccesssufficient:  this.methodCodification(lom?.annotation?.accessmodesufficient?.value) || "",
+        annotation_rol:  this.methodCodification(lom?.annotation?.rol?.value),
+        classification_purpose: this.methodCodification(lom?.classification?.purpose?.value) || "",
+        classification_taxonPath_source:  this.methodCodification(lom?.classification?.taxonPath.source) || "",
+        classification_taxonPath_taxon: lom?.classification?.taxonPath.entry.join(", ") || "",
+        classification_description: this.methodCodification( lom?.classification?.description?.description) || "",
+        //verificar con otro obejtos de aprendizaje
+        classification_keyword: this.methodCodification(lom?.classification?.keyword?.keyword) || '',
+        accesibility_summary: this.methodCodification(lom?.accesibility?.description?.description) || "",
+        accesibility_features: lom?.accesibility?.accessibilityFeatures?.value.join(", ") || "",
+        accesibility_hazard: lom?.accesibility?.accessibilityHazard?.value.join(", ") || "",
+        accesibility_control: lom?.accesibility?.accessibilityControl?.value.join(", ") || "",
+        accesibility_api: lom?.accesibility?.accessibilityApi?.value.join(", ") || "",
       };
     } catch (error) {
       console.log("Error load oa", error)
     }
 
     return objectData;
+  }
+
+  private methodCodification(text){
+    let text_ref:string;
+    if(text == undefined){
+      text_ref = '';
+    }else{
+      text_ref = text[0];
+    }
+    return  text_ref;
   }
 
   private getStringData(value: any): string {

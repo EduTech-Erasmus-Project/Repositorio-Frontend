@@ -4,6 +4,7 @@ import { EducationLevel } from './EducationLevel';
 import { KnowledgeArea } from './KnowledgeArea';
 import { UserCreated } from './UserCreated';
 export interface ObjectLearning {
+    source_file: any;
     id?: number;
     license?: any;
     learning_object_file?: any;

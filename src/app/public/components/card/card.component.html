@@ -8,17 +8,17 @@
 
         <!--<button pButton type="button" class="classBut" label="{{'object.averageRating' | translate}}" > <i class="pi pi-angle-double-down"> &nbsp;</i> </button>
         -->
+        <div class="field col-12 md:col-6" *ngIf="resultsEv == null && resultEvalCero != true && !expertOptionsView">
+            <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
+        </div>
 
         <div class="accordion" id="accordionExample" *ngIf="resultsEv && (resultsEv.length > 0)">
             <div class="accordion-item">
-
                 <!--<p>holaaaa</p>-->
-
                 <button pButton type="button" label="{{'object.averageRating' | translate}}" (click)="show=!show"
                     style="width: 100%;">
                     <i [ngClass]="{'pi-angle-down':!show,'pi-angle-up':show}" class="pi"> &nbsp;</i>
                 </button>
-
                 <div id="formsAr" *ngIf="show">
                     <div class="accordion-body">
                         <app-view-evaluacions *ngIf="object" [resultsEv]="resultsEv" [roleExpert]="roleExpert">
@@ -55,6 +55,12 @@
 
         <!--  Visualizar boton de evalucion para el experto-->
         <div class="expert-view-eavluation" *ngIf="(expertOptions) || (expertOptionsView)">
+            
+            <div class="field col-12 md:col-6" *ngIf="resultsEvViewExpert == null && resultEvalCeroExpert != true">
+                <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
+            </div>
+
+            
             <ng-container *ngIf="resultsEvViewExpert && (resultsEvViewExpert.length > 0)">
                 <div>
                     <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad" [draggable]="false"
@@ -86,19 +92,20 @@
         <ng-template pTemplate="footer">
             <div *ngIf="(teacherOptions)">
                 <div class="buttons">
-                    
-                        <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
-                            title="Editar Objeto de Aprendizaje" class="p-button-rounded p-button-outlined button-edit"></button>
-                   
-                      <!--  <button (click)="deleteLearningObject()" pButton pRipple type="button" icon="pi pi-trash"
+
+                    <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
+                        title="Editar Objeto de Aprendizaje"
+                        class="p-button-rounded p-button-outlined button-edit"></button>
+
+                    <!--  <button (click)="deleteLearningObject()" pButton pRipple type="button" icon="pi pi-trash"
                             title="Eliminar Objeto de Aprendizaje"
                             class="p-button-rounded p-button-outlined button-danger"></button>-->
-                            
-                            <p-confirmPopup></p-confirmPopup>
 
-                            <button (click)="deleteLearningObject($event)" pButton pRipple icon="pi pi-trash"  type="button"
-                            class="p-button-rounded p-button-outlined button-danger"
-                            title="Eliminar Objeto de Aprendizaje"></button>
+                    <p-confirmPopup></p-confirmPopup>
+
+                    <button (click)="deleteLearningObject($event)" pButton pRipple icon="pi pi-trash" type="button"
+                        class="p-button-rounded p-button-outlined button-danger"
+                        title="Eliminar Objeto de Aprendizaje"></button>
 
                     <!-- 
                     <ng-container *ngIf="resultsEv && (resultsEv.length > 0) ; else editTemplate">
@@ -109,7 +116,7 @@
                         <p>Este objeto de aprendizaje está en revisión.</p>
                     </ng-template>
                     -->
-                    <ng-container *ngIf="resultsEv && (resultsEv.length > 0) ; else editTemplate">
+                    <ng-container *ngIf="resultsEv && (resultsEv.length > 0); else editTemplate">
                         <br><br>
                         <ng-container *ngIf="resultsEv && (resultsEv.length > 0)">
                             <div>
@@ -131,29 +138,8 @@
                                 </p-button>
                             </div><br>
                         </ng-container>
-                        <ng-container *ngIf="resultsEvStudent && (resultsEvStudent.length > 0) ; else editTemplate">
-                            <div>
-                                <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad"
-                                    [draggable]="false" [resizable]="false" appendTo="body" draggable="false"
-                                    modal="false" [(visible)]="displaystudent"
-                                    [style]="{width: '68vw',height: '575px'}">
-                                    <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
-                                    </app-evaluation-chart>
-                                    <p-footer>
-                                        <button (click)="navigateToReport(true)" pButton pRipple type="button"
-                                            label="Leer más" class="p-button-rounded p-button-outlined button-read"><i
-                                                class="pi pi-arrow-right"></i>
-                                        </button>
-                                    </p-footer>
-                                </p-dialog>
-                                <p-button (click)="showDialogstudent()" icon="pi pi-external-link"
-                                    label="Evaluacion Estudiante"></p-button>
-                            </div>
-                        </ng-container>
-                        <ng-template #editTemplate>
-                            <p>Este objeto de aprendizaje aun no fue revisado por el estudiante.</p>
-                        </ng-template>
                     </ng-container>
+
                     <ng-template #editTemplate>
                         <br><br>
                         <p-dialog *ngIf="displayautomatic" header="Resumen Evaluacion Preliminar" [draggable]="false"
@@ -171,6 +157,32 @@
                         <br><br>
                         <p>Este objeto de aprendizaje está en revisión.</p>
                     </ng-template>
+
+                    <!--- Evaluacion por el estudiante para visualizacion -->
+                    <ng-container *ngIf="resultsEvStudent && (resultsEvStudent.length > 0) ; else editTemplateEst">
+                        <div>
+                            <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad"
+                                [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false"
+                                [(visible)]="displaystudent" [style]="{width: '68vw',height: '575px'}">
+                                <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
+                                </app-evaluation-chart>
+                                <p-footer>
+                                    <button (click)="navigateToReport(true)" pButton pRipple type="button"
+                                        label="Leer más" class="p-button-rounded p-button-outlined button-read"><i
+                                            class="pi pi-arrow-right"></i>
+                                    </button>
+                                </p-footer>
+                            </p-dialog>
+                            <p-button (click)="showDialogstudent()" icon="pi pi-external-link"
+                                label="Evaluacion Estudiante"></p-button>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #editTemplateEst>
+                        <p>Este objeto de aprendizaje aun no fue revisado por el estudiante.</p>
+                    </ng-template>
+
+
                 </div>
                 <p-toast></p-toast>
                 <p-confirmPopup></p-confirmPopup>

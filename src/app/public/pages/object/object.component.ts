@@ -5,7 +5,6 @@ import { Subscription } from "rxjs";
 import { Message } from "@angular/compiler/src/i18n/i18n_ast";
 import { MessageService } from "primeng/api";
 import { ObjectLearning } from "src/app/core/interfaces/ObjectLearning";
-import { EvaluationsExpertComponent } from "../../components/evaluations-expert/evaluations-expert.component";
 import { LoginService } from "src/app/services/login.service";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 
@@ -25,6 +24,7 @@ export class ObjectComponent implements OnInit, OnDestroy {
   public msgsCopy: Message[];
   public changeView: boolean;
   public angForm: FormGroup;
+  public disabled
   
   public flagConfirm: boolean = false;
   public groupedQuestionsEx: any[];
@@ -70,6 +70,11 @@ export class ObjectComponent implements OnInit, OnDestroy {
         data.avatar = res.avatar.replace('http://', 'https://');
         data.learning_object_file.file = res.learning_object_file.file.replace('http://', 'https://');
         data.learning_object_file.url = res.learning_object_file.url.replace('http://', 'https://');
+        if(data.source_file){
+          data.source_file = res.source_file.replace('http://', 'https://')
+        }
+        
+
         this.objectData = res;
         
         this.loadData();
