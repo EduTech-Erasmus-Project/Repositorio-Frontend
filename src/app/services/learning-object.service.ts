@@ -140,6 +140,10 @@ export class LearningObjectService {
     return this.http.get(`${baseUrl}/learning-objects/student/result-to-public-student/${id}/`).pipe(map((data: any) => data));
     }
 
+    getObjectResultsPublicEvaluationStudentSingle(id){
+      return this.http.get(`${baseUrl}/learning-objects/student/result-to-public-student-single/${id}/`).pipe(map((data: any) => data));
+      }
+
   getPopulars(){
     return this.http.get(`${ baseUrl }/learning-objects/populars/`).pipe(map((data:any) => data));
   }

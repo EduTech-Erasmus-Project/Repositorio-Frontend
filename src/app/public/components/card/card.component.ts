@@ -55,7 +55,12 @@ public resultEvalCeroExpert: boolean = false;
   
     this.loadData();
     this.loadDataAutomatic();
-    this.loadstudent();
+    if(this.roleTeacher){
+      this.loadstudent();
+    }else{
+      this.loadstudentSingle();
+    }
+   
 
   }
   //>>>>>>>>>>>>>>>>>>>>>
@@ -99,6 +104,8 @@ public resultEvalCeroExpert: boolean = false;
               id: item.id,
             }
           });
+        }else{
+          this.resultEvalCero = true;
         }
       });
       this.subscribes.push(resultsEval);
@@ -158,6 +165,9 @@ public resultEvalCeroExpert: boolean = false;
     return this.loginService.validateRole("expert");
   }
 
+ get roleTeacher() {
+    return this.loginService.validateRole("teacher");
+  }
 
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -190,9 +200,10 @@ public resultEvalCeroExpert: boolean = false;
     this.subscribes.push(resultsEvalAutomatic);
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  async loadstudent() {
-    let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudent(this.object.id).subscribe(
+  async loadstudentSingle() {
+    let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudentSingle(this.object.id).subscribe(
       res => {
+        console.log(res);
         if (res.length > 0) {
           this.resultsEvStudent = res.map((item: any) => {
             return {
@@ -237,6 +248,53 @@ public resultEvalCeroExpert: boolean = false;
   this.subscribes.push(dataSstudent);
   }
 
+  async loadstudent() {
+    let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudent(this.object.id).subscribe(
+      res => {
+        console.log(res);
+        if (res.length > 0) {
+          this.resultsEvStudent = res.map((item: any) => {
+            return {
+              rating_student: item.rating,
+              observation: item.observation,
+              evaluation_students: item.evaluation_students.map((item2: any) => {
+                return {
+                  average_principle: item2.average_principle,
+                  evaluation_principle: item2.evaluation_principle,
+                  principle_gl: item2.principle_gl.map((item3: any) => {
+                    return {
+                      average_guideline: item3.average_guideline,
+                      guideline_pr: item3.guideline_pr.guideline,
+                      guideline_evaluations: item3.guideline_evaluations.map((item4: any) => {
+                        return {
+                          question: item4.question,
+                          qualification: item4.qualification,
+                          interpreter_st_yes: item4.interpreter_st_yes,
+                          interpreter_st_no: item4.interpreter_st_no,
+                          interpreter_st_partially: item4.interpreter_st_partially,
+                          metadata: item4.metadata
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          });
+        }
+        let test = []
+        if(this.resultsEvStudent != null) {
+          this.resultsEvStudent.forEach(element => {
+            element.evaluation_students.forEach(element2 => {
+              test.push(element2.average_principle)
+            });
+          })
+        }
+      
+      }
+    );
+  this.subscribes.push(dataSstudent);
+  }
   navigateToReport(valid: boolean) {
     if (valid) {
       let extras: NavigationExtras = {
@@ -260,7 +318,11 @@ public resultEvalCeroExpert: boolean = false;
               if(result.code === 200){
                 this.loadData();
                 this.loadDataAutomatic();
-                this.loadstudent();
+                if(this.roleTeacher){
+                  this.loadstudent();
+                }else{
+                  this.loadstudentSingle();
+                }
                 this.showSuccess('Se Elimino el registro correctamente');
                 this.deleteOptions.emit(true);
               }

@@ -13,8 +13,8 @@ export class ConvertLearningObject {
 
   toJsonLearningObject(lom: any): ObjectLearning {
     var objectData;
-    
-    console.log("property", lom);
+    console.log(lom)
+    //console.log("property", lom);
 
     /*
     let description_aux : any;
@@ -74,7 +74,7 @@ export class ConvertLearningObject {
         educational_semanticDensity: this.methodCodification(lom?.educational?.semanticDensity?.value) || "",
         educational_intendedEndUserRole: this.methodCodification(lom?.educational?.intendedEndUserRole?.value) || "",
         educational_context: this.methodCodification(lom?.educational?.context?.value) || "",
-        educational_typicalAgeRange: this.methodCodification(lom.educational.typicalAgeRange?.typicalAgeRange) || "",
+        educational_typicalAgeRange: this.methodCodification(lom?.educational?.typicalAgeRange?.typicalAgeRange) || "",
         educational_difficulty: this.methodCodification(lom?.educational?.difficulty?.value) || "",
         educational_typicalLearningTime_dateTime: this.methodCodification(lom?.educational?.typicalLearningTime?.duration)|| "",
         educational_typicalLearningTime_description:lom?.educational?.typicalLearningTime?.description?.join(", ") || "",
