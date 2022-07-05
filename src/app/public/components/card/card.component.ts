@@ -30,8 +30,8 @@ export class CardComponent implements OnInit {
   private subscribes: Subscription[] = [];
   public resultsEv: any[];
   public resultsEvViewExpert: any[];
-public resultEvalCero: boolean = false;
-public resultEvalCeroExpert: boolean = false;
+  public resultEvalCero: boolean = false;
+  public resultEvalCeroExpert: boolean = false;
   //>>>>>>>>>>>>>>>>>>>>
   public display: boolean = false;
   public displayautomatic: boolean = false;
@@ -48,19 +48,19 @@ public resultEvalCeroExpert: boolean = false;
     private objectService: LearningObjectService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private loginService: LoginService, 
+    private loginService: LoginService,
   ) { }
 
   ngOnInit(): void {
-  
+
     this.loadData();
     this.loadDataAutomatic();
-    if(this.roleTeacher){
+    if (this.roleTeacher) {
       this.loadstudent();
-    }else{
+    } else {
       this.loadstudentSingle();
     }
-   
+
 
   }
   //>>>>>>>>>>>>>>>>>>>>>
@@ -92,6 +92,7 @@ public resultEvalCeroExpert: boolean = false;
       let resultsEval = await this.objectService.getObjectResultsEvaluation(this.object.id).subscribe(res => {
         if (res.length > 0) {
           this.resultsEv = res.map((item: any) => {
+            console.log(res)
             return {
               conceptEvaluations: item.concept_evaluations.map((item1: any) => {
                 return {
@@ -104,36 +105,37 @@ public resultEvalCeroExpert: boolean = false;
               id: item.id,
             }
           });
-        }else{
+        } else {
           this.resultEvalCero = true;
         }
       });
       this.subscribes.push(resultsEval);
-    } else{
+    } else {
       let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
-        if(res.length >0){ 
+        if (res.length > 0) {
+          console.log(res)
           this.resultsEv = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEv = this.resultsEv;
-        }else{
-         this.resultEvalCero = true;
+        } else {
+          this.resultEvalCero = true;
         }
 
       });
       this.subscribes.push(resultsAns);
     }
 
-    if(this.expertOptions || this.expertOptionsView) {
-      let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
-        if(res.length >0){
+    if (this.expertOptionsView || this.expertOptions) {
+      let resultsAns = await this.objectService.getResultsEvaluationSingle(this.object.id).subscribe(res => {
+        if (res.length > 0) {
+          console.log(res)
           this.resultsEvViewExpert = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEvViewExpert = this.resultsEvViewExpert;
-        }else{
+        } else {
           this.resultEvalCeroExpert = true;
         }
       });
       this.subscribes.push(resultsAns);
     }
-
   }
 
   get objectId() {
@@ -157,7 +159,7 @@ public resultEvalCeroExpert: boolean = false;
   }
 
   onclickEdid() {
-   
+
     this.router.navigateByUrl(`settings/edit-object/${this.object.id}`);
   }
 
@@ -165,7 +167,7 @@ public resultEvalCeroExpert: boolean = false;
     return this.loginService.validateRole("expert");
   }
 
- get roleTeacher() {
+  get roleTeacher() {
     return this.loginService.validateRole("teacher");
   }
 
@@ -194,7 +196,7 @@ public resultEvalCeroExpert: boolean = false;
           }
         });
         this.resultsEvAut = this.resultsEvAut
-      
+
       }
     )
     this.subscribes.push(resultsEvalAutomatic);
@@ -203,7 +205,6 @@ public resultEvalCeroExpert: boolean = false;
   async loadstudentSingle() {
     let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudentSingle(this.object.id).subscribe(
       res => {
-        console.log(res);
         if (res.length > 0) {
           this.resultsEvStudent = res.map((item: any) => {
             return {
@@ -235,23 +236,22 @@ public resultEvalCeroExpert: boolean = false;
           });
         }
         let test = []
-        if(this.resultsEvStudent != null) {
+        if (this.resultsEvStudent != null) {
           this.resultsEvStudent.forEach(element => {
             element.evaluation_students.forEach(element2 => {
               test.push(element2.average_principle)
             });
           })
         }
-      
+
       }
     );
-  this.subscribes.push(dataSstudent);
+    this.subscribes.push(dataSstudent);
   }
 
   async loadstudent() {
     let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudent(this.object.id).subscribe(
       res => {
-        console.log(res);
         if (res.length > 0) {
           this.resultsEvStudent = res.map((item: any) => {
             return {
@@ -283,17 +283,17 @@ public resultEvalCeroExpert: boolean = false;
           });
         }
         let test = []
-        if(this.resultsEvStudent != null) {
+        if (this.resultsEvStudent != null) {
           this.resultsEvStudent.forEach(element => {
             element.evaluation_students.forEach(element2 => {
               test.push(element2.average_principle)
             });
           })
         }
-      
+
       }
     );
-  this.subscribes.push(dataSstudent);
+    this.subscribes.push(dataSstudent);
   }
   navigateToReport(valid: boolean) {
     if (valid) {
@@ -306,39 +306,39 @@ public resultEvalCeroExpert: boolean = false;
     }
   }
 
-  deleteLearningObject(event){
+  deleteLearningObject(event) {
     this.confirmationService.confirm({
       target: event.target,
       message: 'Esta seguro que desea eliminar el OA?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-          //confirm action
-          let eliminar = this.objectService.deleteObjestTeacher(this.object.learning_object_file.id).subscribe(
-            (result:any) => {
-              if(result.code === 200){
-                this.loadData();
-                this.loadDataAutomatic();
-                if(this.roleTeacher){
-                  this.loadstudent();
-                }else{
-                  this.loadstudentSingle();
-                }
-                this.showSuccess('Se Elimino el registro correctamente');
-                this.deleteOptions.emit(true);
+        //confirm action
+        let eliminar = this.objectService.deleteObjestTeacher(this.object.learning_object_file.id).subscribe(
+          (result: any) => {
+            if (result.code === 200) {
+              this.loadData();
+              this.loadDataAutomatic();
+              if (this.roleTeacher) {
+                this.loadstudent();
+              } else {
+                this.loadstudentSingle();
               }
+              this.showSuccess('Se Elimino el registro correctamente');
+              this.deleteOptions.emit(true);
             }
-          );
+          }
+        );
       },
       reject: () => {
-          //reject action
+        //reject action
       }
-  });
+    });
 
   }
 
   showSuccess(message) {
-    this.messageService.add({severity:'success', summary: 'Success', detail: message});
-}
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
 
 
 }
