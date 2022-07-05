@@ -30,8 +30,8 @@ export class CardComponent implements OnInit {
   private subscribes: Subscription[] = [];
   public resultsEv: any[];
   public resultsEvViewExpert: any[];
-public resultEvalCero: boolean = false;
-public resultEvalCeroExpert: boolean = false;
+  public resultEvalCero: boolean = false;
+  public resultEvalCeroExpert: boolean = false;
   //>>>>>>>>>>>>>>>>>>>>
   public display: boolean = false;
   public displayautomatic: boolean = false;
@@ -48,14 +48,19 @@ public resultEvalCeroExpert: boolean = false;
     private objectService: LearningObjectService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private loginService: LoginService, 
+    private loginService: LoginService,
   ) { }
 
   ngOnInit(): void {
-  
+
     this.loadData();
     this.loadDataAutomatic();
-    this.loadstudent();
+    if (this.roleTeacher) {
+      this.loadstudent();
+    } else {
+      this.loadstudentSingle();
+    }
+
 
   }
   //>>>>>>>>>>>>>>>>>>>>>
@@ -87,6 +92,7 @@ public resultEvalCeroExpert: boolean = false;
       let resultsEval = await this.objectService.getObjectResultsEvaluation(this.object.id).subscribe(res => {
         if (res.length > 0) {
           this.resultsEv = res.map((item: any) => {
+            console.log(res)
             return {
               conceptEvaluations: item.concept_evaluations.map((item1: any) => {
                 return {
@@ -99,34 +105,37 @@ public resultEvalCeroExpert: boolean = false;
               id: item.id,
             }
           });
+        } else {
+          this.resultEvalCero = true;
         }
       });
       this.subscribes.push(resultsEval);
-    } else{
+    } else {
       let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
-        if(res.length >0){ 
+        if (res.length > 0) {
+          console.log(res)
           this.resultsEv = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEv = this.resultsEv;
-        }else{
-         this.resultEvalCero = true;
+        } else {
+          this.resultEvalCero = true;
         }
 
       });
       this.subscribes.push(resultsAns);
     }
 
-    if(this.expertOptions || this.expertOptionsView) {
-      let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
-        if(res.length >0){
+    if (this.expertOptionsView || this.expertOptions) {
+      let resultsAns = await this.objectService.getResultsEvaluationSingle(this.object.id).subscribe(res => {
+        if (res.length > 0) {
+          console.log(res)
           this.resultsEvViewExpert = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEvViewExpert = this.resultsEvViewExpert;
-        }else{
+        } else {
           this.resultEvalCeroExpert = true;
         }
       });
       this.subscribes.push(resultsAns);
     }
-
   }
 
   get objectId() {
@@ -150,7 +159,7 @@ public resultEvalCeroExpert: boolean = false;
   }
 
   onclickEdid() {
-   
+
     this.router.navigateByUrl(`settings/edit-object/${this.object.id}`);
   }
 
@@ -158,6 +167,9 @@ public resultEvalCeroExpert: boolean = false;
     return this.loginService.validateRole("expert");
   }
 
+  get roleTeacher() {
+    return this.loginService.validateRole("teacher");
+  }
 
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -184,12 +196,59 @@ public resultEvalCeroExpert: boolean = false;
           }
         });
         this.resultsEvAut = this.resultsEvAut
-      
+
       }
     )
     this.subscribes.push(resultsEvalAutomatic);
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  async loadstudentSingle() {
+    let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudentSingle(this.object.id).subscribe(
+      res => {
+        if (res.length > 0) {
+          this.resultsEvStudent = res.map((item: any) => {
+            return {
+              rating_student: item.rating,
+              observation: item.observation,
+              evaluation_students: item.evaluation_students.map((item2: any) => {
+                return {
+                  average_principle: item2.average_principle,
+                  evaluation_principle: item2.evaluation_principle,
+                  principle_gl: item2.principle_gl.map((item3: any) => {
+                    return {
+                      average_guideline: item3.average_guideline,
+                      guideline_pr: item3.guideline_pr.guideline,
+                      guideline_evaluations: item3.guideline_evaluations.map((item4: any) => {
+                        return {
+                          question: item4.question,
+                          qualification: item4.qualification,
+                          interpreter_st_yes: item4.interpreter_st_yes,
+                          interpreter_st_no: item4.interpreter_st_no,
+                          interpreter_st_partially: item4.interpreter_st_partially,
+                          metadata: item4.metadata
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          });
+        }
+        let test = []
+        if (this.resultsEvStudent != null) {
+          this.resultsEvStudent.forEach(element => {
+            element.evaluation_students.forEach(element2 => {
+              test.push(element2.average_principle)
+            });
+          })
+        }
+
+      }
+    );
+    this.subscribes.push(dataSstudent);
+  }
+
   async loadstudent() {
     let dataSstudent = await this.objectService.getObjectResultsPublicEvaluationStudent(this.object.id).subscribe(
       res => {
@@ -224,19 +283,18 @@ public resultEvalCeroExpert: boolean = false;
           });
         }
         let test = []
-        if(this.resultsEvStudent != null) {
+        if (this.resultsEvStudent != null) {
           this.resultsEvStudent.forEach(element => {
             element.evaluation_students.forEach(element2 => {
               test.push(element2.average_principle)
             });
           })
         }
-      
+
       }
     );
-  this.subscribes.push(dataSstudent);
+    this.subscribes.push(dataSstudent);
   }
-
   navigateToReport(valid: boolean) {
     if (valid) {
       let extras: NavigationExtras = {
@@ -248,35 +306,39 @@ public resultEvalCeroExpert: boolean = false;
     }
   }
 
-  deleteLearningObject(event){
+  deleteLearningObject(event) {
     this.confirmationService.confirm({
       target: event.target,
       message: 'Esta seguro que desea eliminar el OA?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-          //confirm action
-          let eliminar = this.objectService.deleteObjestTeacher(this.object.learning_object_file.id).subscribe(
-            (result:any) => {
-              if(result.code === 200){
-                this.loadData();
-                this.loadDataAutomatic();
+        //confirm action
+        let eliminar = this.objectService.deleteObjestTeacher(this.object.learning_object_file.id).subscribe(
+          (result: any) => {
+            if (result.code === 200) {
+              this.loadData();
+              this.loadDataAutomatic();
+              if (this.roleTeacher) {
                 this.loadstudent();
-                this.showSuccess('Se Elimino el registro correctamente');
-                this.deleteOptions.emit(true);
+              } else {
+                this.loadstudentSingle();
               }
+              this.showSuccess('Se Elimino el registro correctamente');
+              this.deleteOptions.emit(true);
             }
-          );
+          }
+        );
       },
       reject: () => {
-          //reject action
+        //reject action
       }
-  });
+    });
 
   }
 
   showSuccess(message) {
-    this.messageService.add({severity:'success', summary: 'Success', detail: message});
-}
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
 
 
 }

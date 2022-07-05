@@ -349,7 +349,7 @@
                                              <br>
                                             </div>
                                             <small id="email" style="color:orange"
-                                            *ngIf="validateEmailPattern && (checkEx || checkTe || checkEs)">Su correo electrónico no es institucional, una vez registrado espere que el administrador lo apruebe.</small>
+                                            *ngIf="validateEmailPattern && (checkEx || checkTe)">Su correo electrónico no es institucional, una vez registrado espere que el administrador lo apruebe.</small>
                                             
                                             <small id="email" class="p-error"
                                                 *ngIf="validateEmail && !flagAlert">{{'validation.invalidEmail'|translate}}</small>

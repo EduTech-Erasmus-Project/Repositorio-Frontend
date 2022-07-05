@@ -8,7 +8,7 @@
 
         <!--<button pButton type="button" class="classBut" label="{{'object.averageRating' | translate}}" > <i class="pi pi-angle-double-down"> &nbsp;</i> </button>
         -->
-        <div class="field col-12 md:col-6" *ngIf="resultsEv == null && resultEvalCero != true && !expertOptionsView">
+        <div class="field col-12 md:col-6" *ngIf="resultsEv == null && resultEvalCero != true && !expertOptionsView && !expertOptions">
             <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
         </div>
 
@@ -47,20 +47,19 @@
                         </p-footer>
                     </p-dialog>
                     <button (click)="showDialogstudent()" class="button-read" pButton pRipple type="button"
-                        icon="pi pi-external-link" label="Evaluacion Estudiante">
+                        icon="pi pi-external-link" label="Resumen de su Evaluacion">
                     </button>
                 </div>
             </ng-container>
         </div>
 
         <!--  Visualizar boton de evalucion para el experto-->
-        <div class="expert-view-eavluation" *ngIf="(expertOptions) || (expertOptionsView)">
+        <div class="expert-view-eavluation" *ngIf="expertOptions  || expertOptionsView">
             
             <div class="field col-12 md:col-6" *ngIf="resultsEvViewExpert == null && resultEvalCeroExpert != true">
                 <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
             </div>
 
-            
             <ng-container *ngIf="resultsEvViewExpert && (resultsEvViewExpert.length > 0)">
                 <div>
                     <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad" [draggable]="false"

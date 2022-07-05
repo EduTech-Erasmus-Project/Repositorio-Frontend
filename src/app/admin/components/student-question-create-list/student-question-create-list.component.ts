@@ -214,8 +214,6 @@ export class StudentQuestionCreateListComponent implements OnInit {
   openEditquestionGuidelineDialog(question: QuestionStudent) {
    
     this.questionSelect = question;
-    console.log(question);
-    console.log(this.questionSelect);
     this.submitted = false;
     this.updateQuestionDialog = true;
   }
@@ -286,7 +284,6 @@ export class StudentQuestionCreateListComponent implements OnInit {
     this.administratorServices
       .retrieveEvaluationStudentquestions(id)
       .subscribe((data: any) => {
-        console.log(data)
         this.questionList = data.questions;
         this.idGuidelinePrinciple = id;
       });

@@ -97,6 +97,11 @@ export class LearningObjectService {
     return this.http.get(`${baseUrl}/learning-objects/evaluations-result-expert/${id}`).pipe(map((data: any) => data));
   }
 
+  getResultsEvaluationSingle(id){
+    return this.http.get(`${baseUrl}/learning-objects/evaluations-result-expert-single/${id}`).pipe(map((data: any) => data));
+  }
+
+
   interactionLike(body:any){
     //console.log("body request", body)
     return this.http.put(`${baseUrl}/object-learning/interaction/${body.id}/`, body);
@@ -139,6 +144,10 @@ export class LearningObjectService {
   getObjectResultsPublicEvaluationStudent(id){
     return this.http.get(`${baseUrl}/learning-objects/student/result-to-public-student/${id}/`).pipe(map((data: any) => data));
     }
+
+    getObjectResultsPublicEvaluationStudentSingle(id){
+      return this.http.get(`${baseUrl}/learning-objects/student/result-to-public-student-single/${id}/`).pipe(map((data: any) => data));
+      }
 
   getPopulars(){
     return this.http.get(`${ baseUrl }/learning-objects/populars/`).pipe(map((data:any) => data));

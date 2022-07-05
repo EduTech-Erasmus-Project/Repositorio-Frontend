@@ -586,7 +586,9 @@ addEmailPathTeacherAndExpert(){
   
   //Generamos la consulta para obtener el mensaje. 
   validateEmailPatter() {
-    
+    if(this.checkEs){
+      return;
+    }
     let campo = this.angForm.controls['email']?.value;
     let emailRegex = /^([a-zA-Z0-9]+)@((?!hotmail|gmail|yahoo|outlook)(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     //Se muestra un texto a modo de ejemplo, luego va a ser un icono
