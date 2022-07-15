@@ -41,7 +41,7 @@
                 <ng-template #loadingTemplate>
                     <div class="p-grid card-content">
                         <ng-container *ngIf="objects?.length > 0">
-                            <div class="p-col-12 p-md-6 p-lg-3" *ngFor="let object of objects" >
+                            <div class="p-col-12 p-md-6 p-lg-3"  *ngFor="let object of objects" >
                                 <!--[teacherOptions]="true"--->
                                 <div class="rol-expert" *ngIf="roleExpert">
                                     <app-card [object]="object" [expertOptions]="true"></app-card>

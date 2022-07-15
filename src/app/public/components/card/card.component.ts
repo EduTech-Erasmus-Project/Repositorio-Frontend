@@ -92,7 +92,6 @@ export class CardComponent implements OnInit {
       let resultsEval = await this.objectService.getObjectResultsEvaluation(this.object.id).subscribe(res => {
         if (res.length > 0) {
           this.resultsEv = res.map((item: any) => {
-            console.log(res)
             return {
               conceptEvaluations: item.concept_evaluations.map((item1: any) => {
                 return {
@@ -113,7 +112,6 @@ export class CardComponent implements OnInit {
     } else {
       let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
         if (res.length > 0) {
-          console.log(res)
           this.resultsEv = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEv = this.resultsEv;
         } else {
@@ -127,7 +125,6 @@ export class CardComponent implements OnInit {
     if (this.expertOptionsView || this.expertOptions) {
       let resultsAns = await this.objectService.getResultsEvaluationSingle(this.object.id).subscribe(res => {
         if (res.length > 0) {
-          console.log(res)
           this.resultsEvViewExpert = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEvViewExpert = this.resultsEvViewExpert;
         } else {

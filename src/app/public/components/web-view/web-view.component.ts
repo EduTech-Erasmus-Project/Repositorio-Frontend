@@ -229,6 +229,7 @@ export class WebViewComponent implements OnInit, OnDestroy {
   coutCommentstudent(evt) {
     this.displayFormRatingStudent = evt;
     this.flagQuestionsEst = true;
+    this.flagQuestionsEstNumber = 1;
   }
 
   coutComments(evt) {

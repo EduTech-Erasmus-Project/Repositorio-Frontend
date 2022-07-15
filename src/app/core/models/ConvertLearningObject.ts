@@ -13,7 +13,6 @@ export class ConvertLearningObject {
 
   toJsonLearningObject(lom: any): ObjectLearning {
     var objectData;
-    console.log(lom)
     //console.log("property", lom);
 
     /*
