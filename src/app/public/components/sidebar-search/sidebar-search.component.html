@@ -32,12 +32,12 @@
 
                 <div class="view-rol-filters" *ngIf="!loginService.user?.roles.includes('expert') || loginService.user?.roles.includes('teacher') || loginService.user?.roles.includes('student')">
                     <p-accordionTab #acordingAreas aria-hidden="true" [header]="'search.interestAreas' | translate"
-                        [selected]="querySearchService.queryParams.knowledge_area__name">
+                        [selected]="querySearchService.queryParams.knowledge_area__name_es">
                         <div class="box">
                             <div class="p-field-radiobutton" *ngFor="let area of areas">
                                 <p-radioButton [tabindex]="acordingAreas?.selected ? 0 : -1" (click)="areasBtn = true"
                                     [name]="area.name" [value]="area.name"
-                                    [(ngModel)]="querySearchService.queryParams.knowledge_area__name"
+                                    [(ngModel)]="querySearchService.queryParams.knowledge_area__name_es"
                                     [inputId]="area.name">
                                 </p-radioButton>
                                 <label [for]="area.name">{{area.name}}</label>
@@ -53,13 +53,13 @@
                     </p-accordionTab>
 
                     <p-accordionTab #acordingLevel aria-hidden="true" [header]="'search.educationLevel' | translate"
-                        [selected]="querySearchService.queryParams.education_levels__description">
+                        [selected]="querySearchService.queryParams.education_levels__name_es">
                         <div class="box">
                             <div class="p-field-radiobutton" *ngFor="let level of levels">
 
                                 <p-radioButton [tabindex]="acordingLevel?.selected ? 0 : -1" (click)="levelsBtn = true"
                                     [name]="level.name" [value]="level.name"
-                                    [(ngModel)]="querySearchService.queryParams.education_levels__description"
+                                    [(ngModel)]="querySearchService.queryParams.education_levels__name_es"
                                     [inputId]="level.name">
                                 </p-radioButton>
                                 <label [for]="level.name">{{level.name}}</label>
@@ -134,13 +134,13 @@
                     </p-accordionTab>
 
                     <p-accordionTab #acordingLicence aria-hidden="true" [header]="'search.lisence' | translate"
-                        [selected]="querySearchService.queryParams.license__description">
+                        [selected]="querySearchService.queryParams.license__name_es">
                         <div class="box">
 
                             <div class="p-field-radiobutton" *ngFor="let lisence of licenses">
                                 <p-radioButton [tabindex]="acordingLicence?.selected ? 0 : -1"
                                     (click)="lisenceBtn = true" name="lisence" [value]="lisence.name"
-                                    [(ngModel)]="querySearchService.queryParams.license__description"
+                                    [(ngModel)]="querySearchService.queryParams.license__name_es"
                                     [inputId]="lisence.name">
                                 </p-radioButton>
                                 <label [for]="lisence.name">{{lisence.name}}</label>

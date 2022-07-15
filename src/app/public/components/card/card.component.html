@@ -2,13 +2,18 @@
     <p-card [header]="object.general_title"
         [subheader]="(object.user_created?.first_name || '')+' '+(object.user_created?.last_name || '')"
         styleClass="p-card-shadow" [style]="{width: '100%'}">
-        <ng-template pTemplate="header">
+        <!--<ng-template pTemplate="header">
             <img loading="lazy" [alt]="object.general_title" [src]="object.avatar">
+        </ng-template>-->
+        <ng-template pTemplate="header">
+            <div class="class-img" (click)="navigateTo()" style=" background-image: url({{object.avatar}});">
+            </div>
         </ng-template>
 
         <!--<button pButton type="button" class="classBut" label="{{'object.averageRating' | translate}}" > <i class="pi pi-angle-double-down"> &nbsp;</i> </button>
         -->
-        <div class="field col-12 md:col-6" *ngIf="resultsEv == null && resultEvalCero != true && !expertOptionsView && !expertOptions">
+        <div class="field col-12 md:col-6"
+            *ngIf="resultsEv == null && resultEvalCero != true && !expertOptionsView && !expertOptions">
             <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
         </div>
 
@@ -19,6 +24,7 @@
                     style="width: 100%;">
                     <i [ngClass]="{'pi-angle-down':!show,'pi-angle-up':show}" class="pi"> &nbsp;</i>
                 </button>
+
                 <div id="formsAr" *ngIf="show">
                     <div class="accordion-body">
                         <app-view-evaluacions *ngIf="object" [resultsEv]="resultsEv" [roleExpert]="roleExpert">
@@ -55,7 +61,7 @@
 
         <!--  Visualizar boton de evalucion para el experto-->
         <div class="expert-view-eavluation" *ngIf="expertOptions  || expertOptionsView">
-            
+
             <div class="field col-12 md:col-6" *ngIf="resultsEvViewExpert == null && resultEvalCeroExpert != true">
                 <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
             </div>

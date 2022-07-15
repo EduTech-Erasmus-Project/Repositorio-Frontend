@@ -1,111 +1,123 @@
-  .imagen{
+  .imagen {
     height: 15rem;
   }
 
-.button-read{
-  
-  position: relative;
-  padding: 0.6rem  3rem 0.6rem 1rem;
-  i{
-    background-color: var(--primary-color);
-    padding: 0.5rem;
-    border-radius: 50%;
-    color: #fff;
-    position: absolute;
-    right: 2px;
+  .button-read {
+
+    position: relative;
+    padding: 0.6rem 3rem 0.6rem 1rem;
+
+    i {
+      background-color: var(--primary-color);
+      padding: 0.5rem;
+      border-radius: 50%;
+      color: #fff;
+      position: absolute;
+      right: 2px;
+    }
   }
-}
 
-:host ::ng-deep .p-card-content{
-  padding: 0;
-}
+  :host ::ng-deep .p-card-content {
+    padding: 0;
+  }
 
-.card-content{
-  height: 100%;
- 
-  :host ::ng-deep .p-card-shadow{
+  .card-content {
     height: 100%;
-    //position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+
+    :host ::ng-deep .p-card-shadow {
+      height: 100%;
+      //position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    :host ::ng-deep .p-card-body {
+      //height: 100%;
+      //background-color: red;
+      padding: 15px;
+
+
+    }
   }
-  :host ::ng-deep .p-card-body{
-    //height: 100%;
+
+  :host ::ng-deep .p-card-footer {
+    text-align: center;
+  }
+
+  :host ::ng-deep .p-rating {
+    .p-rating-icon {
+      cursor: text;
+    }
+
+  }
+
+  :host ::ng-deep .p-card-shadow {
     //background-color: red;
-    padding: 15px;
-    
-
+    position: relative;
   }
-}
 
-:host ::ng-deep .p-card-footer{
-  text-align: center;
-}
-
-:host ::ng-deep .p-rating{
-  .p-rating-icon{
-    cursor: text;
+  :host ::ng-deep .p-card-title {
+    font-size: 1em;
   }
-  
-}
 
-:host ::ng-deep .p-card-shadow{
-  //background-color: red;
-  position: relative;
-}
+  .rating {
+    display: flex;
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    width: 5rem;
+    background-color: var(--primary-color);
+    padding: 5px 15px;
+    border-radius: 15px;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+  }
 
-:host ::ng-deep .p-card-title {
-  font-size: 1em;
-}
+  .classBut {
+    text-align: center;
+  }
 
-.rating{
-  display: flex;
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  width: 5rem;
-  background-color: var(--primary-color);
-  padding: 5px 15px;
-  border-radius: 15px;
-  align-items: center;
-  justify-content: space-between;
-  color: #fff;
-}
-
-.classBut{
-  text-align: center;
-}
-
-.pi{
-  text-align: center;
-    background-color: var(--primary-color) ;
+  .pi {
+    text-align: center;
+    background-color: var(--primary-color);
     color: white;
-}
+  }
 
-.buttons{
-  margin-bottom: 10px;
-}
+  .buttons {
+    margin-bottom: 10px;
+  }
 
-.expert-view-eavluation{
-  text-align: center;
-}
+  .expert-view-eavluation {
+    text-align: center;
+  }
 
-.student-view-evaluation{
-  text-align: center;
-}
+  .student-view-evaluation {
+    text-align: center;
+  }
 
-:host ::ng-deep .button-read{
-  width: 100%;
-  
-}
+  :host ::ng-deep .button-read {
+    width: 100%;
 
-:host ::ng-deep .button-danger{
-  color :red;
-  margin: 0px 5px;
-}
+  }
 
-:host ::ng-deep .button-edit{
-  color :#28a745;
-  margin: 0px 5px;
-}
+  :host ::ng-deep .button-danger {
+    color: red;
+    margin: 0px 5px;
+  }
+
+  :host ::ng-deep .button-edit {
+    color: #28a745;
+    margin: 0px 5px;
+  }
+
+
+  .class-img {
+    height: 20vh;
+    background-position: center;
+    background-repeat: none;
+    background-size: cover;
+    cursor: pointer;
+  }
+

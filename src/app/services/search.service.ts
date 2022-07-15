@@ -32,7 +32,6 @@ export class SearchService {
   getLevelEducation(){
     return this.http.get(`${ baseUrl }/education-level/`).pipe(map((data: any) => data));
   }
-
   search(queryParams:any){
     return this.http.get(`${ baseUrl }/learning-objects/search/`, {params: queryParams});
   }
