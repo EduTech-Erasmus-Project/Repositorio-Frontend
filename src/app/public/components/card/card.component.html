@@ -19,6 +19,9 @@
 
         <div class="accordion" id="accordionExample" *ngIf="resultsEv && (resultsEv.length > 0)">
             <div class="accordion-item">
+               
+
+                
                 <!--<p>holaaaa</p>-->
                 <button pButton type="button" label="{{'object.averageRating' | translate}}" (click)="show=!show"
                     style="width: 100%;">
@@ -150,7 +153,7 @@
                         <p-dialog *ngIf="displayautomatic" header="Resumen Evaluacion Preliminar" [draggable]="false"
                             [resizable]="false" appendTo="body" draggable="false" modal="false"
                             [(visible)]="displayautomatic" [style]="{width: '78vw',height: '42vw'}">
-                            <app-evaluation-chart [resultsEvAut]="resultsEvAut" idexpe="automatic">
+                            <app-evaluation-chart [resultsEvAut]="resultsEvAut" [object]="object" idexpe="automatic">
                             </app-evaluation-chart>
                             <p-footer>
                                 <!--<button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>

@@ -33,9 +33,10 @@
                 icon="pi pi-cloud-download" class="p-button-rounded p-button-outlined"
                 [pTooltip]="'Descargar el fichero fuente de eXeLearning'"></button>
 
-                <button aria-label="Boton de pantalla completa" *ngIf="!fullScreen" (click)="openFullscreen()" pButton pRipple type="button"
+            
+                <a aria-label="Boton de pantalla completa" style="margin-left: 2px;" *ngIf="!fullScreen" href="{{object.learning_object_file.url}}" target="_blanck" pButton pRipple type="button"
                 icon="pi pi-window-maximize" class="p-button-rounded p-button-outlined"
-                [pTooltip]="'object.btnFullScreen'| translate "></button>
+                [pTooltip]="'object.btnFullScreen'| translate "></a>
             
                 <button aria-label="Boton de salir de la pantalla completa" *ngIf="fullScreen" (click)="closeFullscreen()" pButton pRipple type="button"
                 icon="pi pi-window-minimize" class="p-button-rounded p-button-outlined"></button>

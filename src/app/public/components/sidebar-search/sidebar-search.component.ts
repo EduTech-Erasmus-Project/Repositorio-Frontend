@@ -115,11 +115,11 @@ export class SidebarSearchComponent implements OnInit, OnDestroy {
     return preferencesFilter;
   }
 
-  submitSearch() {
+  async submitSearch() {
     let extras: NavigationExtras = {
       queryParams: this.querySearchService.queryParams,
     };
-    this.router.navigate(["/search"], extras);
+    await this.router.navigate(["/search"], extras);
     //button = false;
   }
 

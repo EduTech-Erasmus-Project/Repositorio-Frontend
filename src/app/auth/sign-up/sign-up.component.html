@@ -68,12 +68,14 @@
                                                 <div class="p-field-checkbox">
 
                                                     <p-checkbox type="checkbox"
+                                                        aria-label="Order 145. On selection a new window will be opened."
                                                         [ngClass]="{'ng-dirty ng-invalid': validateRole}"
                                                         (onChange)="onChangeTypeStudentEnter($event) "
                                                         formControlName="check" binary="true" id="st">
                                                     </p-checkbox>
                                                     <label for="st">{{'register.studen'|translate}}</label>
                                                 </div>
+                                                
                                                 <div class="p-field-checkbox">
                                                     <p-checkbox (onChange)="onChangeTypeTeacher($event)" type="checkbox"
                                                         [ngClass]="{'ng-dirty ng-invalid': validateRole}" binary="true"
@@ -165,6 +167,7 @@
                                             <div class="separador">
                                                 <div class="p-field-radiobutton">
                                                     <p-radioButton (click)="onChangeDisability()" group="button"
+                                                        aria-label="Order 145. On selection a new window will be opened."
                                                         value="yes" formControlName="disability" id="disability1">
                                                     </p-radioButton>
 
@@ -324,7 +327,7 @@
                                             <div *ngIf="academic.invalid && (academic.dirty || academic.touched)">
                                                 <small id="academic" class="p-error"
                                                     *ngIf="academic.errors.required">*{{'validation.obligatoryCamp'|translate}}*</small>
-                                               <!-- <small id="academic" class="p-error"
+                                                <!-- <small id="academic" class="p-error"
                                                     *ngIf="academic.errors.pattern">*{{'validation.letters'|translate}}*</small>-->
                                             </div>
                                         </div>
@@ -336,21 +339,23 @@
                                         <div class="p-field p-fluid">
                                             <label for="email">{{'register.email'|translate}}*</label>
                                             <input id="email" type="text" formControlName="email"
-                                            (keyup)="validateEmailPatter()"
+                                                (keyup)="validateEmailPatter()"
                                                 [ngClass]="{'ng-dirty ng-invalid':(email.invalid && (email.dirty || email.touched) )}"
                                                 placeholder="{{'register.email'|translate}}" pInputText>
                                             <div *ngIf="email.invalid && (email.dirty || email.touched)">
                                                 <small id="email" class="p-error"
                                                     *ngIf="email.errors.required">{{'validation.obligatoryCamp'|translate}}</small>
 
-                                              <small id="email" class="p-error"
+                                                <small id="email" class="p-error"
                                                     *ngIf="email.errors.email && (checkEx || checkTe || checkEs)">{{'validation.errorEmail'|translate}}</small>
                                                 <!-- hasError -->
-                                             <br>
+                                                <br>
                                             </div>
                                             <small id="email" style="color:orange"
-                                            *ngIf="validateEmailPattern && (checkEx || checkTe)">Su correo electrónico no es institucional, una vez registrado espere que el administrador lo apruebe.</small>
-                                            
+                                                *ngIf="validateEmailPattern && (checkEx || checkTe)">Su correo
+                                                electrónico no es institucional, una vez registrado espere que el
+                                                administrador lo apruebe.</small>
+
                                             <small id="email" class="p-error"
                                                 *ngIf="validateEmail && !flagAlert">{{'validation.invalidEmail'|translate}}</small>
                                             <small id="email" class="p-error"
