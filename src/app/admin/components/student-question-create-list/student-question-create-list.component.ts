@@ -224,7 +224,6 @@ export class StudentQuestionCreateListComponent implements OnInit {
       .putEvaluationStudent(this.principleSelect)
       .subscribe((data) => {
         this.editPrincipleDialog = false;
-        //console.log(data);
       });
   }
   openGuideline(principle: Principle) {
@@ -241,16 +240,15 @@ export class StudentQuestionCreateListComponent implements OnInit {
 
   saveQuestion() {
     this.question.guideline = this.guidelineSelect.id;
-   // console.log("----pregunta student",this.question.guideline)
+   
     this.administratorServices.postQuestionStudent(this.question).subscribe(
       (result) => {
         this.question = new QuestionStudent();
-        //console.log("----pregunta student2",this.question)
-        //console.log("----pregunta student3",result)
+      
         this.retrieveEvaluationData2(this.guidelineSelect.id);
       },
       (err: any) => {
-        //console.log(err.error)
+       
       }
     );
   }
@@ -316,11 +314,9 @@ export class StudentQuestionCreateListComponent implements OnInit {
     );
   }
   saveUpdateGuideline() {
-    // console.log(this.questionSelect);
     this.administratorServices
       .updateGuidelineStudent(this.guidelineSelect)
       .subscribe((data) => {
-        //console.log(data);
       });
   }
   ////////// guardar del actualizar pdialog
@@ -342,7 +338,6 @@ export class StudentQuestionCreateListComponent implements OnInit {
             detail: "Error al actualizar el registro",
           });
         }
-        //console.log(data);
       });
   }
   /////////

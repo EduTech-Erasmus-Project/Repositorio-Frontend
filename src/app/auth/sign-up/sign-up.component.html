@@ -17,6 +17,7 @@
                                             <label for="firstnamelabel">{{'register.name'|translate}}*</label>
 
                                             <input id="firstname4" type="text"
+                                                aria-describedby="nameLabel nameLabel2 nameLabel3"
                                                 placeholder="{{'register.name'|translate}}"
                                                 maxlength="{{getErrorNumber('name')}}" formControlName="name"
                                                 (keypress)="getErrorNumber('name')"
@@ -24,13 +25,13 @@
                                                 pInputText>
 
                                             <div *ngIf="name.invalid && (name.dirty || name.touched)">
-                                                <small id="name " class="p-error"
+                                                <small id="nameLabel" class="p-error"
                                                     *ngIf="name.errors.required">*{{'validation.obligatoryCamp'|
                                                     translate}}*</small>
-                                                <small id="name " class="p-error"
+                                                <small id="nameLabel2" class="p-error"
                                                     *ngIf="name.errors.pattern">*{{'validation.letters'|
                                                     translate}}*</small>
-                                                <small id="name " class="p-error"
+                                                <small id="nameLabel3" class="p-error"
                                                     *ngIf="name.hasError('minlength')">*{{'validation.charactersMin'|
                                                     translate}}*</small>
                                             </div>
@@ -41,6 +42,7 @@
                                             <label for="lastname4">{{'register.lastName'|translate}}*</label>
 
                                             <input id="lastname4" type="text" formControlName="lastname"
+                                                aria-describedby="lastName1 lastName2 lastName3"
                                                 maxlength="{{getErrorNumber('lastname')}}"
                                                 placeholder="{{'register.lastName'|translate}}"
                                                 (keypress)="getErrorNumber('lastname')"
@@ -48,47 +50,49 @@
                                                 pInputText>
 
                                             <div *ngIf="lastname.invalid && (lastname.dirty || lastname.touched)">
-                                                <small id="name " class="p-error"
+                                                <small id="lastName1" class="p-error"
                                                     *ngIf="lastname.errors.required">*{{'validation.obligatoryCamp'|
                                                     translate}}*</small>
-                                                <small id="name " class="p-error"
+                                                <small id="lastName2" class="p-error"
                                                     *ngIf="lastname.errors.pattern">*{{'validation.letters'|
                                                     translate}}*</small>
-                                                <small id="name " class="p-error"
+                                                <small id="lastName3" class="p-error"
                                                     *ngIf="lastname.hasError('minlength')">*{{'validation.charactersMin'|
                                                     translate}}*</small>
                                             </div>
                                         </div>
                                     </div>
 
+
                                     <div class="p-col-12 p-md-12 p-lg-12">
                                         <div class="p-field p-fluid">
                                             <label for="lastname4">{{'register.memberType'|translate}}*</label>
                                             <div class="role">
                                                 <div class="p-field-checkbox">
-
-                                                    <p-checkbox type="checkbox"
-                                                        aria-label="Order 145. On selection a new window will be opened."
+                                                    <p-checkbox type="checkbox" inputId="student"
                                                         [ngClass]="{'ng-dirty ng-invalid': validateRole}"
-                                                        (onChange)="onChangeTypeStudentEnter($event) "
+                                                        (onChange)="onChangeTypeStudentEnter($event)"
                                                         formControlName="check" binary="true" id="st">
                                                     </p-checkbox>
-                                                    <label for="st">{{'register.studen'|translate}}</label>
+                                                    <label for="student">{{'register.studen'|translate}}</label>
                                                 </div>
-                                                
+
                                                 <div class="p-field-checkbox">
                                                     <p-checkbox (onChange)="onChangeTypeTeacher($event)" type="checkbox"
+                                                        inputId="teacher"
                                                         [ngClass]="{'ng-dirty ng-invalid': validateRole}" binary="true"
                                                         formControlName="checkTe" id="te">
                                                     </p-checkbox>
-                                                    <label for="te">{{'register.teacher'|translate}}</label>
+                                                    <label for="teacher">{{'register.teacher'|translate}}</label>
                                                 </div>
                                                 <div class="p-field-checkbox">
                                                     <p-checkbox (onChange)="onChangeTypeExpert($event)" type="checkbox"
+                                                        inputId="expert"
                                                         [ngClass]="{'ng-dirty ng-invalid': validateRole}" binary="true"
                                                         formControlName="checkEx" id="ex">
                                                     </p-checkbox>
-                                                    <label for="ex">{{'register.collaboraingExpert'|translate}}</label>
+                                                    <label
+                                                        for="expert">{{'register.collaboraingExpert'|translate}}</label>
                                                 </div>
                                             </div>
                                             <div *ngIf="validateRole">
@@ -166,25 +170,26 @@
                                             <label for="Name">{{'register.disability'|translate}}</label>
                                             <div class="separador">
                                                 <div class="p-field-radiobutton">
-                                                    <p-radioButton (click)="onChangeDisability()" group="button"
-                                                        aria-label="Order 145. On selection a new window will be opened."
-                                                        value="yes" formControlName="disability" id="disability1">
+                                                    <p-radioButton (change)="onChangeDisability()" group="button"
+                                                        inputId="siB" value="yes" formControlName="disability"
+                                                        id="disability1">
                                                     </p-radioButton>
 
-                                                    <label for="city1">{{'register.yes'|translate}}</label>
+                                                    <label for="siB">{{'register.yes'|translate}}</label>
                                                 </div>
                                                 <div class="p-field-radiobutton">
-                                                    <p-radioButton (click)="onChangeDisability()" group="button"
-                                                        value="no" formControlName="disability" id="disability2">
+                                                    <p-radioButton (change)="onChangeDisability()" group="button"
+                                                        inputId="noB" value="no" formControlName="disability"
+                                                        id="disability2">
                                                     </p-radioButton>
-                                                    <label for="city1">{{'register.no'|translate}}</label>
+                                                    <label for="noB">{{'register.no'|translate}}</label>
                                                 </div>
                                             </div>
 
                                         </div>
                                     </div>
                                     <div class="p-col-12 p-md-12 p-lg-12 animate__animated animate__fadeIn position-relative"
-                                        *ngIf="typeDisability">
+                                        *ngIf="disability != false">
                                         <div class="p-field p-fluid">
                                             <input id="discapacidad" type="text"
                                                 placeholder="{{'register.descriptionDis'| translate}}"
@@ -232,14 +237,13 @@
                                             <div *ngFor="let item of preferenceAreas">
                                                 <div class="forms">
                                                     <h6>{{item.label}}</h6>
-
                                                     <div class="labelQu" *ngFor="let itemQ of item.items">
-
                                                         <p-checkbox group="button" [value]="itemQ.value"
-                                                            formControlName="areasPrefer"
+                                                            formControlName="areasPrefer" inputId="{{itemQ.label}}"
                                                             (onChange)="selectPreferences(itemQ.value)">
                                                         </p-checkbox>
-                                                        <label class="labelQT"> {{itemQ.label}}</label>
+                                                        <label class="labelQT" for="{{itemQ.label}}">
+                                                            {{itemQ.label}}</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -283,21 +287,21 @@
 
                                             <div class="separador">
                                                 <div class="p-field-radiobutton">
-                                                    <p-radioButton group="button" value="Bajo"
+                                                    <p-radioButton group="button" value="Bajo" inputId="levelE1"
                                                         formControlName="levelExpertF"></p-radioButton>
                                                     <label for="levelE1">{{'register.low'|translate}}</label>
                                                 </div>
 
                                                 <div class="p-field-radiobutton">
-                                                    <p-radioButton group="button" value="Medio"
+                                                    <p-radioButton group="button" value="Medio" inputId="levelE2"
                                                         formControlName="levelExpertF"></p-radioButton>
-                                                    <label for="levelE1">{{'register.medium'|translate}}</label>
+                                                    <label for="levelE2">{{'register.medium'|translate}}</label>
                                                 </div>
 
                                                 <div class="p-field-radiobutton">
-                                                    <p-radioButton group="button" value="Alto"
+                                                    <p-radioButton group="button" value="Alto" inputId="levelE3"
                                                         formControlName="levelExpertF"></p-radioButton>
-                                                    <label for="levelE1">{{'register.high'|translate}}</label>
+                                                    <label for="levelE3">{{'register.high'|translate}}</label>
                                                 </div>
 
                                             </div>
@@ -339,26 +343,25 @@
                                         <div class="p-field p-fluid">
                                             <label for="email">{{'register.email'|translate}}*</label>
                                             <input id="email" type="text" formControlName="email"
-                                                (keyup)="validateEmailPatter()"
+                                                (keyup)="validateEmailPatter()" aria-labelledby="emailLabel emailLabel1 emailLabel3 emailLabel4 emailLabel5 "
                                                 [ngClass]="{'ng-dirty ng-invalid':(email.invalid && (email.dirty || email.touched) )}"
                                                 placeholder="{{'register.email'|translate}}" pInputText>
                                             <div *ngIf="email.invalid && (email.dirty || email.touched)">
-                                                <small id="email" class="p-error"
+                                                <small id="emailLabel" class="p-error"
                                                     *ngIf="email.errors.required">{{'validation.obligatoryCamp'|translate}}</small>
-
-                                                <small id="email" class="p-error"
+                                                <small id="emailLabel1" class="p-error"
                                                     *ngIf="email.errors.email && (checkEx || checkTe || checkEs)">{{'validation.errorEmail'|translate}}</small>
                                                 <!-- hasError -->
                                                 <br>
                                             </div>
-                                            <small id="email" style="color:orange"
+                                            <small id="emailLabel3" style="color:orange"
                                                 *ngIf="validateEmailPattern && (checkEx || checkTe)">Su correo
                                                 electrónico no es institucional, una vez registrado espere que el
                                                 administrador lo apruebe.</small>
 
-                                            <small id="email" class="p-error"
+                                            <small id="emailLabel4" class="p-error"
                                                 *ngIf="validateEmail && !flagAlert">{{'validation.invalidEmail'|translate}}</small>
-                                            <small id="email" class="p-error"
+                                            <small id="emailLabel5" class="p-error"
                                                 *ngIf="flagAlert">{{'validation.emailRepit'|translate}}</small>
                                         </div>
                                     </div>
@@ -367,11 +370,11 @@
                                             <label for="name">{{'register.password'|translate}}*</label>
                                             <div class="viewPass">
                                                 <input id="password" [type]="show?'text':'password'"
-                                                    formControlName="password"
+                                                    formControlName="password" aria-describedby="password password1"
                                                     placeholder="{{'register.password'|translate}}"
                                                     [ngClass]="{'ng-dirty':password.invalid && (password.dirty || password.touched)}"
                                                     pInputText>
-                                                <i tabindex="0" (keyup.enter)="show=!show"
+                                                <i tabindex="0" (keyup.enter)="show=!show" aria-description="Ver contraseña"
                                                     [ngClass]="{'pi-eye':!show,'pi-eye-slash':show}" class="pi"
                                                     (click)="show=!show"></i>
                                             </div>
@@ -379,11 +382,11 @@
                                             <div *ngIf="password.invalid && (password.dirty || password.touched)">
                                                 <small id="password" class="p-error"
                                                     *ngIf="password.errors.required">{{'validation.obligatoryCamp'|translate}}</small>
-                                                <small id="password" class="p-error"
+                                                <small id="password1" class="p-error"
                                                     *ngIf="password.errors.pattern">*{{'validation.passwordEnter'|translate}}*
                                                     <ul class="p-pl-2 p-ml-2 p-mt-0" style="line-height: 1.5">
                                                         <li>{{'validation.passDigit'|translate}}</li>
-                                                        <li>{{'validation.passMinu'|translate}}</li>
+                                                        <li>{{'validation.passM                 inu'|translate}}</li>
                                                         <li>{{'validation.passMayu'|translate}}</li>
                                                         <li>{{'validation.passChar'|translate}}</li>
                                                     </ul>
@@ -394,12 +397,14 @@
 
                                     <div class="p-col-12 p-md-12 p-lg-12 ">
                                         <div class="p-field p-fluid terms">
-                                            <p-checkbox binary="true"
+                                            <p-checkbox binary="true" inputId="Terms"
                                                 [ngClass]="{'ng-invalid ng-dirty': !terms.value && (terms.dirty || terms.touched)}"
                                                 name="groupname" formControlName="terms">
                                             </p-checkbox>
-                                            <a target="_blank"
-                                                [routerLink]="[ '/terms-and-conditions']">{{'register.terms'|translate}}</a>
+                                            <label for="Terms">
+                                                <a target="_blank">{{'register.terms'|translate}}</a>
+                                            </label>
+
                                         </div>
                                         <div *ngIf="!terms.value && (terms.dirty || terms.touched)">
                                             <small id="educacionL " class="p-error"

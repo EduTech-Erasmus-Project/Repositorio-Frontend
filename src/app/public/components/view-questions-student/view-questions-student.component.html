@@ -8,6 +8,9 @@
                         <label><h6>{{item.label}}</h6></label>
                     </div><br>
                     <div *ngFor="let itemQ of item.items">
+                        <div class="labelQutwo">
+                            <label><p>{{itemQ.label}}</p></label>
+                        </div><br>
                         <div>
                             <ul *ngFor="let itemt of itemQ.question">
                                 <div class="labelQ">
@@ -57,14 +60,13 @@
             label="Guardar Evaluacion" styleClass="p-button-text"></p-button>
         </div>
     </div>
+
     <div *ngIf="flagQuestionsEst==true">
         <div *ngFor="let item of groupedQuestionsUpdate">
             <ul *ngFor="let item2 of item.evaluation_students">
                 <div class="labelQu">
                     <label><p>{{item2.evaluation_principle}}</p></label>
                 </div><br>
-                
-                
                 <ul *ngFor="let item3 of item2.principle_gl">
                     <div class="labelQutwo">
                         <label><p>{{item3.guideline_pr}}</p></label>

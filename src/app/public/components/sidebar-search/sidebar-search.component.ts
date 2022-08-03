@@ -123,6 +123,15 @@ export class SidebarSearchComponent implements OnInit, OnDestroy {
     //button = false;
   }
 
+  async submitSearchExpert() {
+ 
+    let extras: NavigationExtras = {
+      queryParams: this.querySearchService.queryParams,
+    };
+    await this.router.navigate(["/search"], extras);
+    //button = false;
+  }
+
   get selectedPreferences() {
     return (
       this.querySearchService.queryParams.accesibility_features?.length > 0 ||

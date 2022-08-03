@@ -8,15 +8,17 @@
                     [header]="'search.qualifyOA' | translate" [selected]="querySearchService.queryParams.is_evaluated">
                     <div aria-hidden="true" class="box">
                         <div class="p-field-radiobutton">
-                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (change)="submitSearch()" 
+                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (change)="submitSearchExpert()" 
+                            (click)="submitSearchExpert()" 
                                 name="rated" value="False" [(ngModel)]="querySearchService.queryParams.is_evaluated"
                                 inputId="enr">
                             </p-radioButton>
                             <label for="enr">Sin calificar</label>
                         </div>
                         <div class="p-field-radiobutton">
-                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (change)="submitSearch()"
-                                name="rated" value="True" [(ngModel)]="querySearchService.queryParams.is_evaluated"
+                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (change)="submitSearchExpert()"
+                            (click)="submitSearchExpert()"     
+                            name="rated" value="True" [(ngModel)]="querySearchService.queryParams.is_evaluated"
                                 inputId="er">
                             </p-radioButton>
                             <label for="er">Calificados</label>

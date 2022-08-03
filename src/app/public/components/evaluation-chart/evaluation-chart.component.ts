@@ -124,7 +124,6 @@ export class EvaluationChartComponent implements OnInit {
 
 
   navigateToReport(valid: boolean) {
-    console.log('Sii');
     if (valid) {
       let extras: NavigationExtras = {
         queryParams: { rstudent: true },

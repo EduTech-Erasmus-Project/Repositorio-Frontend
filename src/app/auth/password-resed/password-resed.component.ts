@@ -125,7 +125,6 @@ export class PasswordResedComponent implements OnInit {
                 Swal.close();
                 this.router.navigateByUrl("/reset/confirm");
             },(err)=>{
-             // console.log("Err",err);
               this.showError("No se puedo cambiar la contraseña")
               Swal.close();
             });
@@ -146,7 +145,6 @@ export class PasswordResedComponent implements OnInit {
 
   validatorPassword() {
     if (this.angForm.get('passwordNew').value == this.angForm.get('passwordAgain').value) {
-      // console.log('Si son iguales')
       this.flagConfirm = true;
     }
   }

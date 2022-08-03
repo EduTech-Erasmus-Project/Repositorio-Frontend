@@ -14,7 +14,7 @@ import {
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthService } from "src/app/admin/services/auth.service";
 import Swal from "sweetalert2";
-import { Message, SelectItemGroup } from "primeng/api";
+import {SelectItemGroup } from "primeng/api";
 import { UserGeneral } from "src/app/core/models/userGeneral";
 import { SearchService } from "src/app/services/search.service";
 import { Subscription } from "rxjs";
@@ -36,29 +36,22 @@ export class SignUpComponent implements OnInit, OnDestroy {
   public levelsEdications: any[];
   public preferenceAreas: SelectItemGroup[];
   public areasInterestings: any[];
-
   public preferenceAreasSave: any[] = [];
   public selectedValues: string[] = [];
-
   public angForm: FormGroup;
   public show: boolean = false;
   public flagN: number = 20;
   private subscribes: Subscription[] = [];
-
   public validateRole: boolean = false;
   public validateEmail: boolean = false;
-
   public flagAlert: boolean = false;
- 
-
   public registred: boolean = false;
-  //public patternV: string =
-   // "^([a-zA-Z0-9_' - '.]+)@([a-zA-Z0-9_' - '.]+).([a-zA-Z]{2,5})$";
   public patternCorreo: string =
   `^([a-zA-Z0-9]+.+)@((?!hotmail|gmail|yahoo|outlook)(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$`;
   private typeRegister: string;
-
   public validateEmailPattern = false;
+  public msgs: any[];
+
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
@@ -91,7 +84,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.pattern("[a-zA-ZñÑáéíóúÁÉÍÓÚ\s ]+"),
-          Validators.maxLength(20),
+          Validators.maxLength(50),
           Validators.minLength(3),
         ],
       ],
@@ -100,7 +93,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.pattern("[a-zA-ZñÑáéíóúÁÉÍÓÚ\s ]+"),
-          Validators.maxLength(20),
+          Validators.maxLength(50),
           Validators.minLength(3),
         ],
       ],
@@ -306,7 +299,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     if (this.angForm.get(field).hasError("pattern")) {
       return (this.flagN = 0);
     }
-    return (this.flagN = 20);
+    return (this.flagN = 50);
   }
   getvals(field: any): boolean {
     return this.angForm.get(field).pristine;
@@ -467,7 +460,6 @@ addEmailPathTeacherAndExpert(){
               Swal.close();
             },
             (err) => {
-              console.log("Ad",err);
               if (err.error.email[0] == "El correo debe ser institucionals") {      
                this.showError('El correo electronico debe ser institucional');
               } else if (err.error.email[0] == "This field must be unique.") {
@@ -485,10 +477,21 @@ addEmailPathTeacherAndExpert(){
         }
       } else {
         this.markTouchForm();
+        this.showError('El formulario es invalido');
+        this.msgs.push({severity:'error', summary:'Mensaje de error', detail:'El formulario es invalido'});
+        setTimeout(function() {
+          this.msgs = [];
+        },3)
       }
     } else {
       this.validateRole = true;
       this.markTouchForm();
+      this.showError('El formulario es invalido');
+      setTimeout(function() {
+        this.msgs = [];
+        this.messageService = [];
+      },3000)
+      
     }
 
   }
@@ -566,7 +569,7 @@ addEmailPathTeacherAndExpert(){
   }
   getYearRange() {
     let date = new Date();
-    return `${`${date.getFullYear() - 60}:${date.getFullYear() - 6}`}`;
+    return `${`${date.getFullYear() - 22}:${date.getFullYear() - 6}`}`;
   }
   selectLevels(evt) {
     this.angForm.patchValue({

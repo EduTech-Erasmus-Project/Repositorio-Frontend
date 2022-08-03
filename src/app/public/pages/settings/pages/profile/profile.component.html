@@ -131,7 +131,6 @@
                                 selectedItemsLabel="{0} items selected" display="chip" scrollHeight="250px"
                                 [ngClass]="{'ng-dirty':educacionL.invalid && (educacionL.dirty || educacionL.touched)}">
                             </p-multiSelect>
-
                             <div *ngIf="educacionL.invalid && (educacionL.dirty || educacionL.touched)">
                                 <small id="educacionLe " class="p-error"
                                     *ngIf="educacionL.errors.required">*{{'validation.obligatoryCamp'|
@@ -139,7 +138,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="p-col-12 p-md-12 p-lg-6">
                         <div class="p-field p-fluid">
                             <label for="firstname4">{{'register.areasInterest'|translate}}*</label>

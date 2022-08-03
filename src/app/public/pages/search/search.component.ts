@@ -109,6 +109,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   // }
 
   onClearFilters() {
+    
     this.querySearchService.queryParams = {
       is_evaluated: this.querySearchService.queryParams.is_evaluated
     };
