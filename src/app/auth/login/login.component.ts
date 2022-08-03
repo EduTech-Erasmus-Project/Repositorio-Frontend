@@ -58,7 +58,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     //this.dark = localStorage.getItem('dart_active')==='true'?true:false;
   }
   ngOnDestroy(): void {
-    //console.log("unsuscribe")
 
     this.subscribes.forEach((sub) => {
       sub.unsubscribe;
@@ -79,7 +78,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   get errorEmailRequired(): boolean {
-    //console.log(this.loginForm.get('email'))
     return (
       this.loginForm.get("email").errors?.required &&
       this.loginForm.get("email").touched
@@ -186,7 +184,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSaveEmail(event) {
-    //console.log(event);
     if (event.checked) {
       this.saveEmail();
     } else {

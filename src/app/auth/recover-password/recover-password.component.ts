@@ -52,13 +52,11 @@ export class RecoverPasswordComponent implements OnInit {
     if (this.angForm.valid) {
       this.loginService.resetPass(this.email).subscribe(
         (res) => {
-          // console.log("por", res)
           this.showSuccess("Enlace enviado con exito");
           this.emailCheck = false;
           this.angForm.reset();
           this.router.navigateByUrl("/emailMessage");
         }, error => { 
-          //console.log(error) 
         this.showError("El correo electronico no se encuentra registrado");
         this.emailCheck = true;
         }

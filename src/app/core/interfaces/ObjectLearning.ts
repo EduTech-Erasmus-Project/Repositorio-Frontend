@@ -25,6 +25,12 @@ export interface ObjectLearning {
     general_coverage?: string;
     general_structure?: string;
     general_aggregation_Level?: string;
+    item_v1?:string;
+    item_v2?:string;
+    item_t3?:string;
+    item_t4?:string;
+    item_a5?:string;
+    item_i6?:string;
     life_cycle_version?: string;
     life_cycle_status?: string;
     life_cycle_role?: string;

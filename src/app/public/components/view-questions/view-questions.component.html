@@ -8,11 +8,11 @@
                     <label class="labelQT">{{itemQ.label}}.</label>
                     </div>
                     <div class="p-grid" style="padding: 10px 10px 10px;">
-                        <div class="p-col"> {{'object.agree'| translate}}</div>
+                        <div class="p-col">{{'object.disagreement' | translate}} </div>
                         <div class="p-col">
-                            <p-rating [cancel]="false" formControlName="{{itemQ.value}}"></p-rating>
+                            <p-rating [cancel]="false" formControlName="{{itemQ.value}}" ></p-rating>
                         </div>
-                        <div class="p-col"> {{'object.disagreement' | translate}}</div>
+                        <div class="p-col"> {{'object.agree'| translate}}</div>
                         <div class="p-col">
                             <h1><span class="blue">{{getNumber(itemQ.value)}}</span></h1>
                         </div>

@@ -8,15 +8,17 @@
                     [header]="'search.qualifyOA' | translate" [selected]="querySearchService.queryParams.is_evaluated">
                     <div aria-hidden="true" class="box">
                         <div class="p-field-radiobutton">
-                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (click)="calificate = true"
+                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (change)="submitSearchExpert()" 
+                            (click)="submitSearchExpert()" 
                                 name="rated" value="False" [(ngModel)]="querySearchService.queryParams.is_evaluated"
                                 inputId="enr">
                             </p-radioButton>
                             <label for="enr">Sin calificar</label>
                         </div>
                         <div class="p-field-radiobutton">
-                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (click)="calificate = true"
-                                name="rated" value="True" [(ngModel)]="querySearchService.queryParams.is_evaluated"
+                            <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (change)="submitSearchExpert()"
+                            (click)="submitSearchExpert()"     
+                            name="rated" value="True" [(ngModel)]="querySearchService.queryParams.is_evaluated"
                                 inputId="er">
                             </p-radioButton>
                             <label for="er">Calificados</label>
@@ -35,7 +37,8 @@
                         [selected]="querySearchService.queryParams.knowledge_area__name_es">
                         <div class="box">
                             <div class="p-field-radiobutton" *ngFor="let area of areas">
-                                <p-radioButton [tabindex]="acordingAreas?.selected ? 0 : -1" (click)="areasBtn = true"
+                                <p-radioButton [tabindex]="acordingAreas?.selected ? 0 : -1" (change)="submitSearch()"
+                                (click)="submitSearch()"
                                     [name]="area.name" [value]="area.name"
                                     [(ngModel)]="querySearchService.queryParams.knowledge_area__name_es"
                                     [inputId]="area.name">
@@ -57,7 +60,8 @@
                         <div class="box">
                             <div class="p-field-radiobutton" *ngFor="let level of levels">
 
-                                <p-radioButton [tabindex]="acordingLevel?.selected ? 0 : -1" (click)="levelsBtn = true"
+                                <p-radioButton [tabindex]="acordingLevel?.selected ? 0 : -1" (change)="submitSearch()"
+                                (click)="submitSearch()"
                                     [name]="level.name" [value]="level.name"
                                     [(ngModel)]="querySearchService.queryParams.education_levels__name_es"
                                     [inputId]="level.name">
@@ -82,7 +86,7 @@
                                 <div class="p-field-radiobutton"
                                     *ngFor="let preference of getPreferencesGroup('accesibility_features')">
                                     <p-checkbox [tabindex]="acordingPreferences?.selected ? 0 : -1"
-                                        (click)="preferencesBtn = true" name="accesibility_features"
+                                        (change)="submitSearch()" name="accesibility_features"  (click)="submitSearch()"
                                         [(ngModel)]="querySearchService.queryParams.accesibility_features"
                                         [value]="preference.search_value" [inputId]="preference.search_value">
                                     </p-checkbox>
@@ -93,7 +97,7 @@
                                 <div class="p-field-radiobutton"
                                     *ngFor="let preference of getPreferencesGroup('annotation_modeaccess')">
                                     <p-checkbox [tabindex]="acordingPreferences?.selected ? 0 : -1"
-                                        (click)="preferencesBtn = true" name="annotation_modeaccess"
+                                        (change)="submitSearch()" name="annotation_modeaccess"  (click)="submitSearch()"
                                         [(ngModel)]="querySearchService.queryParams.annotation_modeaccess"
                                         [value]="preference.search_value" [inputId]="preference.search_value">
                                     </p-checkbox>
@@ -104,7 +108,7 @@
                                 <div class="p-field-radiobutton"
                                     *ngFor="let preference of getPreferencesGroup('accesibility_hazard')">
                                     <p-checkbox [tabindex]="acordingPreferences?.selected ? 0 : -1"
-                                        (click)="preferencesBtn = true" name="accesibility_hazard"
+                                        (change)="submitSearch()" name="accesibility_hazard"  (click)="submitSearch()"
                                         [(ngModel)]="querySearchService.queryParams.accesibility_hazard"
                                         [value]="preference.search_value" [inputId]="preference.search_value">
                                     </p-checkbox>
@@ -115,7 +119,7 @@
                                 <div class="p-field-radiobutton"
                                     *ngFor="let preference of getPreferencesGroup('key_preferences')">
                                     <p-checkbox [tabindex]="acordingPreferences?.selected ? 0 : -1"
-                                        (click)="preferencesBtn = true" name="key_preferences"
+                                        (change)="submitSearch()" name="key_preferences"  (click)="submitSearch()"
                                         [(ngModel)]="querySearchService.queryParams.key_preferences"
                                         [value]="preference.search_value" [inputId]="preference.search_value">
                                     </p-checkbox>
@@ -139,7 +143,8 @@
 
                             <div class="p-field-radiobutton" *ngFor="let lisence of licenses">
                                 <p-radioButton [tabindex]="acordingLicence?.selected ? 0 : -1"
-                                    (click)="lisenceBtn = true" name="lisence" [value]="lisence.name"
+                                    (change)="submitSearch()" name="lisence" [value]="lisence.name"
+                                    (click)="submitSearch()"
                                     [(ngModel)]="querySearchService.queryParams.license__name_es"
                                     [inputId]="lisence.name">
                                 </p-radioButton>
@@ -161,7 +166,8 @@
 
                             <div class="p-field-radiobutton" *ngFor="let year of years">
                                 <p-radioButton [tabindex]="acordingYear?.selected ? 0 : -1" aria-hidden="true"
-                                    (click)="yearsBtn = true" [name]="year.created" [value]="year.created"
+                                    (change)="submitSearch()" [name]="year.created" [value]="year.created"
+                                    (click)="submitSearch()"
                                     [(ngModel)]="querySearchService.queryParams.created__year" [inputId]="year.created">
                                 </p-radioButton>
                                 <label [for]="year.created">{{year.created}}</label>

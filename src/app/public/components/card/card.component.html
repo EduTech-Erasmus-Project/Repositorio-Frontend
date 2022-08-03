@@ -1,7 +1,5 @@
 <div class="animate__animated animate__fadeIn card-content">
-    <p-card [header]="object.general_title"
-        [subheader]="(object.user_created?.first_name || '')+' '+(object.user_created?.last_name || '')"
-        styleClass="p-card-shadow" [style]="{width: '100%'}">
+    <p-card styleClass="p-card-shadow" [style]="{width: '100%'}">
         <!--<ng-template pTemplate="header">
             <img loading="lazy" [alt]="object.general_title" [src]="object.avatar">
         </ng-template>-->
@@ -10,6 +8,10 @@
             </div>
         </ng-template>
 
+        <div class="p-card-title" (click)="navigateTo()" (keydown.Enter)="navigateTo()"><a href=""
+                style="text-decoration: none; color: black;">{{object.general_title}}</a> </div>
+        <div class="p-card-subtitle ng-star-inserted"> {{(object.user_created?.first_name || '')+'
+            '+(object.user_created?.last_name || '')}}</div>
         <!--<button pButton type="button" class="classBut" label="{{'object.averageRating' | translate}}" > <i class="pi pi-angle-double-down"> &nbsp;</i> </button>
         -->
         <div class="field col-12 md:col-6"
@@ -19,6 +21,9 @@
 
         <div class="accordion" id="accordionExample" *ngIf="resultsEv && (resultsEv.length > 0)">
             <div class="accordion-item">
+
+
+
                 <!--<p>holaaaa</p>-->
                 <button pButton type="button" label="{{'object.averageRating' | translate}}" (click)="show=!show"
                     style="width: 100%;">
@@ -150,7 +155,7 @@
                         <p-dialog *ngIf="displayautomatic" header="Resumen Evaluacion Preliminar" [draggable]="false"
                             [resizable]="false" appendTo="body" draggable="false" modal="false"
                             [(visible)]="displayautomatic" [style]="{width: '78vw',height: '42vw'}">
-                            <app-evaluation-chart [resultsEvAut]="resultsEvAut" idexpe="automatic">
+                            <app-evaluation-chart [resultsEvAut]="resultsEvAut" [object]="object" idexpe="automatic">
                             </app-evaluation-chart>
                             <p-footer>
                                 <!--<button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>

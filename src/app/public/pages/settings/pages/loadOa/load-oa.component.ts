@@ -29,7 +29,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   public displayWindow: boolean;
   public objectForm: FormGroup;
   private subscriptions: Subscription[] = [];
-
+  public tag_count : any;
   public preferencesData: Preference[];
   public educationLevels: EducationLevel[];
   public knowledgeArea: KnowledgeArea[];
@@ -143,11 +143,19 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       education_levels: [null, [Validators.required]],
       knowledge_area: [null, [Validators.required]],
       license: [null, [Validators.required]],
+      
+      item_v1: ['no'],
+      item_v2: ['no'],
+      item_t3: ['no'],
+      item_t4: ['no'],
+      item_a5: ['no'],
+      item_i6: ['no', [Validators.required]],
+      
     });
   }
 
   getRageAge() {
-    if (this.object.educational_typicalAgeRange) {
+    if (this.object?.educational_typicalAgeRange) {
       let range = this.object?.educational_typicalAgeRange.split("-");
       if (range?.length > 2) {
         range.map((res) => {
@@ -163,6 +171,8 @@ export class LoadOaComponent implements OnInit, OnDestroy {
 
   onUpload(evt: any) {
     let lom = JSON.parse(evt.originalEvent.body.metadata);
+    this.tag_count = evt.originalEvent.body.tag_count;
+
     this.metaData = evt.originalEvent.body;
     this.file = evt.files[0];
     this.objectUrl = evt.originalEvent.body.oa_file.url;
@@ -189,7 +199,25 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
+    /*Validacion para los nuevos items*/
+    if(this.tag_count.img >0){
+      this.objectForm.controls['item_v1'].setValidators([Validators.required]);
+      this.objectForm.get('item_v1').updateValueAndValidity();
+      this.objectForm.controls['item_v2'].setValidators([Validators.required]);
+      this.objectForm.get('item_v2').updateValueAndValidity();
+    }
+    if(this.tag_count.paragraph >0){
+      this.objectForm.controls['item_t3'].setValidators([Validators.required]);
+      this.objectForm.get('item_t3').updateValueAndValidity();
+      this.objectForm.controls['item_t4'].setValidators([Validators.required]);
+      this.objectForm.get('item_t4').updateValueAndValidity();
+    }
+    if(this.tag_count.video >0 || this.tag_count.audio > 0){
+      this.objectForm.controls['item_a5'].setValidators([Validators.required]);
+      this.objectForm.get('item_a5').updateValueAndValidity();
+    }
 
+  
     if (this.objectForm.valid) {
       this.loading = true;
       this.object.learning_object_file = this.metaData.oa_file.id;
@@ -205,6 +233,12 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       this.object.general_language = this.objectForm.value.language;
       this.object.avatar = this.objectForm.value.img;
       this.object.source_file = this.objectForm.value.sourceFile;
+      this.object.item_v1 = this.objectForm.value.item_v1;
+      this.object.item_v2 = this.objectForm.value.item_v2;
+      this.object.item_t3 = this.objectForm.value.item_t3;
+      this.object.item_t4 = this.objectForm.value.item_t4;
+      this.object.item_a5 = this.objectForm.value.item_a5;
+      this.object.item_i6 = this.objectForm.value.item_i6;
       
       let addMetadataSub = await this.learningObjectService
         .addMetadata(this.object)

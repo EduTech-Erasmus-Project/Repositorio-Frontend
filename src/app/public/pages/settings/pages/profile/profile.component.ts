@@ -74,7 +74,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .getUserDetail(this.loginService.user.id)
       .subscribe((res) => {
         this.user = res;
-        //console.log("User detail res", this.user);
         this.createForm();
         this.angForm.controls['email'].disable();        
       });
@@ -86,7 +85,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.profesions = res.map((item) => {
           return { id: item.id, name: item.description };
         });
-        //console.log(this.profesions);
         this.profesions = this.profesions;
       });
 
@@ -189,7 +187,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   addStudentControls() {
-    //console.log("StudentControls");
     this.angForm.addControl(
       "calendar",
       new FormControl(
@@ -225,7 +222,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   removeStudentControls() {
-    //console.log("remueve los campos");
     this.angForm.removeControl("calendar");
     this.angForm.removeControl("educacionL");
     this.angForm.removeControl("areasInteres");
@@ -235,13 +231,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   getLevelsStudent() {
     return this.user.student.education_levels.map((item: any) => {
-      return { id: item.id, name: item.description };
+      return { id: item.id, name: item.name_es };
     });
   }
 
   getInterestAreasStudent() {
     return this.user.student.knowledge_areas.map((item: any) => {
-      return { id: item.id, name: item.name };
+      return { id: item.id, name: item.name_es };
     });
   }
 

@@ -1,4 +1,6 @@
 import { Component, Input,OnInit } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
+import { ObjectLearning } from 'src/app/core/interfaces/ObjectLearning';
 
 
 @Component({
@@ -12,6 +14,7 @@ export class EvaluationChartComponent implements OnInit {
   @Input() resultsEvStudent?:any[];
   @Input() rating?:number;
   @Input() idexpe?:string
+  @Input()  object: ObjectLearning;
 
   public data_graf;
   public data_options;
@@ -22,11 +25,13 @@ export class EvaluationChartComponent implements OnInit {
   public valueratingExpert
   public valid
   public displayWindowSchema:boolean;
-  
+  public valor_Intermedio : number = 2.5;
 
 
 
-  constructor() { }
+  constructor(
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
     //console.log("----->",this.idexpe)
@@ -118,6 +123,21 @@ export class EvaluationChartComponent implements OnInit {
   }
 
 
+  navigateToReport(valid: boolean) {
+    if (valid) {
+      let extras: NavigationExtras = {
+        queryParams: { rstudent: true },
+      };
+      this.router.navigate(['/object', this.object.slug], extras)
+    } else {
+      this.router.navigate(['/object', this.object.slug])
+    }
+  }
+
+  navigateTo() {
+    this.router.navigate(['/object', this.object.slug])
+  }
+  
   loaddatagraf3(){
     this.valid="automatic"
     this.ratingAutomatic=this.resultsEvAut[0].rating

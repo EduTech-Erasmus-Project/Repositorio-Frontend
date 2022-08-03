@@ -4,6 +4,7 @@ import { map } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { StorageService } from "./storage.service";
 import { serialize } from "object-to-formdata";
+import { Observable } from "rxjs";
 
 const baseUrl = environment.baseUrl;
 
@@ -115,6 +116,10 @@ export class LearningObjectService {
 
   getObjectsTeacher(){
     return this.http.get(`${baseUrl}/learning-objects/observation/`);
+  }
+
+  getMyObjectQualifications(){
+    return this.http.get(`${baseUrl}/learning-objects/my-qualification/`);
   }
 
   deleteObjestTeacher(id:number){

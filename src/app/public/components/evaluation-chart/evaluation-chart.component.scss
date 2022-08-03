@@ -9,3 +9,38 @@
 .buttonIncog{
     position: relative;
 }
+
+
+.button-read {
+
+    position: relative;
+    padding: 0.6rem 3rem 0.6rem 1rem;
+
+    i {
+      background-color: var(--primary-color);
+      padding: 0.5rem;
+      border-radius: 50%;
+      color: #fff;
+      position: absolute;
+      right: 2px;
+    }
+  }
+
+  .class-img {
+    height: 20vh;
+    background-position: center;
+    background-repeat: none;
+    background-size: cover;
+    cursor: pointer;
+  }
+
+  .class-img :hover {filter: opacity(.5);}
+
+.footer-button{
+  text-align: end;
+}
+
+
+
+.contenedor:hover .imagen {-webkit-transform:scale(1.3);transform:scale(1.3);}
+.contenedor {overflow:hidden;}
