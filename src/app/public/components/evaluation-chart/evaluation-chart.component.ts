@@ -59,7 +59,7 @@ export class EvaluationChartComponent implements OnInit {
     this.valueratingExpert=Math.round((this.rating*100)/5);
     this.data_graf = {
       //labels:this.resultEv[0].concepts.map(concept=>concept.concepto.concept),
-      labels:["Recursos Auditivos","Nivel De Interactividad","Recursos Visuales","Recursos Textuales"],
+      labels:["Nivel De Interactividad","Recursos Visuales","Recursos Auditivos","Recursos Textuales"],
       datasets: [{
         label: 'Evaluacion de Accesibilidad',
         data: this.resultEv[0].concepts.map(concept=>concept.total),

@@ -1,11 +1,10 @@
-import { Injectable } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 import { environment } from "../../environments/environment.prod";
 import { HttpClient } from "@angular/common/http";
 import { Router, NavigationExtras } from "@angular/router";
 import { StorageService } from "./storage.service";
 import { TokenService } from "./token.service";
 import { map } from "rxjs/operators";
-
 import { CurrentUser } from "../core/interfaces/CurrentUser";
 
 const baseUrl = environment.baseUrl;
@@ -15,7 +14,8 @@ const baseUrl = environment.baseUrl;
 })
 export class LoginService {
   private currUser: CurrentUser;
-
+  characterMenu = new EventEmitter<boolean>();
+  characterLogin = new EventEmitter<boolean>();
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -42,6 +42,10 @@ export class LoginService {
   }
 
   signOut(): void {
+    if(this.validateRole("teacher") == true){
+      this.characterMenu.emit(false);
+    }
+    this.characterLogin.emit(false);
     this.storageService.removeCookieItem("current_user");
     //this.storageService.removeCookieItem('csrftoken');
     this.storageService.removeCookieItem("data_ref");
@@ -71,12 +75,15 @@ export class LoginService {
             this.router.navigate(["admin"]);
           } else {
             if (this.validateRole("student")) {
+              this.characterLogin.emit(true);
               this.router.navigate(["recommended"]);
             }
             if (this.validateRole("teacher")) {
+              this.characterLogin.emit(true);
               this.router.navigate(["settings/my-objects"]);
             }
             if (this.validateRole("expert")) {
+              this.characterLogin.emit(true);
               let extras: NavigationExtras = {
                 queryParams: {
                   is_evaluated: "False",

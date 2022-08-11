@@ -106,12 +106,17 @@
                                     <div class="p-col-12 p-md-12 p-lg-6">
                                         <div class="p-field p-fluid">
                                             <label for="Name">{{'register.date'|translate}}*</label>
-                                            <p-calendar [monthNavigator]="true" [yearNavigator]="true"
+                                            <!--<p-calendar [monthNavigator]="true" [yearNavigator]="true"
                                                 yearRange="{{getYearRange()}}" [showIcon]="true"
                                                 placeholder="{{'register.modalSelect'|translate}}"
                                                 formControlName="calendar" inputId="icon"
                                                 [ngClass]="{'ng-dirty':calendar.invalid && (calendar.dirty || calendar.touched)}">
-                                            </p-calendar>
+                                            </p-calendar>-->
+
+                                            <duet-date-picker identifier="date" (duetChange)="event_get_data_calendar($event)" 
+                                            min="1970-01-01" value="{{angForm.get('calendar')?.value}}" [localization]="localization" ></duet-date-picker>
+
+
                                             <div *ngIf="calendar.invalid && (calendar.dirty || calendar.touched)">
                                                 <small id="name " class="p-error"
                                                     *ngIf="calendar.errors.required">*{{'validation.obligatoryCamp'|
@@ -122,7 +127,7 @@
 
                                     <div class="p-col-12 p-md-12 p-lg-6">
                                         <div class="p-field p-fluid">
-                                            <label for="firstname4">{{'register.levelEducation'|translate}}*</label>
+                                            <!--                                            <label for="firstname4">{{'register.levelEducation'|translate}}*</label>
 
                                             <p-multiSelect *ngIf="levelsEdications" (onChange)="selectLevels($event)"
                                                 [options]="levelsEdications"
@@ -133,6 +138,17 @@
                                                 [ngClass]="{'ng-dirty':educacionL.invalid && (educacionL.dirty || educacionL.touched)}">
                                             </p-multiSelect>
 
+                                          -->
+                                            <label for="EduactioLevels">{{'register.levelEducation'|translate}}*</label>
+
+                                            <select name="EduactioLevels" class="class-dropdown-i"
+                                                aria-label="Nivel Educativo seleccione una opcion"
+                                                (change)="selectLevels($event)" fromControlName="educacionL"
+                                                id="EduactioLevels">
+                                                <option *ngFor="let order of levelsEdications" [value]="order.id">
+                                                    {{order.name}}
+                                                </option>
+                                            </select>
 
                                             <div *ngIf="educacionL.invalid && (educacionL.dirty || educacionL.touched)">
                                                 <small id="educacionL " class="p-error"
@@ -143,17 +159,42 @@
                                         </div>
                                     </div>
 
-                                    <div class="p-col-12 p-md-12 p-lg-6">
+                                    <div class="p-col-12 p-md-12 p-lg-12">
                                         <div class="p-field p-fluid">
-                                            <label for="firstname4">{{'register.areasInterest'|translate}}*</label>
+                                             <!--  <label for="AreasI">{{'register.areasInterest'|translate}}*</label>
 
-                                            <p-multiSelect *ngIf="areasInterestings" (onChange)="selectAreas($event)"
+                                           <p-multiSelect *ngIf="areasInterestings" (onChange)="selectAreas($event)"
                                                 [options]="areasInterestings" optionLabel="name"
                                                 [formControl]="angForm.controls['areasInteres']"
                                                 selectedItemsLabel="{0} items selected" display="chip"
                                                 placeholder="{{'register.modalSelect'|translate}}" scrollHeight="250px"
                                                 [ngClass]="{'ng-dirty':areasInteres.invalid && (areasInteres.dirty || areasInteres.touched)}">
-                                            </p-multiSelect>
+                                            </p-multiSelect> 
+
+                                            <select name="AreasI" class="class-dropdown-i"
+                                                aria-label="Areas de interes seleccione una opcion o varias"
+                                                (click)="selectAreas($event)" fromControlName="areasInteres" id="AreasI"
+                                                multiple>
+                                                <option *ngFor="let order of areasInterestings" [value]="order.name">
+                                                    {{order.name}}
+                                                </option> #4c566a
+                                            </select>-->
+
+                                            <p-accordion>
+                                                <p-accordionTab header="{{'register.areasInterest'|translate}}*" [selected]="false">
+                                                    <div *ngFor="let item of areasInterestings">
+                                                        <div class="forms_areas">
+                                                            <p-checkbox group="button" [value]="item.id"
+                                                                formControlName="areasInteres" inputId="{{item.name}}"
+                                                                (click)="selectAreas(item.id)">
+                                                            </p-checkbox>
+                                                            <label class="label_areas" for="{{item.name}}">
+                                                                {{item.name}}</label>
+                                                        </div>
+                                                    </div>
+                                                    </p-accordionTab>
+                                            </p-accordion>
+
 
                                             <div
                                                 *ngIf="areasInteres.invalid && (areasInteres.dirty || areasInteres.touched)">
@@ -165,7 +206,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="p-col-12 p-md-12 p-lg-6">
+                                    <div class="p-col-12 p-md-12 p-lg-12">
                                         <div class="p-field p-fluid">
                                             <label for="Name">{{'register.disability'|translate}}</label>
                                             <div class="separador">
@@ -229,26 +270,34 @@
                                         </div>
                                     </div>-->
 
-                                    <div
-                                        class="p-col-12 p-md-12 p-lg-12 animate__animated animate__fadeIn position-relative">
-                                        <div *ngIf="preferenceAreas" class="card">
-                                            <label for="firstname4">{{'register.preferences'|translate}}</label>
+                                    <div class="p-col-12 p-md-12 p-lg-12 ">
 
-                                            <div *ngFor="let item of preferenceAreas">
-                                                <div class="forms">
-                                                    <h6>{{item.label}}</h6>
-                                                    <div class="labelQu" *ngFor="let itemQ of item.items">
-                                                        <p-checkbox group="button" [value]="itemQ.value"
-                                                            formControlName="areasPrefer" inputId="{{itemQ.label}}"
-                                                            (onChange)="selectPreferences(itemQ.value)">
-                                                        </p-checkbox>
-                                                        <label class="labelQT" for="{{itemQ.label}}">
-                                                            {{itemQ.label}}</label>
+                                        <p-accordion>
+                                            <p-accordionTab header="{{'register.preferences'|translate}} *" [selected]="false">
+                                                <div *ngIf="preferenceAreas" class="card">
+                                                    <div *ngFor="let item of preferenceAreas">
+                                                        <div class="forms">
+                                                            <h6>{{item.label}}</h6>
+                                                            <div class="labelQu" *ngFor="let itemQ of item.items">
+                                                                <p-checkbox group="button" [value]="itemQ.value"
+                                                                aria-describedby="areasPrefer_message"
+                                                                    formControlName="areasPrefer" inputId="{{itemQ.label}}"
+                                                                    (onChange)="selectPreferences(itemQ.value)">
+                                                                </p-checkbox>
+                                                                <label class="labelQT" for="{{itemQ.label}}">
+                                                                    {{itemQ.label}}</label>
+                                                            </div>
+                                                        </div>
                                                     </div>
+        
                                                 </div>
-                                            </div>
-
-                                        </div>
+                                            </p-accordionTab>
+                                        </p-accordion>
+                                        <div
+                                        *ngIf="areasPrefer.invalid && (areasPrefer.dirty || areasPrefer.touched)">
+                                        <small id="areasPrefer_message " class="p-error"
+                                            *ngIf="areasPrefer.errors.required">*{{'validation.obligatoryCamp'|translate}}*</small>
+                                    </div>
                                     </div>
                                 </div>
 
@@ -257,24 +306,32 @@
                                     *ngIf=" checkTe">
                                     <div class="p-col-12 p-md-12 p-lg-12">
                                         <div class="p-field p-fluid">
-                                            <label for="firstname4">{{'register.profession'|translate}}*</label>
+                                            <label for="Profesion">{{'register.profession'|translate}}*</label>
 
-                                            <p-multiSelect *ngIf="profesions" #dropDowProfession
+                                            <!--<p-multiSelect *ngIf="profesions" #dropDowProfession
                                                 (onChange)="selectProfesion($event)" [options]="profesions"
                                                 [formControl]="angForm.controls['profession']"
                                                 placeholder="{{'register.modalSelect'|translate}}" optionLabel="name"
                                                 selectedItemsLabel="{0} items selected" display="chip"
                                                 scrollHeight="250px"
                                                 [ngClass]="{'ng-dirty':profession?.invalid && (profession.dirty || profession.touched)}">
-                                            </p-multiSelect>
+                                            </p-multiSelect>-->
 
+                                            <select name="Profesion" class="class-dropdown-i"
+                                                aria-label="Profesion seleccione una opcion"
+                                                (change)="selectProfesion($event)" fromControlName="profession"
+                                                id="Profesion">
+                                                <option *ngFor="let order of profesions" [value]="order.id">
+                                                    {{order.name}}
+                                                </option>
+                                            </select>
 
-                                            <!-- <div
+                                             <div
                                                 *ngIf="profession?.invalid && (profession.dirty || profession.touched)">
                                                 <small id="profession " class="p-error"
                                                     *ngIf="profession.errors.required">*{{'validation.obligatoryCamp'|
                                                     translate}}*</small>
-                                            </div>-->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -343,7 +400,8 @@
                                         <div class="p-field p-fluid">
                                             <label for="email">{{'register.email'|translate}}*</label>
                                             <input id="email" type="text" formControlName="email"
-                                                (keyup)="validateEmailPatter()" aria-labelledby="emailLabel emailLabel1 emailLabel3 emailLabel4 emailLabel5 "
+                                                (keyup)="validateEmailPatter()"
+                                                aria-labelledby="emailLabel emailLabel1 emailLabel3 emailLabel4 emailLabel5 "
                                                 [ngClass]="{'ng-dirty ng-invalid':(email.invalid && (email.dirty || email.touched) )}"
                                                 placeholder="{{'register.email'|translate}}" pInputText>
                                             <div *ngIf="email.invalid && (email.dirty || email.touched)">
@@ -374,7 +432,8 @@
                                                     placeholder="{{'register.password'|translate}}"
                                                     [ngClass]="{'ng-dirty':password.invalid && (password.dirty || password.touched)}"
                                                     pInputText>
-                                                <i tabindex="0" (keyup.enter)="show=!show" aria-description="Ver contraseña"
+                                                <i tabindex="0" (keyup.enter)="show=!show"
+                                                    aria-description="Ver contraseña"
                                                     [ngClass]="{'pi-eye':!show,'pi-eye-slash':show}" class="pi"
                                                     (click)="show=!show"></i>
                                             </div>
@@ -386,7 +445,7 @@
                                                     *ngIf="password.errors.pattern">*{{'validation.passwordEnter'|translate}}*
                                                     <ul class="p-pl-2 p-ml-2 p-mt-0" style="line-height: 1.5">
                                                         <li>{{'validation.passDigit'|translate}}</li>
-                                                        <li>{{'validation.passM                 inu'|translate}}</li>
+                                                        <li>{{'validation.passM inu'|translate}}</li>
                                                         <li>{{'validation.passMayu'|translate}}</li>
                                                         <li>{{'validation.passChar'|translate}}</li>
                                                     </ul>
@@ -432,3 +491,4 @@
         <!-- <div class="desert"></div> -->
     </div>
 </div>
+

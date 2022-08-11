@@ -8,7 +8,7 @@
             </div>
         </ng-template>
 
-        <div class="p-card-title" (click)="navigateTo()" (keydown.Enter)="navigateTo()"><a href=""
+        <div class="p-card-title"><a href="#/object/{{object.slug}}"
                 style="text-decoration: none; color: black;">{{object.general_title}}</a> </div>
         <div class="p-card-subtitle ng-star-inserted"> {{(object.user_created?.first_name || '')+'
             '+(object.user_created?.last_name || '')}}</div>

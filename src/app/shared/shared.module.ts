@@ -97,7 +97,6 @@ import { UrlsanitizerPipe } from '../pipes/urlsanitizer.pipe';
 import { MomentPipe } from '../pipes/moment.pipe';
 import { MetadataComponent } from './metadata/metadata.component';
 import { BreadcrumbPublicComponent } from './breadcrumb-public/breadcrumb-public.component';
-
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient);
 }
@@ -213,7 +212,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     UrlsanitizerPipe,
     MomentPipe,
     ProgressSpinnerModule,
-    MetadataComponent
+    MetadataComponent,
   ],
   imports: [
     ProgressSpinnerModule,

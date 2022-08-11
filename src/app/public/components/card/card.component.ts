@@ -84,6 +84,7 @@ export class CardComponent implements OnInit {
 
 
   navigateTo() {
+    console.log(this.object.slug)
     this.router.navigate(['/object', this.object.slug])
   }
 

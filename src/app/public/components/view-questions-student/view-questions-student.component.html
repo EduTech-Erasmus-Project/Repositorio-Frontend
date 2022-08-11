@@ -8,13 +8,22 @@
                         <label><h6>{{item.label}}</h6></label>
                     </div><br>
                     <div *ngFor="let itemQ of item.items">
-                        <div class="labelQutwo">
+                        <div class="labelQ">
                             <label><p>{{itemQ.label}}</p></label>
                         </div><br>
                         <div>
                             <ul *ngFor="let itemt of itemQ.question">
-                                <div class="labelQ">
-                                    <label><h6>{{itemt.question}}</h6></label>
+                                <div class="labelQutwo">
+                                    <label><h6>{{itemt.question}} &nbsp;</h6></label>
+                                    <div class="buttonIncog">
+                                        <p-button icon="pi pi-question-circle " (click)="op.toggle($event)"></p-button>
+                                        <p-overlayPanel #op [showCloseIcon]="true" >
+                                            <ng-template pTemplate>
+                                                <h6>{{'object.description'|translate}}:</h6>
+                                                <label>{{itemt.description}}</label>
+                                            </ng-template>
+                                        </p-overlayPanel>
+                                    </div>
                                 </div><br>
                                 <div class="p-field-radiobutton">
                                     <div class="p-field-radiobutton">
@@ -75,6 +84,7 @@
                     <ul *ngFor="let item4 of item3.guideline_evaluations">
                         <div class="labelQ">
                             <label><p>{{item4.question}}</p></label>
+                            
                         </div><br>
                         
                         <div class="p-field-radiobutton">

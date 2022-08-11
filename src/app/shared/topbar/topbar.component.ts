@@ -27,8 +27,8 @@ export class TopbarComponen {
     this.activeItem = this.activeItem === index ? null : index;
   }
   logOut() {
-    //console.log('Logout')
     this.loginService.signOut();
+   
   }
   navigateUserProfile() {
     this.router.navigateByUrl("/admin/learning-object");
