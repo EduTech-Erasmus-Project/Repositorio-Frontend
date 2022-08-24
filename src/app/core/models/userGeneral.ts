@@ -7,6 +7,7 @@ export class UserGeneral{
     password?: string;
     birthday?: string;
     has_disability?: any;
+    disability_description?:any;
     education_levels?: any;
     knowledge_areas?:any;
     preferences?: any[];

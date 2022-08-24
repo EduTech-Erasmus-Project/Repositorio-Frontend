@@ -35,6 +35,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   public profesions: any[];
   public levelsEdications: any[];
   public preferenceAreas: SelectItemGroup[];
+  public areasInterestings_data_save: any[] = [];
   public areasInterestings: any[];
   public angForm: FormGroup;
   public flagN: number = 20;
@@ -51,7 +52,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
   public msgs1: Message[];
   public patternV: string =
   "^([a-zA-Z0-9_' - '.]+)@([a-zA-Z0-9_' - '.]+).([a-zA-Z]{2,5})$";
-
+  public localization = {
+    buttonLabel: "Elige fecha",
+    placeholder: "yyyy-mm-dd",
+    selectedDateMessage: "La fecha seleccionada es",
+    prevMonthLabel: "Mes anterior",
+    nextMonthLabel: "Próximo mes",
+    monthSelectLabel: "Mes",
+    yearSelectLabel: "Año",
+    closeLabel: "Cerrar ventana de fecha",
+    calendarHeading: "Elige una fecha",
+    dayNames: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+    monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    monthNamesShort: ["En", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+    locale: "es-ES",
+  }
   constructor(
     private searchService: SearchService,
     private loginService: LoginService,
@@ -163,14 +178,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.user.email,
         [
           Validators.required,
-          Validators.pattern(this.patternV),
+          //Validators.pattern(this.patternV),
           /*^[a-z]+(@)+[u]+[p]+[s]+.+[e]+[d]+[u]+.+[e]+[c]*/
         ], 
       ],
     });
 
+    //En el prefil no puedes editar el tipo miembro
+    this.angForm.controls['check'].disable();
+    this.angForm.controls['checkTe'].disable();
+    this.angForm.controls['checkEx'].disable();
+
     if (this.checkEs) {
       this.addStudentControls();
+     
     }else {
       this.removeStudentControls();
     }
@@ -187,11 +208,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   addStudentControls() {
+
     this.angForm.addControl(
       "calendar",
       new FormControl(
         this.user.student
-          ? moment(this.user.student.birthday).format("MM/DD/YYYY")
+          ? moment(this.user.student.birthday).format("YYYY-MM-DD")
           : null,
         [Validators.required]
       )
@@ -217,7 +239,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
     this.angForm.addControl(
       "disability",
-      new FormControl([this.user.student?.has_disability ? "yes" : "no"])
+      new FormControl(this.user.student?.has_disability ? "yes" : "no")
+    );
+   
+    this.angForm.addControl(
+      "typeDisability",
+      new FormControl(
+        this.user.student.disability_description
+      )
     );
   }
 
@@ -231,14 +260,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   getLevelsStudent() {
     return this.user.student.education_levels.map((item: any) => {
-      return { id: item.id, name: item.name_es };
+      return  item.id;
     });
   }
 
   getInterestAreasStudent() {
-    return this.user.student.knowledge_areas.map((item: any) => {
-      return { id: item.id, name: item.name_es };
-    });
+    this.areasInterestings_data_save =  this.user.student.knowledge_areas.map((item: any) => item.id);
+    return this.areasInterestings_data_save;
   }
 
   getPreferencesStudent() {
@@ -255,17 +283,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   addTypeDisability() {
-    this.angForm.addControl(
-      "typeDisability",
-      new FormControl(
-        this.user.student.disability_description,
-        Validators.required
-      )
-    );
+   
   }
 
   removeTypeDisability() {
-    this.angForm.removeControl("typeDisability");
+    this.angForm.controls["typeDisability"].setValue(null);
   }
 
   addProfesionControl() {
@@ -429,10 +451,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onChangeDisability() {
-    if (this.disability) {
-      this.addTypeDisability();
-    } else {
-      this.removeTypeDisability();
+    if (!this.disability) {
+      this.angForm.controls["typeDisability"].setValue('Ninguna');
+      this.angForm.controls["typeDisability"].clearValidators();
+      this.angForm.controls["typeDisability"].updateValueAndValidity();
+    }else{
+      this.angForm.controls["typeDisability"].setValue((this.angForm.get("typeDisability").value == null)?  this.user.disability_description: null);
+      this.angForm.controls["typeDisability"].setValidators([Validators.required]);
+      this.angForm.controls["typeDisability"].updateValueAndValidity();
     }
   }
 
@@ -462,6 +488,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           },
           (err) => {
             //console.log("register err (Act)", err); //validateEmail
+            console.log(err)
             if (err.error.message == "Debe tener un email institucional") {
               if (this.roleUser) {
                 this.showError(
@@ -469,7 +496,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 );
               } else {
                 this.showError("El correo electronico debe ser institucional");
-                
+                this.validateEmail = true;
               }
             } else if (err.error.message == "This field must be unique.") {
               this.showError(
@@ -477,7 +504,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
               );
             }
             Swal.close();
-            this.validateEmail = true;
           }
         );
 
@@ -538,28 +564,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.user.password = this.angForm.value.password;
 
     if (this.checkEs) {
-      this.user.education_levels = this.angForm.value.educacionL.map(
-        (res) => res.id
-      );
-      this.user.knowledge_areas = this.angForm.value.areasInteres.map(
-        (res) => res.id
-      );
+      this.user.education_levels = this.angForm.value.educacionL;
+      this.user.knowledge_areas = this.angForm.value.areasInteres;
       this.user.preferences = this.angForm.value.areasPrefer;
 
-      this.user.has_disability = this.angForm.value.typeDisability;
-
+      this.user.has_disability = this.angForm.value.disability;
+      this.user.disability_description = this.angForm.value.typeDisability;
       this.user.birthday = moment(this.angForm.value.calendar).format(
         "YYYY-MM-DD"
       );
     }
 
     if (this.checkTe) {
-      this.user.professions = this.angForm.value.profession.map(
-        (res) => res.id
-      );
+      this.user.professions = this.angForm.value.profession;
     }
     if (this.checkEx) {
       this.user.expert_level = this.angForm.value.levelExpertF;
+      console.log(this.angForm.value.levelExpertF);
       this.user.collaboratingExpert.expert_level = this.angForm.value.levelExpertF;
 
       if(this.angForm.value.url != ""){
@@ -586,20 +607,28 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   selectLevels(evt) {
-    this.angForm.patchValue({
-      educacionL: evt.value,
+     this.angForm.patchValue({
+      educacionL: [Number(evt.target.value)]
     });
   }
 
   selectAreas(evt) {
+    if (this.areasInterestings_data_save.includes(evt)) {
+      this.areasInterestings_data_save = this.areasInterestings_data_save.filter(
+        (res) => res != evt
+      );
+    } else {
+      this.areasInterestings_data_save.push(evt);
+    }
+    
     this.angForm.patchValue({
-      areasInteres: evt.value,
+      areasInteres: this.areasInterestings_data_save,
     });
   }
 
   selectProfesion(evt) {
     this.angForm.patchValue({
-      profession: evt.value,
+      profession: [Number(evt.target.value)],
     });
   }
 
@@ -654,4 +683,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   onEnterFigure() {
     this.inputFile.nativeElement.click();
   }
+
+  event_get_data_calendar(event){   
+    this.angForm.controls['calendar'].setValue(
+      event.detail.value
+    );
+}
+
 }

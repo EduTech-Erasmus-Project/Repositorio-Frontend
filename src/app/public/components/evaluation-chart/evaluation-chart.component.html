@@ -1,10 +1,10 @@
 <div class="accordion-body" *ngIf="data_graf && data_options">
     <div class="p-grid">
         <div class="p-col-12 p-md-8">
-            <div class="main-content" *ngIf="valid=='experto'">
+            <div class="main-content-id" *ngIf="valid=='experto'">
                 <p-chart type="radar" [data]="data_graf" [options]="data_options" height="57vh"></p-chart>
             </div>
-            <div class="main-content" *ngIf="valid=='student'">
+            <div class="main-content-id" *ngIf="valid=='student'">
                 <br>
                 <p-chart type="radar" [data]="data_graf" [options]="data_options" height="51vh"><br></p-chart>
             </div>

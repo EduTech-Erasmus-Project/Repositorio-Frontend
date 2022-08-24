@@ -47,7 +47,6 @@ export class EvaluationChartComponent implements OnInit {
       this.loaddatagraf3();
     }
   }
-
   
   showBasicDialogSchema() {
     this.displayWindowSchema = true;
@@ -55,11 +54,12 @@ export class EvaluationChartComponent implements OnInit {
   }
 
   loaddatagraf(){
+    let labels_cabecera = (this.resultEv[0].concepts.map(concept=>concept.concepto.concept));
     this.valid="experto"
     this.valueratingExpert=Math.round((this.rating*100)/5);
     this.data_graf = {
       //labels:this.resultEv[0].concepts.map(concept=>concept.concepto.concept),
-      labels:["Nivel De Interactividad","Recursos Visuales","Recursos Auditivos","Recursos Textuales"],
+      labels:labels_cabecera,
       datasets: [{
         label: 'Evaluacion de Accesibilidad',
         data: this.resultEv[0].concepts.map(concept=>concept.total),
@@ -139,6 +139,7 @@ export class EvaluationChartComponent implements OnInit {
   }
   
   loaddatagraf3(){
+    console.log(this.resultsEvAut[0].metadata_concept_evaluations)
     this.valid="automatic"
     this.ratingAutomatic=this.resultsEvAut[0].rating
     this.valueratingAutomatic = Math.round((this.ratingAutomatic*100)/5);

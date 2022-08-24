@@ -169,11 +169,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
       "calendar",
       new FormControl("2000-01-01", [Validators.required])
     );
-
-    let object_educations_level = this.levelsEdications[0]
     this.angForm.addControl(
       "educacionL",
-      new FormControl(object_educations_level, [Validators.required])
+      new FormControl(null, [Validators.required])
     );
 
     this.angForm.addControl(
@@ -188,9 +186,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
       "disability",
       new FormControl("no", [Validators.required])
     );
-
-       
-
   }
 
   removeStudentControls() {
@@ -272,6 +267,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         });
         //console.log(this.profesions);
         this.profesions = this.profesions;
+        this.add_item_default_array(this.profesions);
       });
 
     //extraemos datos de nivel de educacion
@@ -282,8 +278,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
           return { id: item.id, name: item.name };
         });
         this.levelsEdications = this.levelsEdications;  
+        this.add_item_default_array(this.levelsEdications);
        });
-
+      
     //Extraemos los datos de precerencias por area
     let preferencesSub = await this.searchService
       .getPreferencesArea()
@@ -300,6 +297,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         this.preferenceAreas = this.preferenceAreas;
       });
 
+   
     let interestingsSub = await this.searchService
       .getInterestAreas()
       .subscribe((res) => {
@@ -317,6 +315,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
     );
   }
 
+  private add_item_default_array(array){
+    const object_default={
+      id:0,
+      name: 'Elige una opción'
+    };
+    array.unshift(object_default);
+  }
+  
   validarCamp(event): boolean {
     if (this.angForm.get("name").hasError("pattern")) {
       return true;
@@ -462,7 +468,6 @@ addEmailPathTeacherAndExpert(){
   }
 
   async validateUser() {
-    console.log(this.angForm);
     this.angForm.markAllAsTouched();
     this.angForm.updateValueAndValidity();
     
@@ -471,7 +476,7 @@ addEmailPathTeacherAndExpert(){
       if (this.angForm.valid) {
         //console.log("Si paso")
         if (this.angForm.value.terms) {
-       
+          
           this.validateRole = false;
           Swal.fire({
             allowOutsideClick: false,
@@ -564,12 +569,14 @@ addEmailPathTeacherAndExpert(){
 
     if (this.checkEs) {
       this.user.education_levels = this.angForm.value.educacionL;
-      this.user.knowledge_areas = this.angForm.value.areasInteres.map(
+      //this.user.knowledge_areas = this.angForm.value.areasInteres.map(
+        //(res) => res.id
+      //);
+      this.user.knowledge_areas = this.angForm.value.areasInteres;
+      /*this.user.preferences = this.angForm.value.areasPrefer.map(
         (res) => res.id
-      );
-      this.user.preferences = this.angForm.value.areasPrefer.map(
-        (res) => res.id
-      );;
+      );*/
+      this.user.preferences = this.angForm.value.areasPrefer;
 
       this.user.has_disability = this.angForm.value.typeDisability;
 
@@ -579,9 +586,7 @@ addEmailPathTeacherAndExpert(){
     }
 
     if (this.checkTe) {
-      this.user.professions = this.angForm.value.profession.map(
-        (res) => res.id
-      );
+      this.user.professions = this.angForm.value.profession;
     }
     if (this.checkEx) {
 
@@ -602,16 +607,12 @@ addEmailPathTeacherAndExpert(){
   }
 
   selectLevels(evt) {
-    let level_Education = this.levelsEdications.filter(result => result.id == evt.target.value);
     this.angForm.patchValue({
-      educacionL: level_Education[0]
+      educacionL: [Number(evt.target.value)]
     });
   }
 
- 
-
   selectAreas(evt) {
-  
     if (this.areasInterestings_data_save.includes(evt)) {
       this.areasInterestings_data_save = this.areasInterestings_data_save.filter(
         (res) => res != evt
@@ -625,9 +626,10 @@ addEmailPathTeacherAndExpert(){
     });
   }
 
-  selectProfesion(evt) {
-    let profession_select = this.profesions.filter(res => res.id == evt.target.value);
-    this.angForm.controls['profession'].setValue(profession_select[0]);     
+  selectProfesion(evt) {  
+    this.angForm.patchValue({
+      profession: [Number(evt.target.value)]
+    }); 
   }
   
   //Generamos la consulta para obtener el mensaje. 

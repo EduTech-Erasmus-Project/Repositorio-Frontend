@@ -127,25 +127,23 @@
 
                                     <div class="p-col-12 p-md-12 p-lg-6">
                                         <div class="p-field p-fluid">
-                                            <!--                                            <label for="firstname4">{{'register.levelEducation'|translate}}*</label>
-
-                                            <p-multiSelect *ngIf="levelsEdications" (onChange)="selectLevels($event)"
+                                            <!--<p-multiSelect *ngIf="levelsEdications" (onChange)="selectLevels($event)"
                                                 [options]="levelsEdications"
                                                 [formControl]="angForm.controls['educacionL']"
                                                 placeholder="{{'register.modalSelect'|translate}}" optionLabel="name"
                                                 selectedItemsLabel="{0} items selected" display="chip"
                                                 scrollHeight="250px"
                                                 [ngClass]="{'ng-dirty':educacionL.invalid && (educacionL.dirty || educacionL.touched)}">
-                                            </p-multiSelect>
+                                            </p-multiSelect> -->
 
-                                          -->
+                                          
                                             <label for="EduactioLevels">{{'register.levelEducation'|translate}}*</label>
 
                                             <select name="EduactioLevels" class="class-dropdown-i"
                                                 aria-label="Nivel Educativo seleccione una opcion"
                                                 (change)="selectLevels($event)" fromControlName="educacionL"
                                                 id="EduactioLevels">
-                                                <option *ngFor="let order of levelsEdications" [value]="order.id">
+                                                <option *ngFor="let order of levelsEdications" [value]="order.id" [disabled]="order.id === 0">
                                                     {{order.name}}
                                                 </option>
                                             </select>
@@ -321,7 +319,7 @@
                                                 aria-label="Profesion seleccione una opcion"
                                                 (change)="selectProfesion($event)" fromControlName="profession"
                                                 id="Profesion">
-                                                <option *ngFor="let order of profesions" [value]="order.id">
+                                                <option *ngFor="let order of profesions" [value]="order.id" [disabled]="order.id === 0">
                                                     {{order.name}}
                                                 </option>
                                             </select>

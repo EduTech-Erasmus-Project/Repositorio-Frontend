@@ -103,7 +103,6 @@ export class ViewQuestionsExpertComponent implements OnInit {
       let resultsEval = await this.learningObject
         .getObjectResultsEvaluation(this.object.id)
         .subscribe((res) => {
-          console.log(res);
           this.groupedQuestionsEx = res.map((item: any) => {
             return {
               conceptEvaluations: item.concept_evaluations.map((item1: any) => {
@@ -174,7 +173,6 @@ export class ViewQuestionsExpertComponent implements OnInit {
           results: vectRe,
           observation: this.angForm.get("observation").value,
         };
-        console.log(this.answers)
         let sendEval = await this.learningObject
           .sendQualificationExpert(this.answers)
           .subscribe(
@@ -214,8 +212,6 @@ export class ViewQuestionsExpertComponent implements OnInit {
           results: vectRe,
           observation: this.angForm.get("observation").value,
         };
-
-        console.log(this.answers)
         let sendEvalUpdate = await this.learningObject
           .sendQualificationExpertUpdate(
             this.answers,

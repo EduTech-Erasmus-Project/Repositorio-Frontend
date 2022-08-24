@@ -9,8 +9,8 @@
             <p-button  *ngIf="roleExpert && flagQuestionsEx && flagQuestionsExNumber == 1" (click)="displayFormRatingExpertUpdate=true"
                 [label]="'object.objectQualification'| translate " title="Editar evaluacion" ><i class="pi pi-pencil">&nbsp;</i></p-button>
             
-                <button aria-label="Boton para calificar este objeto de aprendizaje" *ngIf="roleUser" (click)="displayFormRating=true" pButton pRipple type="button" icon="pi pi-star-o"
-                class="p-button-rounded p-button-outlined" [pTooltip]="'object.btnEvaluate'| translate "></button>
+                <!-- <button aria-label="Boton para calificar este objeto de aprendizaje" *ngIf="roleUser" (click)="displayFormRating=true" pButton pRipple type="button" icon="pi pi-star-o"
+                class="p-button-rounded p-button-outlined" [pTooltip]="'object.btnEvaluate'| translate "></button> -->
             <!--   NUEVO BOTON     -->
 
             <button aria-label="Boton para calificar " *ngIf="roleUser && !flagQuestionsEst && flagQuestionsEstNumber == 0"  (click)="displayFormRatingStudent=true" pButton pRipple type="button"

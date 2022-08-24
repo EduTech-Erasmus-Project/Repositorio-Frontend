@@ -1,10 +1,10 @@
 <div class="animate__animated animate__fadeIn card-content">
-    <p-card styleClass="p-card-shadow" [style]="{width: '100%'}">
+    <p-card styleClass="p-card-shadow" [style]="{width: '100%'}" tabindex="0">
         <!--<ng-template pTemplate="header">
             <img loading="lazy" [alt]="object.general_title" [src]="object.avatar">
         </ng-template>-->
-        <ng-template pTemplate="header">
-            <div class="class-img" (click)="navigateTo()" style=" background-image: url({{object.avatar}});">
+        <ng-template pTemplate="header" >
+            <div class="class-img" tabindex="0"(click)="navigateTo()" style=" background-image: url({{object.avatar}});" aria-description="Imagen del objeto de aprendizaje">
             </div>
         </ng-template>
 
@@ -206,6 +206,10 @@
 
         <div *ngIf="object.rating && (resultsEv && (resultsEv.length > 0))" class="rating">
             <i class="pi pi-star"></i> <span>{{object.rating | number:'1.1-2'}}</span>
+        </div>
+
+        <div class="adapted_oer" *ngIf="is_adapted_oer==true">
+            <img src="assets/img/edutech-icon.png" title= "Objeto de aprendizaje accessible" alt="Objeto de aprendizaje accessible">
         </div>
     </p-card>
 </div>

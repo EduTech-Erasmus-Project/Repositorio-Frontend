@@ -13,6 +13,7 @@ import { License } from "../../../../../core/interfaces/License";
 import { MessageService } from "primeng/api";
 import { LanguageService } from "../../../../../services/language.service";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
+import { TagOA } from "src/app/core/interfaces/TagOA";
 
 @Component({
   selector: "app-load-oa",
@@ -29,7 +30,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   public displayWindow: boolean;
   public objectForm: FormGroup;
   private subscriptions: Subscription[] = [];
-  public tag_count : any;
+  public tag_count : TagOA;
   public preferencesData: Preference[];
   public educationLevels: EducationLevel[];
   public knowledgeArea: KnowledgeArea[];
@@ -150,7 +151,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       item_t4: ['no'],
       item_a5: ['no'],
       item_i6: ['no', [Validators.required]],
-      
+      is_adapted_oer:[false]
     });
   }
 
@@ -172,7 +173,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   onUpload(evt: any) {
     let lom = JSON.parse(evt.originalEvent.body.metadata);
     this.tag_count = evt.originalEvent.body.tag_count;
-
     this.metaData = evt.originalEvent.body;
     this.file = evt.files[0];
     this.objectUrl = evt.originalEvent.body.oa_file.url;
@@ -186,6 +186,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       detail: "El archivo se ah subido con éxito",
     });
     this.loadForm();
+    this.fill_in_the_answers_automatically_adpated_is_adapted(this.tag_count);
   }
 
   onError(evt) {
@@ -196,6 +197,21 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       summary: "Error",
       detail: message,
     });
+  }
+
+  private fill_in_the_answers_automatically_adpated_is_adapted(object_tag_oa){
+    let is_adapted = object_tag_oa.is_adapted_oer
+    if(is_adapted === true){
+      this.objectForm.controls['is_adapted_oer'].setValue(true);
+      this.objectForm.controls['item_v1'].setValue('yes');
+      this.objectForm.controls['item_v2'].setValue('yes');
+      this.objectForm.controls['item_t3'].setValue('yes');
+      this.objectForm.controls['item_t4'].setValue('yes');
+      this.objectForm.controls['item_a5'].setValue('yes');
+      this.objectForm.controls['item_i6'].setValue('yes');
+      this.objectForm.controls['adaptations'].setValue('yes');
+      this.objectForm.controls['adaptations'].disable();
+    }
   }
 
   async onSubmit() {
@@ -219,27 +235,30 @@ export class LoadOaComponent implements OnInit, OnDestroy {
 
   
     if (this.objectForm.valid) {
+      //Obtener los campos por si estubieran desabilitados
+      let object_adaptations = this.objectForm.getRawValue();
       this.loading = true;
       this.object.learning_object_file = this.metaData.oa_file.id;
-      this.object.adaptation = this.objectForm.value.adaptations;
-      this.object.general_title = this.objectForm.value.title;
-      this.object.general_description = this.objectForm.value.description;
-      this.object.general_keyword = this.objectForm.value.keywords;
-      this.object.general_language = this.objectForm.value.language;
-      this.object.educational_typicalAgeRange = `${this.objectForm.value.age[0]}-${this.objectForm.value.age[1]}`;
-      this.object.education_levels = this.objectForm.value.education_levels;
-      this.object.knowledge_area = this.objectForm.value.knowledge_area;
-      this.object.license = this.objectForm.value.license;
-      this.object.general_language = this.objectForm.value.language;
-      this.object.avatar = this.objectForm.value.img;
-      this.object.source_file = this.objectForm.value.sourceFile;
-      this.object.item_v1 = this.objectForm.value.item_v1;
-      this.object.item_v2 = this.objectForm.value.item_v2;
-      this.object.item_t3 = this.objectForm.value.item_t3;
-      this.object.item_t4 = this.objectForm.value.item_t4;
-      this.object.item_a5 = this.objectForm.value.item_a5;
-      this.object.item_i6 = this.objectForm.value.item_i6;
-      
+      this.object.adaptation = object_adaptations.adaptations;
+      this.object.general_title = object_adaptations.title;
+      this.object.general_description = object_adaptations.description;
+      this.object.general_keyword = object_adaptations.keywords;
+      this.object.general_language = object_adaptations.language;
+      this.object.educational_typicalAgeRange = `${object_adaptations.age[0]}-${object_adaptations.age[1]}`;
+      this.object.education_levels = object_adaptations.education_levels;
+      this.object.knowledge_area = object_adaptations.knowledge_area;
+      this.object.license = object_adaptations.license;
+      this.object.general_language = object_adaptations.language;
+      this.object.avatar = object_adaptations.img;
+      this.object.source_file = object_adaptations.sourceFile;
+      this.object.item_v1 = object_adaptations.item_v1;
+      this.object.item_v2 = object_adaptations.item_v2;
+      this.object.item_t3 = object_adaptations.item_t3;
+      this.object.item_t4 = object_adaptations.item_t4;
+      this.object.item_a5 = object_adaptations.item_a5;
+      this.object.item_i6 = object_adaptations.item_i6;
+      this.object.is_adapted_oer = object_adaptations.is_adapted_oer;
+
       let addMetadataSub = await this.learningObjectService
         .addMetadata(this.object)
         .subscribe(
@@ -334,5 +353,9 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     this.objectForm.patchValue({
       language: evt.value?.code || null,
     });
+  }
+
+  get is_adapted_oer(){
+    return this.objectForm.get('is_adapted_oer').value;
   }
 }

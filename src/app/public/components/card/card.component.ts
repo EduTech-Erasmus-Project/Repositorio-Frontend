@@ -52,7 +52,6 @@ export class CardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.loadData();
     this.loadDataAutomatic();
     if (this.roleTeacher) {
@@ -338,5 +337,7 @@ export class CardComponent implements OnInit {
     this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
   }
 
-
+get is_adapted_oer(){
+  return this.object.is_adapted_oer;
+}
 }

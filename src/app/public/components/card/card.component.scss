@@ -64,8 +64,8 @@
   .rating {
     display: flex;
     position: absolute;
-    top: 2rem;
-    left: 2rem;
+    top: 1rem;
+    left: 1rem;
     width: 5rem;
     background-color: var(--primary-color);
     padding: 5px 15px;
@@ -119,5 +119,21 @@
     background-repeat: none;
     background-size: cover;
     cursor: pointer;
+  }
+  .adapted_oer{
+    display: flex;
+    position: absolute;
+    top: 0.5rem;
+    left: 80%;
+    //width: 5rem;
+    background-color: img();
+    padding: 5px 5px;
+    border-radius: 15px;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    img{
+      width: 4vh;
+    }
   }
 
