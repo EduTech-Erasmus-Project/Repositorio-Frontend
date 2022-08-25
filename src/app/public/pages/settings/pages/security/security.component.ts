@@ -18,7 +18,7 @@ export class SecurityComponent implements OnInit {
   public angForm: FormGroup;
   public subscribes: Subscription[] = [];
   public passwords: any;
-
+  public passsword_invalid : boolean = false;
   public newPassword: string;
   public oldPassword: string;
   public againPassword: string;
@@ -46,7 +46,7 @@ export class SecurityComponent implements OnInit {
     this.angForm = this.fb.group({
       passwordOld: [this.oldPassword, [Validators.required]],
       passwordNew: [
-        this.newPassword,
+        {value: this.newPassword, disabled: false},
         [
           Validators.required,
           Validators.pattern(
@@ -54,12 +54,16 @@ export class SecurityComponent implements OnInit {
           ),
         ],
       ],
-      passwordAgain: [this.againPassword, [Validators.required]],
+      passwordAgain: [{value:this.againPassword, disabled: true}, [Validators.required]],
     });
   }
 
   async sendPasswordRest() {
     if (this.angForm.valid) {
+      if(this.validatorPassword()){
+        this.showError('La contraseñas no coinciden');
+        return;
+      }
       this.oldPassword = this.angForm.get("passwordOld").value;
       this.newPassword = this.angForm.get("passwordNew").value;
       this.againPassword = this.angForm.get("passwordAgain").value;
@@ -75,38 +79,47 @@ export class SecurityComponent implements OnInit {
         .changePassword(this.passwords, this.loginService.user.id)
         .subscribe(
           (res) => {
-            if (
-              res.error.details.old_password.old_password ==
-              "Old password is not correct"
-            ) {
-              this.showError("La contraseña actual es incorrecta");
-              this.passError = true;
-            } else {
-              this.showSuccess("Contraseña actualizada");
-              //console.log("res",res);
-              Swal.fire({
-                allowOutsideClick: false,
-                icon: "info",
-                text: "Actualizando su contraseña...",
-              });
-              Swal.showLoading();
-              this.loginService.signOutPass();
-              Swal.close();
+          
+              if(res.status == "Ok") {
+                this.showSuccess("Contraseña actualizada");
+                //console.log("res",res);
+                Swal.fire({
+                  allowOutsideClick: false,
+                  icon: "info",
+                  text: "Actualizando su contraseña...",
+                });
+                Swal.showLoading();
+                this.loginService.signOutPass();
+                Swal.close();
             }
+           
           },
           (error) => {
-            console.log("err", error);
+            if(error.error.details.password[0] == "New password cannot be the same as above."){
+              this.passsword_invalid = true;
+              this.showError('La nueva contraseña no puede ser la misma que la anterior.');
+              this.angForm.controls.passwordNew.markAllAsTouched();
+              this.angForm.controls.passwordAgain.markAllAsTouched();
+            }
+
             if (
               error.error.details.old_password.old_password ==
               "Old password is not correct"
             ) {
-              this.showError("La contraseña actual es incorrecta");
+              this.showError("La contraseña anterior es incorrecta");
               this.passError = true;
             }
             if (
               error.error.details.password[0] == "Password fields didn't match."
             ) {
               this.showError("La contraseña nueva no coincide");
+              this.passError = true;
+            }
+            if (
+              error?.error?.details?.old_password.old_password ==
+              "Old password is not correct"
+            ) {
+              this.showError("La contraseña actual es incorrecta");
               this.passError = true;
             }
           }
@@ -134,11 +147,16 @@ export class SecurityComponent implements OnInit {
 
   validatorPassword() {
     if (
-      this.angForm.get("passwordNew").value ==
+      this.angForm.get("passwordNew").value ===
       this.angForm.get("passwordAgain").value
     ) {
       // console.log('Si son iguales')
       this.flagConfirm = true;
+      this.passsword_invalid = false;
+      return false;
+    }else{
+      this.flagConfirm = false;
+      return true;
     }
   }
   resetForm() {
@@ -161,5 +179,15 @@ export class SecurityComponent implements OnInit {
 
   get passwordAgain() {
     return this.angForm.get("passwordAgain");
+  }
+  
+  public enabled_Password(){
+    if(this.angForm.get("passwordAgain").status === 'DISABLED' && this.angForm.get('passwordNew').value != null && this.angForm.get('passwordNew').value !=''){
+      this.angForm.controls['passwordAgain'].enable();
+    }else{
+      if(this.angForm.get('passwordNew').value === null || this.angForm.get('passwordNew').value === undefined || this.angForm.get('passwordNew').value ===''){
+        this.angForm.controls['passwordAgain'].disable();
+      }
+    }
   }
 }

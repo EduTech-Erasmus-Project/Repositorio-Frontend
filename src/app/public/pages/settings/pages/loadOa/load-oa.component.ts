@@ -14,6 +14,7 @@ import { MessageService } from "primeng/api";
 import { LanguageService } from "../../../../../services/language.service";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 import { TagOA } from "src/app/core/interfaces/TagOA";
+import { Console, timeStamp } from "console";
 
 @Component({
   selector: "app-load-oa",
@@ -46,7 +47,8 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   };
 
   public language = [
-    { name: "Alemán", code: "de" },
+    { name: "Elige una opción", code: "none"},
+    { name: "Alemán", code: "de"},
     { name: "Español", code: "es" },
     { name: "Francés", code: "fr" },
     { name: "Holandés", code: "nl" },
@@ -99,6 +101,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
         this.educationLevels = res.values.map((res) => {
           return { name: res.name, code: res.id };
         });
+        this.add_item_default_array(this.educationLevels);
       });
 
     let knowledgeAreaSub = await this.searchService
@@ -107,6 +110,8 @@ export class LoadOaComponent implements OnInit, OnDestroy {
         this.knowledgeArea = res.values.map((res) => {
           return { name: res.name, code: res.id };
         });
+
+        this.add_item_default_array(this.knowledgeArea);
       });
 
     let licensesSub = await this.searchService
@@ -115,6 +120,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
         this.licenses = res.values.map((res) => {
           return { name: res.name, code: res.id };
         });
+        this.add_item_default_array(this.licenses);
       });
 
     this.subscriptions.push(
@@ -123,6 +129,14 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       knowledgeAreaSub,
       licensesSub
     );
+  }
+
+  private add_item_default_array(array){
+    const object_default={
+      code:0,
+      name: 'Elige una opción'
+    };
+    array.unshift(object_default);
   }
 
   loadForm() {
@@ -248,7 +262,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       this.object.education_levels = object_adaptations.education_levels;
       this.object.knowledge_area = object_adaptations.knowledge_area;
       this.object.license = object_adaptations.license;
-      this.object.general_language = object_adaptations.language;
       this.object.avatar = object_adaptations.img;
       this.object.source_file = object_adaptations.sourceFile;
       this.object.item_v1 = object_adaptations.item_v1;
@@ -258,7 +271,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       this.object.item_a5 = object_adaptations.item_a5;
       this.object.item_i6 = object_adaptations.item_i6;
       this.object.is_adapted_oer = object_adaptations.is_adapted_oer;
-
+      
       let addMetadataSub = await this.learningObjectService
         .addMetadata(this.object)
         .subscribe(
@@ -287,7 +300,8 @@ export class LoadOaComponent implements OnInit, OnDestroy {
         );
       this.subscriptions.push(addMetadataSub);
     } else {
-      this.markTouchForm();
+      this.objectForm.markAllAsTouched();
+      this.objectForm.updateValueAndValidity();
     }
   }
 
@@ -333,25 +347,25 @@ export class LoadOaComponent implements OnInit, OnDestroy {
 
   selectLevel(evt) {
     this.objectForm.patchValue({
-      education_levels: evt.value?.code || null,
+      education_levels: Number(evt.target.value)
     });
   }
 
-  selectKnowledgeArea(evt) {
+  selectKnowledgeArea(evt){
     this.objectForm.patchValue({
-      knowledge_area: evt.value?.code || null,
+      knowledge_area: Number(evt.target.value)|| null,
     });
   }
 
   selectLicense(evt) {
     this.objectForm.patchValue({
-      license: evt.value?.code || null,
+      license: Number(evt.target.value) || null,
     });
   }
 
   selectLanguage(evt) {
     this.objectForm.patchValue({
-      language: evt.value?.code || null,
+      language: evt.target.value || null,
     });
   }
 

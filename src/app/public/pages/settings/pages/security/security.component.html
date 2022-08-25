@@ -1,14 +1,16 @@
+<p-toast>
+</p-toast>
 <div class="card">
     <div class="p-grid">
         <div class="p-col-6">
             <h2 class="title">{{'security.titlePass' | translate}}</h2>
         </div>
         <div class="p-col-6">
-            <div class="box animate__animated animate__fadeIn">
+            <div class="box animate__animated animate__fadeIn" tabindex="0">
                 <figure>
                     <img loading="lazy" class="imgLoad" loading="lazy"
                         src="./../../../../../../assets/img/key-Security.png"
-                        [alt]="'home.teacher.altImage' | translate">
+                        [alt]="'Imagen referente a cambio de contraseña'">
                 </figure>
             </div>
         </div>
@@ -18,7 +20,7 @@
             </label>
         </div>
         <div class="p-col-6">
-            <button label="{{'security.changePass' | translate}}" (click)="show=!show" pButton>
+            <button label="{{'security.changePass' | translate}}" (click)="show=!show" pButton style="width:100%">
                 <i [ngClass]="{'pi-chevron-right':!show,'pi-chevron-down':show}" class="pi"> &nbsp;</i>
             </button>
         </div>
@@ -48,26 +50,28 @@
                 <div class="forms">
                     <div class="viewPass">
 
-                        <input class="passPass" id="passwordOld" formControlName="passwordOld"
+                        <input class="passPass" id="passwordOldInput" formControlName="passwordOld"
                             [type]="show2?'text':'password'"
+                            aria-describedby="passwordOld passwordOld1"
                             [ngClass]="{'ng-dirty ng-invalid':(passwordOld.invalid && (passwordOld.dirty || passwordOld.touched)) || passError}"
                             placeholder="{{'security.oldPass'|translate}}" type="password" pInputText>
-                        <i tabindex="0" [ngClass]="{'pi-eye':!show2,'pi-eye-slash':show2}" class="pi"
+                        <i tabindex="0" [ngClass]="{'pi-eye':!show2,'pi-eye-slash':show2}" class="pi" aria-label="Ver contraseña"
                             (click)="show2=!show2" (keyup.enter)="show2=!show2"></i>
                     </div>
                     <div *ngIf="passwordOld.invalid && (passwordOld.dirty || passwordOld.touched)">
-                        <small id="passwordOld " class="p-error"
+                        <small id="passwordOld" class="p-error"
                             *ngIf="passwordOld.errors.required">*{{'validation.obligatoryCamp'|
                             translate}}*</small>
                     </div>
-                    <small id="passwordOld " class="p-error"
+                    <small id="passwordOld1" class="p-error"
                             *ngIf="passError">*{{'security.passError'|translate}}*</small>
 
                 </div>
                 <br>
                 <div class="forms">
                     <input class="passPass" id="passwordNew" formControlName="passwordNew"
-                        [ngClass]="{'ng-dirty':passwordNew.invalid && (passwordNew.dirty || passwordNew.touched)}" key
+                    aria-describedby="password passwordNewErr passwordNew" (keypress)="enabled_Password()"
+                        [ngClass]="{'ng-dirty ng-invalid':passwordNew.invalid && (passwordNew.dirty || passwordNew.touched) || passsword_invalid}" key
                         placeholder="{{'security.newPass'|translate}}" type="password" pInputText>
                     <div *ngIf="passwordNew.invalid && (passwordNew.dirty || passwordNew.touched)">
                         <small id="passwordNew " class="p-error"
@@ -82,12 +86,15 @@
                                 <li>{{'validation.passChar'|translate}}</li>
                             </ul>
                         </small>
+                        <small id="passwordNewErr" class="p-error"
+                            *ngIf="passsword_invalid">*La contraseña no puede ser la misma que la anterior*</small>
                     </div>
                 </div>
                 <br>
                 <div class="forms">
                     <input class="passPass" id="passwordNewAgain" formControlName="passwordAgain"
-                        [ngClass]="{'ng-dirty':passwordAgain.invalid && (passwordAgain.dirty || passwordAgain.touched)}"
+                    aria-describedby="passwordAgain passwordOldNo passwordNewErr2"
+                        [ngClass]="{'ng-dirty ng-invalid':passwordAgain.invalid && (passwordAgain.dirty || passwordAgain.touched) || passsword_invalid}"
                         (keyup)="validatorPassword()" placeholder="{{'security.againNewPass'|translate}}"
                         type="password" pInputText>
 
@@ -96,10 +103,11 @@
                             *ngIf="passwordAgain.errors.required">*{{'validation.obligatoryCamp'|
                             translate}}*</small>
 
-
                     </div>
-                    <small id="passwordOld " class="p-error"
+                    <small id="passwordOldNo" class="p-error"
                         *ngIf="!flagConfirm && passwordAgain.dirty ">{{'security.confirmPassError' | translate}}</small>
+                        <small id="passwordNewErr2" class="p-error"
+                        *ngIf="passsword_invalid">*La contraseña no puede ser la misma que la anterior*</small>
                 </div>
                 <br>
                 <div class="forms">
