@@ -178,7 +178,6 @@ export class ExpertQuestionCreateListComponent implements OnInit {
       .putEvaluationExpert(this.conceptSelect)
       .subscribe((data) => {
         this.editConceptDialog = false;
-        //console.log(data);
       });
   }
   openQuestion(concept: Concept) {
@@ -195,7 +194,6 @@ export class ExpertQuestionCreateListComponent implements OnInit {
         this.retrieveEvaluationData(this.conceptSelect.id);
       },
       (err: any) => {
-        //console.log(err.error)
       }
     );
   }

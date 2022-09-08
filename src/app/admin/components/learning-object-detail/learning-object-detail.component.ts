@@ -77,7 +77,6 @@ export class LearningObjectDetailComponent implements OnInit {
           this.autor=resp.user_created;
           this.index_url=resp.learning_object_file.url??"";
           this.statusUpdate=this.learningobjectdetail.public
-          //console.log(resp)
       })
   }
 

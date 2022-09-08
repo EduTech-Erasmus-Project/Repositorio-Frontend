@@ -25,4 +25,17 @@ export class EvaluationService {
     });
     return this.http.get(`${ baseUrl }/api/objeto-de-aprendizaje/concepto-evaluacion/`, { headers }).pipe(map((data: any) => data));
   }
+
+  get_qualification_expert_results(){
+    return this.http.get(`${ baseUrl }/learning-objects/evaluated-expert-qualification/`);
+  }
+
+  get_qualification_student_results(id:number){
+    return this.http.get(`${ baseUrl }/learning-objects/evaluated-student-qualification/`+id);
+  }
+
+  getObjectResultsEvaluationStudentResult_Admin(id_user:number,id_oa:number){
+    return this.http.get(`${baseUrl}/learning-objects/evaluated-student-qualification-results/${id_user}/${id_oa}`).pipe(map((data: any) => data));
+    }
+
 }

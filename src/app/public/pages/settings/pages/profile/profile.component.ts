@@ -419,7 +419,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onChangeTypeStudentEnter(evt) {
-    //console.log("event change student", this.checkEs);
     if (this.checkEs) {
       this.addStudentControls();
       this.validateRole = false;
@@ -430,8 +429,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 
   onChangeTypeTeacher(evt) {
-    //this.patternV="^[a-z]+(@)+[u]+[p]+[s]+.+[e]+[d]+[u]+.+[e]+[c]";
-    //console.log("change teacher ", this.angForm.controls);
     if (this.checkTe) {
       this.addProfesionControl();
       this.validateRole = false;
@@ -441,7 +438,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onChangeTypeExpert(evt) {
-    //console.log("teacher", this.checkTe);
     if (this.checkEx) {
       this.addExpertControls();
       this.validateRole = false;
@@ -463,7 +459,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async validateUser() {
-    //console.log("Form register", this.angForm.controls);
     if (this.checkTe || this.checkEx || this.checkEs) {
       if (this.angForm.valid) {
         this.validateRole = false;
@@ -580,7 +575,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
     if (this.checkEx) {
       this.user.expert_level = this.angForm.value.levelExpertF;
-      console.log(this.angForm.value.levelExpertF);
       this.user.collaboratingExpert.expert_level = this.angForm.value.levelExpertF;
 
       if(this.angForm.value.url != ""){
@@ -639,9 +633,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     reader.onload = (event: any) => {
       this.urlImageLocal = event.target.result;
     };
-
     reader.readAsDataURL(event.target.files[0]);
-    //console.log("on change picture", this.urlImageLocal);
   }
 
   onCancelImage() {
@@ -650,11 +642,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.imageSatusErr = false;
   }
   async onLoadImage() {
-    //console.log("Load image");
     this.imageUpload = true;
     await this.userService.updateImage(this.fileImage, this.user.id).subscribe(
       (res: any) => {
-        //console.log(res);
         this.messageService.add({
           severity: "success",
           summary: "Success",
@@ -669,7 +659,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.urlImageLocal = null;
       },
       (err) => {
-        //console.log(err);
         this.imageSatusErr = true;
         this.imageUpload = false;
       }

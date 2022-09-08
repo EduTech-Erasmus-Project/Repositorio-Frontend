@@ -127,8 +127,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           await this.loginService
             .validateUser(res.access)
             .then(() => {
-              if(this.loginService.user?.roles.includes('teacher')){
-                console.log("Se emite")
+              if(this.loginService.user?.roles.includes('teacher')){    
                 this.loginService.characterMenu.emit(true);
               }
               this.saveEmail();

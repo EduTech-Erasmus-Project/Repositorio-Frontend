@@ -46,7 +46,6 @@ export class LearningObjectPendingListComponent implements OnInit {
   }
   listLearningObject(){
     this.administratorService.listLearningObject(0).subscribe((resp:any)=>{
-      //console.log(resp)
       this.isLoading = true;
       this.learningobjectList=resp.results
     })

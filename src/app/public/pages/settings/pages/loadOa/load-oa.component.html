@@ -9,6 +9,7 @@
         <p-fileUpload name="file" [url]="baseUrl" [chooseLabel]="'newObject.form.imgSelect' | translate"
                 [cancelLabel]="'newObject.form.imgCancel' | translate"
                 [uploadLabel]="'newObject.form.fileUpload' | translate" (onUpload)="onUpload($event)"
+                (onBeforeUpload)="progress_event($event)"
                 (onError)="onError($event)" [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
                 [multiple]="false" accept=".zip,.rar">
                 <ng-template pTemplate="content">
@@ -92,11 +93,13 @@
 
                                                         <select name="EduactioLevels" class="class-dropdown-i"
                                                                 aria-label="Nivel Educativo seleccione una opcion"
-                                                               
                                                                 (change)="selectLevel($event)"
-                                                                fromControlName="education_levels" id="EduactioLevels" required>
+                                                                fromControlName="education_levels" id="EduactioLevels"
+                                                                required>
                                                                 <option *ngFor="let order of educationLevels"
-                                                                        [value]="order.code" [disabled]="order.code === 0" [selected]="order.code ===0">
+                                                                        [value]="order.code"
+                                                                        [disabled]="order.code === 0"
+                                                                        [selected]="order.code ===0">
                                                                         {{order.name}}
                                                                 </option>
                                                         </select>
@@ -127,7 +130,8 @@
                                                                 (change)="selectLanguage($event)"
                                                                 fromControlName="language" id="Lenguaje" required>
                                                                 <option *ngFor="let order of language"
-                                                                        [value]="order.code" [disabled]="order.code === 'none'" 
+                                                                        [value]="order.code"
+                                                                        [disabled]="order.code === 'none'"
                                                                         [selected]="order.code ==='none'">
                                                                         {{order.name}}
                                                                 </option>
@@ -157,13 +161,15 @@
                                                                 optionLabel="name" [showClear]="true">
                                                         </p-dropdown> -->
                                                         <select name="knowledge_area" class="class-dropdown-i"
-                                                        aria-label="Area de conocimiento seleccione una opcion"
-                                                        (change)="selectKnowledgeArea($event)" fromControlName="knowledge_area"
-                                                        id="knowledge_area">
-                                                        <option *ngFor="let order of knowledgeArea" [value]="order.code" [disabled]="order.code === 0">
-                                                            {{order.name}}
-                                                        </option>
-                                                    </select>
+                                                                aria-label="Area de conocimiento seleccione una opcion"
+                                                                (change)="selectKnowledgeArea($event)"
+                                                                fromControlName="knowledge_area" id="knowledge_area">
+                                                                <option *ngFor="let order of knowledgeArea"
+                                                                        [value]="order.code"
+                                                                        [disabled]="order.code === 0">
+                                                                        {{order.name}}
+                                                                </option>
+                                                        </select>
 
                                                         <small *ngIf="getErrorFormRequired('knowledge_area')"
                                                                 id="knowledgeArea-help"
@@ -187,13 +193,15 @@
                                                                 optionLabel="name" [showClear]="true">
                                                         </p-dropdown> -->
                                                         <select name="licencia" class="class-dropdown-i"
-                                                        aria-label="Licencia seleccione una opcion"
-                                                        (change)="selectLicense($event)" fromControlName="profession"
-                                                        id="licencia">
-                                                        <option *ngFor="let order of licenses" [value]="order.code" [disabled]="order.code === 0">
-                                                            {{order.name}}
-                                                        </option>
-                                                    </select>
+                                                                aria-label="Licencia seleccione una opcion"
+                                                                (change)="selectLicense($event)"
+                                                                fromControlName="profession" id="licencia">
+                                                                <option *ngFor="let order of licenses"
+                                                                        [value]="order.code"
+                                                                        [disabled]="order.code === 0">
+                                                                        {{order.name}}
+                                                                </option>
+                                                        </select>
 
                                                         <small *ngIf="getErrorFormRequired('license')" id="license-help"
                                                                 class="p-error">{{'newObject.errors.license' |
@@ -265,22 +273,19 @@
                                         </div>
                                 </div>
                         </div>
-
-                        <div class="p-field p-fluid">
-                                <label for="fileImage">{{'newObject.form.imgLabel' | translate}}*</label>
-                                <p-fileUpload id="fileImage" name="fileImage"
-                                        [chooseLabel]="'newObject.form.imgSelect' | translate"
-                                        [showUploadButton]="false"
-                                        [cancelLabel]="'newObject.form.imgCancel' | translate"
-                                        (onSelect)="onSelectImage($event)"
-                                        [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
-                                        [multiple]="false" accept="image/*" aria-describedby="img-help">
-                                </p-fileUpload>
-                                <small *ngIf="getErrorFormRequired('img')" id="img-help"
-                                        class="p-error">{{'newObject.errors.imgHelp' |
-                                        translate}}</small>
+                        <div class="p-col-12 p-md-6 p-lg-12">
+                                <div class="box content">
+                                        <div class="p-field p-fluid slider">
+                                                <div class="p-grid p-grid-editable" *ngIf="img_preview_ref == true"
+                                                        tabindex="0">
+                                                        <label for="">Imagen de previsualizacion del objeto de
+                                                                aprendizaje</label>
+                                                        <img [src]="path_img_preview | urlsanitizer" alt="Image"
+                                                                width="250" style="margin-top: 12px;">
+                                                </div>
+                                        </div>
+                                </div>
                         </div>
-
                         <div class="p-field p-fluid">
                                 <label for="fileImage">Fichero fuente eXeLearning</label>
                                 <p-fileUpload id="fileImage" name="fileImage"
@@ -312,7 +317,7 @@
                                                                                         formControlName="item_v1"
                                                                                         inputId="yesitem_v1">
                                                                                 </p-radioButton>
-                                                                                
+
                                                                                 <label for="yesitem_v1">{{'newObject.form.adaptationsYes'
                                                                                         | translate}}</label>
                                                                         </div>
@@ -471,7 +476,8 @@
                                                                                         formControlName="item_a5"
                                                                                         inputId="yesitem_a5">
                                                                                 </p-radioButton>
-                                                                                <label for="yesitem_a5" id="yes">{{'newObject.form.adaptationsYes'
+                                                                                <label for="yesitem_a5"
+                                                                                        id="yes">{{'newObject.form.adaptationsYes'
                                                                                         | translate}}</label>
                                                                         </div>
                                                                         <div class="p-field-radiobutton">
@@ -528,15 +534,76 @@
                                                 </div>
                                         </div>
                                 </div>
+                                
+                        <div class="p-field p-fluid" *ngIf="img_preview_ref == false">
+                                <label for="fileImage">{{'newObject.form.imgLabel' | translate}}*</label>
+                                <p-fileUpload id="fileImage" name="fileImage"
+                                        [chooseLabel]="'newObject.form.imgSelect' | translate"
+                                        [showUploadButton]="false"
+                                        [cancelLabel]="'newObject.form.imgCancel' | translate"
+                                        (onSelect)="onSelectImage($event)"
+                                        [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
+                                        [multiple]="false" accept="image/*" aria-describedby="img-help">
+                                </p-fileUpload>
+                                <small *ngIf="getErrorFormRequired('img')" id="img-help"
+                                        class="p-error">{{'newObject.errors.imgHelp' |
+                                        translate}}</small>
+                        </div>
+
+                        <div class="p-col-12 p-md-6 p-lg-12" *ngIf="img_preview_ref == false && this.paths_img_preview.length > 0">
+                                <div class="box content">
+                                        <div class="p-field p-fluid slider">
+                                                <div class="content-section implementation" tabindex="0">
+                                                        <div class="card" >
+                                                                <label tabindex="0" for="fileImage">Seleccione una imagen de
+                                                                        previsualizacion*</label>
+                                                                <div class="image-gallery align-items-center gallery_item" style="width:100%;justify-content:center; margin-top: 12px;" >
+                                                                                <img src="{{image.src}}" tabindex="0" (click)="img_preview_save(image.src)" 
+                                                                                style=" max-width: 50% !important; height: 35vh!important;cursor: pointer;" alt="{{(image.alt =='')? 'Imagen de previsualizacion '+first : image.alt}}" />
+                                                                </div>
+                                                                <div class="grid align-items-center header_paginator">
+                                                                        <div class="col-1" style="width: 12%;">
+                                                                                <p-button icon="pi pi-refresh" [label]="'Refrescar'"
+                                                                                        (onClick)="refresh()">
+                                                                                </p-button>
+
+                                                                        </div>
+                                                                        <div class="col-10 paginator_item" style="width: 70%;">
+                                                                                <p-paginator [first]="first" [rows]="1"
+                                                                                        [totalRecords]="totalRecords"
+                                                                                        (onPageChange)="onPageChange($event)"
+                                                                                        [showJumpToPageDropdown]="true"
+                                                                                        [showPageLinks]="false">
+                                                                                </p-paginator>
+                                                                        </div>
+                                                                        <div class="col-1" style="width: 12%;">
+                                                                                <p-button icon="pi pi-times" [label]="'Cancelar'" class="p-button-danger"
+                                                                                        (onClick)="remove_image()">
+                                                                                </p-button>
+
+                                                                        </div>
+                                                                </div>
+                                                                
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+
                         </div>
                         <p-button type="submit" title="Guardar" [label]="'newObject.form.btnSubmit' | translate">
                         </p-button>
                 </form>
         </ng-container>
         <ng-template #dataTemplate>
-                <h4>{{'newObject.infoLoadFile' | translate}}</h4>
-                <label>Recuerda que los estándares educativos de objetos de aprendizaje aceptados por el repositorio son
-                        IMS Y SCROM.</label>
+                <div class="message-create" *ngIf="spinner === false">
+                        <h4>{{'newObject.infoLoadFile' | translate}}</h4>
+                        <label>Recuerda que los estándares educativos de objetos de aprendizaje aceptados por el repositorio son
+                                IMS Y SCROM.</label>
+                </div>
+               <div class="message-spinner" *ngIf="spinner === true">
+                <p-progressSpinner></p-progressSpinner>
+               </div>
         </ng-template>
 
 </ng-template>

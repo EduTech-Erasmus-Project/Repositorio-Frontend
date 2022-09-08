@@ -59,8 +59,6 @@ export class CardComponent implements OnInit {
     } else {
       this.loadstudentSingle();
     }
-
-
   }
   //>>>>>>>>>>>>>>>>>>>>>
   showDialog() {
@@ -83,7 +81,6 @@ export class CardComponent implements OnInit {
 
 
   navigateTo() {
-    console.log(this.object.slug)
     this.router.navigate(['/object', this.object.slug])
   }
 

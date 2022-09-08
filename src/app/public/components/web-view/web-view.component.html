@@ -101,15 +101,14 @@
    
 </p-dialog>
 <!----------------------------------------------------eva est----->
-<p-dialog header="Califica este objeto de aprendizaje" [(visible)]="displayFormRatingStudent" [style]="{width: '50vw'}" [baseZIndex]="10000">
+<p-dialog header="Califica este objeto de aprendizaje como estudiante" [(visible)]="displayFormRatingStudent" [style]="{width: '50vw'}" [baseZIndex]="10000">
     <div *ngIf="!flagQuestionsEst">
         <app-view-questions-student [flagQuestionsEst]="flagQuestionsEst" [object]="object" (commentEmit1)="coutCommentstudent($event)" ></app-view-questions-student>
     </div>
 </p-dialog>
 
-<p-dialog *ngIf="displayFormRatingStudentUpdate" header="Ver mi evaluacion del objeto de aprendizaje student" [(visible)]="displayFormRatingStudentUpdate" [style]="{width: '50vw'}" [baseZIndex]="10000">
+<p-dialog *ngIf="displayFormRatingStudentUpdate" header="Ver mi evaluacion del objeto de aprendizaje" [(visible)]="displayFormRatingStudentUpdate" [style]="{width: '50vw'}" [baseZIndex]="10000">
     <div *ngIf="flagQuestionsEst">
         <app-view-questions-student [flagQuestionsEst]="flagQuestionsEst" [object]="object" (commentEmit1)="coutCommentstudent($event)" (commentEmit)="coutComments($event)"></app-view-questions-student>
     </div>
-
 </p-dialog>

@@ -34,7 +34,6 @@ export class EvaluationChartComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //console.log("----->",this.idexpe)
     if(this.idexpe=="docente"){
       if (this.resultEv.length>0) {
         this.loaddatagraf();
@@ -139,12 +138,12 @@ export class EvaluationChartComponent implements OnInit {
   }
   
   loaddatagraf3(){
-    console.log(this.resultsEvAut[0].metadata_concept_evaluations)
+    let labels_cabecera = this.resultsEvAut[0].metadata_concept_evaluations.map(result => result.evaluationConcept);
     this.valid="automatic"
     this.ratingAutomatic=this.resultsEvAut[0].rating
     this.valueratingAutomatic = Math.round((this.ratingAutomatic*100)/5);
     this.data_graf = {
-      labels:["Nivel De Interactividad","Recursos Textuales","Recursos Auditivos","Recursos Visuales"],
+      labels:labels_cabecera,
       datasets: [{
         label: 'Evaluacion Preliminar',
         data: this.resultsEvAut[0].metadata_concept_evaluations.map(concept=>concept.average),
@@ -167,5 +166,9 @@ export class EvaluationChartComponent implements OnInit {
         }
       }
     };
+  }
+
+  get is_adapted_oer(){
+    return this.object.is_adapted_oer;
   }
 }
