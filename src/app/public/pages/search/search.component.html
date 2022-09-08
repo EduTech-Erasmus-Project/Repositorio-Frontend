@@ -20,13 +20,19 @@
             <div class="box content">
 
                 <div class="header-search">
-                    <div class="p-d-flex p-ai-center">
-                        <p-chip label="Todo" styleClass="p-mr-2 custom-chip"></p-chip>
-                        <!--  <ng-container *ngIf="chipsSearch.length > 0">
-                            <p-chip *ngFor="let chip of chipsSearch; let i = index" [label]="chip.value"
-                                (onRemove)="removeChip(i)" [removable]="true"
-                                styleClass="p-mr-2 custom-chip animate__animated animate__fadeIn"></p-chip>
-                        </ng-container> -->
+                    <div class="p-ai-center">
+                        <!-- <p-chip label="Todo" styleClass="p-mr-2 custom-chip"></p-chip> -->
+                        <ng-container *ngIf="chipsSearch.length > 0 && idQueryEmpty"  >
+                            <!-- <p-chip *ngFor="let chip of chipsSearch; let i = index" [label]="chip.value" tabindex="0"
+                                (onRemove)="removeChip(chip)" [removable]="true"  role="tooltip"
+                                styleClass="p-mr-2 custom-chip animate__animated animate__fadeIn"></p-chip> -->
+
+                                <div class="chip" *ngFor="let chip of chipsSearch; let i = index" tabindex="0">
+                                    {{chip.value}}
+                                    <span class="closebtn" onclick="this.parentElement.style.display='none'" tabindex="0" aria-label="Eliminar filtro" (click)="removeChip(chip)"><i class="pi pi-times"></i></span>
+                                  </div>
+
+                        </ng-container> 
                         <p-button *ngIf="idQueryEmpty" (click)="onClearFilters()" label="Limpiar filtros"
                             icon="pi pi-sliders-v" iconPos="right"></p-button>
                     </div>

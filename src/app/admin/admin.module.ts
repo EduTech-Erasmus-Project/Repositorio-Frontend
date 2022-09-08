@@ -28,6 +28,8 @@ import { StudentComponent } from './components/student/student.component';
 import { UrlSanitizerPipe } from './pipes/url.sanitizer.pipe';
 import { StudentQuestionCreateListComponent } from './components/student-question-create-list/student-question-create-list.component';
 import { MetadataQuestionCreateListComponent } from './components/metadata-question-create-list/metadata-question-create-list.component';
+import { LearningObjectQualificateStudentListComponent } from './components/learning-object-qualificate-student/learning-object-qualificate-student.component';
+import { ViewStudentEvaluationsAdminComponent } from './components/view-student-evaluations-admin/view-student-evaluations-admin.component';
 
 
 
@@ -57,7 +59,9 @@ import { MetadataQuestionCreateListComponent } from './components/metadata-quest
     StudentComponent,
     UrlSanitizerPipe,
     StudentQuestionCreateListComponent,
-    MetadataQuestionCreateListComponent
+    MetadataQuestionCreateListComponent,
+    LearningObjectQualificateStudentListComponent,
+    ViewStudentEvaluationsAdminComponent
   ],
   exports: [
     AdminComponent, 

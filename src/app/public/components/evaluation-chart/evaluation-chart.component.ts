@@ -34,7 +34,6 @@ export class EvaluationChartComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //console.log("----->",this.idexpe)
     if(this.idexpe=="docente"){
       if (this.resultEv.length>0) {
         this.loaddatagraf();
@@ -47,7 +46,6 @@ export class EvaluationChartComponent implements OnInit {
       this.loaddatagraf3();
     }
   }
-
   
   showBasicDialogSchema() {
     this.displayWindowSchema = true;
@@ -55,11 +53,12 @@ export class EvaluationChartComponent implements OnInit {
   }
 
   loaddatagraf(){
+    let labels_cabecera = (this.resultEv[0].concepts.map(concept=>concept.concepto.concept));
     this.valid="experto"
     this.valueratingExpert=Math.round((this.rating*100)/5);
     this.data_graf = {
       //labels:this.resultEv[0].concepts.map(concept=>concept.concepto.concept),
-      labels:["Recursos Auditivos","Nivel De Interactividad","Recursos Visuales","Recursos Textuales"],
+      labels:labels_cabecera,
       datasets: [{
         label: 'Evaluacion de Accesibilidad',
         data: this.resultEv[0].concepts.map(concept=>concept.total),
@@ -139,11 +138,12 @@ export class EvaluationChartComponent implements OnInit {
   }
   
   loaddatagraf3(){
+    let labels_cabecera = this.resultsEvAut[0].metadata_concept_evaluations.map(result => result.evaluationConcept);
     this.valid="automatic"
     this.ratingAutomatic=this.resultsEvAut[0].rating
     this.valueratingAutomatic = Math.round((this.ratingAutomatic*100)/5);
     this.data_graf = {
-      labels:["Nivel De Interactividad","Recursos Textuales","Recursos Auditivos","Recursos Visuales"],
+      labels:labels_cabecera,
       datasets: [{
         label: 'Evaluacion Preliminar',
         data: this.resultsEvAut[0].metadata_concept_evaluations.map(concept=>concept.average),
@@ -166,5 +166,9 @@ export class EvaluationChartComponent implements OnInit {
         }
       }
     };
+  }
+
+  get is_adapted_oer(){
+    return this.object.is_adapted_oer;
   }
 }

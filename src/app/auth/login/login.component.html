@@ -35,7 +35,7 @@
                                 <input [ngClass]="{'ng-dirty': errorPasswordRequired}" aria-describedby="pass-help"
                                 [type]="show?'text':'password'" id="password" name="password" formControlName="password"
                                     [placeholder]="'login.placeholderPass' | translate" pPassword [feedback]="false" />
-                                <i tabindex="0" [ngClass]="{'pi-eye':!show,'pi-eye-slash':show}" class="pi" (click)="show=!show" (keyup.enter)="show=!show"></i>
+                                <i tabindex="0" [ngClass]="{'pi-eye':!show,'pi-eye-slash':show}" aria-label="Ver contraseña" class="pi" (click)="show=!show" (keyup.enter)="show=!show"></i>
                             </div>
                             <!-- <i class="pi pi-lock"></i> -->
                             <small *ngIf="errorPasswordRequired" id="pass-help"
@@ -43,9 +43,9 @@
                         </div>
 
                         <div class="p-col-12">
-                            <p-checkbox (onChange)="onSaveEmail($event)" name="checked" id="check"
-                                formControlName="rememberMe" [label]="'login.check' | translate" value="SaveInfo"
-                                binary="true"></p-checkbox>
+                            <p-checkbox (onChange)="onSaveEmail($event)" name="checked" id="check" inputId="recordar_contr"
+                                formControlName="rememberMe"   binary="true"></p-checkbox>
+                                <label for="recordar_contr">&nbsp; {{'login.check' | translate}}</label>
                         </div>
 
 

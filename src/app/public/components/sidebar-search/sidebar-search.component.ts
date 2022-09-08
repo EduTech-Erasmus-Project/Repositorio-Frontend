@@ -32,7 +32,8 @@ export class SidebarSearchComponent implements OnInit, OnDestroy {
     private router: Router,
     public loginService: LoginService,
     public querySearchService: QuerySearchService
-  ) {}
+  ) {
+  }
 
   ngOnDestroy(): void {
     this.suscribes.forEach((item) => {
@@ -121,6 +122,7 @@ export class SidebarSearchComponent implements OnInit, OnDestroy {
     };
     await this.router.navigate(["/search"], extras);
     //button = false;
+    
   }
 
   async submitSearchExpert() {

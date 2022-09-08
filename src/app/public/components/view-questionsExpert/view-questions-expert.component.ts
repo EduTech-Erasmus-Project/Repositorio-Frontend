@@ -173,7 +173,6 @@ export class ViewQuestionsExpertComponent implements OnInit {
           results: vectRe,
           observation: this.angForm.get("observation").value,
         };
-
         let sendEval = await this.learningObject
           .sendQualificationExpert(this.answers)
           .subscribe(
@@ -213,8 +212,6 @@ export class ViewQuestionsExpertComponent implements OnInit {
           results: vectRe,
           observation: this.angForm.get("observation").value,
         };
-
-
         let sendEvalUpdate = await this.learningObject
           .sendQualificationExpertUpdate(
             this.answers,

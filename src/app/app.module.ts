@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -79,7 +79,6 @@ import { FormBuilder } from "@angular/forms";
     AdminModule,
     PublicModule,
     QuicklinkModule,
-    
   ],
   declarations: [AppComponent],
   providers: [
@@ -98,5 +97,6 @@ import { FormBuilder } from "@angular/forms";
 
   ],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

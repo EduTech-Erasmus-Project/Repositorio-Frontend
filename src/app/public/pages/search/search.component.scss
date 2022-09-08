@@ -49,3 +49,38 @@
 .rol-others{
   height: 100%;
 }
+
+:host ::ng-deep .p-chip.custom-chip {
+margin-top: 3px;
+}
+
+:host ::ng-deep  .p-chip .p-chip-text {
+  line-height: 1.5;
+  margin-top: 0.40rem;
+  margin-bottom: 0.40rem;
+  /* border-radius: 2px !important; */
+}
+
+.chip {
+  display: inline-block;
+    padding: 0 10px;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 10px;
+    background-color: #3B5B68;
+    color: white;
+    margin: 0px 10px 0px 0px;
+}
+
+.closebtn {
+  padding-left: 4px;
+  padding-right: 4px;
+  color: white;
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.closebtn:hover {
+ color: black;
+}

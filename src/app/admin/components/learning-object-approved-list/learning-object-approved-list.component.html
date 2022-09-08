@@ -32,6 +32,11 @@
 								{{'admin.status'| translate }}
 							</div>
 						</th>
+						<th style="width: 15rem">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								<p> Evaluacion</p>
+							</div>
+						</th>
 						<th style="width: 15rem">{{'admin.actions'| translate }}</th>
 					</tr>
 				</ng-template>
@@ -53,6 +58,19 @@
 							<span class="p-column-title">{{'admin.status'| translate }}</span>
 							<p-tag *ngIf="oa.public" styleClass="p-mr-2" severity="success" value="APROBADO"></p-tag>
 						</td>
+						<td class="evaluacion">
+							<div class="button-student-ref" *ngIf="oa.qualification_student == true">
+								<button (click)="evaluation_student(oa.id)"  pButton pRipple type="button" label="Estudiantes"
+								class="p-button-warning p-mr-2 p-mb-2"></button>
+							</div>
+							<div class="button-expert-ref" *ngIf="oa.qualification_expert == true">
+								<button (click)="getDetail(oa.slug)" pButton pRipple type="button" label="Expertos"
+								class="p-button-warning p-mr-2 p-mb-2"></button>
+							</div>
+							<div class="text" *ngIf="oa.qualification_student == false && oa.qualification_expert == false">
+								<p>No existen evaluaciones en este objeto de aprendizaje</p>
+							</div>
+						</td>
 						<td style="text-align: center">
 								<p-toast></p-toast>
 								<button *ngIf="oa.public" (click)="confirm2($event,oa.id)" pButton pRipple
@@ -60,6 +78,7 @@
 								<p-confirmPopup key="confirm2"></p-confirmPopup>
 							<button (click)="getDetail(oa.slug)" pButton pRipple type="button" label="Detalle"
 								class="p-button-info p-mr-2 p-mb-2"></button>
+							
 						</td>
 					</tr>
 				</ng-template>

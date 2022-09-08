@@ -15,6 +15,7 @@ export interface ObjectLearning {
     created?: any;
     modified?: any;
     adaptation?: string;
+    is_adapted_oer:boolean;
     avatar?: any;
     general_catalog?: string;
     general_entry?: string;

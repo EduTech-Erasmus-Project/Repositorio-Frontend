@@ -92,10 +92,10 @@ export class ConvertLearningObject {
         annotation_date_dateTime: this.methodCodification(lom?.annotation?.date?.dateTime) || "",
         annotation_date_description:lom?.annotation?.date?.description?.join(", ") || "",
         annotation_description: this.methodCodification(lom?.annotation?.description?.description) || "",
-        annotation_modeaccess:  this.methodCodification(lom?.annotation?.accessmode?.value) || "",
-        annotation_modeaccesssufficient:  this.methodCodification(lom?.annotation?.accessmodesufficient?.value) || "",
+        annotation_modeaccess:  lom?.annotation?.accessmode?.value?.join(", ")  || "",
+        annotation_modeaccesssufficient:  lom?.annotation?.accessmodesufficient?.value.join(", ") || "",
         annotation_rol:  this.methodCodification(lom?.annotation?.rol?.value),
-        classification_purpose: this.methodCodification(lom?.classification?.purpose?.value) || "",
+        classification_purpose: lom?.classification?.purpose?.value?.join(",") || "",
         classification_taxonPath_source:  this.methodCodification(lom?.classification?.taxonPath.source) || "",
         classification_taxonPath_taxon: lom?.classification?.taxonPath?.entry?.join(", ") || "",
         classification_description: this.methodCodification( lom?.classification?.description?.description) || "",
@@ -125,7 +125,6 @@ export class ConvertLearningObject {
   }
 
   private getStringData(value: any): string {
-    //console.log("Value", value);
     let Keyword = "";
     try {
       value?.forEach((element) => {
@@ -138,7 +137,6 @@ export class ConvertLearningObject {
   }
 
   private getStringDataConcat(value: any): string {
-    //console.log("Value 2 ", value);
     let dataReturn = "";
     try {
       dataReturn = value.join();

@@ -29,9 +29,15 @@ export class SearchComponent implements OnInit, OnDestroy {
     //this.loadData();
     this.route.queryParams.subscribe((params) => {
       this.querySearchService.queryParams = JSON.parse(JSON.stringify(params));
-
       if (!this.loginService.validateRole("expert")) {
-        //console.log("params", this.querySearchService.queryParams)
+        if(Object.keys(this.querySearchService.queryParams).length != 0) {
+          let claves = Object.keys(this.querySearchService.queryParams);
+          this.chipsSearch=[];
+          for(let i = 0 ; i < claves.length; i++) {
+            let clave = claves[i];
+            this.chipsSearch.push({value:this.querySearchService.queryParams[clave]});
+          }
+        }
         this.searchData();
       } else {
         if(!this.querySearchService.queryParams.is_evaluated){
@@ -40,7 +46,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         this.searchExpert();
       }
     });
-  }
+}
 
   ngOnInit(): void {
     //console.log("query params", this.querySearchService.queryParams);
@@ -58,7 +64,6 @@ export class SearchComponent implements OnInit, OnDestroy {
       .search(this.querySearchService.queryParams)
       .subscribe(
         (res: any) => {
-          //console.log("params", this.querySearchService.queryParams)
           this.objects = res.results;
           this.loading = false;
         },
@@ -67,6 +72,20 @@ export class SearchComponent implements OnInit, OnDestroy {
         }
       );
     this.subscribes.push(searchSub);
+  }
+
+  public removeChip(index){
+    for (var name in this.querySearchService.queryParams) {
+      if (this.querySearchService.queryParams.hasOwnProperty(name)) {
+        if(this.querySearchService.queryParams[name] === index.value) {
+            delete this.querySearchService.queryParams[name]
+            let extras: NavigationExtras = {
+              queryParams: this.querySearchService.queryParams,
+            };
+            this.router.navigate(["/search"], extras);
+        }
+      }
+  }
   }
 
   async searchExpert() {
@@ -109,7 +128,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   // }
 
   onClearFilters() {
-    
+    this.chipsSearch=[];
     this.querySearchService.queryParams = {
       is_evaluated: this.querySearchService.queryParams.is_evaluated
     };

@@ -77,6 +77,4 @@ export class SearchService {
   getObjectResultsEvaluationStudent(id){
     return this.http.get(`${baseUrl}/learning-objects/student/result-to-student/${id}/`).pipe(map((data: any) => data));
     }
- 
-  
 }

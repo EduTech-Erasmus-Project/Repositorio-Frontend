@@ -9,8 +9,8 @@
             <p-button  *ngIf="roleExpert && flagQuestionsEx && flagQuestionsExNumber == 1" (click)="displayFormRatingExpertUpdate=true"
                 [label]="'object.objectQualification'| translate " title="Editar evaluacion" ><i class="pi pi-pencil">&nbsp;</i></p-button>
             
-                <button aria-label="Boton para calificar este objeto de aprendizaje" *ngIf="roleUser" (click)="displayFormRating=true" pButton pRipple type="button" icon="pi pi-star-o"
-                class="p-button-rounded p-button-outlined" [pTooltip]="'object.btnEvaluate'| translate "></button>
+                <!-- <button aria-label="Boton para calificar este objeto de aprendizaje" *ngIf="roleUser" (click)="displayFormRating=true" pButton pRipple type="button" icon="pi pi-star-o"
+                class="p-button-rounded p-button-outlined" [pTooltip]="'object.btnEvaluate'| translate "></button> -->
             <!--   NUEVO BOTON     -->
 
             <button aria-label="Boton para calificar " *ngIf="roleUser && !flagQuestionsEst && flagQuestionsEstNumber == 0"  (click)="displayFormRatingStudent=true" pButton pRipple type="button"
@@ -101,15 +101,14 @@
    
 </p-dialog>
 <!----------------------------------------------------eva est----->
-<p-dialog header="Califica este objeto de aprendizaje" [(visible)]="displayFormRatingStudent" [style]="{width: '50vw'}" [baseZIndex]="10000">
+<p-dialog header="Califica este objeto de aprendizaje como estudiante" [(visible)]="displayFormRatingStudent" [style]="{width: '50vw'}" [baseZIndex]="10000">
     <div *ngIf="!flagQuestionsEst">
         <app-view-questions-student [flagQuestionsEst]="flagQuestionsEst" [object]="object" (commentEmit1)="coutCommentstudent($event)" ></app-view-questions-student>
     </div>
 </p-dialog>
 
-<p-dialog *ngIf="displayFormRatingStudentUpdate" header="Ver mi evaluacion del objeto de aprendizaje student" [(visible)]="displayFormRatingStudentUpdate" [style]="{width: '50vw'}" [baseZIndex]="10000">
+<p-dialog *ngIf="displayFormRatingStudentUpdate" header="Ver mi evaluacion del objeto de aprendizaje" [(visible)]="displayFormRatingStudentUpdate" [style]="{width: '50vw'}" [baseZIndex]="10000">
     <div *ngIf="flagQuestionsEst">
         <app-view-questions-student [flagQuestionsEst]="flagQuestionsEst" [object]="object" (commentEmit1)="coutCommentstudent($event)" (commentEmit)="coutComments($event)"></app-view-questions-student>
     </div>
-
 </p-dialog>

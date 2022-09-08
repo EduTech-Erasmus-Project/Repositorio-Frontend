@@ -4,6 +4,7 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
+  AfterContentInit,
 } from "@angular/core";
 import {
   FormBuilder,
@@ -24,10 +25,11 @@ import * as moment from "moment";
 @Component({
   selector: "app-sign-up",
   templateUrl: "./sign-up.component.html",
-  styleUrls: ["./sign-up.component.scss"],
+  styleUrls: ["./sign-up.component.scss"]
 })
 export class SignUpComponent implements OnInit, OnDestroy {
   @ViewChild("dropDowProfession") private dropDowProfession: ElementRef;
+  
   //variables para activar los checkbox
   //dark: boolean = false;
   public flagprofession = false;
@@ -36,6 +38,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   public levelsEdications: any[];
   public preferenceAreas: SelectItemGroup[];
   public areasInterestings: any[];
+  public areasInterestings_data_save: any[] = [];
   public preferenceAreasSave: any[] = [];
   public selectedValues: string[] = [];
   public angForm: FormGroup;
@@ -46,12 +49,26 @@ export class SignUpComponent implements OnInit, OnDestroy {
   public validateEmail: boolean = false;
   public flagAlert: boolean = false;
   public registred: boolean = false;
-  public patternCorreo: string =
-  `^([a-zA-Z0-9]+.+)@((?!hotmail|gmail|yahoo|outlook)(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$`;
+  public patternCorreo: string = `^([a-zA-Z0-9]+.+)@((?!hotmail|gmail|yahoo|outlook)(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$`;
   private typeRegister: string;
   public validateEmailPattern = false;
   public msgs: any[];
-
+  public educacionLevel:any;
+  public localization = {
+    buttonLabel: "Elige fecha",
+    placeholder: "yyyy-mm-dd",
+    selectedDateMessage: "La fecha seleccionada es",
+    prevMonthLabel: "Mes anterior",
+    nextMonthLabel: "Próximo mes",
+    monthSelectLabel: "Mes",
+    yearSelectLabel: "Año",
+    closeLabel: "Cerrar ventana de fecha",
+    calendarHeading: "Elige una fecha",
+    dayNames: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+    monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    monthNamesShort: ["En", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+    locale: "es-ES",
+  }
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
@@ -65,17 +82,21 @@ export class SignUpComponent implements OnInit, OnDestroy {
     });
     this.createForm();
   }
+
   ngOnDestroy(): void {
     this.subscribes.forEach((subscription) => {
       subscription.unsubscribe();
     });
   }
+
   ngOnInit(): void {
     this.loadData();
-
+    
+    //new test();
     //this.getYearRange();
   }
 
+  
   onSubmit() {}
   createForm() {
     this.angForm = this.fb.group({
@@ -146,12 +167,13 @@ export class SignUpComponent implements OnInit, OnDestroy {
     //console.log("create student controls");
     this.angForm.addControl(
       "calendar",
-      new FormControl(null, [Validators.required])
+      new FormControl("2000-01-01", [Validators.required])
     );
     this.angForm.addControl(
       "educacionL",
       new FormControl(null, [Validators.required])
     );
+
     this.angForm.addControl(
       "areasInteres",
       new FormControl(null, [Validators.required])
@@ -186,9 +208,10 @@ export class SignUpComponent implements OnInit, OnDestroy {
   }
 
   addProfesionControl() {
+    let object_profession = this.profesions[0];
     this.angForm.addControl(
       "profession",
-      new FormControl(null, Validators.required)
+      new FormControl(object_profession, Validators.required)
     );
 
    // this.removeEmail();   
@@ -244,6 +267,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         });
         //console.log(this.profesions);
         this.profesions = this.profesions;
+        this.add_item_default_array(this.profesions);
       });
 
     //extraemos datos de nivel de educacion
@@ -253,9 +277,10 @@ export class SignUpComponent implements OnInit, OnDestroy {
         this.levelsEdications = res.values.map((item: any) => {
           return { id: item.id, name: item.name };
         });
-        this.levelsEdications = this.levelsEdications;
-      });
-
+        this.levelsEdications = this.levelsEdications;  
+        this.add_item_default_array(this.levelsEdications);
+       });
+      
     //Extraemos los datos de precerencias por area
     let preferencesSub = await this.searchService
       .getPreferencesArea()
@@ -272,6 +297,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         this.preferenceAreas = this.preferenceAreas;
       });
 
+   
     let interestingsSub = await this.searchService
       .getInterestAreas()
       .subscribe((res) => {
@@ -289,6 +315,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
     );
   }
 
+  private add_item_default_array(array){
+    const object_default={
+      id:0,
+      name: 'Elige una opción'
+    };
+    array.unshift(object_default);
+  }
+  
   validarCamp(event): boolean {
     if (this.angForm.get("name").hasError("pattern")) {
       return true;
@@ -434,7 +468,6 @@ addEmailPathTeacherAndExpert(){
   }
 
   async validateUser() {
-    
     this.angForm.markAllAsTouched();
     this.angForm.updateValueAndValidity();
     
@@ -443,12 +476,12 @@ addEmailPathTeacherAndExpert(){
       if (this.angForm.valid) {
         //console.log("Si paso")
         if (this.angForm.value.terms) {
-       
+          
           this.validateRole = false;
           Swal.fire({
             allowOutsideClick: false,
-            icon: "info",
             text: "Registrando...",
+            icon: "info",
           });
           Swal.showLoading();
           this.getDataMaped();
@@ -460,6 +493,7 @@ addEmailPathTeacherAndExpert(){
               Swal.close();
             },
             (err) => {
+              console.log(err);
               if (err.error.email[0] == "El correo debe ser institucionals") {      
                this.showError('El correo electronico debe ser institucional');
               } else if (err.error.email[0] == "This field must be unique.") {
@@ -478,7 +512,7 @@ addEmailPathTeacherAndExpert(){
       } else {
         this.markTouchForm();
         this.showError('El formulario es invalido');
-        this.msgs.push({severity:'error', summary:'Mensaje de error', detail:'El formulario es invalido'});
+        //this.msgs.push({severity:'error', summary:'Mensaje de error', detail:'El formulario es invalido'});
         setTimeout(function() {
           this.msgs = [];
         },3)
@@ -534,12 +568,14 @@ addEmailPathTeacherAndExpert(){
     this.user.password = this.angForm.value.password;
 
     if (this.checkEs) {
-      this.user.education_levels = this.angForm.value.educacionL.map(
+      this.user.education_levels = this.angForm.value.educacionL;
+      //this.user.knowledge_areas = this.angForm.value.areasInteres.map(
+        //(res) => res.id
+      //);
+      this.user.knowledge_areas = this.angForm.value.areasInteres;
+      /*this.user.preferences = this.angForm.value.areasPrefer.map(
         (res) => res.id
-      );
-      this.user.knowledge_areas = this.angForm.value.areasInteres.map(
-        (res) => res.id
-      );
+      );*/
       this.user.preferences = this.angForm.value.areasPrefer;
 
       this.user.has_disability = this.angForm.value.typeDisability;
@@ -550,9 +586,7 @@ addEmailPathTeacherAndExpert(){
     }
 
     if (this.checkTe) {
-      this.user.professions = this.angForm.value.profession.map(
-        (res) => res.id
-      );
+      this.user.professions = this.angForm.value.profession;
     }
     if (this.checkEx) {
 
@@ -571,20 +605,31 @@ addEmailPathTeacherAndExpert(){
     let date = new Date();
     return `${`${date.getFullYear() - 22}:${date.getFullYear() - 6}`}`;
   }
+
   selectLevels(evt) {
     this.angForm.patchValue({
-      educacionL: evt.value,
+      educacionL: [Number(evt.target.value)]
     });
   }
+
   selectAreas(evt) {
+    if (this.areasInterestings_data_save.includes(evt)) {
+      this.areasInterestings_data_save = this.areasInterestings_data_save.filter(
+        (res) => res != evt
+      );
+    } else {
+      this.areasInterestings_data_save.push(evt);
+    }
+    
     this.angForm.patchValue({
-      areasInteres: evt.value,
+      areasInteres: this.areasInterestings_data_save,
     });
   }
-  selectProfesion(evt) {
+
+  selectProfesion(evt) {  
     this.angForm.patchValue({
-      profession: evt.value,
-    });
+      profession: [Number(evt.target.value)]
+    }); 
   }
   
   //Generamos la consulta para obtener el mensaje. 
@@ -605,4 +650,13 @@ addEmailPathTeacherAndExpert(){
     }
   }
 
+  event_get_data_calendar(event){
+   
+      this.angForm.controls['calendar'].setValue(
+        event.detail.value
+      );
+    
+    
+    //calendar
+  }
 }

@@ -70,7 +70,6 @@ export class AdministratorUserListComponent implements OnInit {
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
           this.administratorService.updateAdministratorUser(id,1).subscribe((user:any) => {
-            //console.log(user);
             this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Habilitado con éxito'});
             setTimeout(()=>{
               this.getUser();

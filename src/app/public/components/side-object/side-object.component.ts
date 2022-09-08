@@ -77,7 +77,6 @@ export class SideObjectComponent implements OnInit, OnDestroy {
       let popularsSub = await this.learningObjectService
         .getPopulars()
         .subscribe((res: any) => {
-          //console.log("popular", res)
           this.objects = res.map((res) => {
             return {
               ...res.learning_object,
@@ -90,7 +89,6 @@ export class SideObjectComponent implements OnInit, OnDestroy {
   }
 
   onClick(slug: string) {
-    //console.log("slug", slug)
     this.router.navigate(["/object", slug]);
   }
 

@@ -213,7 +213,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     UrlsanitizerPipe,
     MomentPipe,
     ProgressSpinnerModule,
-    MetadataComponent
+    MetadataComponent,
   ],
   imports: [
     ProgressSpinnerModule,

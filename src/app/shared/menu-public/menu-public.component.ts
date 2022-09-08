@@ -23,7 +23,7 @@ export class MenuPublicComponent implements OnInit {
     public appMain: PublicComponent,
     private languageService: LanguageService,
     public loginService: LoginService,
-    private router: Router
+    private router: Router,
   ) {
     if (
       this.loginService.user?.administrator ||
@@ -44,25 +44,36 @@ export class MenuPublicComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+
+    this.loginService.characterLogin.subscribe((res) => {
+      if(res == true){
+        this.role_name = this.getROLE(this.loginService.user.roles[0]);
+      }else if(res == false){
+       this.role_name=''; 
+      }
+    })
+
     if (this.loginService.user) {
       this.role_name = this.getROLE(this.loginService.user.roles[0]);
-    }
+    }    
+
 
     this.translate = this.languageService.translate;
     this.loadMenu();
 
-    // this.loginService
-    //   .isLoged()
-    //   .then((res: boolean) => {
-    //     //console.log("menu res", res);
-    //     this.loged = res;
-    //   })
-    //   .catch((err: boolean) => {
-    //     //console.log("menu err", err);
-    //     this.loged = err;
-    //   });
+   
 
-    //this.loged = false
+    this.addMenuItems();
+      
+      this.loginService.characterMenu.subscribe((res)=>{
+        if(res == true){
+          this.addMenuItems();
+        }else if(res == false){
+          this.tieredItems = this.tieredItems.slice(0,-2);
+        }
+      });
+
+    
   }
 
   loadMenu() {
@@ -119,6 +130,25 @@ export class MenuPublicComponent implements OnInit {
         styleClass: "homeItem",
       },
     ];
+
+  /*  if(this.roleTeacher == true){
+      this.tieredItems.push(
+        {
+        label: "Mis OAs",
+        routerLink: "/settings/my-objects",
+        routerLinkActiveOptions: {
+          exact: true,
+        },
+      },
+      {
+        label: "Subir un OA",
+        routerLink: "/settings/new-object",
+        routerLinkActiveOptions: {
+          exact: true,
+        },
+      },
+      )
+    }*/
     //});
     // console.log("user menu");
     // if (this.loginService.validateRole("student")) {
@@ -133,6 +163,26 @@ export class MenuPublicComponent implements OnInit {
     // }
   }
 
+  private addMenuItems(){
+    if(this.roleTeacher){
+      this.tieredItems.push(
+        {
+        label: "Mis OAs",
+        routerLink: "/settings/my-objects",
+        routerLinkActiveOptions: {
+          exact: true,
+        },
+      },
+      {
+        label: "Subir un OA",
+        routerLink: "/settings/new-object",
+        routerLinkActiveOptions: {
+          exact: true,
+        },
+      },
+      )
+    }
+  }
   mobileMegaMenuItemClick(index) {
     this.appMain.megaMenuMobileClick = true;
     this.activeItem = this.activeItem === index ? null : index;
@@ -158,5 +208,9 @@ export class MenuPublicComponent implements OnInit {
 
   navigateStudent() {
     this.router.navigate(["recommended"]);
+  }
+
+  get roleTeacher() {
+    return this.loginService.validateRole("teacher");
   }
 }

@@ -63,6 +63,7 @@ const routes: Routes = [
         data: {
           breadcrumb: "Buscar",
         },
+        
       },
       {
         path: "terms-and-conditions",
