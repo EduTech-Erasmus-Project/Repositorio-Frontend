@@ -14,8 +14,8 @@ import { ExpertQuestionCreateListComponent } from './components/expert-question-
 import { LearningObjectApprovedListComponent } from './components/learning-object-approved-list/learning-object-approved-list.component';
 import { LearningObjectEvaluatedDetailComponent } from './components/learning-object-evaluated-detail/learning-object-evaluated-detail.component';
 import { LearningObjectPendingListComponent } from './components/learning-object-pending-list/learning-object-pending-list.component';
-import { TeacherExpertApprovedComponent } from './components/teacher-expert-approved/teacher-expert-approved.component';
-import { TeacherExpertPendingComponent } from './components/teacher-expert-pending/teacher-expert-pending.component';
+import { TeacherApprovedComponent } from './components/teacher-approved/teacher-approved.component';
+import { TeacherPendingComponent } from './components/teacher-pending/teacher-pending.component';
 import { TeacherExpertProfileComponent } from './components/teacher-expert-profile/teacher-expert-profile.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LearningObjectDetailComponent } from './components/learning-object-detail/learning-object-detail.component';
@@ -30,6 +30,8 @@ import { StudentQuestionCreateListComponent } from './components/student-questio
 import { MetadataQuestionCreateListComponent } from './components/metadata-question-create-list/metadata-question-create-list.component';
 import { LearningObjectQualificateStudentListComponent } from './components/learning-object-qualificate-student/learning-object-qualificate-student.component';
 import { ViewStudentEvaluationsAdminComponent } from './components/view-student-evaluations-admin/view-student-evaluations-admin.component';
+import { ExpertPendingComponent } from './components/expert-pending/expert-pending.component';
+import { ExpertApprovedComponent } from './components/expert-approved/expert-approved.component';
 
 
 
@@ -47,8 +49,8 @@ import { ViewStudentEvaluationsAdminComponent } from './components/view-student-
     LearningObjectApprovedListComponent, 
     LearningObjectEvaluatedDetailComponent, 
     LearningObjectPendingListComponent, 
-    TeacherExpertApprovedComponent, 
-    TeacherExpertPendingComponent, 
+    TeacherApprovedComponent, 
+    TeacherPendingComponent, 
     TeacherExpertProfileComponent, 
     LearningObjectDetailComponent, 
     AdminProfileComponent,
@@ -61,7 +63,9 @@ import { ViewStudentEvaluationsAdminComponent } from './components/view-student-
     StudentQuestionCreateListComponent,
     MetadataQuestionCreateListComponent,
     LearningObjectQualificateStudentListComponent,
-    ViewStudentEvaluationsAdminComponent
+    ViewStudentEvaluationsAdminComponent,
+    ExpertPendingComponent,
+    ExpertApprovedComponent
   ],
   exports: [
     AdminComponent, 

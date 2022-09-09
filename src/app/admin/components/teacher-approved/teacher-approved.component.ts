@@ -8,9 +8,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { User } from '../../models/evaluation.models';
 
 @Component({
-  selector: 'app-teacher-expert-approved',
-  templateUrl: './teacher-expert-approved.component.html',
-  styleUrls: ['./teacher-expert-approved.component.scss'],
+  selector: 'app-teacher-approved',
+  templateUrl: './teacher-approved.component.html',
+  styleUrls: ['./teacher-approved.component.scss'],
   styles: [`
   @media screen and (max-width: 960px) {
       :host ::ng-deep .p-datatable.p-datatable-customers.rowexpand-table .p-datatable-tbody > tr > td:nth-child(6) {
@@ -21,7 +21,7 @@ import { User } from '../../models/evaluation.models';
 `],
 providers: [MessageService, ConfirmationService]
 })
-export class TeacherExpertApprovedComponent implements OnInit {
+export class TeacherApprovedComponent implements OnInit {
   @ViewChild('dt') table: Table;
   user_student_teacher_lists:any[]=[];
   userList: User[];
@@ -43,7 +43,7 @@ export class TeacherExpertApprovedComponent implements OnInit {
     this.getTeacherExpertAproved();
   }
   getTeacherExpertAproved(){
-    this.administratorService.getTeacherAndExpertAproved().subscribe((user:any) => {
+    this.administratorService.getTeacherAproved().subscribe((user:any) => {
       this.isLoading=true;
       this.user_student_teacher_lists=user;
     })
@@ -65,7 +65,7 @@ export class TeacherExpertApprovedComponent implements OnInit {
         message: '¿Esta seguro que desea deshabilitar usuario?',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-          this.administratorService.updateTeacherAndExpertAproved(id,teacher_status,expert_status).subscribe((user:any) => {
+          this.administratorService.updateTeacherAproved(id,teacher_status,expert_status).subscribe((user:any) => {
             this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Deshabilitado con éxito'});
             setTimeout(()=>{
               this.getTeacherExpertAproved();

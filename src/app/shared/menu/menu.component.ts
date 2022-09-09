@@ -35,7 +35,7 @@ export class MenuComponent implements OnInit {
             ],
           },
           {
-            label: "Docente & Experto",
+            label: "Docente",
             icon: "pi pi-fw pi-user",
             routerLink: ["/admin/teacher"],
             items: [
@@ -46,6 +46,21 @@ export class MenuComponent implements OnInit {
               {
                 label: "Solicitudes aprobados",
                 routerLink: ["./teacher/request/approved"],
+              },
+            ],
+          },
+          {
+            label: "Experto",
+            icon: "pi pi-fw pi-user",
+            routerLink: ["/admin/teacher"],
+            items: [
+              {
+                label: "Solicitudes pendientes",
+                routerLink: ["./expert/request/pending"],
+              },
+              {
+                label: "Solicitudes aprobados",
+                routerLink: ["./expert/request/approved"],
               },
             ],
           },

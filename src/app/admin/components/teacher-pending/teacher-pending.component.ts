@@ -6,11 +6,12 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { AdminComponent } from '../../admin.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { User } from '../../models/evaluation.models';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-teacher-expert',
-  templateUrl: './teacher-expert-pending.component.html',
-  styleUrls: ['./teacher-expert-pending.component.scss'],
+  selector: 'app-teacher-pending',
+  templateUrl: './teacher-pending.component.html',
+  styleUrls: ['./teacher-pending.component.scss'],
   styles: [`
   @media screen and (max-width: 960px) {
       :host ::ng-deep .p-datatable.p-datatable-customers.rowexpand-table .p-datatable-tbody > tr > td:nth-child(6) {
@@ -21,12 +22,12 @@ import { User } from '../../models/evaluation.models';
 `],
 providers: [MessageService, ConfirmationService]
 })
-export class TeacherExpertPendingComponent implements OnInit {
+export class TeacherPendingComponent implements OnInit {
   @ViewChild('dt') table: Table;
   user_student_teacher_list:any[]=[];
   userList: User[];
   isLoading:boolean = false;
-
+  private subscriptions: Subscription[] = [];
   constructor(
     private breadcrumbService: BreadcrumbService,
     private administratorService:AdministratorService,
@@ -41,14 +42,17 @@ export class TeacherExpertPendingComponent implements OnInit {
     }
  
   ngOnInit(): void {
-    this.getTeacherAndExpert();
+    this.get_Teacher();
   }
 
-  getTeacherAndExpert(){
-    this.administratorService.getTeacherAndExpertToAprove().subscribe((user:any) => {
+   async get_Teacher(){
+    this.administratorService.getTeacherToAprove().subscribe((user:any) => {
       this.isLoading = true;
       this.user_student_teacher_list=user;
     })
+
+   
+
   }
 
   getProfile(id:number){
@@ -61,10 +65,10 @@ export class TeacherExpertPendingComponent implements OnInit {
         message: '¿Esta seguro que desea habilitar usuario?',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-          this.administratorService.updateTeacherAndExpertToAprove(id,teacher_status,expert_status).subscribe((user:any) => {
+          this.administratorService.updateTeacherToAprove(id,teacher_status,expert_status).subscribe((user:any) => {
             this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Habilitado con éxito'});
             setTimeout(()=>{
-              this.getTeacherAndExpert();
+              this.get_Teacher();
             },600)
           })
         },
