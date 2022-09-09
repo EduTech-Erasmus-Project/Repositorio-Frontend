@@ -1,0 +1,71 @@
+<p-toast></p-toast>
+<form autocomplete="off" [formGroup]="angForm2" id="loginForm">
+    <div *ngFor="let aux of groupedQuestionsEx">
+        <div *ngFor="let item of aux.conceptEvaluations">
+            <div class="forms">
+                <h6>{{item.evaluationConcept}}</h6>
+                <ul>
+                    <li *ngFor="let itemQ of item.questionEvaluations">
+                        <div class="labelQu">
+                            <label class="labelQT">{{itemQ.questions}}</label>
+                        </div>
+                        <div class="forms">
+                            <div class="p-field-radiobutton">
+                                <div class="p-field-radiobutton">
+                                    <p-radioButton formControlName="{{itemQ.questionid}}" group="button" value="Si">
+                                    </p-radioButton>
+                                    <label for="group1">{{'register.yes' |translate}}</label>
+                                </div>
+
+                                <div class="p-field-radiobutton" style="padding: 0px 15px;">
+                                    <p-radioButton formControlName="{{itemQ.questionid}}" group="button" value="No">
+                                    </p-radioButton>
+                                    <label for="group1">{{'register.no' |translate}}</label>
+                                </div>
+
+                                <div class="p-field-radiobutton" style="padding: 0px 10px;">
+                                    <p-radioButton formControlName="{{itemQ.questionid}}" group="button"
+                                        value="Parcialmente">
+                                    </p-radioButton>
+                                    <label for="group1">{{'register.partially' |translate}}</label>
+                                </div>
+                                <div class="p-field-radiobutton" style="padding: 0px 10px;">
+                                    <p-radioButton formControlName="{{itemQ.questionid}}" group="button"
+                                        value="No aplica">
+                                    </p-radioButton>
+                                    <label for="group1">{{'register.notApply' |translate}}</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="forms">
+            <h6>{{'object.observation' | translate}}</h6>
+            <textarea rows="5" cols="30" style="width: 100%;" placeholder="{{'object.observation' | translate}}.."
+                formControlName="observation"
+                [ngClass]="{'ng-dirty':observation.invalid && (observation.dirty || observation.touched)}"
+                pInputTextarea></textarea>
+            <div *ngIf="observation.invalid && (observation.dirty || observation.touched)">
+                <small id="observation " class="p-error"
+                    *ngIf="observation.errors.required">*{{'validation.obligatoryCamp'|
+                    translate}}*</small>
+            </div>
+        </div>
+
+        <div style="text-align: right;">
+            <p-button icon="pi pi-times" type="button" (click)="closeView()" label="{{'object.exit'|translate}}"
+                styleClass="p-button-text">
+            </p-button>
+            &nbsp;
+            <p-button icon="pi pi-check" type="submit" label="{{'profile.btnUpdate' | translate}}"
+                styleClass="p-button-text">
+            </p-button>
+        </div>
+    </div>
+</form>
+
+
+

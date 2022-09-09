@@ -1,0 +1,119 @@
+<div class="p-grid table-demo">
+	<div class="p-col-12">
+		<div class="card">
+			<app-loading *ngIf="!isLoading"></app-loading>
+			<p-table *ngIf="isLoading" #dt [value]="learningobjectList" [(selection)]="learningobjectsSelected" dataKey="id" 
+			styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [paginator]="true"
+				[filterDelay]="0" [globalFilterFields]="['general_title']">
+				<ng-template pTemplate="caption">
+					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+						Objetos de aprendizaje calificados
+						<span class="p-input-icon-left">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+								placeholder="Buscar" />
+						</span>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="width: 8rem">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.avatar'| translate }}
+							</div>
+						</th>
+						 <th>
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.title'| translate }}
+							</div>
+						</th>
+						<th style="width: 8rem">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.status'| translate }}
+							</div>
+						</th>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Experto evaluador
+                           </div>
+                        </th>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Correo
+                           </div>
+                        </th>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+								 Calificación 
+							</div>
+                        </th>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Observación
+                           </div>
+                        </th>
+					<!--	<th style="width: 15rem">{{'admin.actions'| translate }}</th> -->
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-oa>
+					<tr class="p-selectable-row">
+						<td>
+							<span class="p-column-title">{{'admin.avatar'| translate }}</span>
+							<img src="{{oa.learning_object.avatar}}" alt="avatar" width="75">
+						</td>
+						<td>
+							<span class="p-column-title">{{'admin.title'| translate }}</span>
+							<h4>{{oa.learning_object.general_title}}</h4>
+							<p>
+								{{oa.learning_object.general_description | slice:0:500}}
+							</p>
+                            <p>
+								<strong>{{'admin.uploadDate' | translate }}: </strong>{{oa.learning_object.created | date:'MM/dd/yyyy' }}
+							</p>
+						</td>
+						<td>
+							<span class="p-column-title">{{'admin.status'| translate }}</span>
+							<p-tag *ngIf="oa.learning_object.public" styleClass="p-mr-2" severity="success" value="APROBADO"></p-tag>
+						</td>
+                        <td>
+                            <span class="p-column-title">Experto evaluador</span>
+                            <p>{{ join_last_name_first_name(oa.collaborating_expert.first_name,oa.collaborating_expert.last_name)}}</p>
+                        </td>
+                        <td>
+                            <span class="p-column-title">Correo</span>
+                            <p>{{oa.collaborating_expert.email}}</p>
+                        </td>
+                        <td>
+                            <span class="p-column-title">Calificación</span>
+							<button pButton pRipple title="Ver evaluacion" (click)="oa.boolean_display = true" type="button" label="{{oa.rating}}" class="p-button-raised p-button-warning" style="width: 50%;"></button>
+							<p-dialog header="Evaluacion del objeto de aprendizaje" [(visible)]="oa.boolean_display" [style]="{width: '50vw'}" [baseZIndex]="10000">
+								<div >
+									<app-view-expert-evaluations-admin [student_id]="oa.collaborating_expert.id" [oa_id]="oa.learning_object.id" (displayFormRatingStuden)="change_value($event)"></app-view-expert-evaluations-admin>
+								</div>
+							</p-dialog>
+						</td>
+                        <td>
+                            <span class="p-column-title">Observación</span>
+                            <p>{{oa.observation}}</p>
+                        </td>
+					<!-- 	<td style="text-align: center">
+								<p-toast></p-toast>
+								<button *ngIf="oa.public" (click)="confirm2($event,oa.id)" pButton pRipple
+								type="button" label="Ocultar" class="p-button-danger p-mr-2 p-mb-2" pTooltip="Deshabilitar"></button>
+								<p-confirmPopup key="confirm2"></p-confirmPopup>
+							<button (click)="getDetail(oa.slug)" pButton pRipple type="button" label="Detalle"
+								class="p-button-info p-mr-2 p-mb-2"></button>
+						</td> -->
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">No existen objetos de aprendizaje calificados</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	</div>
+</div>
+
+

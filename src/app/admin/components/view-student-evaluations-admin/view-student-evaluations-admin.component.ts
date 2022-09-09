@@ -12,7 +12,7 @@ export class ViewStudentEvaluationsAdminComponent implements OnInit, OnDestroy {
 public angForm2: FormGroup;
 public groupedQuestionsUpdate:any[];
 @Input() student_id:number;
-@Input() oa_id:number
+@Input() oa_id:number;
 @Output() displayFormRatingStuden = new EventEmitter<boolean>();
 private subscribes: Subscription[] = [];
   constructor(

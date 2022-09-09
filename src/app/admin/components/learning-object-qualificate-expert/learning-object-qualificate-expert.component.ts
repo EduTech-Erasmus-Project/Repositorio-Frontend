@@ -1,20 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { AdministratorService } from 'src/app/services/administrator.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { SearchService } from 'src/app/services/search.service';
 import Swal from 'sweetalert2';
 import { AdminComponent } from '../../admin.component';
 import { LearningObjects } from '../../models/evaluation.models';
 import { EvaluationService } from '../../services/evaluation.service';
-import { SearchService } from 'src/app/services/search.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-learning-object-qualificate-student',
-  templateUrl: './learning-object-qualificate-student.component.html',
-  styleUrls: ['./learning-object-qualificate-student.component.scss'],
+  selector: 'app-learning-object-qualificate-expert',
+  templateUrl: './learning-object-qualificate-expert.component.html',
+  styleUrls: ['./learning-object-qualificate-expert.component.scss'],
   styles: [`
   @media screen and (max-width: 960px) {
       :host ::ng-deep .p-datatable.p-datatable-customers.rowexpand-table .p-datatable-tbody > tr > td:nth-child(6) {
@@ -22,10 +22,9 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
       }
   }
 `],
-  providers: [MessageService, ConfirmationService]
+providers: [MessageService, ConfirmationService]
 })
-export class LearningObjectQualificateStudentListComponent implements OnInit {
-
+export class LearningObjectQualificateExpertListComponent implements OnInit {
   learningobjectList: any[] = [];
   public isLoading: boolean = false;
   learningobjectsSelected: LearningObjects[];
@@ -37,6 +36,7 @@ export class LearningObjectQualificateStudentListComponent implements OnInit {
   public student_id : number = 0;
   public oa_id:number = 0;
   public boolean_display : any[];
+  public concep_evaluations: any[];
   constructor(
     private breadcrumbService: BreadcrumbService,
     private administratorService: AdministratorService,
@@ -64,8 +64,9 @@ export class LearningObjectQualificateStudentListComponent implements OnInit {
   }
 
   private async load_data() {
-    let resultados: any = await this.evaluationsService.get_qualification_student_results(this.id_learningobject).toPromise();
+    let resultados: any = await this.evaluationsService.get_qualification_expert_results(this.id_learningobject).toPromise();
     let data = resultados.results;
+    console.log(data);
     data.forEach((value)=>{
       value.boolean_display = false;
     })
@@ -74,13 +75,15 @@ export class LearningObjectQualificateStudentListComponent implements OnInit {
     }
     this.learningobjectList = data;
     this.isLoading = true;
+
   }
 
   public join_last_name_first_name(first_name, last_name) {
     return first_name + ' ' + last_name;
   }
-  cahnge_value(event){
+  change_value(event){
     this.displayFormRatingStuden = event;
   }
 
-}
+
+  }

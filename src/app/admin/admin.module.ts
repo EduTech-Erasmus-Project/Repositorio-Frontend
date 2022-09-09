@@ -32,6 +32,8 @@ import { LearningObjectQualificateStudentListComponent } from './components/lear
 import { ViewStudentEvaluationsAdminComponent } from './components/view-student-evaluations-admin/view-student-evaluations-admin.component';
 import { ExpertPendingComponent } from './components/expert-pending/expert-pending.component';
 import { ExpertApprovedComponent } from './components/expert-approved/expert-approved.component';
+import { LearningObjectQualificateExpertListComponent } from './components/learning-object-qualificate-expert/learning-object-qualificate-expert.component';
+import { ViewExpertEvaluationsAdminComponent } from './components/view-expert-evaluations-admin/view-expert-evaluations-admin.component';
 
 
 
@@ -63,9 +65,11 @@ import { ExpertApprovedComponent } from './components/expert-approved/expert-app
     StudentQuestionCreateListComponent,
     MetadataQuestionCreateListComponent,
     LearningObjectQualificateStudentListComponent,
+    LearningObjectQualificateExpertListComponent,
     ViewStudentEvaluationsAdminComponent,
     ExpertPendingComponent,
-    ExpertApprovedComponent
+    ExpertApprovedComponent,
+    ViewExpertEvaluationsAdminComponent
   ],
   exports: [
     AdminComponent, 

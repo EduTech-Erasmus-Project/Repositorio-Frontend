@@ -20,7 +20,7 @@ import { LearningObjectEvaluatedListComponent } from "./components/learning-obje
 import { StudentComponent } from "./components/student/student.component";
 import { MetadataQuestionCreateListComponent } from './components/metadata-question-create-list/metadata-question-create-list.component';
 import { StudentQuestionCreateListComponent } from './components/student-question-create-list/student-question-create-list.component';
-import { LearningObjectQualificateListComponent } from "./components/learning-object-qualificate/learning-object-qualificate.component";
+import { LearningObjectQualificateExpertListComponent } from "./components/learning-object-qualificate-expert/learning-object-qualificate-expert.component";
 import { LearningObjectQualificateStudentListComponent } from "./components/learning-object-qualificate-student/learning-object-qualificate-student.component";
 import { ExpertPendingComponent } from "./components/expert-pending/expert-pending.component";
 import { ExpertApprovedComponent } from "./components/expert-approved/expert-approved.component";
@@ -39,7 +39,7 @@ const routes: Routes = [
       { path: "home", component: DashboardComponent},
       { path: "learning-object/approved", component: LearningObjectApprovedListComponent },
       { path: "learning-object/pending", component: LearningObjectPendingListComponent },
-      { path: "learning-object/qualified-expert", component: LearningObjectQualificateListComponent },
+      { path: "learning-object/qualified-expert/:id", component: LearningObjectQualificateExpertListComponent },
       { path: "learning-object/qualified-student/:id",component: LearningObjectQualificateStudentListComponent },
       { path: "learning-object/:type/detail/:slug", component: LearningObjectDetailComponent },
       { path: "teacher/request/pending", component: TeacherPendingComponent },
