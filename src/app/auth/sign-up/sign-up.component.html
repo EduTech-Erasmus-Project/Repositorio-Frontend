@@ -5,10 +5,10 @@
                 <div class="logo">
                     <img src="assets/img/image2vector.svg" alt="mirage-layout" />
                 </div>
-                <h2>{{'register.becomeMember'|translate}}</h2>
                 <div class="p-fluid">
                     <p-toast></p-toast>
                     <ng-container *ngIf="!registred; else registredTemplate">
+                        <h2>{{'register.becomeMember'|translate}}</h2>
                         <form autocomplete="off" [formGroup]="angForm" (ngSubmit)="validateUser()" id="loginForm">
                             <div class="forms">
                                 <div class="p-grid">
@@ -113,8 +113,10 @@
                                                 [ngClass]="{'ng-dirty':calendar.invalid && (calendar.dirty || calendar.touched)}">
                                             </p-calendar>-->
 
-                                            <duet-date-picker identifier="date" (duetChange)="event_get_data_calendar($event)" 
-                                            min="1970-01-01" value="{{angForm.get('calendar')?.value}}" [localization]="localization" ></duet-date-picker>
+                                            <duet-date-picker identifier="date"
+                                                (duetChange)="event_get_data_calendar($event)" min="1970-01-01"
+                                                value="{{angForm.get('calendar')?.value}}"
+                                                [localization]="localization"></duet-date-picker>
 
 
                                             <div *ngIf="calendar.invalid && (calendar.dirty || calendar.touched)">
@@ -136,14 +138,15 @@
                                                 [ngClass]="{'ng-dirty':educacionL.invalid && (educacionL.dirty || educacionL.touched)}">
                                             </p-multiSelect> -->
 
-                                          
+
                                             <label for="EduactioLevels">{{'register.levelEducation'|translate}}*</label>
 
                                             <select name="EduactioLevels" class="class-dropdown-i"
                                                 aria-label="Nivel Educativo seleccione una opcion"
                                                 (change)="selectLevels($event)" fromControlName="educacionL"
                                                 id="EduactioLevels">
-                                                <option *ngFor="let order of levelsEdications" [value]="order.id" [disabled]="order.id === 0">
+                                                <option *ngFor="let order of levelsEdications" [value]="order.id"
+                                                    [disabled]="order.id === 0">
                                                     {{order.name}}
                                                 </option>
                                             </select>
@@ -159,7 +162,7 @@
 
                                     <div class="p-col-12 p-md-12 p-lg-12">
                                         <div class="p-field p-fluid">
-                                             <!--  <label for="AreasI">{{'register.areasInterest'|translate}}*</label>
+                                            <!--  <label for="AreasI">{{'register.areasInterest'|translate}}*</label>
 
                                            <p-multiSelect *ngIf="areasInterestings" (onChange)="selectAreas($event)"
                                                 [options]="areasInterestings" optionLabel="name"
@@ -179,7 +182,8 @@
                                             </select>-->
 
                                             <p-accordion>
-                                                <p-accordionTab header="{{'register.areasInterest'|translate}}*" [selected]="false">
+                                                <p-accordionTab header="{{'register.areasInterest'|translate}}*"
+                                                    [selected]="false">
                                                     <div *ngFor="let item of areasInterestings">
                                                         <div class="forms_areas">
                                                             <p-checkbox group="button" [value]="item.id"
@@ -190,7 +194,7 @@
                                                                 {{item.name}}</label>
                                                         </div>
                                                     </div>
-                                                    </p-accordionTab>
+                                                </p-accordionTab>
                                             </p-accordion>
 
 
@@ -271,15 +275,17 @@
                                     <div class="p-col-12 p-md-12 p-lg-12 ">
 
                                         <p-accordion>
-                                            <p-accordionTab header="{{'register.preferences'|translate}} *" [selected]="false">
+                                            <p-accordionTab header="{{'register.preferences'|translate}} *"
+                                                [selected]="false">
                                                 <div *ngIf="preferenceAreas" class="card">
                                                     <div *ngFor="let item of preferenceAreas">
                                                         <div class="forms">
                                                             <h6>{{item.label}}</h6>
                                                             <div class="labelQu" *ngFor="let itemQ of item.items">
                                                                 <p-checkbox group="button" [value]="itemQ.value"
-                                                                aria-describedby="areasPrefer_message"
-                                                                    formControlName="areasPrefer" inputId="{{itemQ.label}}"
+                                                                    aria-describedby="areasPrefer_message"
+                                                                    formControlName="areasPrefer"
+                                                                    inputId="{{itemQ.label}}"
                                                                     (onChange)="selectPreferences(itemQ.value)">
                                                                 </p-checkbox>
                                                                 <label class="labelQT" for="{{itemQ.label}}">
@@ -287,15 +293,14 @@
                                                             </div>
                                                         </div>
                                                     </div>
-        
+
                                                 </div>
                                             </p-accordionTab>
                                         </p-accordion>
-                                        <div
-                                        *ngIf="areasPrefer.invalid && (areasPrefer.dirty || areasPrefer.touched)">
-                                        <small id="areasPrefer_message " class="p-error"
-                                            *ngIf="areasPrefer.errors.required">*{{'validation.obligatoryCamp'|translate}}*</small>
-                                    </div>
+                                        <div *ngIf="areasPrefer.invalid && (areasPrefer.dirty || areasPrefer.touched)">
+                                            <small id="areasPrefer_message " class="p-error"
+                                                *ngIf="areasPrefer.errors.required">*{{'validation.obligatoryCamp'|translate}}*</small>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -319,12 +324,13 @@
                                                 aria-label="Profesion seleccione una opcion"
                                                 (change)="selectProfesion($event)" fromControlName="profession"
                                                 id="Profesion">
-                                                <option *ngFor="let order of profesions" [value]="order.id" [disabled]="order.id === 0">
+                                                <option *ngFor="let order of profesions" [value]="order.id"
+                                                    [disabled]="order.id === 0">
                                                     {{order.name}}
                                                 </option>
                                             </select>
 
-                                             <div
+                                            <div
                                                 *ngIf="profession?.invalid && (profession.dirty || profession.touched)">
                                                 <small id="profession " class="p-error"
                                                     *ngIf="profession.errors.required">*{{'validation.obligatoryCamp'|
@@ -478,9 +484,19 @@
                         </form>
                     </ng-container>
                     <ng-template #registredTemplate>
-                        <div class="register animate__animated animate__fadeIn">
+                        <div class="register animate__animated animate__fadeIn" *ngIf="message_check_email == false"
+                            tabindex="0">
                             <p>{{'register.registerSuccessful' | translate }}</p>
                             <a [routerLink]="['/login']">{{'menu.login' | translate}}</a>
+                        </div>
+                        <div class="register animate__animated animate__fadeIn" *ngIf="message_check_email == true"
+                            tabindex="0">
+                            <p>¡Listo! Revisa tu correo electronico.</p>
+                            <br />
+                            <p>Esta acción requiere una verificación de correo. Por favor revisa tu buzón de correo. El
+                                correo fue enviado a:</p>
+
+                            <label for="Texto"> {{user.email}} </label>
                         </div>
                     </ng-template>
                 </div>
@@ -489,4 +505,3 @@
         <!-- <div class="desert"></div> -->
     </div>
 </div>
-

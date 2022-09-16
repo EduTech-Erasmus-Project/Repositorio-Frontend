@@ -25,4 +25,13 @@ export class UserService {
 
     return this.http.put(`${baseUrl}/user/photo/${userId}/`, formData);
   }
+
+  sent_email_token_verify(token: string){
+    return this.http.get(`${baseUrl}/email-verify/`+token);
+  }
+
+  set_email_verify_new_token(email: string){
+    let object = { 'email': email };
+    return this.http.post(`${baseUrl}/set-verify/`,object);
+  }
 }

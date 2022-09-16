@@ -52,6 +52,11 @@
                                 Observación
                            </div>
                         </th>
+						<th>
+							<div class="p-d-flex p-jc-between p-ai-center">
+                                Prioritaria
+                           </div>
+						</th>
 					<!--	<th style="width: 15rem">{{'admin.actions'| translate }}</th> -->
 					</tr>
 				</ng-template>
@@ -88,7 +93,7 @@
 							<button pButton pRipple title="Ver evaluacion" (click)="oa.boolean_display = true" type="button" label="{{oa.rating}}" class="p-button-raised p-button-warning" style="width: 50%;"></button>
 							<p-dialog header="Evaluacion del objeto de aprendizaje" [(visible)]="oa.boolean_display" [style]="{width: '50vw'}" [baseZIndex]="10000">
 								<div >
-									<app-view-expert-evaluations-admin [student_id]="oa.collaborating_expert.id" [oa_id]="oa.learning_object.id" (displayFormRatingStuden)="change_value($event)"></app-view-expert-evaluations-admin>
+									<app-view-expert-evaluations-admin [student_id]="oa.collaborating_expert.id" [oa_id]="oa.learning_object.id" (displayFormRatingExpert)="change_value($event)"></app-view-expert-evaluations-admin>
 								</div>
 							</p-dialog>
 						</td>
@@ -96,6 +101,14 @@
                             <span class="p-column-title">Observación</span>
                             <p>{{oa.observation}}</p>
                         </td>
+						<td>
+							<p-toast></p-toast>
+							<p-confirmPopup></p-confirmPopup>
+							<button (click)="confirm($event, oa.is_priority, oa.id)" pButton 
+							[disabled]="oa.is_priority"
+							icon="{{(oa.is_priority == true)? 'pi pi-save':'pi pi-check'}}" 
+							class="{{class_color(oa.is_priority)}}" label="{{name_label(oa.is_priority)}}"></button>
+						</td>
 					<!-- 	<td style="text-align: center">
 								<p-toast></p-toast>
 								<button *ngIf="oa.public" (click)="confirm2($event,oa.id)" pButton pRipple

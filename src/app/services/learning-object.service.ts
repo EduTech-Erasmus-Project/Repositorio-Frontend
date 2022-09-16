@@ -98,6 +98,10 @@ export class LearningObjectService {
     return this.http.get(`${baseUrl}/learning-objects/evaluations-result-expert/${id}`).pipe(map((data: any) => data));
   }
 
+  getResultsEvaluationPriority(id){
+    return this.http.get(`${baseUrl}/learning-objects/evaluations-result-expert-priority/${id}`).pipe(map((data: any) => data));
+  }
+
   getResultsEvaluationSingle(id){
     return this.http.get(`${baseUrl}/learning-objects/evaluations-result-expert-single/${id}`).pipe(map((data: any) => data));
   }

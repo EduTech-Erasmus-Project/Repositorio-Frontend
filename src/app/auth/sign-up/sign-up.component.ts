@@ -69,6 +69,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     monthNamesShort: ["En", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
     locale: "es-ES",
   }
+  public message_check_email : boolean = false;
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
@@ -185,6 +186,10 @@ export class SignUpComponent implements OnInit, OnDestroy {
     this.angForm.addControl(
       "disability",
       new FormControl("no", [Validators.required])
+    );
+    this.angForm.addControl(
+      "typeDisability",
+      new FormControl(null,)
     );
   }
 
@@ -460,17 +465,19 @@ addEmailPathTeacherAndExpert(){
   }
 
   onChangeDisability() {
-    if (this.disability) {
-      this.addTypeDisability();
-    } else {
-      this.removeTypeDisability();
+    if (!this.disability) {
+      //this.removeTypeDisability();
+      this.angForm.get('typeDisability').clearValidators();
+      this.angForm.updateValueAndValidity();
+    }else{
+      this.angForm.get('typeDisability').setValidators([Validators.required]);
+      this.angForm.get('typeDisability').updateValueAndValidity();
     }
   }
 
   async validateUser() {
     this.angForm.markAllAsTouched();
     this.angForm.updateValueAndValidity();
-    
     if (this.checkTe || this.checkEx || this.checkEs) {
       //console.log("Si paso1")
       if (this.angForm.valid) {
@@ -490,6 +497,9 @@ addEmailPathTeacherAndExpert(){
             (res) => {
               this.registred = true;
               this.validateEmail = false;
+              if(this.user.roles[0] == 'teacher' || this.user.roles[0] == 'expert' || (this.user.roles[0] == 'student' && this.user.has_disability == 'no')){
+                this.message_check_email = true;
+              }
               Swal.close();
             },
             (err) => {
@@ -578,7 +588,10 @@ addEmailPathTeacherAndExpert(){
       );*/
       this.user.preferences = this.angForm.value.areasPrefer;
 
-      this.user.has_disability = this.angForm.value.typeDisability;
+      this.user.has_disability = this.angForm.value.disability;
+      if(this.user.has_disability == 'yes'){
+        this.user.disability_description = this.angForm.value.typeDisability;
+      }
 
       this.user.birthday = moment(this.angForm.value.calendar).format(
         "YYYY-MM-DD"

@@ -30,6 +30,9 @@ export class EvaluationService {
     return this.http.get(`${ baseUrl }/learning-objects/evaluated-expert-qualification/`+id);
   }
 
+  update_qualification_expert_results(id:number, data:any){
+    return this.http.put(`${ baseUrl }/learning-objects/evaluated-expert-update/`+id,data);
+  }
   get_qualification_student_results(id:number){
     return this.http.get(`${ baseUrl }/learning-objects/evaluated-student-qualification/`+id);
   }

@@ -13,7 +13,7 @@ export class ViewExpertEvaluationsAdminComponent implements OnInit, OnDestroy {
   public groupedQuestionsEx: any[];
   @Input() student_id:number;
   @Input() oa_id:number;
-  @Output() displayFormRatingStuden = new EventEmitter<boolean>();
+  @Output() displayFormRatingExpert = new EventEmitter<boolean>();
   private subscribes: Subscription[] = [];
   constructor(
     private evaluationsService: EvaluationService,
@@ -85,7 +85,7 @@ export class ViewExpertEvaluationsAdminComponent implements OnInit, OnDestroy {
     this.subscribes.push(resultsEval)
   }
 
-  closeView2() {
-    this.displayFormRatingStuden.emit(false);
+  closeView() {
+    this.displayFormRatingExpert.emit(false);
   }
 }

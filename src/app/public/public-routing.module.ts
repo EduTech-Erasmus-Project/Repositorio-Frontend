@@ -63,7 +63,7 @@ const routes: Routes = [
         data: {
           breadcrumb: "Buscar",
         },
-        
+
       },
       {
         path: "terms-and-conditions",
@@ -129,56 +129,65 @@ const routes: Routes = [
           breadcrumb: "Acerca de nosotros",
         },
       },
-      { 
-        path: 'report', 
-        loadChildren: () => 
-        import('./pages/reports/reports.module').then(m => m.ReportsModule), 
+      {
+        path: 'report',
+        loadChildren: () =>
+          import('./pages/reports/reports.module').then(m => m.ReportsModule),
         canActivate: [ExpertAndStudentGuardAndTeacher],
         data: {
           breadcrumb: "Reporte Objeto de Aprendizaje",
         },
       },
-      { 
-        path: 'developers', 
-        loadChildren: () => 
-        import('./pages/developers/developers.module').then((m) => m.DevelopersModule) ,
+      {
+        path: 'developers',
+        loadChildren: () =>
+          import('./pages/developers/developers.module').then((m) => m.DevelopersModule),
         data: {
           breadcrumb: "Acerca de los desarrolladores",
         },
       },
-      { 
-        path: 'password-resed/:uidb64/:token', 
-        loadChildren: () => 
-        import('../auth/password-resed/password-resed.module').then((m) => m.PasswordResedModule),
+      {
+        path: 'password-resed/:uidb64/:token',
+        loadChildren: () =>
+          import('../auth/password-resed/password-resed.module').then((m) => m.PasswordResedModule),
         data: {
           breadcrumb: "Reestablecer contraseña",
         },
         component: PasswordResedComponent
       },
-      { 
+      {
         path: 'reset/:?',
-         loadChildren: () => 
-         import('../auth/reset/reset.module').then((m) => m.ResetModule),
-         data: {
+        loadChildren: () =>
+          import('../auth/reset/reset.module').then((m) => m.ResetModule),
+        data: {
           breadcrumb: "Contraseña reestablecida",
         },
-        },
-        { path: 'emailMessage', 
+      },
+      {
+        path: 'emailMessage',
         loadChildren: () => import
-        ('../auth/emailMessage/email-message.module').then(m => m.EmailMessageModule),
+          ('../auth/emailMessage/email-message.module').then(m => m.EmailMessageModule),
         data: {
           breadcrumb: "Enlace enviado",
-        }, 
+        },
       },
+      {
+        path: 'emailVerify/:token/:email',
+        loadChildren: () => import('./pages/verify-email/verify-email.module').then(m => m.VerifyEmailModule),
+        data: {
+          breadcrumb: "Verificacion de correo",
+        },
+      },
+
     ],
   },
-  
-  
-  
+
+
+
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PublicRoutingModule {}
+export class PublicRoutingModule { }

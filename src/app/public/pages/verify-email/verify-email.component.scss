@@ -1,0 +1,14 @@
+:host ::ng-deep .p-card-header{
+    text-align:center;
+}
+
+.img-responsive-header{
+    width:100px; height:auto;
+}
+p-card{
+    display:flex;
+}
+
+:host ::ng-deep .login-panel {
+    height:70vh !important;
+}

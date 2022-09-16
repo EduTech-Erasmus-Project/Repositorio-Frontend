@@ -68,6 +68,7 @@ export class LearningObjectQualificateStudentListComponent implements OnInit {
     let data = resultados.results;
     data.forEach((value)=>{
       value.boolean_display = false;
+      value.rating = value.rating.toFixed(2);
     })
     if (data.length == 0) {
       this.router.navigate(['/admin/learning-object/approved']);
