@@ -40,12 +40,9 @@ export class VerifyEmailComponent implements OnInit {
   public async set_email_token(){
     let response_email = await this._userService.sent_email_token_verify(this.token).subscribe(
       response => {
-        console.log(response)
         this.state_success=true;
       },err => {
-        console.log(err.error)
         if(err.error.error == 'Token invalido'){
-          console.log('invalido')
           this._router.navigate(['/notfound'])
           this.showError('No se pudo verificar la cuenta');
         }else if(err.error.error == 'Activacion expirada'){
@@ -65,9 +62,8 @@ private showSuccess(message: string) {
   this.messageService.add({severity:'success', summary: 'Correcto', detail: message});
 }
 public set_token_user(){
-  let response_email= this._userService.set_email_verify_new_token(this.email).subscribe(
+  let response_email= this._userService.set_email_verify_new_token(atob(this.email)).subscribe(
     (_email:any) => {
-      console.log(_email)
       if(_email.status == 200){
         this.state_request = false;
         this.state_success_token =true;

@@ -25,7 +25,7 @@ export class RecoverPasswordComponent implements OnInit {
   public patternV: string =
     "^([a-zA-Z0-9_' - '.]+)@([a-zA-Z0-9_' - '.]+).([a-zA-Z]{2,5})$";
   public emailCheck:boolean = false;
-
+  public is_student : boolean = false;
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -51,11 +51,19 @@ export class RecoverPasswordComponent implements OnInit {
     this.email = this.angForm.get("email").value;
     if (this.angForm.valid) {
       this.loginService.resetPass(this.email).subscribe(
-        (res) => {
-          this.showSuccess("Enlace enviado con exito");
+        (res:any) => {
+          if(res.message == "We have send you a link to reset your password"){
+            this.showSuccess("Enlace enviado con exito");
           this.emailCheck = false;
           this.angForm.reset();
           this.router.navigateByUrl("/emailMessage");
+          }else if(res.status == 201){
+            this.is_student=true;
+            this.showSuccess("Contraseña generada correctamente");
+            this.angForm.reset();
+            this.emailCheck = false;
+          }
+          
         }, error => { 
         this.showError("El correo electronico no se encuentra registrado");
         this.emailCheck = true;

@@ -59,7 +59,6 @@ export class CardComponent implements OnInit {
     } else {
       this.loadstudentSingle();
     }
-    console.log(this.object)
   }
   //>>>>>>>>>>>>>>>>>>>>>
   showDialog() {
@@ -109,8 +108,6 @@ export class CardComponent implements OnInit {
       this.subscribes.push(resultsEval);
     } else {
       let resultsAns = await this.objectService.getResultsEvaluationPriority(this.object.id).subscribe(res => {
-        console.log(res);
-        
         if (res.length > 0) {
           this.resultsEv = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEv = this.resultsEv;

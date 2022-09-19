@@ -47,7 +47,6 @@ export class ExpertPendingComponent implements OnInit {
 
    async get_Expert(){
     let users_expert = await this.administratorService.getExpertToAprove().toPromise();
-    console.log(users_expert);
     this.isLoading = true;
       this.user_student_teacher_list=users_expert;
   }

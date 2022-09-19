@@ -273,13 +273,12 @@
                                     </div>-->
 
                                     <div class="p-col-12 p-md-12 p-lg-12 ">
-
                                         <p-accordion>
                                             <p-accordionTab header="{{'register.preferences'|translate}} *"
                                                 [selected]="false">
                                                 <div *ngIf="preferenceAreas" class="card">
                                                     <div *ngFor="let item of preferenceAreas">
-                                                        <div class="forms">
+                                                        <div class="forms-class">
                                                             <h6>{{item.label}}</h6>
                                                             <div class="labelQu" *ngFor="let itemQ of item.items">
                                                                 <p-checkbox group="button" [value]="itemQ.value"

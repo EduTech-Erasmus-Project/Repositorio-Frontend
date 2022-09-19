@@ -66,7 +66,6 @@ export class LearningObjectQualificateExpertListComponent implements OnInit {
   private async load_data() {
     let resultados: any = await this.evaluationsService.get_qualification_expert_results(this.id_learningobject).toPromise();
     let data = resultados.results;
-    console.log(data);
     data.forEach((value) => {
       value.boolean_display = false;
       value.rating = value.rating.toFixed(2);
@@ -99,7 +98,6 @@ export class LearningObjectQualificateExpertListComponent implements OnInit {
           }
           let update = this.evaluationsService.update_qualification_expert_results(id_collaborating_expert,object).toPromise();
           update.then((results:any) => {
-            console.log(results);
             if(results.status == 200){
               this.load_data();
             }else{

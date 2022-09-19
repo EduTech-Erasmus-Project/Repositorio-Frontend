@@ -178,9 +178,16 @@ const routes: Routes = [
           breadcrumb: "Verificacion de correo",
         },
       },
-
+      {
+        path: 'guide',
+        loadChildren: () => import('./pages/guide/guide.module').then(m => m.GuideModule),
+        data: {
+          breadcrumb: "Guía de usuario",
+        },
+      },
     ],
   },
+
 
 
 

@@ -129,6 +129,13 @@ export class MenuPublicComponent implements OnInit {
         },
         styleClass: "homeItem",
       },
+      {
+        label: "Guía de usuario",
+        routerLink: "/guide",
+        routerLinkActiveOptions: {
+          exact: true,
+        },
+      },
     ];
 
   /*  if(this.roleTeacher == true){
