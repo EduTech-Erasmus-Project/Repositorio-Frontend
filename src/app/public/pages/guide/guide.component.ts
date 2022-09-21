@@ -30,32 +30,12 @@ export class GuideComponent implements OnInit {
         routerLink: "introduction",
       },
       {
-        label: "Cargar archivo",
-        routerLink: "upload",
+        label: "Busqueda de objetos de aprendizaje",
+        routerLink: "search-public",
       },
       {
-        label: "Área de trabajo",
-        routerLink: "tour",
-      },
-      {
-        label: "Audios",
-        routerLink: "audio",
-      },
-      {
-        label: "Imagénes",
-        routerLink: "image",
-      },
-      {
-        label: "Párrafos",
-        routerLink: "paragraph",
-      },
-      {
-        label: "Videos",
-        routerLink: "video",
-      },
-      {
-        label: "Descargar",
-        routerLink: "download",
+        label: "Registrarse con un perfil",
+        routerLink: "registration-profile",
       },
     ];
 
@@ -74,4 +54,7 @@ export class GuideComponent implements OnInit {
     this.router.navigate([`/guide/${this.items[this.activeIndex].routerLink}`]);
   }
 
+  public reset_Page(){
+    
+  }
 }

@@ -131,7 +131,7 @@ export class MenuPublicComponent implements OnInit {
       },
       {
         label: "Guía de usuario",
-        routerLink: "/guide",
+        routerLink: "/guide/introduction",
         routerLinkActiveOptions: {
           exact: true,
         },
