@@ -1,0 +1,17 @@
+
+<div class="card">
+    <div class="container-button-refresh"style="margin: 10px">
+        <p-button label="Clic elegir perfiles" (onClick)="reset_Page()" icon="pi pi-users" iconPos="right"></p-button>
+    </div>
+    
+    <div class="content">
+         <router-outlet></router-outlet>
+        <!-- <p>{{activeIndex}}</p>  -->
+    </div>
+
+    <div  class="steps">
+        <p-button [disabled]="activeIndex === 0" label="Atras" (onClick)="prevPage()" icon="pi pi-angle-left"></p-button>
+        <p-steps   [model]="items" [(activeIndex)]="activeIndex" [readonly]="true"></p-steps>
+        <p-button [disabled]="activeIndex >= items.length-1" label="Siguiente" (onClick)="nextPage()" icon="pi pi-angle-right" iconPos="right"></p-button>
+    </div>
+</div>

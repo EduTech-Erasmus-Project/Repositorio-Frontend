@@ -1,0 +1,29 @@
+.content{
+    min-height: 60vh;
+    margin-top: 15px;
+}
+
+p-steps{
+    width: 100%;
+    position: relative;
+    display: block;
+}
+
+.steps{
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    display: flex;
+    justify-content:space-around;
+}
+
+@media (max-width: 900px) {
+    p-steps{
+        display: none;
+    }
+  }
+
+
+  .card{
+    background-color:#eceff4
+  }

@@ -10,7 +10,6 @@
         </p>
         <p>Recuerda cumplir con todos los pasos y requisitos del registro para que puedas disfrutar de la plataforma
             ROA.</p>
-           
     </div>
     <div class="p-col-12 p-md-6 p-lg-6" style="text-align:center">
         <video width="500" height="270" controls autoplay>
@@ -41,7 +40,7 @@
                         tabindex="0">
                 </ng-template>
                 <ng-template pTemplate="footer" style="text-align: center">
-                    <p-button label="Comenzar" icon="pi pi-check"></p-button>
+                    <p-button label="Clic empezar como estudiante" icon="pi pi-check"></p-button>
                 </ng-template>
             </p-card>
         </div>
@@ -65,7 +64,7 @@
                         tabindex="0">
                 </ng-template>
                 <ng-template pTemplate="footer" style="text-align: center">
-                    <p-button label="Comenzar" icon="pi pi-check"></p-button>
+                    <p-button label="Clic empezar como docente" icon="pi pi-check" (click)="router.navigate(['/guideTeacher/uploadfile'])"></p-button>
                 </ng-template>
             </p-card>
         </div>
@@ -99,7 +98,7 @@
                         tabindex="0">
                 </ng-template>
                 <ng-template pTemplate="footer" style="text-align: center">
-                    <p-button label="Comenzar" icon="pi pi-check"></p-button>
+                    <p-button label="Clic empezar como experto" icon="pi pi-check"></p-button>
                 </ng-template>
             </p-card>
         </div>

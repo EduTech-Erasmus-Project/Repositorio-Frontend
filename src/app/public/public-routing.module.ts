@@ -185,12 +185,15 @@ const routes: Routes = [
           breadcrumb: "Guía de usuario",
         },
       },
+      {
+        path: 'guideTeacher',
+        loadChildren: () => import('./pages/guideTeacher/guide-teacher.module').then(m => m.GuideTeacherModule),
+        data: {
+          breadcrumb: "Guía de usuario con el rol de Profesor",
+        },
+      },
     ],
   },
-
-
-
-
 ];
 
 @NgModule({

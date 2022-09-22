@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { PrimeIcons } from 'primeng/api';
 
 @Component({
@@ -8,7 +9,9 @@ import { PrimeIcons } from 'primeng/api';
 })
 export class RegistrationProfileComponent implements OnInit {
   events1: any[];
-  constructor() { }
+  constructor(
+    public router: Router,
+  ) { }
 
   ngOnInit(): void {
     this.events1 = [
