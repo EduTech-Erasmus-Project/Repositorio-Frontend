@@ -43,3 +43,8 @@ _sino funciona_
 ```
 npm install --force
 ```
+
+- Servir aplicación localmente 
+```
+ng serve
+```
