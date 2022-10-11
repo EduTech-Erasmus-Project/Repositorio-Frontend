@@ -4,6 +4,17 @@ _Este proyecto es la parte FrontEnd del repositorio de objetos de aprendizaje qu
 _Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
 <ul>
  <li>
-  <a href="https://github.com/EduTech-Erasmus-Project/Repositorio-Backend.git">BackEnd ROA</a>
+  <a href="https://github.com/EduTech-Erasmus-Project/Repositorio-Backend.git">Backend Repositorio de objetos de aprendizaje (ROA)</a>
  </li>
 </ul>
+### Pre-requisitos 📋
+_Node JS y npm_
+<ul>
+ <li>
+  <a href="https://nodejs.org">Node JS</a>
+ </li>
+</ul>
+_Angular CLI_
+```
+npm install -g @angular/cli
+```
