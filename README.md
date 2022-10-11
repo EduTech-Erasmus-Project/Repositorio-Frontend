@@ -14,7 +14,7 @@ _Estas instrucciones te permitirán obtener una copia del proyecto en funcionami
 
 ### Pre-requisitos 📋
 
-_Node JS y npm_
+Node JS y npm
 
 <ul>
  <li>
@@ -22,11 +22,11 @@ _Node JS y npm_
  </li>
 </ul>
 
-_Angular CLI_
+Angular CLI
 ```
 npm install -g @angular/cli
 ```
 
-_Este proyecto esta generado con <a href="https://angular.io/cli">Angular CLI</a> versión 11.0.0_
+Este proyecto esta generado con <a href="https://angular.io/cli">Angular CLI</a> versión 11.0.0
 
 ### Instalación 🔧
