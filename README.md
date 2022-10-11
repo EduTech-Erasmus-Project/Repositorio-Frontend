@@ -1,10 +1,10 @@
 # Repositorio de Objetos de Aprendizaje (ROA) 
 
-_Este proyecto es la parte FrontEnd del <a href="https://repositorio.edutech-project.org/#/">Repositorio de Objetos de Aprendizaje</a> que tiene como finalidad, almacenar objetos de aprendizaje, ver metadatos de accesibilidad, evaluar los metadatos y evaluar los objetos de aprendizajes subidos por cada profesor._
+Este proyecto es la parte FrontEnd del <a href="https://repositorio.edutech-project.org/#/">Repositorio de Objetos de Aprendizaje</a> que tiene como finalidad, almacenar objetos de aprendizaje, ver metadatos de accesibilidad, evaluar los metadatos y evaluar los objetos de aprendizajes subidos por cada profesor.
 
 ## Empezar 🚀
 
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
+Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas.
 
 <ul>
  <li>
@@ -14,7 +14,7 @@ _Estas instrucciones te permitirán obtener una copia del proyecto en funcionami
 
 ### Pre-requisitos 📋
 
-Node JS y npm
+_Node JS y npm_
 
 <ul>
  <li>
@@ -22,11 +22,11 @@ Node JS y npm
  </li>
 </ul>
 
-Angular CLI
+_Angular CLI_
 ```
 npm install -g @angular/cli
 ```
 
-Este proyecto esta generado con <a href="https://angular.io/cli">Angular CLI</a> versión 11.0.0
+_Este proyecto esta generado con <a href="https://angular.io/cli">Angular CLI</a> versión 11.0.0_
 
 ### Instalación 🔧
