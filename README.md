@@ -33,7 +33,7 @@ _Este proyecto esta generado con <a href="https://angular.io/cli">Angular CLI</a
 
 _Descargar las dependencias_
 
-Ejecute este comando dentro del directorio raíz del proyecto.
+- Ejecute este comando dentro del directorio raíz del proyecto.
 
 ```
 npm install
