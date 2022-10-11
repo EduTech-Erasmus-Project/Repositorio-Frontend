@@ -27,6 +27,6 @@ _Angular CLI_
 npm install -g @angular/cli
 ```
 
-_Este proyecto esta generado con Angular CLI versión 11.0.0_
+_Este proyecto esta generado con <a href="https://angular.io/cli">Angular CLI</a> versión 11.0.0_
 
 ### Instalación 🔧
