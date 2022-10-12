@@ -49,3 +49,10 @@ npm install --force
 ```
 ng serve
 ```
+## Despliegue 📦
+
+_Para hacer deploy utilizamos el siguiente comando en la consola_
+
+```
+ng build --prod
+```
