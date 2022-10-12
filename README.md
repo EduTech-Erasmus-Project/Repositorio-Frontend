@@ -38,7 +38,8 @@ Ejecute este comando dentro del directorio raíz del proyecto.
 ```
 npm install
 ```
-_sino funciona_
+
+&nbsp; _sino funciona_
 
 ```
 npm install --force
