@@ -36,7 +36,7 @@ _Este proyecto esta generado con <a href="https://angular.io/cli">Angular CLI</a
 npm install
 ```
 
-&nbsp; _sino funciona_
+_   sino funciona_
 
 ```
 npm install --force
