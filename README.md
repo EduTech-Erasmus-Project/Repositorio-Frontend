@@ -1,6 +1,6 @@
 # Repositorio de Objetos de Aprendizaje (ROA) 
 
-Este proyecto es la parte FrontEend del <a href="https://repositorio.edutech-project.org/#/">Repositorio de Objetos de Aprendizaje</a> que tiene como finalidad, almacenar objetos de aprendizaje, ver metadatos de accesibilidad, evaluar los metadatos y evaluar los objetos de aprendizajes subidos por cada profesor.
+Este proyecto es la parte Frontend del <a href="https://repositorio.edutech-project.org/#/">Repositorio de Objetos de Aprendizaje</a> que tiene como finalidad, almacenar objetos de aprendizaje, ver metadatos de accesibilidad, evaluar los metadatos y evaluar los objetos de aprendizajes subidos por cada profesor.
 
 ## Empezar 🚀
 
