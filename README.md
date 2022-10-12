@@ -14,15 +14,12 @@ Estas instrucciones te permitirán obtener una copia del proyecto en funcionamie
 
 ### Pre-requisitos 📋
 
-_Node JS y npm_
+- Node JS y npm
 
-<ul>
- <li>
   <a href="https://nodejs.org">Node JS</a>
- </li>
-</ul>
 
-_Angular CLI_
+- Angular CLI
+
 ```
 npm install -g @angular/cli
 ```
