@@ -8,7 +8,7 @@ Estas instrucciones te permitirán obtener una copia del proyecto en funcionamie
 
 <ul>
  <li>
-  <a href="https://github.com/EduTech-Erasmus-Project/Repositorio-Backend.git">Backend Repositorio de objetos de aprendizaje (ROA)</a>
+  <a href="https://github.com/EduTech-Erasmus-Project/Repositorio-Backend.git">Backend repositorio de objetos de aprendizaje (ROA)</a>
  </li>
 </ul>
 
