@@ -57,8 +57,9 @@ http://localhost:4200/
 
 ## Despliegue 📦
 
-- Para hacer deploy utilizamos el siguiente comando en la consola.
+- Para compilar el proyecto
 
 ```
 ng build --prod
 ```
+- Los archivos de compilación se almacenarán en el directorio `dist/`. Use el comando `--prod` para una compilación de producción.
