@@ -49,9 +49,15 @@ npm install --force
 ```
 ng serve
 ```
+- Navegar hacia 
+
+```
+http://localhost:4200/
+```
+
 ## Despliegue 📦
 
-_Para hacer deploy utilizamos el siguiente comando en la consola_
+- Para hacer deploy utilizamos el siguiente comando en la consola.
 
 ```
 ng build --prod
