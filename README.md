@@ -60,3 +60,23 @@ http://localhost:4200/
 ng build --prod
 ```
 - Los archivos de compilación se almacenarán en el directorio `dist/`. Use el comando `--prod` para una compilación de producción.
+
+## Servicios que consume la aplicacion Frontend 📝
+
+### Configuración de las variables de entorno locales
+
+```
+export const environment = {
+  production: false,
+  baseUrl: 'http://localhost:8000/api/v1',
+};
+```
+
+### Configuración de las variables de entorno para producción 
+
+```
+export const environment = {
+  production: true,
+  baseUrl: 'https://repositorio.edutech-project.org/api/v1',
+};
+```
