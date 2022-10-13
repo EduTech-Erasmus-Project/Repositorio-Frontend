@@ -61,7 +61,7 @@ ng build --prod
 ```
 - Los archivos de compilación se almacenarán en el directorio `dist/`. Use el comando `--prod` para una compilación de producción.
 
-## Servicios que consume la aplicacion Frontend 📝
+## Servicios que consume la aplicación 📝
 
 ### Configuración de las variables de entorno locales
 
