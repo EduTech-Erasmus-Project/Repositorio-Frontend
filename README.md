@@ -81,7 +81,9 @@ export const environment = {
 };
 ```
 
-# Documentación API-REST 📋
+# Documentación API-REST que consumen los servicios 📋
+
+- Todos los servicios que consume el frontend están documentados en la siguiente herramienta `swagger`. 
 
 <p align="center">
 <img alt="Documentacion api rest con swagger" src="swagger.JPG" style="width:75%; height:100%;margin-left: 15%;">
