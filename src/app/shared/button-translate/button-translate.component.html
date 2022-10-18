@@ -1,0 +1,14 @@
+ <!------------------------ Boton de traduccion ---------------------------->
+
+    <span class="fl-prefsEditor-buttons-edit">
+        <div class="">
+            <select [ngModel]="selectedLanguage" class="class-dropdown-i" (ngModelChange)="selectLanguage($event)">
+                <option value="es">
+                    Español
+                </option>
+                <option value="en">
+                    Ingles
+                </option>
+            </select>
+        </div>
+    </span>

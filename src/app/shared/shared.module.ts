@@ -88,19 +88,15 @@ import { TreeModule } from "primeng/tree";
 import { TreeTableModule } from "primeng/treetable";
 import { VirtualScrollerModule } from "primeng/virtualscroller";
 import { MenuPublicComponent } from './menu-public/menu-public.component';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule } from '@ngx-translate/core';
 import { PrettyprintPipe } from '../pipes/prettyprint.pipe';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { UrlsanitizerPipe } from '../pipes/urlsanitizer.pipe';
 import { MomentPipe } from '../pipes/moment.pipe';
 import { MetadataComponent } from './metadata/metadata.component';
 import { BreadcrumbPublicComponent } from './breadcrumb-public/breadcrumb-public.component';
+import { ButtonTranslateComponent } from './button-translate/button-translate.component';
 
-export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient);
-}
 
 @NgModule({
   declarations: [
@@ -115,7 +111,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     UrlsanitizerPipe,
     MomentPipe,
     MetadataComponent,
-    BreadcrumbPublicComponent
+    BreadcrumbPublicComponent,
+    ButtonTranslateComponent
 
   ],
   exports: [
@@ -214,6 +211,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MomentPipe,
     ProgressSpinnerModule,
     MetadataComponent,
+    ButtonTranslateComponent
   ],
   imports: [
     ProgressSpinnerModule,
@@ -299,14 +297,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TreeModule,
     TreeTableModule,
     VirtualScrollerModule,
-    TranslateModule.forRoot({
-      defaultLanguage: 'es',
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
   ],
 })
 export class SharedModule {}

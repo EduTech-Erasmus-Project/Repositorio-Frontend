@@ -21,6 +21,7 @@ import { SearchService } from "src/app/services/search.service";
 import { Subscription } from "rxjs";
 import {MessageService} from 'primeng/api';
 import * as moment from "moment";
+import { LanguageService } from "src/app/services/language.service";
 
 @Component({
   selector: "app-sign-up",
@@ -75,7 +76,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private searchService: SearchService,
     private route: ActivatedRoute,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private languageService: LanguageService
   ) {
     //this.dark = localStorage.getItem('dart_active') === 'true' ? true : false;
     this.route.queryParams.subscribe((params) => {
@@ -320,12 +322,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
     );
   }
 
-  private add_item_default_array(array){
+  private async add_item_default_array(array){
+    let name_translate = await this.languageService.translate.get('register.chooseOption').toPromise();
     const object_default={
       id:0,
-      name: 'Elige una opción'
+      name: name_translate
     };
     array.unshift(object_default);
+
   }
   
   validarCamp(event): boolean {
@@ -334,6 +338,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+
   getErrorNumber(field: string): number {
     if (this.angForm.get(field).hasError("pattern")) {
       return (this.flagN = 0);
@@ -502,12 +507,14 @@ addEmailPathTeacherAndExpert(){
               }
               Swal.close();
             },
-            (err) => {
+            async (err) => {
               console.log(err);
-              if (err.error.email[0] == "El correo debe ser institucionals") {      
-               this.showError('El correo electronico debe ser institucional');
+              if (err.error.email[0] == "El correo debe ser institucionals") {   
+                let message_des = await this.languageService.translate.get('register.emailInstitutional').toPromise();
+               this.showError(message_des);
               } else if (err.error.email[0] == "This field must be unique.") {
-                this.showError('El correo que ingreso ya se encuentra registrado');
+                let message_des = await this.languageService.translate.get('register.emailinsertError').toPromise();
+                this.showError(message_des);
                 this.flagAlert = true;
               }
               this.validateEmail = true;
@@ -521,8 +528,8 @@ addEmailPathTeacherAndExpert(){
         }
       } else {
         this.markTouchForm();
-        this.showError('El formulario es invalido');
-        //this.msgs.push({severity:'error', summary:'Mensaje de error', detail:'El formulario es invalido'});
+        let message_des = await this.languageService.translate.get('register.formInvalid').toPromise();
+        this.showError(message_des);
         setTimeout(function() {
           this.msgs = [];
         },3)
@@ -530,7 +537,8 @@ addEmailPathTeacherAndExpert(){
     } else {
       this.validateRole = true;
       this.markTouchForm();
-      this.showError('El formulario es invalido');
+      let message_des = await this.languageService.translate.get('register.formInvalid').toPromise();
+      this.showError(message_des);
       setTimeout(function() {
         this.msgs = [];
         this.messageService = [];

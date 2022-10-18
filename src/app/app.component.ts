@@ -22,9 +22,16 @@ export class AppComponent implements OnInit {
 
   inputStyle = "outlined";
 
-  constructor(private primengConfig: PrimeNGConfig) {}
+
+
+  constructor(private primengConfig: PrimeNGConfig,
+
+   ) {
+      
+    }
 
   ngOnInit() {
     this.primengConfig.ripple = true;
   }
+
 }

@@ -1,9 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { LangChangeEvent, TranslateService } from "@ngx-translate/core";
 import { LanguageService } from "../../services/language.service";
 import { LoginService } from "../../services/login.service";
 import { PublicComponent } from "../../public/public.component";
 import { Router, NavigationExtras } from "@angular/router";
+import { StorageService } from "src/app/services/storage.service";
 
 @Component({
   selector: "app-menu-public",
@@ -18,18 +19,63 @@ export class MenuPublicComponent implements OnInit {
   public countries: any[];
   public loged: boolean;
   //private queryParams: QuerySearch = {};
-  public role_name: string='';
+  public role_name: string = '';
+  public language: any;
+
+
   constructor(
     public appMain: PublicComponent,
     private languageService: LanguageService,
     public loginService: LoginService,
     private router: Router,
+    private translateService: TranslateService,
+    private _storageService: StorageService
   ) {
     if (
       this.loginService.user?.administrator ||
       this.loginService.validateRole("superuser")
     ) {
       this.router.navigateByUrl("/admin");
+    }
+
+    translateService.onLangChange.subscribe((translate: LangChangeEvent) => {
+      this.language = translate.translations;
+      this.loadMenu();
+    })
+  }
+
+
+
+  ngOnInit(): void {
+    this.loginService.characterLogin.subscribe((res) => {
+      if (res == true) {
+        this.role_name = this.getROLE(this.loginService.user.roles[0]);
+      } else if (res == false) {
+        this.role_name = '';
+      }
+    })
+    if (this.loginService.user) {
+      this.role_name = this.getROLE(this.loginService.user.roles[0]);
+    }
+    this.addMenuItems();
+
+    this.loginService.characterMenu.subscribe((res) => {
+      if (res == true) {
+        this.addMenuItems();
+      } else if (res == false) {
+        this.tieredItems = this.tieredItems.slice(0, -2);
+      }
+    });
+    //Metodos para usar los servicios de traduccion 
+    this.storage_get_lenguage();
+    this.loadMenu();
+  }
+
+  private storage_get_lenguage() {
+    if (this._storageService.getCookieItem('lenguaje') != null && this._storageService.getCookieItem('lenguaje') == 'en') {
+      this.language = this.languageService.translate.translations.en;
+    } else {
+      this.language = this.languageService.translate.translations.es;
     }
   }
 
@@ -43,38 +89,6 @@ export class MenuPublicComponent implements OnInit {
         return 'Est.'
     }
   }
-  ngOnInit(): void {
-
-    this.loginService.characterLogin.subscribe((res) => {
-      if(res == true){
-        this.role_name = this.getROLE(this.loginService.user.roles[0]);
-      }else if(res == false){
-       this.role_name=''; 
-      }
-    })
-
-    if (this.loginService.user) {
-      this.role_name = this.getROLE(this.loginService.user.roles[0]);
-    }    
-
-
-    this.translate = this.languageService.translate;
-    this.loadMenu();
-
-   
-
-    this.addMenuItems();
-      
-      this.loginService.characterMenu.subscribe((res)=>{
-        if(res == true){
-          this.addMenuItems();
-        }else if(res == false){
-          this.tieredItems = this.tieredItems.slice(0,-2);
-        }
-      });
-
-    
-  }
 
   loadMenu() {
     this.countries = [
@@ -82,31 +96,33 @@ export class MenuPublicComponent implements OnInit {
       { name: "Ingles", code: "US" },
     ];
 
+
+
     //this.translate.onLangChange.subscribe((translate: LangChangeEvent) => {
     this.tieredItems = [
       {
-        label: "Inicio", //translate.translations.menu.home,
+        label: this.language.menu.home,//this.translate.translations.menu.home,
         routerLink: "/",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
       {
-        label: "Nosotros", //translate.translations.menu.aboutUs,
+        label: this.language.menu.aboutUs, //translate.translations.menu.aboutUs,
         routerLink: "about-us",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
       {
-        label: "Servicios", //translate.translations.menu.services,
+        label: this.language.menu.services, //translate.translations.menu.services,
         routerLink: "services",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
       {
-        label: "Contacto", //translate.translations.menu.contact,
+        label: this.language.menu.contact, //translate.translations.menu.contact,
         routerLink: "contact",
         routerLinkActiveOptions: {
           exact: true,
@@ -114,14 +130,14 @@ export class MenuPublicComponent implements OnInit {
         },
       },
       {
-        label: "Buscar",
+        label: this.language.menu.search,
         routerLink: "/search",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
       {
-        label: "Desarrolladores",
+        label: this.language.menu.developers,
         routerLink: "/developers",
         routerLinkActiveOptions: {
           exact: true,
@@ -130,63 +146,32 @@ export class MenuPublicComponent implements OnInit {
         styleClass: "homeItem",
       },
       {
-        label: "Guía de usuario",
+        label: this.language.menu.userGuide,
         routerLink: "/guide/introduction",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
     ];
-
-  /*  if(this.roleTeacher == true){
-      this.tieredItems.push(
-        {
-        label: "Mis OAs",
-        routerLink: "/settings/my-objects",
-        routerLinkActiveOptions: {
-          exact: true,
-        },
-      },
-      {
-        label: "Subir un OA",
-        routerLink: "/settings/new-object",
-        routerLinkActiveOptions: {
-          exact: true,
-        },
-      },
-      )
-    }*/
-    //});
-    // console.log("user menu");
-    // if (this.loginService.validateRole("student")) {
-    //   this.tieredItems.push({
-    //     label: "Recomendados",
-    //     routerLink: "recommended",
-    //     routerLinkActiveOptions: {
-    //       exact: true,
-    //       styleClass: "",
-    //     },
-    //   });
-    // }
   }
 
-  private addMenuItems(){
-    if(this.roleTeacher){
+  private addMenuItems() {
+    if (this.roleTeacher) {
       this.tieredItems.push(
         {
-        label: "Mis OAs",
-        routerLink: "/settings/my-objects",
-        routerLinkActiveOptions: {
-          exact: true,
+          label: "Mis OAs",
+          routerLink: "/settings/my-objects",
+          routerLinkActiveOptions: {
+            exact: true,
+          },
         },
-      },
-      {
-        label: "Subir un OA",
-        routerLink: "/settings/new-object",
-        routerLinkActiveOptions: {
-          exact: true,
+        {
+          label: "Subir un OA",
+          routerLink: "/settings/new-object",
+          routerLinkActiveOptions: {
+            exact: true,
+          },
         },
-      },
       )
     }
   }
@@ -196,7 +181,6 @@ export class MenuPublicComponent implements OnInit {
   }
 
   logOut() {
-    //console.log("saliendo")
     this.loginService.signOut();
   }
 
