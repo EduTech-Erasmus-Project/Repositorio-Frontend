@@ -149,8 +149,6 @@ export class LoginService {
   resetPass(data: any) {
     let aux = new FormData();
     aux.append("email", data);
-
-   // console.log("ser", data);
     return this.http.post(baseUrl + "/request-reset-email/", aux);
   }
 
@@ -161,4 +159,5 @@ export class LoginService {
   resetPassToken(data : FormData){
     return this.http.patch(baseUrl+`/password-reset-complete/`,data).pipe(map((data: any) => data));
   }
+  
 }

@@ -1,0 +1,106 @@
+<div class="main-content p-grid guide-content">
+
+    <div class="p-col-12 p-md-6 p-lg-6 text" tabindex="0">
+        <h2>{{"guide.guideIntroductionRegister.title" | translate}}</h2>
+        <h3>{{"guide.guideIntroductionRegister.subtitle1" | translate}}</h3>
+        <p>
+            {{"guide.guideIntroductionRegister.p1" | translate}}
+        </p>
+        <p>{{"guide.guideIntroductionRegister.p2" | translate}}</p>
+    </div>
+    <div class="p-col-12 p-md-6 p-lg-6" style="text-align:center">
+        <video width="500" height="270" controls autoplay>
+            <source src="assets/videos/Registro.mp4" type="video/mp4">
+        </video>
+    </div>
+    <!----------------Separadores------------------>
+    <div class=" p-col-12 p-md-6 p-lg-6 separador">
+    </div>
+    <div class=" p-col-12 p-md-6 p-lg-6 separador">
+    </div>
+    <!----------------------------Segunda Fila ------------------------------------------------------->
+    <div class="p-col-12 p-md-6 p-lg-6" style="text-align:center">
+        <video width="550" height="400" controls autoplay>
+            <source src="assets/videos/RegistroEstudiante.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="p-col-12 p-md-6 p-lg-6 text" tabindex="0">
+        <h3>{{"guide.guideIntroductionRegister.subtitle2" | translate}}</h3>
+        <p>
+            {{"guide.guideIntroductionRegister.p3" | translate}}
+        </p>
+        <div class="profiles-card">
+            <p-card header="{{'guide.guideIntroductionRegister.profile1' | translate}}"
+                [style]="{width: '300px', margin:'2px'}" tabindex="0">
+                <ng-template pTemplate="header">
+                    <img alt="Card" src="assets/img/student.png" alt="Imagen referente al perfin del estudiante"
+                        tabindex="0">
+                </ng-template>
+                <ng-template pTemplate="footer" style="text-align: center">
+                    <p-button label="{{'guide.guideIntroductionRegister.button1' | translate}}" icon="pi pi-check">
+                    </p-button>
+                </ng-template>
+            </p-card>
+        </div>
+    </div>
+    <!----------------Separadores------------------>
+    <div class=" p-col-12 p-md-6 p-lg-6 separador">
+    </div>
+    <div class=" p-col-12 p-md-6 p-lg-6 separador">
+    </div>
+    <!----------------------------Tercera Fila ------------------------------------------------------->
+    <div class="p-col-12 p-md-6 p-lg-6 text" tabindex="0">
+        <h3>{{'guide.guideIntroductionRegister.subtitle3' | translate}}</h3>
+        <p>
+            {{'guide.guideIntroductionRegister.p4' | translate}}
+        </p>
+        <div class="profiles-card">
+            <p-card header="{{'guide.guideIntroductionRegister.profile2' | translate}}"
+                [style]="{width: '300px', margin:'2px'}" tabindex="0">
+                <ng-template pTemplate="header">
+                    <img alt="Card" src="assets/img/teacherf.png" alt="Imagen referente al perfin del profesor"
+                        tabindex="0">
+                </ng-template>
+                <ng-template pTemplate="footer" style="text-align: center">
+                    <p-button label="{{'guide.guideIntroductionRegister.button2' | translate}}" icon="pi pi-check"
+                        (click)="router.navigate(['/guideTeacher/uploadfile'])"></p-button>
+                </ng-template>
+            </p-card>
+        </div>
+    </div>
+    <div class="p-col-12 p-md-6 p-lg-6" style="text-align:center">
+        <video width="550" height="400" controls autoplay>
+            <source src="assets/videos/RegistroDocente.mp4" type="video/mp4">
+        </video>
+    </div>
+    <!----------------Separadores------------------>
+    <div class=" p-col-12 p-md-6 p-lg-6 separador">
+    </div>
+    <div class=" p-col-12 p-md-6 p-lg-6 separador">
+    </div>
+    <!----------------------------Cuarta Fila ------------------------------------------------------->
+    <div class="p-col-12 p-md-6 p-lg-6" style="text-align:center">
+        <video width="550" height="400" controls autoplay>
+            <source src="assets/videos/RegistroExperto.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="p-col-12 p-md-6 p-lg-6 text" tabindex="0">
+        <h3>{{'guide.guideIntroductionRegister.subtitle4' | translate}}</h3>
+        <p>
+            {{'guide.guideIntroductionRegister.p5' | translate}}
+        </p>
+        <div class="profiles-card">
+            <p-card header="{{'guide.guideIntroductionRegister.profile3' | translate}}"
+                [style]="{width: '300px', margin:'2px'}" tabindex="0">
+                <ng-template pTemplate="header">
+                    <img alt="Card" src="assets/img/expert.png" alt="Imagen referente al perfin del experto colaborador"
+                        tabindex="0">
+                </ng-template>
+                <ng-template pTemplate="footer" style="text-align: center">
+                    <p-button label="{{'guide.guideIntroductionRegister.button3' | translate}}" icon="pi pi-check">
+                    </p-button>
+                </ng-template>
+            </p-card>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+.text {
+    place-self: center;
+    text-align: justify;
+
+    h2 {
+        text-align: center;
+    }
+}
+
+
+.separador {
+    margin: 5px;
+}
+
+
+:host::ng-deep .p-card-header {
+    text-align: center;
+
+    img {
+        height: 115px;
+        width: 40%;
+    }
+}
+
+:host::ng-deep .p-card-title {
+    text-align: center;
+}
+
+:host::ng-deep  .p-card-footer {
+    text-align: center;
+}
+
+.profiles-card{
+    text-align: -webkit-center;
+}
+
+:host::ng-deep .p-card .p-card-content {
+padding:0px
+}
+
+// .main-content{
+//     overflow:scroll;
+//     height:400px;
+// }
+//     ::-webkit-scrollbar {
+//         display: none;
+//     }
+
+/******************************************************/

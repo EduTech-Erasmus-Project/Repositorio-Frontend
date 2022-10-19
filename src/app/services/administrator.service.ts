@@ -166,32 +166,86 @@ export class AdministratorService {
   getLearningObject(slug: string){
     return this.http.get(`${ baseUrl }/learning-object/${slug}/`).pipe(map((data: any) => data));
   }
-  getTeacherAndExpertToAprove(){
-    return this.http.get(`${ baseUrl }/teacher-expert-to-approve/`).pipe(map((data: any) => data));
+  
+  // getTeacherAndExpertToAprove(){
+  //   return this.http.get(`${ baseUrl }/teacher-expert-to-approve/`).pipe(map((data: any) => data));
+  // }
+
+  getExpertToAprove(){
+    return this.http.get(`${ baseUrl }/expert-to-approve/`).pipe(map((data: any) => data));
   }
+
+  getTeacherToAprove(){
+    return this.http.get(`${ baseUrl }/teacher-to-approve/`).pipe(map((data: any) => data));
+  }
+
   getTeacherAndExpertToAproveProfile(id: number){
     return this.http.get(`${ baseUrl }/teacher-expert-to-approve/${id}`).pipe(map((data: any) => data));
   }
-  getTeacherAndExpertAproved(){
-    return this.http.get(`${ baseUrl }/teacher-expert-approved/`).pipe(map((data: any) => data));
+  
+  // getTeacherAndExpertAproved(){
+  //   return this.http.get(`${ baseUrl }/teacher-expert-approved/`).pipe(map((data: any) => data));
+  // }
+
+  getTeacherAproved(){
+    return this.http.get(`${ baseUrl }/teacher-approved/`).pipe(map((data: any) => data));
   }
+
+  getExpertAproved(){
+    return this.http.get(`${ baseUrl }/expert-approved/`).pipe(map((data: any) => data));
+  }
+
   getTeacherAndExpertprovedProfile(id: number){
     return this.http.get(`${ baseUrl }/teacher-expert-approved/${id}`).pipe(map((data: any) => data));
   }
-  updateTeacherAndExpertToAprove(id:number,teacher_status:number,expert_status: number){
+  // updateTeacherAndExpertToAprove(id:number,teacher_status:number,expert_status: number){
+  //   let data = {
+  //     'teacher_is_active':teacher_status,
+  //     'expert_is_active':expert_status
+  //   }
+  //   return this.http.put(`${ baseUrl }/teacher-expert-to-approve/${id}/`,data);
+  // }
+
+  updateTeacherToAprove(id:number,teacher_status:number,expert_status: number){
     let data = {
       'teacher_is_active':teacher_status,
       'expert_is_active':expert_status
     }
-    return this.http.put(`${ baseUrl }/teacher-expert-to-approve/${id}/`,data);
+    return this.http.put(`${ baseUrl }/teacher-to-approve/${id}/`,data);
   }
-  updateTeacherAndExpertAproved(id:number,teacher_status:number,expert_status: number){
+
+  updateCollaboratingExpertToAprove(id:number,teacher_status:number,expert_status: number){
     let data = {
       'teacher_is_active':teacher_status,
       'expert_is_active':expert_status
     }
-    return this.http.put(`${ baseUrl }/teacher-expert-approved/${id}/`,data);
+    return this.http.put(`${ baseUrl }/expert-to-approve/${id}/`,data);
   }
+
+  // updateTeacherAndExpertAproved(id:number,teacher_status:number,expert_status: number){
+  //   let data = {
+  //     'teacher_is_active':teacher_status,
+  //     'expert_is_active':expert_status
+  //   }
+  //   return this.http.put(`${ baseUrl }/teacher-expert-approved/${id}/`,data);
+  // }
+
+  updateTeacherAproved(id:number,teacher_status:number,expert_status: number){
+    let data = {
+      'teacher_is_active':teacher_status,
+      'expert_is_active':expert_status
+    }
+    return this.http.put(`${ baseUrl }/teacher-approved/${id}/`,data);
+  }
+
+  updateCollaboratingExpertAproved(id:number,teacher_status:number,expert_status: number){
+    let data = {
+      'teacher_is_active':teacher_status,
+      'expert_is_active':expert_status
+    }
+    return this.http.put(`${ baseUrl }/expert-approved/${id}/`,data);
+  }
+
   getLearningObjectEvaluatedByExpert(id:number){
     return this.http.get(`${ baseUrl }/learning-objects/evaluated-expert/${id}/`).pipe(map((data: any) => data));
   }

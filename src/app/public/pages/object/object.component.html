@@ -126,15 +126,15 @@
 
                     </p-tabPanel>
 
-                    <p-tabPanel [header]="'Insertar'">
+                    <p-tabPanel [header]="'object.insert' | translate">
 
                         <textarea disabled class="code animate__animated animate__fadeIn" rows="6" [value]="embedCode"
                             pInputTextarea></textarea>
-                        <button (click)="copyText()" pButton pRipple type="button" label="Copiar"
+                        <button (click)="copyText()" pButton pRipple type="button" label="{{'object.copy' | translate}}"
                             class="p-button-raised"></button>
                     </p-tabPanel>
 
-                    <p-tabPanel [header]="'Evaluacion'" >                       
+                    <p-tabPanel [header]="'object.evaluation' | translate" >                       
                         <!------------------------------------------------------------------------------------------>
                         <div *ngIf="roleStudent && (!roleExpert && !roleTeacher)">
                             <div *ngFor="let item of resultsEva" class="tableP">

@@ -141,6 +141,7 @@ export class ViewQuestionsExpertComponent implements OnInit {
               new FormControl(element.observation, [Validators.required])
             );
           });
+          
         });
       this.subscribes.push(resultsEval);
     }

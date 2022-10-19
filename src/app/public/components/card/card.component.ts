@@ -107,7 +107,7 @@ export class CardComponent implements OnInit {
       });
       this.subscribes.push(resultsEval);
     } else {
-      let resultsAns = await this.objectService.getResultsEvaluation(this.object.id).subscribe(res => {
+      let resultsAns = await this.objectService.getResultsEvaluationPriority(this.object.id).subscribe(res => {
         if (res.length > 0) {
           this.resultsEv = res.map((item: any) => { return { concepts: item.concept_evaluations.map((aux: any) => { return { concepto: aux.evaluation_concept, total: aux.average } }) } });
           this.resultsEv = this.resultsEv;

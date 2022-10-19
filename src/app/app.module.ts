@@ -46,6 +46,13 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { CookieService } from "ngx-cookie-service";
 import { AuthInterceptor } from './services/auth.interceptor';
 import { FormBuilder } from "@angular/forms";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient);
+}
+
 
 @NgModule({
   imports: [
@@ -79,6 +86,15 @@ import { FormBuilder } from "@angular/forms";
     AdminModule,
     PublicModule,
     QuicklinkModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'es',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
+    
   ],
   declarations: [AppComponent],
   providers: [

@@ -1,23 +1,24 @@
-import { Injectable } from "@angular/core";
+import { Injectable , EventEmitter} from "@angular/core";
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
 import * as moment from 'moment';
+import { StorageService } from "./storage.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class LanguageService {
   
-  constructor(private translateService: TranslateService) {
+  constructor(
+    private translateService: TranslateService,
+    private storageService: StorageService
+    ) {
     translateService.addLangs(["es", "en"]);
     translateService.setDefaultLang("es");
     moment.locale('es-us'); 
-
-    //const browserLang = translateService.getBrowserLang();
-    //translateService.use(browserLang.match(/es|en/) ? browserLang : "es");
-    translateService.use("es");
-
+    translateService.use((this.storageService.getCookieItem('lenguaje') != null && this.storageService.getCookieItem('lenguaje') === 'en')? 'en':'es');
     translateService.onLangChange.subscribe((translate: LangChangeEvent) => {
-      //console.log("event change lenguage")
+      console.log(translate)
+      
     })
   }
 
@@ -28,5 +29,11 @@ export class LanguageService {
   get momentjs(){
     return moment;
   }
+
+  public setTranslate(code:string){
+    this.translateService.use(code);
+  }
+
+
 
 }

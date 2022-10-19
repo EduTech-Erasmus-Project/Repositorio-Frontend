@@ -21,9 +21,6 @@
 
         <div class="accordion" id="accordionExample" *ngIf="resultsEv && (resultsEv.length > 0)">
             <div class="accordion-item">
-
-
-
                 <!--<p>holaaaa</p>-->
                 <button pButton type="button" label="{{'object.averageRating' | translate}}" (click)="show=!show"
                     style="width: 100%;">
@@ -52,7 +49,7 @@
                         <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
                         </app-evaluation-chart>
                         <p-footer *ngIf="resultsEvStudent?.length>0 && !studentOptions">
-                            <button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más"
+                            <button (click)="navigateToReport(true)" pButton pRipple type="button" label="{{'search.readPlus'|translate}}"
                                 class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
                             </button>
                         </p-footer>
@@ -81,7 +78,7 @@
                                 [object]="object"></app-evaluation-chart>
                         </div>
                         <p-footer *ngIf="resultsEvViewExpert?.length>0 && !expertOptions">
-                            <button (click)="navigateToReport(false)" pButton pRipple type="button" label="Leer más"
+                            <button (click)="navigateToReport(false)" pButton pRipple type="button" label="{{'search.readPlus'|translate}}"
                                 class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
                             </button>
                         </p-footer>
@@ -138,7 +135,7 @@
                                     </div>
                                     <p-footer *ngIf="resultsEv?.length>0">
                                         <button (click)="navigateToReport(false)" pButton pRipple type="button"
-                                            label="Leer más" class="p-button-rounded p-button-outlined button-read"><i
+                                            label="{{'search.readPlus'|translate}}" class="p-button-rounded p-button-outlined button-read"><i
                                                 class="pi pi-arrow-right"></i>
                                         </button>
                                     </p-footer>
@@ -157,7 +154,7 @@
                             <app-evaluation-chart [resultsEvAut]="resultsEvAut" [object]="object" idexpe="automatic">
                             </app-evaluation-chart>
                             <p-footer>
-                                <!--<button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                                <!--<button (click)="navigateToReport(true)" pButton pRipple type="button" label="{{'search.readPlus'|translate}}" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
                                 </button>-->
                             </p-footer>
                         </p-dialog>
@@ -177,7 +174,7 @@
                                 </app-evaluation-chart>
                                 <p-footer>
                                     <button (click)="navigateToReport(true)" pButton pRipple type="button"
-                                        label="Leer más" class="p-button-rounded p-button-outlined button-read"><i
+                                        label="{{'search.readPlus'|translate}}" class="p-button-rounded p-button-outlined button-read"><i
                                             class="pi pi-arrow-right"></i>
                                     </button>
                                 </p-footer>
@@ -197,7 +194,7 @@
                 <p-confirmPopup></p-confirmPopup>
             </div>
 
-            <button (click)="navigateTo()" pButton pRipple type="button" label="Leer más"
+            <button (click)="navigateTo()" pButton pRipple type="button" label="{{'search.readPlus'|translate}}"
                 class="p-button-rounded p-button-outlined button-read">
                 <i class="pi pi-arrow-right"></i>
             </button>

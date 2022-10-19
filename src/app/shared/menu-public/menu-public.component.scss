@@ -1,8 +1,13 @@
 .menu{
   padding: 15px 0 0;
+
 }
 :host ::ng-deep .p-menubar.p-component {
   padding: 5px 0;
+}
+
+:host ::ng-deep .p-menubar{
+  background:#ffffff;
 }
 
 :host ::ng-deep .p-menuitem-link-active {

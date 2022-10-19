@@ -100,4 +100,8 @@ export class LearningObjectApprovedListComponent implements OnInit {
     this.router.navigate(['/admin/learning-object/qualified-student/'+id])
   }
 
+  evaluation_expert(id:number){
+    this.router.navigate(['/admin/learning-object/qualified-expert/'+id])
+  }
+
   }

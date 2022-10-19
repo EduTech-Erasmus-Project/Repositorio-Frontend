@@ -4,8 +4,8 @@ import { AdminComponent } from "./admin.component";
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
 import { AuthGuard } from "../guards/auth.guard";
 import { AdminGuard } from '../guards/admin.guard';
-import { TeacherExpertPendingComponent } from "./components/teacher-expert-pending/teacher-expert-pending.component";
-import { TeacherExpertApprovedComponent } from "./components/teacher-expert-approved/teacher-expert-approved.component";
+import { TeacherPendingComponent } from "./components/teacher-pending/teacher-pending.component";
+import { TeacherApprovedComponent} from "./components/teacher-approved/teacher-approved.component";
 import { TeacherExpertProfileComponent } from "./components/teacher-expert-profile/teacher-expert-profile.component";
 import { LearningObjectEvaluatedDetailComponent } from "./components/learning-object-evaluated-detail/learning-object-evaluated-detail.component";
 import { LearningObjectApprovedListComponent } from "./components/learning-object-approved-list/learning-object-approved-list.component";
@@ -20,8 +20,10 @@ import { LearningObjectEvaluatedListComponent } from "./components/learning-obje
 import { StudentComponent } from "./components/student/student.component";
 import { MetadataQuestionCreateListComponent } from './components/metadata-question-create-list/metadata-question-create-list.component';
 import { StudentQuestionCreateListComponent } from './components/student-question-create-list/student-question-create-list.component';
-import { LearningObjectQualificateListComponent } from "./components/learning-object-qualificate/learning-object-qualificate.component";
+import { LearningObjectQualificateExpertListComponent } from "./components/learning-object-qualificate-expert/learning-object-qualificate-expert.component";
 import { LearningObjectQualificateStudentListComponent } from "./components/learning-object-qualificate-student/learning-object-qualificate-student.component";
+import { ExpertPendingComponent } from "./components/expert-pending/expert-pending.component";
+import { ExpertApprovedComponent } from "./components/expert-approved/expert-approved.component";
 
 const routes: Routes = [
   {
@@ -37,11 +39,13 @@ const routes: Routes = [
       { path: "home", component: DashboardComponent},
       { path: "learning-object/approved", component: LearningObjectApprovedListComponent },
       { path: "learning-object/pending", component: LearningObjectPendingListComponent },
-      { path: "learning-object/qualified-expert", component: LearningObjectQualificateListComponent },
+      { path: "learning-object/qualified-expert/:id", component: LearningObjectQualificateExpertListComponent },
       { path: "learning-object/qualified-student/:id",component: LearningObjectQualificateStudentListComponent },
       { path: "learning-object/:type/detail/:slug", component: LearningObjectDetailComponent },
-      { path: "teacher/request/pending", component: TeacherExpertPendingComponent },
-      { path: "teacher/request/approved", component: TeacherExpertApprovedComponent },
+      { path: "teacher/request/pending", component: TeacherPendingComponent },
+      { path: "teacher/request/approved", component: TeacherApprovedComponent },
+      { path: "expert/request/pending", component: ExpertPendingComponent },
+      { path: "expert/request/approved", component: ExpertApprovedComponent },
       { path: "teacher/request/pending/teacher-expert-profile/:id/:status", component: TeacherExpertProfileComponent },
       { path: "teacher/request/approved/teacher-expert-profile/:id/:status", component: TeacherExpertProfileComponent },
       { path: "teacher/request/approved/learning-object/evaluated/:id", component: LearningObjectEvaluatedListComponent },

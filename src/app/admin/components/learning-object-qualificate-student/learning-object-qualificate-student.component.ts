@@ -63,22 +63,18 @@ export class LearningObjectQualificateStudentListComponent implements OnInit {
     this.load_data();
   }
 
- 
-
   private async load_data() {
     let resultados: any = await this.evaluationsService.get_qualification_student_results(this.id_learningobject).toPromise();
     let data = resultados.results;
     data.forEach((value)=>{
       value.boolean_display = false;
+      value.rating = value.rating.toFixed(2);
     })
     if (data.length == 0) {
       this.router.navigate(['/admin/learning-object/approved']);
     }
     this.learningobjectList = data;
     this.isLoading = true;
-    for (let i = 0; i < data.length;i++){
-
-    }
   }
 
   public join_last_name_first_name(first_name, last_name) {
