@@ -12,9 +12,14 @@
     "register": "Register",
     "search": "Search",
     "developers": "Developers",
-    "userGuide": "UserGuide"
+    "userGuide": "User Guide",
+    "sideMenu":{
+      "myAccount":"My Profile",
+      "security":"Security",
+      "exit":"Exit",
+      "ratedMe":"Rated by me"
+    }
   },
-
   "home": {
     "tittle": "Find Educational Resources",
     "students": "Students",
@@ -40,20 +45,20 @@
     "baneDescription": "Find the best free and open learning objects.",
     "btnLogin": "Log in to your account"
   },
-  "aboutsUs":{
-    "title":"WHO WE ARE",
-    "desciption":"We are a group that works hard to serve the community by providing non-profit technology support.",
-    "mission":"Mission",
-    "missionDes":"Promote educational inclusion and diversity using accessible technologies, quality, innovation and teamwork as catalysts.",
-    "vision":"Vision",
-    "visionDes":"Become a network of knowledge and good practices for the efficient development and application of accessible technologies in Higher Education that contribute to inclusion, participation and employability.",
-    "values":"Values",
-    "valuesDes":"Teamwork, Innovation, Commitment, Diversity, Service"
+  "aboutsUs": {
+    "title": "WHO WE ARE",
+    "desciption": "We are a group that works hard to serve the community by providing non-profit technology support.",
+    "mission": "Mission",
+    "missionDes": "Promote educational inclusion and diversity using accessible technologies, quality, innovation and teamwork as catalysts.",
+    "vision": "Vision",
+    "visionDes": "Become a network of knowledge and good practices for the efficient development and application of accessible technologies in Higher Education that contribute to inclusion, participation and employability.",
+    "values": "Values",
+    "valuesDes": "Teamwork, Innovation, Commitment, Diversity, Service"
   },
-  "developers":{
-    "title":"DEVELOPERS",
-    "description":"We are a group that works hard to serve the community by providing our knowledge, with exceptional skills willing to help you with technological tools.",
-    "subtitle":"ROA Working Group"
+  "developers": {
+    "title": "DEVELOPERS",
+    "description": "We are a group that works hard to serve the community by providing our knowledge, with exceptional skills willing to help you with technological tools.",
+    "subtitle": "ROA Working Group"
   },
   "input": {
     "search": "Search",
@@ -73,18 +78,18 @@
     "resetPass": "Reset your password",
     "resetDescription": "Enter your verified user account email address and we will send you a link to reset your password.",
     "sentResEmail": "Send email",
-    "resetEmailStudentDes":"Your password was reset automatically, your new password is made up of your email username (username@example.com), your username is the first describing part of the email before the @ , followed by the date of birth (Year-Month-Day), the date of birth is written first the year in numeric format plus a hyphen, plus the month in numeric format followed by a hyphen plus the day.",
-    "resetEmailStudentExample":"Example: username1999-09-09",
-    "resetEmailStudentAlert":"If you have any problems resetting your password, please contact your administrator.",
+    "resetEmailStudentDes": "Your password was reset automatically, your new password is made up of your email username (username@example.com), your username is the first describing part of the email before the @ , followed by the date of birth (Year-Month-Day), the date of birth is written first the year in numeric format plus a hyphen, plus the month in numeric format followed by a hyphen plus the day.",
+    "resetEmailStudentExample": "Example: username1999-09-09",
+    "resetEmailStudentAlert": "If you have any problems resetting your password, please contact your administrator.",
     "errorMesage": "The email or password you entered does not match any record",
     "modalMsj": "Please wait...",
     "PassConfirmMsj": "Your password was successfully reset",
     "emailConfirm": "A verification link has been sent please check your email",
     "linkError": "Wrong verification link",
     "requestVerification": "Request new verification",
-    "recoverSentEmail":"Link sent successfully", 
-    "recoverPasswordM":"Password generated successfully", 
-    "recoverErrorMail":"The email is not registered"
+    "recoverSentEmail": "Link sent successfully",
+    "recoverPasswordM": "Password generated successfully",
+    "recoverErrorMail": "The email is not registered"
   },
   "register": {
     "becomeMember": "Become a member",
@@ -129,9 +134,9 @@
     "termsCond": "Please accept the terms and conditions",
     "registerSuccessful": "Your account has been successfully created, please log in with the email and password you just registered.",
     "chooseOption": "Choose an option",
-    "emailInstitutional":"The email must be institutional",
-     "emailinsertError":"The email you entered is already registered",
-     "formInvalid":"The form is invalid"
+    "emailInstitutional": "The email must be institutional",
+    "emailinsertError": "The email you entered is already registered",
+    "formInvalid": "The form is invalid"
   },
   "validation": {
     "obligatoryCamp": "Obligatory field",
@@ -160,7 +165,8 @@
     "btnApply": "Apply",
     "lisence": "License",
     "noResults": "No results found",
-    "message": "Message"
+    "message": "Message",
+    "readPlus":"Read more"
   },
   "newObject": {
     "form": {
@@ -222,6 +228,9 @@
     "labelLicense": "License:",
     "comments": "Comments",
     "metadata": "Metadata",
+    "insert": "Insert",
+    "evaluation": "Evaluation",
+    "copy": "Copy",
     "labelRecommended": "Recommended",
     "btnAddComment": "Add a comment",
     "labelNoRated": "Learning objects not rated",
@@ -336,7 +345,8 @@
     "viewed": "Seen by me",
     "viewedMsj": "There are no learning objects seen by you yet.",
     "populars": "populars",
-    "popularsMsj": "No popular learning objects yet"
+    "popularsMsj": "No popular learning objects yet",
+    "myAccount":"My account"
   },
   "registesest": {
     "btnEva": "Rate",
@@ -354,7 +364,88 @@
       "point3": "All users must moderate comments on the site.",
       "point4": "Show respect to other users of the site."
     },
-    "subtitle3":"Use of cookies",
-     "p3":"The use of cookies to store information purely for reference in a record, no personal or visiting user information is stored, all stored values are duly encrypted."
-  }
+    "subtitle3": "Use of cookies",
+    "p3": "The use of cookies to store information purely for reference in a record, no personal or visiting user information is stored, all stored values are duly encrypted."
+  },
+  "guide": {
+    "guideIntroduction": {
+      "title": "Introduction",
+      "p1": "Welcome to the user guide of the Roa Learning Objects repository, through this guide we will teach you how you can use and take advantage of the ROA platform so that you can interact with the learning objects. The ROA platform has as objectives store educational resources OAs and evaluate accessibility metadata to improve learning in educational resources.",
+      "p2": "In this platform you can register according to the educational profile you want, it can be as a student, teacher and expert collaborator. So you can have a better experience within the ROA platform.",
+      "p3": "In this guide we will teach you how to interact with learning objects, how to register in the Learning Objects Repository, upload learning objects, perform evaluations on learning objects, view metadata of learning objects.",
+      "p4": "If you have questions or suggestions you can contact us by accessing the different links:",
+      "p5": "Let's start.",
+      "a1": "About us",
+      "a2": "Contact"
+    },
+    "guideIntroductionSearch": {
+      "title": "Search page",
+      "subtitle1": "Search Learning Objects",
+      "p1": " On the search page we will find learning objects on different educational topics, you can see the rating of the learning objects and you can preview them.",
+      "p2": "As you can see in each learning object you can see the name of the author, the category or area to which it belongs, the title and the rating of the evaluations that were made for that learning object.",
+      "subtitle2": "Learning object preview",
+      "p3": "In this section we can see the learning object with all its content, in the same way there is a list of popular learning objects within the platform.",
+      "p4": "In its lower part we can find a section for comments, metadata of the learning object, insert that contains the iframe code so that it can be used on another platform.",
+      "p5": "You can download the resource in compressed .zip format, if the learning object has the eXeLearning .elp source file you can see the button to download the file and preview the learning object in a new tab. "
+    },
+    "guideIntroductionRegister": {
+      "title": "Registration",
+      "subtitle1": "Profiles when registering",
+      "p1": "Within the learning objects platform, we can choose 3 different ways to register, the first to register as a student, the second to register as a teacher and the third as an expert collaborator.",
+      "p2": "Remember to comply with all the steps and registration requirements so that you can enjoy the ROA platform.",
+      "subtitle2": "Student Profile",
+      "p3": " Next, you will be presented with a guide on how you can interact with the Learning Objects Repository once you have registered as a student.",
+      "profile1": "Student Profile",
+      "button1": "Click start as a student",
+      "subtitle3": "Teacher profile",
+      "p4": "Next, you will be presented with a guide on how you can interact with the Learning Objects Repository once you have registered as a teacher.",
+      "profile2": "Teaching Profile",
+      "button2": "Click start as a teacher",
+      "subtitle4": "Expert Collaborator Profile",
+      "p5": " Next, you will be presented with a guide on how you could interact with the Learning Objects Repository once you have registered as an expert collaborator.",
+      "profile3": "Expert Collaborator Profile",
+      "button3": "Click start as expert"
+    }
+  },
+  "guideTeacher": {
+    "buttonProfiles": "Click choose profiles",
+    "upload": {
+      "title": "Upload a Learning Object",
+      "subtitle1": "Load the Learning Object zip file",
+      "p1": "Once registered with the teacher profile we can view the menu, with the following options: my profile, security, my learning objects, upload learning object and exit.",
+      "p2": "Next, we will explain how you can upload a learning object.",
+      "subtitle2": "Select a file to upload to the repository",
+      "p3": "We select the compressed .zip file referring to the Learning Object, it must be taken into account that the learning objects must be under the specifications such as IMS or SCROM so that the OA can be uploaded.",
+      "p4": "A form can be seen to fill in the data regarding the learning object.",
+      "subtitle3": "Select a reference photo in the form",
+      "p5": "An additional functionality within the learning object repository is to provide you with a list of images, which are extracted from the learning object itself. You can choose an image to be your cover or reference image of this learning object inside the repository.",
+      "p6": "In case you can upload an image you want from your own computer.",
+      "subtitle4": "Accessibility Assessment Questions",
+      "p7": "Inside the form there are questions that help us obtain a more accurate evaluation of the metadata that the learning object has.",
+      "p8": "Since the platform automatically detects the resources that the learning object has. As you can see, the resources it is looking for are: images, paragraphs, videos and audios."
+    },
+    "uploadAdapted":{
+      "title": "Upload an Adapted Learning Object",
+      "subtitle1":"Load the Learning Object zip file",
+      "p1":"A learning object adapted by the platform",
+      "p2":"has an additional plus within the repository of learning objects, its accessibility metadata evaluation will be high and therefore when its preliminary evaluation is submitted it will have a high score.",
+      "p3":"Next, we will explain how you can upload an adapted learning object.",
+      "subtitle2":"Learning object information registration form",
+      "p4":"A learning object adapted by the platform",
+      "p5":"has an additional function within the learning objects repository, its accessibility metadata evaluation will be high and therefore when its preliminary evaluation is submitted it will have a high score.",
+      "p6":"Next, we will explain how you can upload an adapted learning object.",
+      "p7":"The repository recognizes the learning objects adapted by the tool",
+      "p8":", given this it is much easier to register the information of the learning object. Since the system does an automatic recognition and informs you that the LO has been adapted by the tool",
+      "a1":"OER-ADAP"
+    },
+    "myObjects":{
+      "title":"My learning objects",
+      "subtitle1":"Visualization of learning objects within the platform.",
+      "p1":"Inside the menu we can see a section of my learning objects, which lists all the learning objects that are uploaded by you.",
+      "p2":"You can view the evaluations, such as: preliminary evaluation, evaluation carried out by the student and the evaluation carried out by the collaborating expert.",
+      "subtitle2":"View evaluations",
+      "p3":"In this section we will be able to observe the evaluations, carried out by the student, by the collaborating expert or the automatic evaluation carried out by the platform.",
+      "p4":"We will be presented with a summary of the evaluation with its corresponding graph."
+    }
+  }  
 }

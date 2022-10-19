@@ -1,15 +1,12 @@
 <div class="main-content p-grid guide-content">
 
     <div class="p-col-12 p-md-6 p-lg-6 text" tabindex="0">
-        <h2>Registro</h2>
-        <h3>Perfiles al registrarse</h3>
+        <h2>{{"guide.guideIntroductionRegister.title" | translate}}</h2>
+        <h3>{{"guide.guideIntroductionRegister.subtitle1" | translate}}</h3>
         <p>
-            Dentro de la plataforma de objetos de aprendizaje, podemos elegir 3 maneras distintas de registrarnos, la
-            primera para registrarnos como estudiantes, la segunda para registrarnos como docente y la tercera como
-            experto colaborador.
+            {{"guide.guideIntroductionRegister.p1" | translate}}
         </p>
-        <p>Recuerda cumplir con todos los pasos y requisitos del registro para que puedas disfrutar de la plataforma
-            ROA.</p>
+        <p>{{"guide.guideIntroductionRegister.p2" | translate}}</p>
     </div>
     <div class="p-col-12 p-md-6 p-lg-6" style="text-align:center">
         <video width="500" height="270" controls autoplay>
@@ -28,19 +25,20 @@
         </video>
     </div>
     <div class="p-col-12 p-md-6 p-lg-6 text" tabindex="0">
-        <h3>Perfil de estudiante</h3>
+        <h3>{{"guide.guideIntroductionRegister.subtitle2" | translate}}</h3>
         <p>
-            A continuación, se le presentara una guía, de cómo podría interactuar con el Repositorio de Objetos
-            de Aprendizaje una vez que se haya registrado como estudiante.
+            {{"guide.guideIntroductionRegister.p3" | translate}}
         </p>
         <div class="profiles-card">
-            <p-card header="Perfil Estudiante" [style]="{width: '300px', margin:'2px'}" tabindex="0">
+            <p-card header="{{'guide.guideIntroductionRegister.profile1' | translate}}"
+                [style]="{width: '300px', margin:'2px'}" tabindex="0">
                 <ng-template pTemplate="header">
                     <img alt="Card" src="assets/img/student.png" alt="Imagen referente al perfin del estudiante"
                         tabindex="0">
                 </ng-template>
                 <ng-template pTemplate="footer" style="text-align: center">
-                    <p-button label="Clic empezar como estudiante" icon="pi pi-check"></p-button>
+                    <p-button label="{{'guide.guideIntroductionRegister.button1' | translate}}" icon="pi pi-check">
+                    </p-button>
                 </ng-template>
             </p-card>
         </div>
@@ -52,19 +50,20 @@
     </div>
     <!----------------------------Tercera Fila ------------------------------------------------------->
     <div class="p-col-12 p-md-6 p-lg-6 text" tabindex="0">
-        <h3>Perfil de docente</h3>
+        <h3>{{'guide.guideIntroductionRegister.subtitle3' | translate}}</h3>
         <p>
-            A continuación, se le presentara una guía, de cómo podría interactuar con el Repositorio de Objetos
-            de Aprendizaje una vez que se haya registrado como docente.
+            {{'guide.guideIntroductionRegister.p4' | translate}}
         </p>
         <div class="profiles-card">
-            <p-card header="Perfil Docente" [style]="{width: '300px', margin:'2px'}" tabindex="0">
+            <p-card header="{{'guide.guideIntroductionRegister.profile2' | translate}}"
+                [style]="{width: '300px', margin:'2px'}" tabindex="0">
                 <ng-template pTemplate="header">
                     <img alt="Card" src="assets/img/teacherf.png" alt="Imagen referente al perfin del profesor"
                         tabindex="0">
                 </ng-template>
                 <ng-template pTemplate="footer" style="text-align: center">
-                    <p-button label="Clic empezar como docente" icon="pi pi-check" (click)="router.navigate(['/guideTeacher/uploadfile'])"></p-button>
+                    <p-button label="{{'guide.guideIntroductionRegister.button2' | translate}}" icon="pi pi-check"
+                        (click)="router.navigate(['/guideTeacher/uploadfile'])"></p-button>
                 </ng-template>
             </p-card>
         </div>
@@ -86,26 +85,22 @@
         </video>
     </div>
     <div class="p-col-12 p-md-6 p-lg-6 text" tabindex="0">
-        <h3>Perfil de experto colaborador</h3>
+        <h3>{{'guide.guideIntroductionRegister.subtitle4' | translate}}</h3>
         <p>
-            A continuación, se le presentara una guía, de cómo podría interactuar con el Repositorio de Objetos
-            de Aprendizaje una vez que se haya registrado como experto colaborador.
+            {{'guide.guideIntroductionRegister.p5' | translate}}
         </p>
         <div class="profiles-card">
-            <p-card header="Perfil Experto Colaborador" [style]="{width: '300px', margin:'2px'}" tabindex="0">
+            <p-card header="{{'guide.guideIntroductionRegister.profile3' | translate}}"
+                [style]="{width: '300px', margin:'2px'}" tabindex="0">
                 <ng-template pTemplate="header">
                     <img alt="Card" src="assets/img/expert.png" alt="Imagen referente al perfin del experto colaborador"
                         tabindex="0">
                 </ng-template>
                 <ng-template pTemplate="footer" style="text-align: center">
-                    <p-button label="Clic empezar como experto" icon="pi pi-check"></p-button>
+                    <p-button label="{{'guide.guideIntroductionRegister.button3' | translate}}" icon="pi pi-check">
+                    </p-button>
                 </ng-template>
             </p-card>
         </div>
     </div>
-
-    
-
-
-
 </div>

@@ -7,7 +7,7 @@
         </ng-template>
         <ng-template pTemplate="end">
             <ng-container *ngIf="loginService.user; else loginTemplate">
-                <div class="layout-topbar">
+                <div class="layout-topbar" style="background: #ffffff;">
                     <div class="layout-topbar-wrapper">
                         <div class="layout-topbar-right fadeInDown">
                             <ul class="layout-topbar-actions">
@@ -56,7 +56,7 @@
                                             class="layout-submenu-item">
                                             <i class="pi pi-star-o icon icon-1"></i>
                                             <div class="menu-text">
-                                                <p>Recomendados para ti</p>
+                                                <p>{{"recommended.recommended" | translate}}</p>
                                             </div>
                                             <i class="pi pi-angle-right"></i>
                                         </li>
@@ -67,7 +67,7 @@
                                             class="layout-submenu-item">
                                             <i class="pi pi-eye icon icon-2"></i>
                                             <div class="menu-text">
-                                                <p>Vistos por mi </p>
+                                                <p>{{"recommended.viewed" | translate}}</p>
                                             </div>
                                             <i class="pi pi-angle-right"></i>
                                         </li>
@@ -98,7 +98,7 @@
                                             (click)="navigate('settings')" class="layout-submenu-item">
                                             <i class="pi pi-cog icon icon-4"></i>
                                             <div class="menu-text">
-                                                <p>Mi Cuenta</p>
+                                                <p>{{"recommended.myAccount"| translate}}</p>
                                             </div>
                                             <i class="pi pi-angle-right"></i>
                                         </li>

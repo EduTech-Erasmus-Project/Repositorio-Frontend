@@ -12,7 +12,13 @@
     "register": "Registrarme",
     "search": "Buscar",
     "developers": "Desarrolladores",
-    "userGuide": "Guía de usuario"
+    "userGuide": "Guía de usuario",
+    "sideMenu":{
+      "myAccount":"Mi perfil",
+      "security":"Seguridad",
+      "exit":"Salir",
+      "ratedMe":"Calificados por mi"
+    }
   },
   "home": {
     "tittle": "Busca Los Recursos Educativos",
@@ -159,7 +165,8 @@
     "btnApply": "Aplicar",
     "lisence": "Licencia",
     "noResults": "No se encontró ningún resultado",
-    "message": "Mensaje"
+    "message": "Mensaje",
+    "readPlus":"Leer más"
   },
   "newObject": {
     "form": {
@@ -221,6 +228,9 @@
     "labelLicense": "Licencia:",
     "comments": "Comentarios",
     "metadata": "Metadatos",
+    "insert":"Insertar",
+    "evaluation":"Evaluacion",
+    "copy":"Copiar",
     "labelRecommended": "Recomendados",
     "btnAddComment": "Agregar un comentario",
     "labelNoRated": "Objetos de aprendizaje sin evaluar",
@@ -334,8 +344,9 @@
     "recommendedMsj": "Aun no hay objetos de aprendizaje recomendados para ti.",
     "viewed": "Vistos por mi",
     "viewedMsj": "Aun no hay objetos de aprendizaje vistos por ti.",
-    "populars": "populares",
-    "popularsMsj": "Aun no hay objetos de aprendizaje populares"
+    "populars": "Populares",
+    "popularsMsj": "Aun no hay objetos de aprendizaje populares",
+    "myAccount":"Mi cuenta"
   },
   "registesest": {
     "btnEva": "Calificar",
@@ -355,5 +366,86 @@
     },
     "subtitle3":"Uso de cookies",
     "p3":"El uso de las cookies para almacenar información netamente de referencia de un registro, no se almacena información personal o del usuario visitante, todos los valores almacenados están debidamente encriptados."
+  },
+  "guide":{
+    "guideIntroduction": {
+      "title": "Introducción",
+      "p1":"Bienvenido a la guía de usuario del repositorio de Objetos de aprendizaje Roa, por medio de esta guía te enseñaremos como puedes utilizar y sacarle provecho a la plataforma ROA para que puedas interactuar con los objetos de aprendizaje. La plataforma ROA tiene como objetivos almacenar recursos educativos OAs y evaluar metadatos de accesibilidad para mejor el aprendizaje en los recursos educativos.",
+      "p2":"En esta plataforma podrás registrarte según el perfil Educativo que desees, puede ser como estudiante, docente y experto colaborador. Para que puedas tener una mejor experiencia dentro de la plataforma ROA.",
+      "p3":"En esta guía te enseñaremos como interactuar con los objetos de aprendizaje, como registrarse dentro del Repositorio de Objetos de aprendizaje, subir objetos de aprendizaje, realizar evaluaciones a los objetos de aprendizaje, ver metadatos de los objetos de aprendizaje.",
+      "p4":"Si tienes dudas o sugerencias puedes ponerte en contacto con nosotros accediendo a los diferentes enlaces:",
+      "p5":"Empecemos.",
+      "a1":"Nosotros",
+      "a2":"Contacto"
+    },
+    "guideIntroductionSearch":{
+      "title":"Página de busqueda",
+      "subtitle1":"Buscar Objetos de Aprendizaje",
+      "p1":" En la página de búsqueda encontraremos objetos de aprendizaje de distintos temas educativos, se puede observar la calificación de los objetos de aprendizaje y se puede realizar la previsualización de estos.",
+      "p2":"Como se aprecia en cada objeto de aprendizaje se puede ver el nombre del autor, la categoría o área a la que pertenece, el titulo y la calificación de las evaluaciones que se realizó hacía ese objeto de aprendizaje.",
+      "subtitle2":"Previsualización del objeto de aprendizaje",
+      "p3":"En esta sección podemos apreciar el objeto de aprendizaje con todo su contenido, de la misma forma se encuentra una lista de los objetos de aprendizaje populares dentro de la plataforma.",
+      "p4":"En su parte inferior podemos encontrar un apartado para los comentarios, metadatos del objeto de aprendizaje, insertar que contiene el código iframe para que pueda ser utilizado en otra plataforma.",
+      "p5":"Se puede descargar el recurso en formato comprimido .zip, si el objeto de aprendizaje cuenta con el archivo fuente de eXeLearning .elp se puede apreciar el botón para descargar el fichero y previsualizar el objeto de aprendizaje en una nueva pestaña."
+    },
+    "guideIntroductionRegister":{
+      "title":"Registro",
+      "subtitle1":"Perfiles al registrarse",
+      "p1":"Dentro de la plataforma de objetos de aprendizaje, podemos elegir 3 maneras distintas de registrarnos, la primera para registrarnos como estudiantes, la segunda para registrarnos como docente y la tercera como experto colaborador.",
+      "p2":"Recuerda cumplir con todos los pasos y requisitos del registro para que puedas disfrutar de la plataforma ROA.",
+      "subtitle2":"Perfil de estudiante",
+      "p3":" A continuación, se le presentara una guía, de cómo podría interactuar con el Repositorio de Objetos de Aprendizaje una vez que se haya registrado como estudiante.",
+      "profile1":"Perfil Estudiante",
+      "button1":"Clic empezar como estudiante",
+      "subtitle3":"Perfil de docente",
+      "p4":"A continuación, se le presentara una guía, de cómo podría interactuar con el Repositorio de Objetos de Aprendizaje una vez que se haya registrado como docente.",
+      "profile2":"Perfil Docente",
+      "button2":"Clic empezar como docente",
+      "subtitle4":"Perfil de experto colaborador",
+      "p5":" A continuación, se le presentara una guía, de cómo podría interactuar con el Repositorio de Objetos de Aprendizaje una vez que se haya registrado como experto colaborador.",
+      "profile3":"Perfil Experto Colaborador",
+      "button3":"Clic empezar como experto"
+    }
+  },
+  "guideTeacher": {
+    "buttonProfiles":"Clic elegir perfiles",
+    "upload":{
+      "title":"Subir un Objeto de aprendizaje",
+      "subtitle1":"Cargar el archivo comprimido del Objeto de aprendizaje",
+      "p1":"Una vez registrados con el perfil de profesor podemos visualizar el menú, con las siguientes opciones: mi perfil, seguridad, mis objetos de aprendizaje, subir objeto de aprendizaje y salir.",
+      "p2":"A continuación, te explicaremos como puedes subir un objeto de aprendizaje.",
+      "subtitle2":"Selecionar un archivo para cargarlo en el repositorio",
+      "p3":"Seleccionamos el archivo comprimido .zip referente al Objeto de Aprendizaje, se debe tener en cuenta que los objetos de aprendizaje deben estar bajo las especificaciones como IMS o SCROM para que se pueda subir el OA.",
+      "p4":"Se podrá observar un formulario para llenar los datos referentes a el objeto de aprendizaje.",
+      "subtitle3":"Selecionar una foto de referencia en el formulario",
+      "p5":"Una funcionalidad adicional dentro del repositorio de objetos de aprendizaje es brindarte una lista de imágenes, las cuales son extraídas del mismo objeto de aprendizaje. Puedes elegir una imagen para que sea tu portada o imagen de referencia de este objeto de aprendizaje dentro del repositorio.",
+      "p6":"Dado caso se puede subir una imagen que se desee desde el propio ordenador.",
+      "subtitle4":"Preguntas para la evaluación de accesibilidad",
+      "p7":"Dentro del formulario existe preguntas que nos ayudan a obtener una evaluación mas certera de los metadatos que tiene el objeto de aprendizaje.",
+      "p8":"Ya que de manera automática la plataforma detecta los recurso que posee el objeto de aprendizaje. Como se puede apreciar los recursos que se busca son: imágenes, párrafos, videos y audios."
+    },
+    "uploadAdapted":{
+      "title": "Subir un Objeto de aprendizaje adaptado",
+      "subtitle1":"Cargar el archivo comprimido del Objeto de aprendizaje",
+      "p1":"Un objeto de aprendizaje adaptado por la plataforma",
+      "p2":"tiene un plus adicional dentro del repositorio de objetos de aprendizaje, su evaluación de metadatos de accesibilidad será alto y por ende al presentarse su evaluación preliminar tendrá un puntaje alto.",
+      "p3":"A continuación, te explicaremos como puedes subir un objeto de aprendizaje adaptado.",
+      "subtitle2":"Formulario de registro de información del objeto de aprendizaje",
+      "p4":"Un objeto de aprendizaje adaptado por la plataforma",
+      "p5":"tiene una función adicional dentro del repositorio de objetos de aprendizaje, su evaluación de metadatos de accesibilidad será alto y por ende al presentarse su evaluación preliminar tendrá un puntaje alto.",
+      "p6":"A continuación, te explicaremos como puedes subir un objeto de aprendizaje adaptado.",
+      "p7":"El repositorio reconoce los objetos de aprendizaje adaptados por la herramienta",
+      "p8":", dado esto es mucho más fácil registrar la información del objeto de aprendizaje. Ya que el sistema hace un reconocimiento automático y te informa que el OA ha sido adaptado por la herramienta",
+      "a1":"OER-ADAP"
+    },
+    "myObjects":{
+      "title":"Mis obejtos de aprendizaje",
+      "subtitle1":"Visualización de objetos de aprendizaje dentro de la plataforma.",
+      "p1":"Dentro del menú podemos observar un apartado de mis objetos de aprendizaje, el cual lista todos los objetos de aprendizaje que son subidos por su persona.",
+      "p2":"Puedes visualizar las evaluaciones, como son: evaluación preliminar, evaluación realizada por el estudiante y la evaluación realizada por el experto colaborado.",
+      "subtitle2":"Visualización de evaluaciones",
+      "p3":"En este apartado podremos observar las evaluaciones, realizadas por el estudiante, por el experto colaborador o la evaluación automática realizada por la plataforma.",
+      "p4":"Se nos presentara un resumen de la evaluación con su grafica correspondiente."
+    }
   }
 }
