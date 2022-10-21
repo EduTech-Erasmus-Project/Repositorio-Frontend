@@ -17,6 +17,7 @@ import { ViewEvaluacionsComponent } from './view-evaluacions/view-evaluacions.co
 import { ContributorsComponent } from './contributors/contributors.component';
 import { EvaluationChartComponent } from './evaluation-chart/evaluation-chart.component';
 import { ViewQuestionsStudentComponent } from './view-questions-student/view-questions-student.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ViewQuestionsStudentComponent } from './view-questions-student/view-que
   imports: [
     CommonModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ],
   exports:[
     SearchComponent,

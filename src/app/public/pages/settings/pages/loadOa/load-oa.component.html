@@ -9,9 +9,9 @@
         <p-fileUpload name="file" [url]="baseUrl" [chooseLabel]="'newObject.form.imgSelect' | translate"
                 [cancelLabel]="'newObject.form.imgCancel' | translate"
                 [uploadLabel]="'newObject.form.fileUpload' | translate" (onUpload)="onUpload($event)"
-                (onBeforeUpload)="progress_event($event)"
-                (onError)="onError($event)" [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
-                [multiple]="false" accept=".zip,.rar">
+                (onBeforeUpload)="progress_event($event)" (onError)="onError($event)"
+                [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate" [multiple]="false"
+                accept=".zip,.rar">
                 <ng-template pTemplate="content">
                         <ng-container *ngIf="file">
                                 <p>{{file.name}} - {{file.size}}</p>
@@ -228,7 +228,7 @@
                                 <div class="p-col-12 p-md-6 p-lg-6">
                                         <div class="box sidebar">
                                                 <div class="p-field p-fluid" tabindex="0">
-                                                        <label for="adaptations">Objeto de aprendizaje adaptado*</label>
+                                                        <label for="adaptations">{{'newObject.form.OaAdapted' | translate}}</label>
                                                         <br />
                                                         <div class="radio-buttons">
                                                                 <div class="p-field-radiobutton">
@@ -254,21 +254,22 @@
                                                                                 | translate}}</label>
                                                                 </div>
                                                         </div>
-                                                        <label for="" *ngIf="is_adapted_oer == true">Este objeto de
-                                                                aprendizaje fue adaptado con la herramienta <a
+                                                        <label for=""
+                                                                *ngIf="is_adapted_oer == true">{{'newObject.form.adaptationsIs.description1'
+                                                                | translate}} <a
                                                                         style="font-style: italic;text-decoration: underline;"
                                                                         href="https://oeradap.edutech-project.org/">OER-ADAP</a></label>
-                                                        <label for="" *ngIf="is_adapted_oer == false">Visita nuestra
-                                                                herramienta <a
+                                                        <label for=""
+                                                                *ngIf="is_adapted_oer == false">{{'newObject.form.adaptationsIs.description2'|
+                                                                translate}} <a
                                                                         style="font-style: italic;text-decoration: underline;"
                                                                         href="https://oeradap.edutech-project.org/">OER-ADAP</a>
-                                                                para la adaptación de objetos de aprendizaje.También
-                                                                visita nuestra herramienta <a
+                                                                {{'newObject.form.adaptationsIs.description3'|
+                                                                translate}} <a
                                                                         style="font-style: italic;text-decoration: underline;"
                                                                         href="https://lompads.edutech-project.org/#/">LOMPAD-WEB</a>
-                                                                para el metaetiquetado para objetos de
-                                                                aprendizaje.</label>
-
+                                                                {{'newObject.form.adaptationsIs.description4'|
+                                                                translate}}</label>
                                                 </div>
                                         </div>
                                 </div>
@@ -278,8 +279,7 @@
                                         <div class="p-field p-fluid slider">
                                                 <div class="p-grid p-grid-editable" *ngIf="img_preview_ref == true"
                                                         tabindex="0">
-                                                        <label for="">Imagen de previsualizacion del objeto de
-                                                                aprendizaje</label>
+                                                        <label for="">{{'newObject.form.imgPreview' |translate}}</label>
                                                         <img [src]="path_img_preview | urlsanitizer" alt="Image"
                                                                 width="250" style="margin-top: 12px;">
                                                 </div>
@@ -287,7 +287,7 @@
                                 </div>
                         </div>
                         <div class="p-field p-fluid">
-                                <label for="fileImage">Fichero fuente eXeLearning</label>
+                                <label for="fileImage">{{'newObject.form.fileExe'|translate}}</label>
                                 <p-fileUpload id="fileImage" name="fileImage"
                                         [chooseLabel]="'newObject.form.imgSelect' | translate"
                                         [showUploadButton]="false"
@@ -303,11 +303,9 @@
                                         <div class="p-col-12 p-md-6 p-lg-6">
                                                 <div class="box content">
                                                         <div class="p-field p-fluid slider" tabindex="0">
-                                                                <label for="Pregunta1" class="preguntas-metadatos">¿Ha
-                                                                        considerado poner texto alternativo en las
-                                                                        imágenes que así lo requieran?*</label>
-                                                                <label for="Resp">Se encontraron un total de
-                                                                        {{tag_count.img}} imagenes.</label>
+                                                                <label for="Pregunta1" class="preguntas-metadatos">{{'newObject.form.questionsAdapters.question1'|translate}}</label>
+                                                                <label for="Resp">{{'newObject.form.questionsResult.label1'| translate}}
+                                                                        {{tag_count.img}} {{'newObject.form.questionsResult.label2'| translate}}</label>
                                                                 <br>
                                                                 <div class="radio-buttons">
                                                                         <div class="p-field-radiobutton">
@@ -343,9 +341,7 @@
                                         <div class="p-col-12 p-md-6 p-lg-6">
                                                 <div class="box content">
                                                         <div class="p-field p-fluid slider" tabindex="0">
-                                                                <label for="Pregunta1" class="preguntas-metadatos">¿Se
-                                                                        cumple con contrastes óptimos en la presentación
-                                                                        de la información?*</label>
+                                                                <label for="Pregunta1" class="preguntas-metadatos">{{'newObject.form.questionsAdapters.question2'|translate}}</label>
 
                                                                 <br>
                                                                 <div class="radio-buttons">
@@ -382,11 +378,9 @@
                                         <div class="p-col-12 p-md-6 p-lg-6">
                                                 <div class="box content">
                                                         <div class="p-field p-fluid slider" tabindex="0">
-                                                                <label for="Pregunta1" class="preguntas-metadatos">¿El
-                                                                        contenido textual contiene títulos,
-                                                                        descripciones o enlaces adecuados?*</label>
-                                                                <label for="Resp">Se encontraron un total de
-                                                                        {{tag_count.paragraph}} parrafos.</label>
+                                                                <label for="Pregunta1" class="preguntas-metadatos">{{'newObject.form.questionsAdapters.question3'|translate}}</label>
+                                                                <label for="Resp">{{'newObject.form.questionsResult.label1'| translate}}
+                                                                        {{tag_count.paragraph}} {{'newObject.form.questionsResult.label3'| translate}}</label>
                                                                 <br>
                                                                 <div class="radio-buttons">
                                                                         <div class="p-field-radiobutton">
@@ -421,9 +415,7 @@
                                         <div class="p-col-12 p-md-6 p-lg-6">
                                                 <div class="box content">
                                                         <div class="p-field p-fluid slider" tabindex="0">
-                                                                <label for="Pregunta1" class="preguntas-metadatos">¿Se
-                                                                        cumple con contrastes óptimos en la presentación
-                                                                        del contenido de texto y fondo?*</label>
+                                                                <label for="Pregunta1" class="preguntas-metadatos">{{'newObject.form.questionsAdapters.question4'|translate}}</label>
                                                                 <br>
                                                                 <div class="radio-buttons">
                                                                         <div class="p-field-radiobutton">
@@ -459,14 +451,12 @@
                                                 *ngIf="tag_count.video != 0 || tag_count.audio != 0">
                                                 <div class="box content">
                                                         <div class="p-field p-fluid slider" tabindex="0">
-                                                                <label for="Pregunta1" class="preguntas-metadatos">¿Los
-                                                                        videos contienen subtitulado sincronizado y
-                                                                        coherente con el lenguaje?*</label>
-                                                                <label for="Resp">Se encontraron un total de
-                                                                        {{tag_count.video}} videos.</label>
+                                                                <label for="Pregunta1" class="preguntas-metadatos">{{'newObject.form.questionsAdapters.question5'|translate}}</label>
+                                                                <label for="Resp">{{'newObject.form.questionsResult.label1'| translate}}
+                                                                        {{tag_count.video}} {{'newObject.form.questionsResult.label4'| translate}}</label>
                                                                 <br>
-                                                                <label for="Resp">Se encontraron un total de
-                                                                        {{tag_count.audio}} audios.</label>
+                                                                <label for="Resp">{{'newObject.form.questionsResult.label1'| translate}}
+                                                                        {{tag_count.audio}} {{'newObject.form.questionsResult.label5'| translate}}</label>
                                                                 <br>
                                                                 <div class="radio-buttons">
                                                                         <div class="p-field-radiobutton">
@@ -501,9 +491,7 @@
                                         <div class="p-col-12 p-md-6 p-lg-6">
                                                 <div class="box content">
                                                         <div class="p-field p-fluid slider" tabindex="0">
-                                                                <label for="Pregunta1" class="preguntas-metadatos">¿Se
-                                                                        puede navegar secuencialmente sobre el contenido
-                                                                        utilizando únicamente el teclado?*</label>
+                                                                <label for="Pregunta1" class="preguntas-metadatos">{{'newObject.form.questionsAdapters.question6'|translate}}</label>
                                                                 <br>
                                                                 <div class="radio-buttons">
                                                                         <div class="p-field-radiobutton">
@@ -534,61 +522,71 @@
                                                 </div>
                                         </div>
                                 </div>
-                                
-                        <div class="p-field p-fluid" *ngIf="img_preview_ref == false">
-                                <label for="fileImage">{{'newObject.form.imgLabel' | translate}}*</label>
-                                <p-fileUpload id="fileImage" name="fileImage"
-                                        [chooseLabel]="'newObject.form.imgSelect' | translate"
-                                        [showUploadButton]="false"
-                                        [cancelLabel]="'newObject.form.imgCancel' | translate"
-                                        (onSelect)="onSelectImage($event)"
-                                        [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
-                                        [multiple]="false" accept="image/*" aria-describedby="img-help">
-                                </p-fileUpload>
-                                <small *ngIf="getErrorFormRequired('img')" id="img-help"
-                                        class="p-error">{{'newObject.errors.imgHelp' |
-                                        translate}}</small>
-                        </div>
 
-                        <div class="p-col-12 p-md-6 p-lg-12" *ngIf="img_preview_ref == false && this.paths_img_preview.length > 0">
-                                <div class="box content">
-                                        <div class="p-field p-fluid slider">
-                                                <div class="content-section implementation" tabindex="0">
-                                                        <div class="card" >
-                                                                <label tabindex="0" for="fileImage">Seleccione una imagen de
-                                                                        previsualizacion*</label>
-                                                                <div class="image-gallery align-items-center gallery_item" style="width:100%;justify-content:center; margin-top: 12px;" >
-                                                                                <img src="{{image.src}}" tabindex="0" (click)="img_preview_save(image.src)" 
-                                                                                style=" max-width: 50% !important; height: 35vh!important;cursor: pointer;" alt="{{(image.alt =='')? 'Imagen de previsualizacion '+first : image.alt}}" />
+                                <div class="p-field p-fluid" *ngIf="img_preview_ref == false">
+                                        <label for="fileImage">{{'newObject.form.imgLabel' | translate}}*</label>
+                                        <p-fileUpload id="fileImage" name="fileImage"
+                                                [chooseLabel]="'newObject.form.imgSelect' | translate"
+                                                [showUploadButton]="false"
+                                                [cancelLabel]="'newObject.form.imgCancel' | translate"
+                                                (onSelect)="onSelectImage($event)"
+                                                [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
+                                                [multiple]="false" accept="image/*" aria-describedby="img-help">
+                                        </p-fileUpload>
+                                        <small *ngIf="getErrorFormRequired('img')" id="img-help"
+                                                class="p-error">{{'newObject.errors.imgHelp' |
+                                                translate}}</small>
+                                </div>
+
+                                <div class="p-col-12 p-md-6 p-lg-12"
+                                        *ngIf="img_preview_ref == false && this.paths_img_preview.length > 0">
+                                        <div class="box content">
+                                                <div class="p-field p-fluid slider">
+                                                        <div class="content-section implementation" tabindex="0">
+                                                                <label tabindex="0" for="fileImage">{{'newObject.form.selectImg'|translate}}</label>
+                                                                        <br>
+                                                                <div class="card">
+                                                                        <div class="image-gallery align-items-center gallery_item"
+                                                                                style="width:100%;justify-content:center; margin-top: 12px;">
+                                                                                <img src="{{image.src}}" tabindex="0"
+                                                                                        (click)="img_preview_save(image.src)"
+                                                                                        style=" max-width: 50% !important; height: auto!important;cursor: pointer;"
+                                                                                        alt="{{(image.alt =='')? 'Imagen de previsualizacion '+first : image.alt}}" />
+                                                                        </div>
+                                                                        <div
+                                                                                class="grid align-items-center header_paginator">
+                                                                                <div class="col-1" style="width: 12%;">
+                                                                                        <p-button icon="pi pi-refresh"
+                                                                                                [label]="'Refrescar'"
+                                                                                                (onClick)="refresh()">
+                                                                                        </p-button>
+
+                                                                                </div>
+                                                                                <div class="col-10 paginator_item"
+                                                                                        style="width: 70%;">
+                                                                                        <p-paginator [first]="first"
+                                                                                                [rows]="1"
+                                                                                                [totalRecords]="totalRecords"
+                                                                                                (onPageChange)="onPageChange($event)"
+                                                                                                [showJumpToPageDropdown]="true"
+                                                                                                [showPageLinks]="false">
+                                                                                        </p-paginator>
+                                                                                </div>
+                                                                                <div class="col-1" style="width: 12%;">
+                                                                                        <p-button icon="pi pi-times"
+                                                                                                [label]="'Cancelar'"
+                                                                                                class="p-button-danger"
+                                                                                                (onClick)="remove_image()">
+                                                                                        </p-button>
+
+                                                                                </div>
+                                                                        </div>
+
                                                                 </div>
-                                                                <div class="grid align-items-center header_paginator">
-                                                                        <div class="col-1" style="width: 12%;">
-                                                                                <p-button icon="pi pi-refresh" [label]="'Refrescar'"
-                                                                                        (onClick)="refresh()">
-                                                                                </p-button>
-
-                                                                        </div>
-                                                                        <div class="col-10 paginator_item" style="width: 70%;">
-                                                                                <p-paginator [first]="first" [rows]="1"
-                                                                                        [totalRecords]="totalRecords"
-                                                                                        (onPageChange)="onPageChange($event)"
-                                                                                        [showJumpToPageDropdown]="true"
-                                                                                        [showPageLinks]="false">
-                                                                                </p-paginator>
-                                                                        </div>
-                                                                        <div class="col-1" style="width: 12%;">
-                                                                                <p-button icon="pi pi-times" [label]="'Cancelar'" class="p-button-danger"
-                                                                                        (onClick)="remove_image()">
-                                                                                </p-button>
-
-                                                                        </div>
-                                                                </div>
-                                                                
                                                         </div>
                                                 </div>
                                         </div>
                                 </div>
-                        </div>
 
                         </div>
                         <p-button type="submit" title="Guardar" [label]="'newObject.form.btnSubmit' | translate">
@@ -598,12 +596,11 @@
         <ng-template #dataTemplate>
                 <div class="message-create" *ngIf="spinner === false">
                         <h4>{{'newObject.infoLoadFile' | translate}}</h4>
-                        <label>Recuerda que los estándares educativos de objetos de aprendizaje aceptados por el repositorio son
-                                IMS Y SCROM.</label>
+                        <label>{{'newObject.form.descriptionAlert' | translate}}</label>
                 </div>
-               <div class="message-spinner" *ngIf="spinner === true">
-                <p-progressSpinner></p-progressSpinner>
-               </div>
+                <div class="message-spinner" *ngIf="spinner === true">
+                        <p-progressSpinner></p-progressSpinner>
+                </div>
         </ng-template>
 
 </ng-template>

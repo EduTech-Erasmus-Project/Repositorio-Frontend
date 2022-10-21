@@ -8,13 +8,13 @@
     <app-baner-register></app-baner-register>
 <p-toast></p-toast>
     <div class="labelPopular">
-        <h2>Populares</h2>
+        <h2>{{"object.labelPopulars"  | translate}}</h2>
         <ng-container *ngIf="userRole; else isStudentTemplate">
-            <button (click)="onNavegateTo('recommended')" pButton pRipple type="button" label="Ver todos los populares"
+            <button (click)="onNavegateTo('recommended')" pButton pRipple type="button" label="{{'object.viewAllPopulars' | translate}}"
                 class="p-button-outlined"></button>
         </ng-container>
         <ng-template #isStudentTemplate>
-            <button (click)="onNavegateTo('search')" pButton pRipple type="button" label="Ver todos"
+            <button (click)="onNavegateTo('search')" pButton pRipple type="button" label="{{'object.viewAll' | translate}}"
                 class="p-button-outlined"></button>
         </ng-template>
     </div>

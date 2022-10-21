@@ -30,3 +30,9 @@
         margin-right: 10px;
     }
 }
+
+:host ::ng-deep .p-button{
+    background: transparent;
+    color: #3B5B68;
+    border-color: #3B5B68;
+}

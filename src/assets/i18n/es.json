@@ -17,8 +17,13 @@
       "myAccount":"Mi perfil",
       "security":"Seguridad",
       "exit":"Salir",
-      "ratedMe":"Calificados por mi"
-    }
+      "ratedMe":"Calificados por mi",
+      "myObjectsA":"Mis Objetos de aprendizaje",
+      "uploadOA":"Subir Objeto de aprendizaje",
+      "OAQualificate":"Objetos de aprendizaje calificados"
+    },
+    "myOAs":"Mis OAs",
+    "uploadOAs":"Subir un OA"
   },
   "home": {
     "tittle": "Busca Los Recursos Educativos",
@@ -89,7 +94,9 @@
     "requestVerification": "Solicitar nueva verificación",
     "recoverSentEmail":"Enlace enviado con exito",
     "recoverPasswordM":"Contraseña generada correctamente",
-    "recoverErrorMail":"El correo electronico no se encuentra registrado"
+    "recoverErrorMail":"El correo electronico no se encuentra registrado",
+    "send":"Enviar",
+    "sendImage":"Imagen que hace referencia a una aplicacion de correo electronico"
   },
   "register": {
     "becomeMember": "Hazte miembro",
@@ -194,7 +201,33 @@
       "imgLabel": "Subir una imagen",
       "imgSelect": "Seleccionar",
       "imgCancel": "Cancelar",
-      "btnSubmit": "Guardar"
+      "btnSubmit": "Guardar",
+      "descriptionAlert":"Recuerda que los estándares educativos de objetos de aprendizaje aceptados por el repositorio son IMS Y SCROM.",
+      "imgPreview":"Imagen de previsualizacion del objeto de aprendizaje",
+      "OaAdapted":"Objeto de aprendizaje adaptado*",
+      "adaptationsIs":{
+        "description1":"Este objeto de aprendizaje fue adaptado con la herramienta",
+        "description2":"Visita nuestra herramienta",
+        "description3":"para la adaptación de objetos de aprendizaje.También visita nuestra herramienta",
+        "description4":"para el metaetiquetado para objetos de aprendizaje."
+      },
+      "questionsAdapters":{
+        "question1":"¿Ha considerado poner texto alternativo en las imágenes que así lo requieran?*",
+        "question2":"¿Se cumple con contrastes óptimos en la presentación de la información?*",
+        "question3":"¿El contenido textual contiene títulos, descripciones o enlaces adecuados?*",
+        "question4":"¿Se cumple con contrastes óptimos en la presentación del contenido de texto y fondo?*",
+        "question5":"¿Los videos contienen subtitulado sincronizado y coherente con el lenguaje?*",
+        "question6":"¿Se puede navegar secuencialmente sobre el contenido utilizando únicamente el teclado?*"
+      },
+      "questionsResult":{
+        "label1":"Se encontraron un total de",
+        "label2":"imagenes.",
+        "label3":"parrafos.",
+        "label4":"videos.",
+        "label5":"audios."
+      },
+      "fileExe":"Fichero fuente eXeLearning",
+      "selectImg":"Seleccione una imagen de previsualizacion*"
     },
     "messages": {
       "successFile": "El archivo se ha subido con éxito",
@@ -211,7 +244,8 @@
       "license": "Por favor seleccione una licencia",
       "language": "Por favor seleccione un idioma",
       "img": "El tipo de archivo no es valido",
-      "imgHelp": "Por favor seleccione una imagen"
+      "imgHelp": "Por favor seleccione una imagen",
+      "selectOptions":"Por favor seleccione una opción"
     },
     "infoLoadFile": "Carga tu objeto de aprendizaje"
   },
@@ -235,6 +269,11 @@
     "btnAddComment": "Agregar un comentario",
     "labelNoRated": "Objetos de aprendizaje sin evaluar",
     "labelPopulars": "Populares",
+    "viewAllPopulars":"Ver todos los populares",
+    "viewAll":"Ver todos",
+    "registerByStudent":"Registrate como estudiante",
+    "registerByTeacher": "Registrate como docente",
+    "registerByExpert":"Registrate como experto colaborador",
     "placeholderComment": "Escribe tu comentario",
     "noComments": "Aun no hay comentarios en este objeto de aprendizaje",
     "btnSubmit": "Publicar",

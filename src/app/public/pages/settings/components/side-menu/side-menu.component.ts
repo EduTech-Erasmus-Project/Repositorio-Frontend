@@ -86,7 +86,7 @@ export class SideMenuComponent implements OnInit {
   
       if (this.loginService.validateRole("teacher")) {
         this.items.splice(2, 0, {
-          label: "Mis Objetos de aprendizaje",
+          label: await this.languageService.translate.get('menu.sideMenu.myObjectsA').toPromise(),
           icon: "pi pi-fw pi-list",
           routerLink: "my-objects",
           routerLinkActiveOptions: {
@@ -96,7 +96,7 @@ export class SideMenuComponent implements OnInit {
         });
   
         this.items.splice(3, 0, {
-          label: "Subir Objeto de aprendizaje",
+          label: await this.languageService.translate.get('menu.sideMenu.uploadOA').toPromise(),
           icon: "pi pi-fw pi-upload",
           routerLink: "new-object",
           routerLinkActiveOptions: {
@@ -108,7 +108,7 @@ export class SideMenuComponent implements OnInit {
       
       if (this.loginService.validateRole("expert")) {
           this.items.splice(1, 0, {
-            label: "Objetos de aprendizaje calificados",
+            label: await this.languageService.translate.get('menu.sideMenu.OAQualificate').toPromise(),
           icon: "pi pi-fw pi-check",
           routerLink: "objects-qualified",
           routerLinkActiveOptions: {

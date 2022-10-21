@@ -17,8 +17,13 @@
       "myAccount":"My Profile",
       "security":"Security",
       "exit":"Exit",
-      "ratedMe":"Rated by me"
-    }
+      "ratedMe":"Rated by me",
+      "myObjectsA":"My Learning Objects", 
+      "uploadOA":"Upload Learning Object", 
+      "OAQualificate":"Qualified Learning Objects"
+    },
+    "myOAs":"My OAs",
+    "uploadOAs":"Upload an OA"
   },
   "home": {
     "tittle": "Find Educational Resources",
@@ -89,7 +94,9 @@
     "requestVerification": "Request new verification",
     "recoverSentEmail": "Link sent successfully",
     "recoverPasswordM": "Password generated successfully",
-    "recoverErrorMail": "The email is not registered"
+    "recoverErrorMail": "The email is not registered",
+    "send":"Send",
+    "sendImage":"Image referencing an email application"
   },
   "register": {
     "becomeMember": "Become a member",
@@ -179,7 +186,7 @@
       "descriptionLabel": "Description",
       "keywords": "Keywords: example1, example2, example3",
       "keywordsLabel": "Keywords",
-      "adaptationYes": "Yes",
+      "adaptationsYes": "Yes",
       "adaptationsNo": "No",
       "adaptationsLabel": "Adaptation of the learning object",
       "language": "Select a language",
@@ -194,7 +201,33 @@
       "imgLabel": "Upload an image",
       "imgSelect": "Select",
       "imgCancel": "Cancel",
-      "btnSubmit": "Save"
+      "btnSubmit": "Save",
+      "descriptionAlert":"Remember that the educational standards for learning objects accepted by the repository are IMS AND SCROM.",
+      "imgPreview":"Preview image of the learning object",
+      "OaAdapted":"Adapted learning object*",
+      "adaptationsIs":{
+        "description1":"This learning object was adapted with the tool",
+        "description2":"Visit our tool",
+        "description3":"for the adaptation of learning objects. Also visit our tool",
+        "description4":"for meta tagging for learning objects."
+      },
+      "questionsAdapters":{
+        "question1":"Have you considered putting alt text on images that require it?*",
+        "question2":"Are optimal contrasts met in the presentation of information?*",
+        "question3":"Does the textual content contain appropriate titles, descriptions or links?*",
+        "question4":"Are optimal contrasts met in the presentation of text and background content?*",
+        "question5":"Do the videos contain synchronized and language-consistent subtitling?*",
+        "question6":"Is it possible to navigate sequentially over the content using only the keyboard?*"
+      },
+      "questionsResult":{
+        "label1":"A total of were found",
+        "label2":"images.",
+        "label3":"paragraphs.",
+        "label4":"videos.",
+        "label5":"audio."
+      },
+      "fileExe":"ExeLearning source file",
+      "selectImg":"Select a preview image*"
     },
     "messages": {
       "successFile": "The file has been successfully uploaded",
@@ -202,7 +235,7 @@
       "successMetadata": "Your file has been submitted for review",
       "errorMetadata": "An error occurred while saving data, please try again"
     },
-    "bugs": {
+    "errors": {
       "title": "Title is required",
       "description": "Description is required",
       "keywords": "Keywords are required",
@@ -211,7 +244,8 @@
       "license": "Please select a license",
       "language": "Please select a language",
       "img": "Invalid file type",
-      "imgHelp": "Please select an image"
+      "imgHelp": "Please select an image",
+      "selectOptions":"Please select an option"
     },
     "infoLoadFile": "Load your learning object"
   },
@@ -235,6 +269,11 @@
     "btnAddComment": "Add a comment",
     "labelNoRated": "Learning objects not rated",
     "labelPopulars": "Populars",
+    "viewAllPopulars":"View All Popular",
+    "viewAll":"View all",
+    "registerByStudent":"Register as a student",
+    "registerByTeacher": "Register as a teacher",
+    "registerByExpert":"Register as a collaborating expert",
     "placeholderComment": "Type your comment",
     "noComments": "There are no comments on this learning object yet",
     "btnSubmit": "Publish",

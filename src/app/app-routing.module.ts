@@ -5,6 +5,7 @@ import { QuicklinkStrategy } from "ngx-quicklink";
 import { PublicRoutingModule } from "./public/public-routing.module";
 import { ErrorComponent } from "./shared/error/error.component";
 import { NotfoundComponent } from "./shared/notfound/notfound.component";
+import { TranslateModule } from "@ngx-translate/core";
 
 const routes: Routes = [
   { path: "error", component: ErrorComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
     }),
     PublicRoutingModule,
     AdminRoutingModule,
+    TranslateModule
   ],
   exports: [RouterModule],
 })

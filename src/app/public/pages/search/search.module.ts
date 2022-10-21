@@ -5,6 +5,7 @@ import { SearchRoutingModule } from './search-routing.module';
 import { SearchComponent } from './search.component';
 import { ComponentsModule } from '../../components/components.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     SearchRoutingModule,
     ComponentsModule,
-    SharedModule
+    SharedModule,
+    TranslateModule
   ]
 })
 export class SearchModule { }

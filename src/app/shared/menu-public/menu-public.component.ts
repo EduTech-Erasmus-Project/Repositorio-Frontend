@@ -20,7 +20,7 @@ export class MenuPublicComponent implements OnInit {
   public loged: boolean;
   //private queryParams: QuerySearch = {};
   public role_name: string = '';
-  public language: any;
+
 
 
   constructor(
@@ -37,16 +37,12 @@ export class MenuPublicComponent implements OnInit {
     ) {
       this.router.navigateByUrl("/admin");
     }
-
-    translateService.onLangChange.subscribe((translate: LangChangeEvent) => {
-      this.language = translate.translations;
-      this.loadMenu();
-    })
   }
 
 
 
   ngOnInit(): void {
+    this.loadMenu();
     this.loginService.characterLogin.subscribe((res) => {
       if (res == true) {
         this.role_name = this.getROLE(this.loginService.user.roles[0]);
@@ -57,7 +53,7 @@ export class MenuPublicComponent implements OnInit {
     if (this.loginService.user) {
       this.role_name = this.getROLE(this.loginService.user.roles[0]);
     }
-    this.addMenuItems();
+    //this.addMenuItems();
 
     this.loginService.characterMenu.subscribe((res) => {
       if (res == true) {
@@ -67,17 +63,11 @@ export class MenuPublicComponent implements OnInit {
       }
     });
     //Metodos para usar los servicios de traduccion 
-    this.storage_get_lenguage();
-    this.loadMenu();
+ 
+    //this.loadMenu();
   }
 
-  private storage_get_lenguage() {
-    if (this._storageService.getCookieItem('lenguaje') != null && this._storageService.getCookieItem('lenguaje') == 'en') {
-      this.language = this.languageService.translate.translations.en;
-    } else {
-      this.language = this.languageService.translate.translations.es;
-    }
-  }
+
 
   getROLE(role: string) {
     switch (role) {
@@ -90,39 +80,39 @@ export class MenuPublicComponent implements OnInit {
     }
   }
 
-  loadMenu() {
+  async loadMenu() {
     this.countries = [
       { name: "Español", code: "ES" },
       { name: "Ingles", code: "US" },
     ];
 
-
+    //this.language.menu.home
 
     //this.translate.onLangChange.subscribe((translate: LangChangeEvent) => {
     this.tieredItems = [
       {
-        label: this.language.menu.home,//this.translate.translations.menu.home,
+        label: await this.languageService.translate.get("menu.home").toPromise() || "",//this.translate.translations.menu.home,
         routerLink: "/",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
       {
-        label: this.language.menu.aboutUs, //translate.translations.menu.aboutUs,
+        label: await this.languageService.translate.get("menu.aboutUs").toPromise()|| "", //translate.translations.menu.aboutUs,
         routerLink: "about-us",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
       {
-        label: this.language.menu.services, //translate.translations.menu.services,
+        label: await this.languageService.translate.get("menu.services").toPromise() || "", //translate.translations.menu.services,
         routerLink: "services",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
       {
-        label: this.language.menu.contact, //translate.translations.menu.contact,
+        label: await this.languageService.translate.get("menu.contact").toPromise() || "", //translate.translations.menu.contact,
         routerLink: "contact",
         routerLinkActiveOptions: {
           exact: true,
@@ -130,15 +120,15 @@ export class MenuPublicComponent implements OnInit {
         },
       },
       {
-        label: this.language.menu.search,
-        routerLink: "/search",
+        label:  await this.languageService.translate.get("menu.search").toPromise() || "" ,
+        routerLink: "search",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
       {
-        label: this.language.menu.developers,
-        routerLink: "/developers",
+        label:  await this.languageService.translate.get("menu.developers").toPromise() || "",
+        routerLink: "developers",
         routerLinkActiveOptions: {
           exact: true,
           styleClass: "router-active",
@@ -146,27 +136,29 @@ export class MenuPublicComponent implements OnInit {
         styleClass: "homeItem",
       },
       {
-        label: this.language.menu.userGuide,
-        routerLink: "/guide/introduction",
+        label:  await this.languageService.translate.get("menu.userGuide").toPromise() || "",
+        routerLink: "guide/introduction",
         routerLinkActiveOptions: {
           exact: true,
         },
       },
     ];
+
+    this.addMenuItems();
   }
 
-  private addMenuItems() {
+  private async addMenuItems() {
     if (this.roleTeacher) {
       this.tieredItems.push(
         {
-          label: "Mis OAs",
+          label: await this.languageService.translate.get("menu.myOAs").toPromise(),
           routerLink: "/settings/my-objects",
           routerLinkActiveOptions: {
             exact: true,
           },
         },
         {
-          label: "Subir un OA",
+          label: await this.languageService.translate.get("menu.uploadOAs").toPromise(),
           routerLink: "/settings/new-object",
           routerLinkActiveOptions: {
             exact: true,

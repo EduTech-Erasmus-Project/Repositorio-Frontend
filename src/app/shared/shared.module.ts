@@ -205,15 +205,16 @@ import { ButtonTranslateComponent } from './button-translate/button-translate.co
     TreeTableModule,
     VirtualScrollerModule,
     MenuPublicComponent,
-    TranslateModule,
     PrettyprintPipe,
     UrlsanitizerPipe,
     MomentPipe,
     ProgressSpinnerModule,
     MetadataComponent,
-    ButtonTranslateComponent
+    ButtonTranslateComponent,
+    TranslateModule
   ],
   imports: [
+    TranslateModule,
     ProgressSpinnerModule,
     CommonModule,
     RouterModule,

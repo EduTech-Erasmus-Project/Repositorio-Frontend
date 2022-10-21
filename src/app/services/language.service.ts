@@ -12,12 +12,11 @@ export class LanguageService {
     private translateService: TranslateService,
     private storageService: StorageService
     ) {
-    translateService.addLangs(["es", "en"]);
-    translateService.setDefaultLang("es");
-    moment.locale('es-us'); 
+    //translateService.addLangs(["es", "en"]);
+    //translateService.setDefaultLang("en");
+   // moment.locale('es-us'); 
     translateService.use((this.storageService.getCookieItem('lenguaje') != null && this.storageService.getCookieItem('lenguaje') === 'en')? 'en':'es');
     translateService.onLangChange.subscribe((translate: LangChangeEvent) => {
-      console.log(translate)
       
     })
   }

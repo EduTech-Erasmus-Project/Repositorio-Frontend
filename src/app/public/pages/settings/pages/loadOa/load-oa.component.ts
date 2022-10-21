@@ -50,7 +50,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   public spinner: boolean = false;
   public first: number =0;
   public language = [
-    { name: "Elige una opción", code: "none" },
     { name: "Alemán", code: "de" },
     { name: "Español", code: "es" },
     { name: "Francés", code: "fr" },
@@ -71,7 +70,10 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     private languageService: LanguageService,
     private h:HttpClient,
     private sanitizer: DomSanitizer
-  ) { }
+  ) {
+    this.item_language();
+   }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => {
       sub.unsubscribe();
@@ -91,6 +93,12 @@ export class LoadOaComponent implements OnInit, OnDestroy {
 
   }
 
+  private async item_language(){
+    this.language.unshift(
+      { name: await this.languageService.translate.get("register.chooseOption").toPromise(), code: "none" },
+
+    );
+  }
   async loadData() {
     let preferencesSub = await this.searchService
       .getPreferences()
@@ -136,10 +144,10 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     );
   }
 
-  private add_item_default_array(array) {
+  private async add_item_default_array(array) {
     const object_default = {
       code: 0,
-      name: 'Elige una opción'
+      name: await this.languageService.translate.get("register.chooseOption").toPromise()
     };
     array.unshift(object_default);
   }
@@ -350,6 +358,12 @@ this.spinner= true;
     } else {
       this.objectForm.markAllAsTouched();
       this.objectForm.updateValueAndValidity();
+      this.messageService.add({
+        severity: "error",
+        summary: "Error",
+        detail:
+          "Formulario invalido",
+      });
     }
   }
 
