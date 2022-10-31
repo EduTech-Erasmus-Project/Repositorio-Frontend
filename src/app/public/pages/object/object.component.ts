@@ -7,6 +7,8 @@ import { MessageService } from "primeng/api";
 import { ObjectLearning } from "src/app/core/interfaces/ObjectLearning";
 import { LoginService } from "src/app/services/login.service";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { LanguageService } from "src/app/services/language.service";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 
 @Component({
   selector: "app-object",
@@ -25,32 +27,34 @@ export class ObjectComponent implements OnInit, OnDestroy {
   public changeView: boolean;
   public angForm: FormGroup;
   public disabled
-  
+
   public flagConfirm: boolean = false;
   public groupedQuestionsEx: any[];
   public groupedQuestionsTeacher: any[];
   public resultsEva: any[];
-  public ObjectID:number;
+  public ObjectID: number;
   constructor(
     private route: ActivatedRoute,
     private objectService: LearningObjectService,
     private router: Router,
     private messageService: MessageService,
     private loginService: LoginService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private breadcrumbService: BreadcrumbService,
+    private languageService: LanguageService
   ) {
     this.route.params.subscribe((params) => {
       //this.loading = true;
       this.getObjectDetail(params.slug);
-    
+      this.add_breadcrumb(params.slug);
       //console.log(params.slug)
     });
     this.createForm();
-   
+
   }
 
-  ngOnInit(  ): void {
-    
+  ngOnInit(): void {
+
   }
 
   ngOnDestroy(): void {
@@ -62,6 +66,14 @@ export class ObjectComponent implements OnInit, OnDestroy {
     this.angForm = this.fb.group({});
   }
 
+  private async add_breadcrumb(slug: string) {
+    this.breadcrumbService.setItems([
+      { label: "ROA" },
+      { label: await this.languageService.translate.get('menu.learningObject').toPromise() },
+      { label: slug, routerLink: ["/object/" + slug] },
+    ]);
+  }
+
   async getObjectDetail(slug: string) {
     let detailSub = await this.objectService.getObjectDetail(slug).subscribe(
       (res: any) => {
@@ -70,21 +82,16 @@ export class ObjectComponent implements OnInit, OnDestroy {
         data.avatar = res.avatar.replace('http://', 'https://');
         data.learning_object_file.file = res.learning_object_file.file.replace('http://', 'https://');
         data.learning_object_file.url = res.learning_object_file.url.replace('http://', 'https://');
-        if(data.source_file){
+        if (data.source_file) {
           data.source_file = res.source_file.replace('http://', 'https://')
         }
-        
-
         this.objectData = res;
-        
         this.loadData();
-        //this.metadata = this.objectData.getMetadataFormat();
-
         this.embedCode = `<iframe id='roa_iframe' src='${this.objectData.learning_object_file.url}' style='border:0; width:100%; height:100%' iframeborder='0' frameborder='0' iframeElement.frameBorder = 0; webkitallowfullscreen mozallowfullscreen allowfullscreen ></iframe>`;
         this.loadComments(res.id);
       },
       (err) => {
-       
+
         this.router.navigateByUrl("/**");
       }
     );
@@ -96,50 +103,50 @@ export class ObjectComponent implements OnInit, OnDestroy {
       .getComments(id)
       .subscribe((res: any) => {
         this.commentsData = res;
-      
+
       });
     this.subscribes.push(commentSub);
   }
 
   coutComment(evt) {
-   
+
     this.commentsData.count += evt;
   }
 
-  copyText() {
+  async copyText() {
     //this.messageService.clear();
     navigator.clipboard.writeText(this.embedCode).then(
-      () => {
+      async () => {
         this.messageService.add({
           severity: "success",
-          summary: "Copiado",
-          detail: "Contenido copiado pega en tu web",
+          summary: await this.languageService.translate.get('message.copy').toPromise(),
+          detail: await this.languageService.translate.get('buttons.copyWebSuccess').toPromise(),
         });
       },
-      (err) => {
+      async (err) => {
         //console.error("Async: Could not copy text: ", err);
         this.messageService.add({
           severity: "error",
-          summary: "Error",
-          detail: "Intenta de nuevo",
+          summary: await this.languageService.translate.get('message.titleError').toPromise(),
+          detail: await this.languageService.translate.get('buttons.resetOther').toPromise(),
         });
       }
     );
   }
 
   coutComment1(evt) {
-    if(evt==true){
-    
-    this.loadData();
+    if (evt == true) {
+
+      this.loadData();
     }
   }
- 
-  
+
+
   async loadData() {
-    if (this.roleStudent && (!this.roleExpert && !this.roleTeacher)) {     
+    if (this.roleStudent && (!this.roleExpert && !this.roleTeacher)) {
       let resultsAns = await this.objectService
         .getResultsEvaluation(this.objectData.id)
-        .subscribe((res) => {   
+        .subscribe((res) => {
           this.resultsEva = res.map((item: any) => {
             return {
               concepts: item.concept_evaluations.map((aux: any) => {
@@ -148,15 +155,15 @@ export class ObjectComponent implements OnInit, OnDestroy {
             };
           });
           this.resultsEva = this.resultsEva;
-         
+
         });
       this.subscribes.push(resultsAns);
     } else if (this.roleExpert) {
       let resultsEval = await this.objectService
         .getObjectResultsEvaluation(this.objectData.id)
         .subscribe((res) => {
-      
-          if(res.length > 0) {
+
+          if (res.length > 0) {
             this.groupedQuestionsEx = res.map((item: any) => {
               return {
                 conceptEvaluations: item.concept_evaluations.map((item1: any) => {
@@ -178,34 +185,34 @@ export class ObjectComponent implements OnInit, OnDestroy {
                 id: item.id,
               };
             });
-            
-              //this.commentEmit.emit(true);
-          this.groupedQuestionsEx = this.groupedQuestionsEx;
-          this.groupedQuestionsEx.forEach((element) => {
-            element.conceptEvaluations.forEach((element1) => {
-              element1.questionEvaluations.forEach((element2) => {
-                this.angForm.addControl(
-                  element2.value,
-                  new FormControl(element2.qualification, Validators.required)
-                );
+
+            //this.commentEmit.emit(true);
+            this.groupedQuestionsEx = this.groupedQuestionsEx;
+            this.groupedQuestionsEx.forEach((element) => {
+              element.conceptEvaluations.forEach((element1) => {
+                element1.questionEvaluations.forEach((element2) => {
+                  this.angForm.addControl(
+                    element2.value,
+                    new FormControl(element2.qualification, Validators.required)
+                  );
+                });
               });
+
+              this.angForm.addControl(
+                "observation",
+                new FormControl(element.observation, [Validators.required])
+              );
+
+              if (element.observation) {
+                this.flagConfirm = true;
+              } else {
+                this.flagConfirm = false;
+              }
             });
 
-            this.angForm.addControl(
-              "observation",
-              new FormControl(element.observation, [Validators.required])
-            );
-
-            if (element.observation) {
-              this.flagConfirm = true;
-            } else {
-              this.flagConfirm = false;
-            }
-          });
-          
           }
 
-        
+
         });
 
       this.subscribes.push(resultsEval);

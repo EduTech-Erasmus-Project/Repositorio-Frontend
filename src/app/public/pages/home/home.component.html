@@ -18,12 +18,14 @@
                 class="p-button-outlined"></button>
         </ng-template>
     </div>
-    <ng-container *ngIf="populars?.length > 0">
+    <ng-container *ngIf="populars?.length > 0" >
         <div class="p-grid card-content">
             <div class="p-col-12 p-md-6 p-lg-3" *ngFor="let popular of populars">
                 <app-card [object]='popular'></app-card>
+                
             </div>
         </div>
+       
     </ng-container>
 
 

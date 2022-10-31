@@ -7,6 +7,7 @@ import { QuerySearch } from "src/app/core/interfaces/Search";
 import { Subscription } from "rxjs";
 import { LearningObjectService } from "../../../services/learning-object.service";
 import { LoginService } from "../../../services/login.service";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 
 @Component({
   selector: "app-home",
@@ -25,13 +26,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     private languageService: LanguageService,
     private router: Router,
     private objectService: LearningObjectService,
-    private loginService: LoginService
+    private loginService: LoginService, 
+    private breadcrumbService: BreadcrumbService
   ) {
+    this.add_breadcrumb();
   }
   ngOnDestroy(): void {
     this.subscribes.forEach((sub) => {
       sub.unsubscribe();
     });
+  }
+
+  private async add_breadcrumb(){
+    this.breadcrumbService.setItems([
+      {label: "ROA"},
+      { label: await this.languageService.translate.get('menu.home').toPromise(), routerLink: ["/"] },
+    ]);
   }
 
   get userRole() {

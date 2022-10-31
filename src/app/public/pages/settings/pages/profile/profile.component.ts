@@ -21,6 +21,8 @@ import { UserGeneral } from "../../../../../core/models/userGeneral";
 import * as moment from "moment";
 import Swal from "sweetalert2";
 import { UserService } from "../../../../../services/user.service";
+import { LanguageService } from "src/app/services/language.service";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 
 @Component({
   selector: "app-profile",
@@ -72,8 +74,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     private userService: UserService,
     private fb: FormBuilder,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+    private breadcrumbService:BreadcrumbService,
+    private languageService: LanguageService
+  ) {
+    this.add_breadcrumb();
+  }
   ngOnDestroy(): void {
     this.subscribes.forEach((sub) => {
       sub.unsubscribe();
@@ -82,6 +88,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadData();
+  }
+
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      { label: "ROA" },
+      { label: await this.languageService.translate.get('menu.settings').toPromise()},
+      { label: await this.languageService.translate.get('menu.sideMenu.myAccount').toPromise(), routerLink: ["/settings/profile"] },
+    ]);
   }
 
   async loadData() {

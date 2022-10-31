@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'app-guide',
@@ -12,29 +14,46 @@ export class GuideComponent implements OnInit {
   //private subscription: Subscription;
   private path: string;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private router: Router, 
+    private route: ActivatedRoute,
+    private breadcrumbService: BreadcrumbService,
+    private languageService: LanguageService,
+    ) {
     this.path = this.route.snapshot.firstChild.url[0].path;
+    this.add_breadcrumb();
   }
 
   public activeIndex: number = 0;
 
   ngOnDestroy(): void {
     //this.subscription.unsubscribe();
+   
   }
 
+  
   ngOnInit(): void {
     //console.log("GuideComponent", this.activeIndex);
+   this.add_items();
+  
+  }
+
+  private async add_items(){
     this.items = [
       {
-        label: "Introducción",
+        label: 'eXeLearning',
+        routerLink: "eXeLearning",
+      },
+      {
+        label: await this.languageService.translate.get('buttons.introduction').toPromise(),
         routerLink: "introduction",
       },
       {
-        label: "Busqueda de objetos de aprendizaje",
+        label: await this.languageService.translate.get('buttons.searchOa').toPromise(),
         routerLink: "search-public",
       },
       {
-        label: "Registrarse con un perfil",
+        label: await this.languageService.translate.get('buttons.profileRegister').toPromise(),
         routerLink: "registration-profile",
       },
     ];
@@ -42,6 +61,12 @@ export class GuideComponent implements OnInit {
     this.activeIndex = this.items.findIndex(
       (item) => item.routerLink === this.path
     );
+  }
+  
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      { label: await this.languageService.translate.get('menu.userGuide').toPromise(), routerLink: ["/guide"] },
+    ]);
   }
 
   public prevPage() {
@@ -54,7 +79,5 @@ export class GuideComponent implements OnInit {
     this.router.navigate([`/guide/${this.items[this.activeIndex].routerLink}`]);
   }
 
-  public reset_Page(){
-    
-  }
+
 }

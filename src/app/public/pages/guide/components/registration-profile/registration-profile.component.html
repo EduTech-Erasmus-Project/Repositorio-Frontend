@@ -37,7 +37,7 @@
                         tabindex="0">
                 </ng-template>
                 <ng-template pTemplate="footer" style="text-align: center">
-                    <p-button label="{{'guide.guideIntroductionRegister.button1' | translate}}" icon="pi pi-check">
+                    <p-button label="{{'guide.guideIntroductionRegister.button1' | translate}}" icon="pi pi-check" (click)="router.navigate(['/guideStudent/qualifications'])">
                     </p-button>
                 </ng-template>
             </p-card>
@@ -97,7 +97,8 @@
                         tabindex="0">
                 </ng-template>
                 <ng-template pTemplate="footer" style="text-align: center">
-                    <p-button label="{{'guide.guideIntroductionRegister.button3' | translate}}" icon="pi pi-check">
+                    <p-button label="{{'guide.guideIntroductionRegister.button3' | translate}}" icon="pi pi-check" 
+                    (click)="router.navigate(['/guideExpert/expert-evaluation'])">
                     </p-button>
                 </ng-template>
             </p-card>

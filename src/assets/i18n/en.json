@@ -1,6 +1,28 @@
 {
   "message": {
-    "titleError": "Error"
+    "titleError": "Error",
+    "copy":"Copy"
+  },
+  "language": {
+    "es":"Spanish",
+    "en":"English"
+  },
+  "buttons": {
+    "back":"Back",
+    "next":"Next",
+    "introduction":"Introduction",
+    "searchOa":"Search for learning objects",
+    "profileRegister":"Register with a profile",
+    "uploadOa":"Loading learning objects", 
+    "uploadOaOer":"Loading OERADAP adapted learning objects", 
+    "viewMyOa":"View my learning objects",
+    "copyWebSuccess":"Copied content paste on your website",
+    "resetOther":"Try again"
+  },
+  "footer": {
+    "projectEdutech":"EduTech Project",
+    "p1":"All rights reserved | Developed By",
+    "a1":"Terms and conditions"
   },
   "menu": {
     "altLogo": "EduTech Logo",
@@ -13,6 +35,9 @@
     "search": "Search",
     "developers": "Developers",
     "userGuide": "User Guide",
+    "teacherGuide":"User guide with the role of Teacher",
+    "studentGuide": "User Guide with the role of Student", 
+    "expertGuide": "User Guide with the role of Expert",
     "sideMenu":{
       "myAccount":"My Profile",
       "security":"Security",
@@ -20,10 +45,23 @@
       "ratedMe":"Rated by me",
       "myObjectsA":"My Learning Objects", 
       "uploadOA":"Upload Learning Object", 
-      "OAQualificate":"Qualified Learning Objects"
+      "OAQualificate":"Qualified Learning Objects",
+      "noneQualification":"No Qualification",
+      "qualified":"Qualified",
+      "qualificateOa":"Qualify OA",
+      "uploadOa":"Upload OA"
     },
     "myOAs":"My OAs",
-    "uploadOAs":"Upload an OA"
+    "uploadOAs":"Upload an OA",
+    "termsAndConditions":"Terms and Conditions",
+    "resetPassword":"Reset password",
+    "confirmResetPassword":"Password reset",
+    "sendLink":"Send Link",
+    "verifyEmail":"Email verification",
+    "settings":"Settings",
+    "learningObject":"Learning object",
+    "editOa":"Edit Learning Object",
+    "recommended":"Recommended"
   },
   "home": {
     "tittle": "Find Educational Resources",
@@ -173,10 +211,13 @@
     "lisence": "License",
     "noResults": "No results found",
     "message": "Message",
-    "readPlus":"Read more"
+    "readPlus":"Read more",
+    "filterClean":"Clean filters"
   },
   "newObject": {
     "form": {
+      "success":"Successful",
+      "alert":"Alert",
       "fileUpload": "Upload",
       "btnShowMetadata": "Show Metadata",
       "btnPreview": "Preview",
@@ -202,6 +243,7 @@
       "imgSelect": "Select",
       "imgCancel": "Cancel",
       "btnSubmit": "Save",
+      "selectImgProfile":"Select a profile picture",
       "descriptionAlert":"Remember that the educational standards for learning objects accepted by the repository are IMS AND SCROM.",
       "imgPreview":"Preview image of the learning object",
       "OaAdapted":"Adapted learning object*",
@@ -227,7 +269,13 @@
         "label5":"audio."
       },
       "fileExe":"ExeLearning source file",
-      "selectImg":"Select a preview image*"
+      "selectImg":"Select a preview image*",
+      "alertImgRemove":"The image was successfully removed",
+      "alertSuccessSelect":"Image successfully selected",
+      "fileSendReview":"Your file has been submitted for review",
+      "errorSaveData":"An error occurred while saving data, please try again",
+      "successUploadFile":"The file has been successfully uploaded",
+      "invalidForm":"Invalid Form"
     },
     "messages": {
       "successFile": "The file has been successfully uploaded",
@@ -250,9 +298,14 @@
     "infoLoadFile": "Load your learning object"
   },
   "object": {
-    "btnEvaluateExpert": "Evaluate this LO",
+    "like":"I like",
+    "btnEvaluateExpert": "Evaluate this OA",
     "btnEvaluate": "Rate this learning object",
     "btnDownload": "Download this learning object",
+    "btnEvaluateWithExpert":"Rate this learning object as an expert",
+    "btnEvaluateWithExpertView":"View my evaluation of the learning object",
+    "EvaluateWithStudent":"Evaluate this learning object as a student",
+    "EvaluateWithStudentView":"View my evaluation of the learning object",
     "btnFullScreen": "Full Screen",
     "btnShared": "Share",
     "labelValorate": "Value:",
@@ -293,7 +346,27 @@
     "objectQualification": "Edit",
     "evaluationErrorView": "There is no evaluation yet for this learning object",
     "description": "Description",
-    "schema": "Schema"
+    "schema": "Schema",
+    "reviewObject":"This learning object is under review",
+    "reviewStudent":"This learning object has not yet been reviewed by the student",
+    "evalPre":"Preliminary Evaluation",
+    "evalStudent":"Student Evaluation",
+    "evalExpert":"Evaluation Expert",
+    "abstractEvalAdap": "Adaptability Evaluation Summary",
+    "abstractEvaluaction":"Summary of your Evaluation",
+    "abstractEvalAcc": "Accessibility Evaluation Summary",
+    "editOa":"Edit Learning Object", 
+    "deleteOa":"Delete Learning Object",
+    "oaQuestion":"Are you sure you want to delete the OA?",
+    "delesteSuccess": "The record was successfully deleted",
+    "imgCurrent":"Current Image",
+    "oaSave":"Saving...",
+    "messageSuccess":"Data has been updated.",
+    "messageError":"An error occurred while saving data, please try again.",
+    "evaluationMessage":"Data sent successfully, thank you for performing the evaluation",
+    "successSendData":"The data was successfully updated",
+    "messageErrorUpdate":"The information could not be updated correctly",
+    "fillForm":"Fill in all required fields"
   },
   "security": {
     "titlePass": "Sign in to EduTech",
@@ -407,6 +480,29 @@
     "p3": "The use of cookies to store information purely for reference in a record, no personal or visiting user information is stored, all stored values are duly encrypted."
   },
   "guide": {
+    "exelearning": {
+      "preview": "Preview image",
+      "subtitle": "Export eXeLearning file",
+      "step": "Step number",
+      "p1": "Once we have our learning object, the first thing we have to verify is that we have the advanced mode active, otherwise we activate it. The advanced mode is located in the upper right part of the exelearning application.",
+      "alt1": "Image showing how to activate advanced mode",
+      "alt2": "Image showing how to configure the export properties",
+      "p2": "Once the advanced mode is activated we can go to the top, properties and go to the option to export Properties > Export.",
+      "subtitle2": "General recommendations for exporting the eXeLearning file",
+      "li1": "The exported folder will include a copy of the .elp file, even if the content you have generated does not have a link to it. If you want everyone to be able to easily find your .elp consider including a link to the .elp inside the content instead of using this option.",
+      "li2": "Checking this option will cause eXe to add Previous/Next links to individual pages in your SCO. It requires a non-standard SCORM 1.2 extension and is only guaranteed to work with certain versions of Moodle.",
+      "li3": "By checking this option, the SCORM file will include the result of exporting this eXe package as a website. All html files will have the 'website_' prefix to differentiate them from their SCORM equivalent.",
+      "alt3": "Image showing general recommendations for exporting the file",
+      "p3": "To export our learning object we follow these steps:",
+      "li4": "Click File",
+      "li5": "Click Export",
+      "li6": "Educational Standard Click",
+      "li7": "Click SCROM1.2",
+      "alt4": "Image showing the steps to export the Learning Object in SCROM format",
+      "alt5": "Image showing the LOM type metadata form",
+      "subtitle3": "Metadata",
+      "p4": "The metadata form must be filled out before exporting the eXeLearning file. This will facilitate the search and information about the data content."
+    },
     "guideIntroduction": {
       "title": "Introduction",
       "p1": "Welcome to the user guide of the Roa Learning Objects repository, through this guide we will teach you how you can use and take advantage of the ROA platform so that you can interact with the learning objects. The ROA platform has as objectives store educational resources OAs and evaluate accessibility metadata to improve learning in educational resources.",
@@ -486,5 +582,36 @@
       "p3":"In this section we will be able to observe the evaluations, carried out by the student, by the collaborating expert or the automatic evaluation carried out by the platform.",
       "p4":"We will be presented with a summary of the evaluation with its corresponding graph."
     }
-  }  
+  },
+  "guideStudent":{
+    "steps":{
+      "qualifications":"Qualify the learning object",
+      "qualificationsByMe":"Learning objects qualified by me",
+      "seeByMe":"Learning objects seen by me"
+    },
+    "title":"Run grades",
+    "subtitle1":"Grade a Learning Object",
+    "p1":"When a user has the role of student, they have access to evaluate a learning object, this evaluation helps to evaluate the educational resource and its metadata. To evaluate educational resources we have several options such as downloading the learning object or view in a new screen to review the resource.",
+    "p2":"You must remember that it is necessary to fill in all the fields of the evaluation so that the evaluation can be saved successfully, in the same way that you add a comment about the evaluation you made so that the authors of the learning objects can get feedback of their evaluations.",
+    "ratingByMe":{
+      "title":"Rated by me ",
+      "subtitle1":"Learning objects graded by me",
+      "p1":"In this section we can see the learning objects that were graded by the user. You can see a modal where information on the grade is presented in statistical graphs.",
+      "p2": "In the same way a student can update her evolution towards the learning object in this way the user can make the evaluations to the learning objects that he wishes."
+    },
+    "seeByMe":{
+      "title": "Seen by me",
+      "subtitle1": "Learning objects seen by me",
+      "p1": "In this section the student can see the learning objects she has visited."
+    }
+  } ,
+  "guideExpert":{
+    "title":"Grade Learning Objects ",
+    "subtitle1":"Unassessed or Assessed Learning Objects",
+    "p1":"Within the system we can appreciate the search screen that makes it easy for the expert collaborator to search for learning objects with filters such as qualified or unqualified learning objects.",
+    "subtitle2":"Evaluate the learning object",
+    "p2":"The expert can evaluate the learning objects for this he can enter inside each learning object in the same way he has the possibility to download the learning object or open the learning object in a new tab to perform a review of this before carrying out the evaluation.",
+    "subtitle3":"My graded learning objects",
+    "p3": "One of the additional functions also within the user menu we have an option so that the expert user can see within a section their learning objects qualified by him."
+  }
 }

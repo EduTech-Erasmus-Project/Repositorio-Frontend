@@ -1,8 +1,5 @@
 <div class="animate__animated animate__fadeIn card-content">
     <p-card styleClass="p-card-shadow" [style]="{width: '100%'}" tabindex="0">
-        <!--<ng-template pTemplate="header">
-            <img loading="lazy" [alt]="object.general_title" [src]="object.avatar">
-        </ng-template>-->
         <ng-template pTemplate="header">
             <div class="class-img" tabindex="0" (click)="navigateTo()"
                 style=" background-image: url({{object.avatar}});" aria-description="Imagen del objeto de aprendizaje">
@@ -13,7 +10,7 @@
                 style="text-decoration: none; color: black;">{{object.general_title}}</a> </div>
         <div class="p-card-subtitle ng-star-inserted"> {{(object.user_created?.first_name || '')+'
             '+(object.user_created?.last_name || '')}}</div>
-            
+
         <div class="field col-12 md:col-6"
             *ngIf="resultsEv == null && resultEvalCero != true && !expertOptionsView && !expertOptions">
             <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
@@ -43,19 +40,20 @@
             *ngIf="(studentOptions) || (studentOptionsView)">
             <ng-container *ngIf="resultsEvStudent && (resultsEvStudent.length > 0)">
                 <div>
-                    <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad" [draggable]="false"
-                        [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="displaystudent"
-                        [style]="{width: '68vw',height: '575px'}">
+                    <p-dialog *ngIf="displaystudent" header="{{'object.abstractEvalAdap'| translate}}"
+                        [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false"
+                        [(visible)]="displaystudent" [style]="{width: '68vw',height: '575px'}">
                         <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
                         </app-evaluation-chart>
                         <p-footer *ngIf="resultsEvStudent?.length>0 && !studentOptions">
-                            <button (click)="navigateToReport(true)" pButton pRipple type="button" label="{{'search.readPlus'|translate}}"
+                            <button (click)="navigateToReport(true)" pButton pRipple type="button"
+                                label="{{'search.readPlus'|translate}}"
                                 class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
                             </button>
                         </p-footer>
                     </p-dialog>
                     <button (click)="showDialogstudent()" class="button-read" pButton pRipple type="button"
-                        icon="pi pi-external-link" label="Resumen de su Evaluacion">
+                        icon="pi pi-external-link" label="{{'object.abstractEvaluaction' | translate}}">
                     </button>
                 </div>
             </ng-container>
@@ -70,21 +68,22 @@
 
             <ng-container *ngIf="resultsEvViewExpert && (resultsEvViewExpert.length > 0)">
                 <div>
-                    <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad" [draggable]="false"
+                    <p-dialog *ngIf="display" header="{{'object.abstractEvalAcc' | translate}}" [draggable]="false"
                         [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="display"
                         [style]="{width: '75vw',height: '557px'}">
                         <div>
-                            <app-evaluation-chart [resultEv]="resultsEvViewExpert" [rating]="object.rating" [idexpe]="'docente'"
-                                [object]="object"></app-evaluation-chart>
+                            <app-evaluation-chart [resultEv]="resultsEvViewExpert" [rating]="object.rating"
+                                [idexpe]="'docente'" [object]="object"></app-evaluation-chart>
                         </div>
                         <p-footer *ngIf="resultsEvViewExpert?.length>0 && !expertOptions">
-                            <button (click)="navigateToReport(false)" pButton pRipple type="button" label="{{'search.readPlus'|translate}}"
+                            <button (click)="navigateToReport(false)" pButton pRipple type="button"
+                                label="{{'search.readPlus'|translate}}"
                                 class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
                             </button>
                         </p-footer>
                     </p-dialog>
                     <button (click)="showDialog()" icon="pi pi-external-link" pButton pRipple type="button"
-                        class="button-read" label="Evaluacion Experto"></button>
+                        class="button-read" label="{{'object.evalExpert' | translate}}"></button>
                 </div><br>
             </ng-container>
         </div>
@@ -101,46 +100,34 @@
                 <div class="buttons">
 
                     <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
-                        title="Editar Objeto de Aprendizaje"
+                        title="{{'object.editOa'|translate}}"
                         class="p-button-rounded p-button-outlined button-edit"></button>
-
-                    <!--  <button (click)="deleteLearningObject()" pButton pRipple type="button" icon="pi pi-trash"
-                            title="Eliminar Objeto de Aprendizaje"
-                            class="p-button-rounded p-button-outlined button-danger"></button>-->
 
                     <p-confirmPopup></p-confirmPopup>
 
                     <button (click)="deleteLearningObject($event)" pButton pRipple icon="pi pi-trash" type="button"
                         class="p-button-rounded p-button-outlined button-danger"
-                        title="Eliminar Objeto de Aprendizaje"></button>
+                        title="{{'object.deleteOa'|translate}}"></button>
 
-                    <!-- 
-                    <ng-container *ngIf="resultsEv && (resultsEv.length > 0) ; else editTemplate">
-                        <button (click)="confirmDelete($event)" pButton pRipple type="button" icon="pi pi-trash"
-                        class="p-button-rounded p-button-danger p-button-outlined"></button> 
-                    </ng-container>
-                    <ng-template #editTemplate>
-                        <p>Este objeto de aprendizaje está en revisión.</p>
-                    </ng-template>
-                    -->
                     <ng-container *ngIf="resultsEv && (resultsEv.length > 0); else editTemplate">
                         <ng-container *ngIf="resultsEv && (resultsEv.length > 0)">
                             <div>
-                                <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad"
+                                <p-dialog *ngIf="display" header="{{'object.abstractEvalAcc' | translate}}"
                                     [draggable]="false" [resizable]="false" appendTo="body" draggable="false"
                                     modal="false" [(visible)]="display" [style]="{width: '75vw',height: '557px'}">
                                     <div>
-                                        <app-evaluation-chart [resultEv]="resultsEv" [rating]="object.rating" [object]="object"
-                                            [idexpe]="'docente'"></app-evaluation-chart>
+                                        <app-evaluation-chart [resultEv]="resultsEv" [rating]="object.rating"
+                                            [object]="object" [idexpe]="'docente'"></app-evaluation-chart>
                                     </div>
                                     <p-footer *ngIf="resultsEv?.length>0">
                                         <button (click)="navigateToReport(false)" pButton pRipple type="button"
-                                            label="{{'search.readPlus'|translate}}" class="p-button-rounded p-button-outlined button-read"><i
+                                            label="{{'search.readPlus'|translate}}"
+                                            class="p-button-rounded p-button-outlined button-read"><i
                                                 class="pi pi-arrow-right"></i>
                                         </button>
                                     </p-footer>
                                 </p-dialog>
-                                <p-button (click)="showDialog()" icon="pi pi-external-link" label="Evaluacion Experto">
+                                <p-button (click)="showDialog()" icon="pi pi-external-link" label="{{'object.evalExpert'| translate}}">
                                 </p-button>
                             </div><br>
                         </ng-container>
@@ -148,7 +135,7 @@
 
                     <ng-template #editTemplate>
                         <br><br>
-                        <p-dialog *ngIf="displayautomatic" header="Resumen Evaluacion Preliminar" [draggable]="false"
+                        <p-dialog *ngIf="displayautomatic" header="{{'object.evalPre'|translate}}" [draggable]="false"
                             [resizable]="false" appendTo="body" draggable="false" modal="false"
                             [(visible)]="displayautomatic" [style]="{width: '78vw',height: '42vw'}">
                             <app-evaluation-chart [resultsEvAut]="resultsEvAut" [object]="object" idexpe="automatic">
@@ -159,33 +146,34 @@
                             </p-footer>
                         </p-dialog>
                         <p-button (click)="showDialogautomatic()" icon="pi pi-external-link"
-                            label="Evaluación Preliminar"></p-button>
+                            label="{{'object.evalPre' |translate}}"></p-button>
                         <br><br>
-                        <p>Este objeto de aprendizaje está en revisión.</p>
+                        <p>{{'object.reviewObject' | translate}}</p>
                     </ng-template>
 
                     <!--- Evaluacion por el estudiante para visualizacion -->
                     <ng-container *ngIf="resultsEvStudent && (resultsEvStudent.length > 0) ; else editTemplateEst">
                         <div>
-                            <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad"
+                            <p-dialog *ngIf="displaystudent" header="{{'object.abstractEvalAdap'| translate}}"
                                 [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false"
                                 [(visible)]="displaystudent" [style]="{width: '68vw',height: '575px'}">
                                 <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
                                 </app-evaluation-chart>
                                 <p-footer>
                                     <button (click)="navigateToReport(true)" pButton pRipple type="button"
-                                        label="{{'search.readPlus'|translate}}" class="p-button-rounded p-button-outlined button-read"><i
+                                        label="{{'search.readPlus'|translate}}"
+                                        class="p-button-rounded p-button-outlined button-read"><i
                                             class="pi pi-arrow-right"></i>
                                     </button>
                                 </p-footer>
                             </p-dialog>
                             <p-button (click)="showDialogstudent()" icon="pi pi-external-link"
-                                label="Evaluacion Estudiante"></p-button>
+                                label="{{'object.evalStudent' |translate}}"></p-button>
                         </div>
                     </ng-container>
 
                     <ng-template #editTemplateEst>
-                        <p>Este objeto de aprendizaje aun no fue revisado por el estudiante.</p>
+                        <p>{{'object.reviewStudent'|translate}}</p>
                     </ng-template>
 
 

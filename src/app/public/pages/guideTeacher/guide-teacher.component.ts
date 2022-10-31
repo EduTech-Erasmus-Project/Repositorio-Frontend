@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'app-guide-teacher',
@@ -13,8 +15,14 @@ export class GuideTeacherComponent implements OnInit {
   //private subscription: Subscription;
   private path: string;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private router: Router, 
+    private route: ActivatedRoute,
+    private breadcrumbService: BreadcrumbService,
+    private languageService: LanguageService
+    ) {
     this.path = this.route.snapshot.firstChild.url[0].path;
+    this.add_breadcrumb();
   }
 
   public activeIndex: number = 0;
@@ -25,17 +33,21 @@ export class GuideTeacherComponent implements OnInit {
 
   ngOnInit(): void {
     //console.log("GuideComponent", this.activeIndex);
+    this.add_items();
+  }
+
+  private async add_items(){
     this.items = [
       {
-        label: "Carga de objetos de aprendizaje",
+        label: await this.languageService.translate.get('buttons.uploadOa').toPromise(),
         routerLink: "uploadfile",
       },
       {
-        label: "Carga de objetos de aprendizaje adaptados OERADAP",
+        label: await this.languageService.translate.get('buttons.uploadOaOer').toPromise(),
         routerLink: "uploadfile-adapted",
       },
       {
-        label: "Ver mis objetos de aprendizaje",
+        label: await this.languageService.translate.get('buttons.viewMyOa').toPromise(),
         routerLink: "my-objects",
       },
     ];
@@ -44,6 +56,13 @@ export class GuideTeacherComponent implements OnInit {
       (item) => item.routerLink === this.path
     );
   }
+
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      { label: await this.languageService.translate.get('menu.teacherGuide').toPromise(), routerLink: ["/"] },
+    ]);
+  }
+
 
   public prevPage() {
     this.activeIndex -= 1;

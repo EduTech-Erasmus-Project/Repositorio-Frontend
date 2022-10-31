@@ -12,6 +12,8 @@ import { TokenService } from "../../../../../services/token.service";
 import { MessageService } from "primeng/api";
 import { SearchService } from "../../../../../services/search.service";
 import { LearningObjectFile } from "../../../../../core/interfaces/LearningObjectFile";
+import { LanguageService } from "src/app/services/language.service";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 
 @Component({
   selector: "app-edit-object",
@@ -47,11 +49,14 @@ export class EditObjectComponent implements OnInit, OnDestroy {
     private objectService: LearningObjectService,
     private searchService: SearchService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private languageService: LanguageService,
+    private breadcrumbService:BreadcrumbService,
   ) {
     this.route.params.subscribe((params) => {
       this.getObjectDetail(Number(params.slug));
     });
+    this.add_breadcrumb();
   }
 
   ngOnInit(): void {
@@ -65,13 +70,21 @@ export class EditObjectComponent implements OnInit, OnDestroy {
     });
   }
 
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      { label: "ROA" },
+      { label: await this.languageService.translate.get('menu.settings').toPromise()},
+      { label: await this.languageService.translate.get('menu.editOa').toPromise(), routerLink: ["/settings/my-objects"] },
+    ]);
+  }
+
   async getObjectDetail(id: number) {
     let detailSub = await this.objectService.getObjectDetailById(id).subscribe(
       (res: any) => {
         //console.log(res)
         this.object = res;
         this.currentFile = res.learning_object_file;
-        this.currentImg =res.avatar;
+        this.currentImg = res.avatar;
         this.loadForm();
         this.loading = false;
       },
@@ -86,7 +99,7 @@ export class EditObjectComponent implements OnInit, OnDestroy {
   async loadData() {
     let tokenSub = await this.tokenService
       .refreshToken()
-      .subscribe((res) => {});
+      .subscribe((res) => { });
     let preferencesSub = await this.searchService
       .getPreferences()
       .subscribe((res) => {
@@ -188,14 +201,10 @@ export class EditObjectComponent implements OnInit, OnDestroy {
 
   async onSubmit() {
     if (this.objectForm.valid) {
-      //console.log("this.objectForm", this.objectForm.value);
       this.editData = true;
       this.loading = true;
       let data = this.objectForm.value;
       data.id = this.object.id;
-
-      //console.log("data send before", this.objectForm);
-
       data.educational_typicalAgeRange = `${this.objectForm.value.educational_typicalAgeRange[0]}-${this.objectForm.value.educational_typicalAgeRange[1]}`;
       if (!this.objectForm.value.avatar) {
         delete data.avatar;
@@ -204,27 +213,25 @@ export class EditObjectComponent implements OnInit, OnDestroy {
       let addMetadataSub = await this.objectService
         .editMetadata(data)
         .subscribe(
-          (res: any) => {
+          async (res: any) => {
             this.object = res;
             this.currentImg = res.avatar;
             this.messageService.add({
               severity: "success",
-              summary: "Success",
-              detail: "Se han actualizado los datos.",
+              summary: await this.languageService.translate.get('newObject.form.success').toPromise(),
+              detail: await this.languageService.translate.get('object.messageSuccess').toPromise(),
             });
             this.file = null;
             this.loading = false;
             this.editData = false;
-            //console.log("form ", this.objectForm.value);
-            //return this.router.navigateByUrl("/settings/my-objects");
           },
-          (err) => {
+          async (err) => {
             console.log("err", err);
             this.messageService.add({
               severity: "error",
-              summary: "Error",
+              summary: await this.languageService.translate.get('newObject.form.alert').toPromise(),
               detail:
-                "Se ah producido un error al guardar los datos, intente de nuevo",
+              await this.languageService.translate.get('object.messageError').toPromise(),
             });
             this.loading = false;
           }

@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ObjectLearning } from 'src/app/core/interfaces/ObjectLearning';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { LanguageService } from 'src/app/services/language.service';
 import { LearningObjectService } from 'src/app/services/learning-object.service';
 import { LoginService } from 'src/app/services/login.service';
 import { QuerySearchService } from 'src/app/services/query-search.service';
@@ -20,8 +22,12 @@ export class MyQualifiedOaComponent implements OnInit, OnDestroy {
     private searchService: SearchService,
     private loginService: LoginService,
     public querySearchService: QuerySearchService,
-    private learningObjectService: LearningObjectService
-  ) { }
+    private learningObjectService: LearningObjectService,
+    private breadcrumbService:BreadcrumbService,
+    private languageService: LanguageService
+  ) { 
+    this.add_breadcrumb();
+  }
 
   ngOnDestroy(): void {
     this.suscribes.forEach((result) => result.unsubscribe());
@@ -31,6 +37,14 @@ export class MyQualifiedOaComponent implements OnInit, OnDestroy {
     this.loadData();
   }
 
+
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      { label: "ROA" },
+      { label: await this.languageService.translate.get('menu.settings').toPromise()},
+      { label: await this.languageService.translate.get('menu.sideMenu.ratedMe').toPromise(), routerLink: ["/settings/objects-qualified"] },
+    ]);
+  }
 
   async loadData() {
 

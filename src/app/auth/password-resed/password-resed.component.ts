@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { LanguageService } from 'src/app/services/language.service';
 import { LoginService } from 'src/app/services/login.service';
 import { SearchService } from 'src/app/services/search.service';
 import Swal from "sweetalert2";
@@ -33,8 +35,11 @@ export class PasswordResedComponent implements OnInit {
     private messageService: MessageService,
     private loginService: LoginService,
     private router: Router,
+    private breadcrumbService: BreadcrumbService,
+    private languageService: LanguageService
   ) {
     this.createForm();
+    this.add_breadcrumb();
   }
 
   ngOnInit(): void {
@@ -44,6 +49,14 @@ export class PasswordResedComponent implements OnInit {
     };
     this.loadData();
   }
+  
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      {label: "ROA"},
+      { label: await this.languageService.translate.get('menu.resetPassword').toPromise(), routerLink: ["/"] },
+    ]);
+  }
+
   async loadData() {
     let resToken = await this.searchService.getTokenRestPassword(this.Credencial.uidb64, this.Credencial.token).subscribe(res => {
 
@@ -64,6 +77,7 @@ export class PasswordResedComponent implements OnInit {
 
     this.subscribes.push(resToken);
   }
+
   createForm() {
     this.angForm = this.fb.group({
       passwordNew: [

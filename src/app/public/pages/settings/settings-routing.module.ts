@@ -25,9 +25,9 @@ const routes: Routes = [
         path: "profile",
         loadChildren: () =>
           import("./pages/profile/profile.module").then((m) => m.ProfileModule),
-          data: {
-            breadcrumb: "Perfil"
-          },
+          // data: {
+          //   breadcrumb: "Perfil"
+          // },
       },
       {
         path: "security",
@@ -35,18 +35,18 @@ const routes: Routes = [
           import("./pages/security/security.module").then(
             (m) => m.SecurityModule
           ),
-          data: {
-            breadcrumb: "Seguridad"
-          },
+          // data: {
+          //   breadcrumb: "Seguridad"
+          // },
       },
       {
         path: "new-object",
         loadChildren: () =>
           import("./pages/loadOa/load-oa.module").then((m) => m.LoadOaModule),
         canActivate: [TeacherGuard],
-        data: {
-          breadcrumb: "Nuevo objeto de aprendizaje"
-        },
+        // data: {
+        //   breadcrumb: "Nuevo objeto de aprendizaje"
+        // },
       },
       {
         path: "my-objects",
@@ -55,9 +55,9 @@ const routes: Routes = [
             (m) => m.MyObjectsModule
           ),
         canActivate: [TeacherGuard],
-        data: {
-          breadcrumb: "Objetos de aprendizaje sibidos por mi"
-        },
+        // data: {
+        //   breadcrumb: "Objetos de aprendizaje sibidos por mi"
+        // },
       },
       {
         path: "objects-qualified",
@@ -66,9 +66,9 @@ const routes: Routes = [
             (m) => m.MyQualifiedOaModule
           ),
         canActivate: [ExpertAndStudentGuard],
-        data: {
-          breadcrumb: "Objetos de aprendizaje calificados por mi"
-        },
+        // data: {
+        //   breadcrumb: "Objetos de aprendizaje calificados por mi"
+        // },
       },
       {
         path: "my-views",
@@ -77,9 +77,9 @@ const routes: Routes = [
             (m) => m.StudentViewedModule
           ),
         canActivate: [StudentGuard],
-        data: {
-          breadcrumb: "Objetos de aprendizaje vistos por mi"
-        },
+        // data: {
+        //   breadcrumb: "Objetos de aprendizaje vistos por mi"
+        // },
       },
       {
         path: "edit-object",
@@ -88,9 +88,9 @@ const routes: Routes = [
             (m) => m.EditObjectModule
           ),
         canActivate: [TeacherGuard],
-        data: {
-          breadcrumb: "Editar objeto de aprendizaje"
-        },
+        // data: {
+        //   breadcrumb: "Editar objeto de aprendizaje"
+        // },
       },
     ],
   },

@@ -13,7 +13,7 @@
                                 name="rated" value="False" [(ngModel)]="querySearchService.queryParams.is_evaluated"
                                 inputId="enr">
                             </p-radioButton>
-                            <label for="enr">Sin calificar</label>
+                            <label for="enr">{{'menu.sideMenu.noneQualification' |translate}}</label>
                         </div>
                         <div class="p-field-radiobutton">
                             <p-radioButton [tabindex]="acordingExpert?.selected ? 0 : -1" (change)="submitSearchExpert()"
@@ -21,7 +21,7 @@
                             name="rated" value="True" [(ngModel)]="querySearchService.queryParams.is_evaluated"
                                 inputId="er">
                             </p-radioButton>
-                            <label for="er">Calificados</label>
+                            <label for="er">{{'menu.sideMenu.qualified' |translate}}</label>
                         </div>
 
                         <div class="btn" *ngIf="calificate">

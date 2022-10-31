@@ -5,6 +5,8 @@ import { ObjectLearning } from "../../../core/interfaces/ObjectLearning";
 import { Subscription } from "rxjs";
 import { QuerySearchService } from "../../../services/query-search.service";
 import { LoginService } from '../../../services/login.service';
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
+import { LanguageService } from "src/app/services/language.service";
 
 @Component({
   selector: "app-search",
@@ -18,35 +20,24 @@ export class SearchComponent implements OnInit, OnDestroy {
   public chipsSearch: any[] = [];
   public objects: ObjectLearning[];
   public loading: boolean = false;
-
+  public is_evaluated: any;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private searchService: SearchService,
     public querySearchService: QuerySearchService,
-    private loginService:LoginService
+    private loginService: LoginService,
+    private breadcrumbService: BreadcrumbService,
+    private languageService: LanguageService
   ) {
-    //this.loadData();
+
     this.route.queryParams.subscribe((params) => {
       this.querySearchService.queryParams = JSON.parse(JSON.stringify(params));
-      if (!this.loginService.validateRole("expert")) {
-        if(Object.keys(this.querySearchService.queryParams).length != 0) {
-          let claves = Object.keys(this.querySearchService.queryParams);
-          this.chipsSearch=[];
-          for(let i = 0 ; i < claves.length; i++) {
-            let clave = claves[i];
-            this.chipsSearch.push({value:this.querySearchService.queryParams[clave]});
-          }
-        }
-        this.searchData();
-      } else {
-        if(!this.querySearchService.queryParams.is_evaluated){
-          this.querySearchService.queryParams.is_evaluated = "False";
-        }
-        this.searchExpert();
-      }
+      this.is_evaluated = params;
+      this.add_breadcrumb();
+      this.validate_rol_add_chipSearch();
     });
-}
+  }
 
   ngOnInit(): void {
     //console.log("query params", this.querySearchService.queryParams);
@@ -56,6 +47,53 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.subscribes.forEach((sub) => {
       sub.unsubscribe();
     });
+  }
+
+  private async add_breadcrumb() {
+
+    if (!this.loginService.validateRole("expert")) {
+      this.breadcrumbService.setItems([
+        { label: "ROA" },
+        { label: await this.languageService.translate.get('menu.search').toPromise(), routerLink: ["/search"] },
+      ]);
+    } else {
+      let name_label = this.validate_is_evaluate();
+      this.breadcrumbService.setItems([
+        { label: "ROA" },
+        { label: await this.languageService.translate.get('menu.search').toPromise() },
+        { label: await name_label, routerLink: ["/search"] },
+      ]);
+    }
+  }
+
+  private async validate_is_evaluate() {
+    let name_side: string;
+    if (this.is_evaluated.is_evaluated == 'True') {
+      name_side = await this.languageService.translate.get('menu.sideMenu.qualified').toPromise();
+      return name_side;
+    } else {
+      name_side = await this.languageService.translate.get('menu.sideMenu.noneQualification').toPromise();
+      return name_side;
+    }
+  }
+
+  private validate_rol_add_chipSearch() {
+    if (!this.loginService.validateRole("expert")) {
+      if (Object.keys(this.querySearchService.queryParams).length != 0) {
+        let claves = Object.keys(this.querySearchService.queryParams);
+        this.chipsSearch = [];
+        for (let i = 0; i < claves.length; i++) {
+          let clave = claves[i];
+          this.chipsSearch.push({ value: this.querySearchService.queryParams[clave] });
+        }
+      }
+      this.searchData();
+    } else {
+      if (!this.querySearchService.queryParams.is_evaluated) {
+        this.querySearchService.queryParams.is_evaluated = "False";
+      }
+      this.searchExpert();
+    }
   }
 
   async searchData() {
@@ -74,18 +112,18 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.subscribes.push(searchSub);
   }
 
-  public removeChip(index){
+  public removeChip(index) {
     for (var name in this.querySearchService.queryParams) {
       if (this.querySearchService.queryParams.hasOwnProperty(name)) {
-        if(this.querySearchService.queryParams[name] === index.value) {
-            delete this.querySearchService.queryParams[name]
-            let extras: NavigationExtras = {
-              queryParams: this.querySearchService.queryParams,
-            };
-            this.router.navigate(["/search"], extras);
+        if (this.querySearchService.queryParams[name] === index.value) {
+          delete this.querySearchService.queryParams[name]
+          let extras: NavigationExtras = {
+            queryParams: this.querySearchService.queryParams,
+          };
+          this.router.navigate(["/search"], extras);
         }
       }
-  }
+    }
   }
 
   async searchExpert() {
@@ -94,8 +132,6 @@ export class SearchComponent implements OnInit, OnDestroy {
       .searchExpert(this.querySearchService.queryParams)
       .subscribe(
         (res: any) => {
-          //console.log("params", this.querySearchService.queryParams)
-          //console.log("results",res)
           this.objects = res.results;
           this.loading = false;
         },
@@ -128,7 +164,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   // }
 
   onClearFilters() {
-    this.chipsSearch=[];
+    this.chipsSearch = [];
     this.querySearchService.queryParams = {
       is_evaluated: this.querySearchService.queryParams.is_evaluated
     };

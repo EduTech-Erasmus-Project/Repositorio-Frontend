@@ -14,7 +14,6 @@ const baseUrl = environment.baseUrl;
 export class LearningObjectService {
   constructor(
     private http: HttpClient,
-    private storageService: StorageService
   ) {}
 
   getLearningObject() {

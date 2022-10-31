@@ -16,6 +16,7 @@ import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 import { PathsImgPreview, TagOA } from "src/app/core/interfaces/TagOA";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 
 @Component({
   selector: "app-load-oa",
@@ -69,9 +70,11 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private languageService: LanguageService,
     private h:HttpClient,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private breadcrumbService:BreadcrumbService
   ) {
     this.item_language();
+    this.add_breadcrumb();
    }
 
   ngOnDestroy(): void {
@@ -92,6 +95,15 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     });
 
   }
+
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      { label: "ROA" },
+      { label: await this.languageService.translate.get('menu.settings').toPromise()},
+      { label: await this.languageService.translate.get('menu.sideMenu.uploadOA').toPromise(), routerLink: ["/settings/new-object"] },
+    ]);
+  }
+
 
   private async item_language(){
     this.language.unshift(
@@ -197,7 +209,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     }
   }
 
-  onUpload(evt: any) {
+  async onUpload(evt: any) {
     this.spinner = false;
     let lom = JSON.parse(evt.originalEvent.body.metadata);
     this.tag_count = evt.originalEvent.body.tag_count;
@@ -210,8 +222,8 @@ export class LoadOaComponent implements OnInit, OnDestroy {
 
     this.messageService.add({
       severity: "success",
-      summary: "Success",
-      detail: "El archivo se ah subido con éxito",
+      summary: await this.languageService.translate.get('newObject.form.success').toPromise(),
+      detail: await this.languageService.translate.get('newObject.form.successUploadFile').toPromise(),
     });
     this.loadForm();
     this.fill_in_the_answers_automatically_adpated_is_adapted(this.tag_count);
@@ -331,11 +343,11 @@ this.spinner= true;
       let addMetadataSub = await this.learningObjectService
         .addMetadata(this.object)
         .subscribe(
-          (res) => {
+          async (res) => {
             this.messageService.add({
               severity: "success",
               summary: "Success",
-              detail: "Tu archivo se ha enviado para revisión",
+              detail: await this.languageService.translate.get('newObject.form.fileSendReview').toPromise(),
             });
             this.objectForm.reset();
             this.object = null;
@@ -344,12 +356,12 @@ this.spinner= true;
             this.objectUrl = null;
             this.loading = false;
           },
-          (err) => {
+          async (err) => {
             this.messageService.add({
               severity: "error",
               summary: "Error",
               detail:
-                "Se ha producido un error al guardar los datos, intente de nuevo",
+                await this.languageService.translate.get('newObject.form.errorSaveData').toString(),
             });
             this.loading = false;
           }
@@ -362,7 +374,7 @@ this.spinner= true;
         severity: "error",
         summary: "Error",
         detail:
-          "Formulario invalido",
+        await this.languageService.translate.get('newObject.form.invalidForm').toString(),
       });
     }
   }
@@ -456,20 +468,20 @@ refresh() {
     return this.paths_img_preview.length;
   }
 
-  public img_preview_save(url_img){
+  public async img_preview_save(url_img){
     this.messageService.add({
       severity: "success",
-      summary: "Correcto",
-      detail: "Imagen seleccionada correctamente",
+      summary: await this.languageService.translate.get('newObject.form.success').toPromise(),
+      detail: await this.languageService.translate.get('newObject.form.alertSuccessSelect').toPromise(),
     });
     this.load_img_preview_form(url_img,'img-prev.png');
   }
 
-  public remove_image(){
+  public async remove_image(){
     this.messageService.add({
       severity: "error",
-      summary: "Alerta",
-      detail: "La imagen se removio correctamente",
+      summary: await this.languageService.translate.get('newObject.form.alert').toPromise(),
+      detail: await this.languageService.translate.get('newObject.form.alertImgRemove').toPromise(),
     });
     this.objectForm.patchValue({
       img: null

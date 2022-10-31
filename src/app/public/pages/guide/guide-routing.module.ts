@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ExelearningComponent } from './components/exelearning/exelearning.component';
 import { IntroductionComponent } from './components/introduction/introduction.component';
 import { RegistrationProfileComponent } from './components/registration-profile/registration-profile.component';
 import { SearchPublicComponent } from './components/search-public/search-public.component';
@@ -11,6 +12,16 @@ const routes: Routes = [{
     breadcrumb: null,
   },
   children: [
+    {
+      path: "",
+      pathMatch: "full",
+      redirectTo: "exelearning",
+
+    },
+    {
+      path: "eXeLearning",
+      component: ExelearningComponent,
+    },
     {
       path: "introduction",
       component: IntroductionComponent,

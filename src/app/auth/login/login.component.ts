@@ -9,6 +9,7 @@ import { LanguageService } from "../../services/language.service";
 import { MessageService } from "primeng/api";
 import { LoginService } from "../../services/login.service";
 import { StorageService } from "../../services/storage.service";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 
 @Component({
   selector: "app-login",
@@ -53,9 +54,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     private languageService: LanguageService,
     private messageService: MessageService,
     private loginService: LoginService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private breadcrumbService: BreadcrumbService
   ) {
     //this.dark = localStorage.getItem('dart_active')==='true'?true:false;
+    this.add_breadcrumb();
   }
   ngOnDestroy(): void {
 
@@ -75,6 +78,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         detail: translate.translations.login.errorMesage,
       };
     });
+  }
+
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      {label: "ROA"},
+      { label: await this.languageService.translate.get('menu.login').toPromise(), routerLink: ["/login"] },
+    ]);
   }
 
   get errorEmailRequired(): boolean {

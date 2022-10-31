@@ -110,11 +110,9 @@
             </ul>
         </div>
         <div class="forms">
-            <h6>Observaciones</h6>
-            <textarea rows="5" cols="30" style="width: 100%;" placeholder="observaciones.."
-                formControlName="observation"
-               
-                pInputTextarea></textarea>
+            <h6>{{'object.observation' | translate}}</h6>
+            <textarea rows="5" cols="30" style="width: 100%;" placeholder="{{'object.observation' | translate}}.."
+                formControlName="observation" pInputTextarea></textarea>
             <div *ngIf="observation.invalid && (observation.dirty || observation.touched)">
                 <small id="observation " class="p-error"
                     *ngIf="observation.errors.required">*****</small>
@@ -124,7 +122,7 @@
             <p-button icon="pi pi-times" type="button" (click)="closeView2()" label="{{'object.exit'|translate}}"
             styleClass="p-button-text"></p-button>&nbsp;
             <p-button icon="pi pi-check" type="submit"
-            label="Guardar Evaluacion" styleClass="p-button-text"></p-button>
+            label="{{'profile.btnUpdate' | translate}}" styleClass="p-button-text"></p-button>
         </div>
     </div>
 </form>

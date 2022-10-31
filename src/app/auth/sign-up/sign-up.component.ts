@@ -22,6 +22,7 @@ import { Subscription } from "rxjs";
 import {MessageService} from 'primeng/api';
 import * as moment from "moment";
 import { LanguageService } from "src/app/services/language.service";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 
 @Component({
   selector: "app-sign-up",
@@ -77,13 +78,15 @@ export class SignUpComponent implements OnInit, OnDestroy {
     private searchService: SearchService,
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private breadcrumbService: BreadcrumbService
   ) {
     //this.dark = localStorage.getItem('dart_active') === 'true' ? true : false;
     this.route.queryParams.subscribe((params) => {
       this.typeRegister = params.register;
     });
     this.createForm();
+    this.add_breadcrumb();
   }
 
   ngOnDestroy(): void {
@@ -99,6 +102,12 @@ export class SignUpComponent implements OnInit, OnDestroy {
     //this.getYearRange();
   }
 
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      {label: "ROA"},
+      { label: await this.languageService.translate.get('menu.register').toPromise(), routerLink: ["/register"] },
+    ]);
+  }
   
   onSubmit() {}
   createForm() {

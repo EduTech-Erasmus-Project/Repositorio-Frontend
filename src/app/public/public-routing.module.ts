@@ -11,9 +11,6 @@ const routes: Routes = [
   {
     path: "",
     component: PublicComponent,
-    data: {
-      breadcrumb: "Inicio",
-    },
     children: [
       {
         path: "",
@@ -23,28 +20,17 @@ const routes: Routes = [
           breadcrumb: null,
         },
       },
-      // {
-      //   path: "/home",
-      //   loadChildren: () =>
-      //     import("./pages/home/home.module").then((m) => m.HomeModule),
-      // },
       {
         path: "login",
         loadChildren: () =>
           import("../auth/login/login.module").then((m) => m.LoginModule),
         canActivate: [CheckLoginGuard],
-        data: {
-          breadcrumb: "Inicio de sesión",
-        },
       },
       {
         path: "register",
         loadChildren: () =>
           import("../auth/sign-up/sign-up.module").then((m) => m.SignUpModule),
         canActivate: [CheckLoginGuard],
-        data: {
-          breadcrumb: "Registro",
-        },
       },
       {
         path: "restart-password",
@@ -52,26 +38,16 @@ const routes: Routes = [
           import("../auth/recover-password/recover-password.module").then(
             (m) => m.RecoverPasswordModule
           ),
-        data: {
-          breadcrumb: "Reestablecer contraseña",
-        },
       },
       {
         path: "search",
         loadChildren: () =>
           import("./pages/search/search.module").then((m) => m.SearchModule),
-        data: {
-          breadcrumb: "Buscar",
-        },
-
       },
       {
         path: "terms-and-conditions",
         loadChildren: () =>
           import("./pages/terms/terms.module").then((m) => m.TermsModule),
-        data: {
-          breadcrumb: "Términos y condiciones",
-        },
       },
       {
         path: "settings",
@@ -98,17 +74,11 @@ const routes: Routes = [
           import("./pages/services/services.module").then(
             (m) => m.ServicesModule
           ),
-        data: {
-          breadcrumb: "Servicios",
-        },
       },
       {
         path: "contact",
         loadChildren: () =>
           import("./pages/contact/contact.module").then((m) => m.ContactModule),
-        data: {
-          breadcrumb: "Contacto",
-        },
       },
       {
         path: "recommended",
@@ -117,17 +87,14 @@ const routes: Routes = [
             (m) => m.RecommendedModule
           ),
         canActivate: [StudentGuard],
-        data: {
-          breadcrumb: "Recomendados",
-        },
+        // data: {
+        //   breadcrumb: "Recomendados",
+        // },
       },
       {
         path: "about-us",
         loadChildren: () =>
           import("./pages/aboutus/aboutus.module").then((m) => m.AboutusModule),
-        data: {
-          breadcrumb: "Acerca de nosotros",
-        },
       },
       {
         path: 'report',
@@ -141,59 +108,47 @@ const routes: Routes = [
       {
         path: 'developers',
         loadChildren: () =>
-          import('./pages/developers/developers.module').then((m) => m.DevelopersModule),
-        data: {
-          breadcrumb: "Acerca de los desarrolladores",
-        },
+           import('./pages/developers/developers.module').then((m) => m.DevelopersModule),
       },
       {
         path: 'password-resed/:uidb64/:token',
         loadChildren: () =>
           import('../auth/password-resed/password-resed.module').then((m) => m.PasswordResedModule),
-        data: {
-          breadcrumb: "Reestablecer contraseña",
-        },
         component: PasswordResedComponent
       },
       {
         path: 'reset/:?',
         loadChildren: () =>
           import('../auth/reset/reset.module').then((m) => m.ResetModule),
-        data: {
-          breadcrumb: "Contraseña reestablecida",
-        },
       },
       {
         path: 'emailMessage',
         loadChildren: () => import
           ('../auth/emailMessage/email-message.module').then(m => m.EmailMessageModule),
-        data: {
-          breadcrumb: "Enlace enviado",
-        },
       },
       {
         path: 'emailVerify/:token/:email',
         loadChildren: () => import('./pages/verify-email/verify-email.module').then(m => m.VerifyEmailModule),
-        data: {
-          breadcrumb: "Verificacion de correo",
-        },
       },
       {
         path: 'guide',
         loadChildren: () => import('./pages/guide/guide.module').then(m => m.GuideModule),
-        data: {
-          breadcrumb: "Guía de usuario",
-        },
       },
       {
         path: 'guideTeacher',
         loadChildren: () => import('./pages/guideTeacher/guide-teacher.module').then(m => m.GuideTeacherModule),
-        data: {
-          breadcrumb: "Guía de usuario con el rol de Profesor",
-        },
+      },
+      { 
+        path: 'guideStudent',
+        loadChildren: () => import('./pages/guideStudent/guide-student.module').then(m => m.GuideStudentModule)
+      },
+      { 
+        path: 'guideExpert', 
+        loadChildren: () => import('./pages/guideExpert/guide-expert.module').then(m => m.GuideExpertModule) 
       },
     ],
   },
+ 
 ];
 
 @NgModule({

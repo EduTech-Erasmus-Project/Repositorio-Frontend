@@ -11,7 +11,7 @@
                     <input #inputFile class="image-select" (change)="onChangePicture($event)" type="file"
                         accept="image/*">
                 </figure>
-                <span>Seleccione una foto de perfil</span>
+                <span>{{'newObject.form.selectImgProfile' | translate}}</span>
             </div>
             <span *ngIf="fileImage" class="p-buttonset animate__animated animate__fadeIn">
                 <button (click)="onCancelImage()" pButton pRipple label="Cancelar" icon="pi pi-times"

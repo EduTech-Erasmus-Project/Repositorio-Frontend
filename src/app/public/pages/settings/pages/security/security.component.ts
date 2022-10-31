@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Message, MessageService } from "primeng/api";
 import { Subscription } from "rxjs";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
+import { LanguageService } from "src/app/services/language.service";
 import { LoginService } from "src/app/services/login.service";
 import Swal from "sweetalert2";
 
@@ -27,9 +29,12 @@ export class SecurityComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public loginService: LoginService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private breadcrumbService:BreadcrumbService,
+    private languageService: LanguageService
   ) {
     this.createForm();
+    this.add_breadcrumb();
   }
 
   ngOnDestroy(): void {
@@ -40,6 +45,14 @@ export class SecurityComponent implements OnInit {
 
   ngOnInit(): void {
     //console.log("Este es el Id:", this.loginService.user.id);
+  }
+
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      { label: "ROA" },
+      { label: await this.languageService.translate.get('menu.settings').toPromise()},
+      { label: await this.languageService.translate.get('menu.sideMenu.security').toPromise(), routerLink: ["/settings/security"] },
+    ]);
   }
 
   createForm() {

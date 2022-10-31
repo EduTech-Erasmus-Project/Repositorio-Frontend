@@ -28,8 +28,6 @@ export class MenuPublicComponent implements OnInit {
     private languageService: LanguageService,
     public loginService: LoginService,
     private router: Router,
-    private translateService: TranslateService,
-    private _storageService: StorageService
   ) {
     if (
       this.loginService.user?.administrator ||
@@ -137,7 +135,7 @@ export class MenuPublicComponent implements OnInit {
       },
       {
         label:  await this.languageService.translate.get("menu.userGuide").toPromise() || "",
-        routerLink: "guide/introduction",
+        routerLink: "guide/eXeLearning",
         routerLinkActiveOptions: {
           exact: true,
         },

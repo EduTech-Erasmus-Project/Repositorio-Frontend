@@ -6,6 +6,7 @@ import { ObjectLearning } from 'src/app/core/interfaces/ObjectLearning';
 import { LoginService } from 'src/app/services/login.service';
 import { SearchService } from 'src/app/services/search.service';
 import { LearningObjectService } from 'src/app/services/learning-object.service';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'app-view-questions-student',
@@ -34,6 +35,7 @@ export class ViewQuestionsStudentComponent implements OnInit {
     public fb2: FormBuilder,
     private messageServicee: MessageService,
     private learningObject: LearningObjectService,
+    private languageService: LanguageService
   ) { }
 
   ngOnInit(): void {
@@ -181,20 +183,20 @@ export class ViewQuestionsStudentComponent implements OnInit {
           "observation": this.angForm2.get('observation').value
         }
         let sendEvalSt = await this.learningObject.sendQualificationStudent(this.answerEV).subscribe(
-          res => {
+          async res => {
             this.commentEmit1.emit(true);
             this.flagConfirmSt = true;
             this.angForm2.reset();
             this.ngOnInit();
             this.closeView2();
-            this.showSuccess('Datos enviados con exito, gracias por realizar la evaluacion');
+            this.showSuccess(await this.languageService.translate.get('object.evaluationMessage').toPromise());
           }, error => {
             this.flagConfirmSt = false;
           }
         );
       } else {
         this.markTouchForm();
-        this.showError('Llenar todos los campos requeridos');
+        this.showError(await this.languageService.translate.get('object.fillForm').toPromise());
       }
     } else if (this.flagQuestionsEst) {
       ///////
@@ -213,12 +215,12 @@ export class ViewQuestionsStudentComponent implements OnInit {
       }
       ////enviar nuevo path
       let sendEvalSt = await this.learningObject.sendQualificationStudentUpdate(this.answerEV, this.groupedQuestionsUpdate[0].id).subscribe(
-        res => {
+        async res => {
           this.commentEmit.emit(false);
           this.commentEmit1.emit(false);
           this.flagConfirmSt = true;
           this.ngOnInit();
-          this.showSuccess('Datos enviados con exito, gracias por realizar la evaluacion');
+          this.showSuccess(await this.languageService.translate.get('object.evaluationMessage').toPromise());
         }, error => {
           this.flagConfirmSt = false;
         }

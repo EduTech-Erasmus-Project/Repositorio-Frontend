@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PrimeIcons } from 'primeng/api';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'app-registration-profile',
@@ -11,7 +13,18 @@ export class RegistrationProfileComponent implements OnInit {
   events1: any[];
   constructor(
     public router: Router,
-  ) { }
+    private breadcrumbService: BreadcrumbService,
+    private languageService: LanguageService
+  ) { 
+    this.add_breadcrumb();
+  }
+
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      {label: await this.languageService.translate.get('menu.userGuide').toPromise()},
+      { label: await this.languageService.translate.get('buttons.profileRegister').toPromise(), routerLink: ["/registration-profile"] },
+    ]);
+}
 
   ngOnInit(): void {
     this.events1 = [

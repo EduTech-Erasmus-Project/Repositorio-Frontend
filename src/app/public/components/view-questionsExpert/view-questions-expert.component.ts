@@ -9,6 +9,7 @@ import {
 import { Message, MessageService } from "primeng/api";
 import { Subscription } from "rxjs";
 import { ObjectLearning } from "src/app/core/interfaces/ObjectLearning";
+import { LanguageService } from "src/app/services/language.service";
 import { LearningObjectService } from "src/app/services/learning-object.service";
 import { LoginService } from "src/app/services/login.service";
 import { SearchService } from "src/app/services/search.service";
@@ -37,7 +38,8 @@ export class ViewQuestionsExpertComponent implements OnInit {
     private fb: FormBuilder,
     private learningObject: LearningObjectService,
     private loginService: LoginService,
-    private messageServicee: MessageService
+    private messageServicee: MessageService,
+    private languageService: LanguageService
   ) { }
 
   ngOnDestroy(): void {
@@ -177,12 +179,12 @@ export class ViewQuestionsExpertComponent implements OnInit {
         let sendEval = await this.learningObject
           .sendQualificationExpert(this.answers)
           .subscribe(
-            (res) => {
+            async (res) => {
               this.commentEmit1.emit(true);
               this.flagConfirm = true;
               this.ngOnInit();
               this.showSuccess(
-                "Datos enviados con exito, gracias por realizar la evaluacion"
+              await this.languageService.translate.get('object.evaluationMessage').toPromise()
               );
                this.angForm.reset();
             },
@@ -219,13 +221,13 @@ export class ViewQuestionsExpertComponent implements OnInit {
             this.groupedQuestionsEx[0].id
           )
           .subscribe(
-            (res) =>{
-              this.showSuccess("Los datos se actualizaron con exito");
+            async (res) =>{
+              this.showSuccess( await this.languageService.translate.get('object.successSendData').toPromise());
               this.commentEmit.emit(false);
             },
-            (error) => {
+            async (error) => {
               this.showError(
-                "No se pudo actualizar la informacion correctamente"
+                await this.languageService.translate.get('object.messageErrorUpdate').toPromise()
               );
             }
           );
@@ -233,7 +235,7 @@ export class ViewQuestionsExpertComponent implements OnInit {
       }
     } else {
       this.markTouchForm();
-      this.showError("Llenar todos los campos requeridos");
+      this.showError( await this.languageService.translate.get('object.fillForm').toPromise());
     }
   }
 

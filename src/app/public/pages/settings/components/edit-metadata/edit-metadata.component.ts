@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { LearningObjectService } from '../../../../../services/learning-object.service';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: "app-edit-metadata",
@@ -18,7 +19,12 @@ export class EditMetadataComponent implements OnInit, OnDestroy {
   public metadataForm: FormGroup;
   private subscribes: Subscription[] = [];
 
-  constructor(private fb: FormBuilder,  private objectService: LearningObjectService, private messageService: MessageService) {}
+  constructor(private fb: FormBuilder,  
+    private objectService: 
+    LearningObjectService, 
+    private messageService: MessageService,
+    private languageService: LanguageService
+    ) {}
 
   ngOnInit(): void {
     //console.log(this.object);
@@ -109,25 +115,24 @@ export class EditMetadataComponent implements OnInit, OnDestroy {
     let addMetadataSub = await this.objectService
         .editMetadata(data)
         .subscribe(
-          (res: any) => {
+          async (res: any) => {
 
             //console.log(res)
             this.updateEvent.emit(true);
 
             this.messageService.add({
               severity: "success",
-              summary: "Success",
-              detail: "Se han actualizado los datos.",
+              summary: await this.languageService.translate.get('newObject.form.success').toPromise(),
+              detail: await this.languageService.translate.get('object.messageSuccess').toPromise(),
             });
             //return this.router.navigateByUrl("/settings/my-objects");
           },
-          (err) => {
-            console.log("err", err);
+          async (err) => {
             this.messageService.add({
               severity: "error",
-              summary: "Error",
+              summary: await this.languageService.translate.get('newObject.form.alert').toPromise(),
               detail:
-                "Se ah producido un error al guardar los datos, intente de nuevo",
+                await this.languageService.translate.get('object.messageError').toPromise(),
             });
 
           }

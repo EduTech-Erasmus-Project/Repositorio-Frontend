@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
+import { LanguageService } from "src/app/services/language.service";
 import { ObjectLearning } from "../../../core/interfaces/ObjectLearning";
 import { LearningObjectService } from "../../../services/learning-object.service";
 
@@ -14,7 +16,13 @@ export class RecommendedComponent implements OnInit, OnDestroy {
   public populars: ObjectLearning[];
   public loading: boolean = false;
 
-  constructor(private objectService: LearningObjectService) {}
+  constructor(private objectService: LearningObjectService,
+    private breadcrumbService: BreadcrumbService,
+    private languageService: LanguageService,
+    ) {
+      this.add_breadcrumb();
+    }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => {
       sub.unsubscribe();
@@ -24,6 +32,14 @@ export class RecommendedComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadData();
   }
+
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      {label: "ROA"},
+      { label: await this.languageService.translate.get('menu.recommended').toPromise(), routerLink: ["/guide"] },
+    ]);
+  }
+
 
   async loadData() {
     this.loading = true;

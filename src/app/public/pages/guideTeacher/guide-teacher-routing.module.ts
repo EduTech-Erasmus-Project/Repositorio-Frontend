@@ -14,23 +14,23 @@ const routes: Routes = [{
     {
       path: "uploadfile",
       component: UploadFileComponent,
-      data: {
-        breadcrumb: "Cargar Objeto de Aprendizaje",
-      },
+      // data: {
+      //   breadcrumb: "Cargar Objeto de Aprendizaje",
+      // },
     },
     {
       path: "uploadfile-adapted",
       component: UploadFileAdaptedComponent,
-      data: {
-        breadcrumb: "Cargar Objeto de Aprendizaje Adaptado",
-      },
+      // data: {
+      //   breadcrumb: "Cargar Objeto de Aprendizaje Adaptado",
+      // },
     },
     {
       path: "my-objects",
       component: MyObjectsComponent,
-      data: {
-        breadcrumb: "Mis objetos de aprendizaje",
-      },
+      // data: {
+      //   breadcrumb: "Mis objetos de aprendizaje",
+      // },
     },
   ]
 }];

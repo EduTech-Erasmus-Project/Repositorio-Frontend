@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment.prod';
@@ -33,9 +34,11 @@ export class RecoverPasswordComponent implements OnInit {
     private loginService: LoginService,
     private messageService: MessageService,
     private router: Router,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private breadcrumbService: BreadcrumbService,
   ) {
     this.createForm();
+    this.add_breadcrumb();
   }
 
   ngOnInit(): void { }
@@ -47,6 +50,13 @@ export class RecoverPasswordComponent implements OnInit {
         [Validators.required, Validators.pattern(this.patternV)],
       ],
     });
+  }
+
+  private async add_breadcrumb() {
+    this.breadcrumbService.setItems([
+      {label: "ROA"},
+      { label: await this.languageService.translate.get('menu.resetPassword').toPromise(), routerLink: ["/restart-password"] },
+    ]);
   }
 
   async sentEmail() {

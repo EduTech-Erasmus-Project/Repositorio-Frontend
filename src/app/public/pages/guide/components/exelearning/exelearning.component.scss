@@ -1,0 +1,50 @@
+.container-guide{
+    h1{
+        text-align: center;
+    }
+    .img-icon{
+        text-align: center;
+        margin: 10px;
+        img{
+            text-align: center;
+            width: 200px;
+            height:auto;
+        }
+    }
+    h2{
+        text-align: center;
+        a:hover{
+            color: rgba(0, 0, 0, 0.5);
+        }
+    }
+}
+
+.text {
+    place-self: center;
+    text-align: justify;
+
+    h2 {
+        text-align: center;
+    }
+}
+
+
+.separador {
+    margin: 5px;
+}
+
+
+img{
+width: 100%;
+height:auto;
+}
+
+.text-ul{
+    ol{
+        padding-left:4em;
+        padding-right:4em;
+        li {
+            margin-bottom: 1em;
+        }
+    }
+}

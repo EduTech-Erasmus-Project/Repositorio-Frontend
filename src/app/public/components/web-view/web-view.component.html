@@ -23,7 +23,7 @@
 
             <button *ngIf="roleUser" aria-label="Boton me gusta"  (click)="onLike()" pButton pRipple type="button" icon="pi pi-heart"
                 [ngClass]="{'p-button-outlined': !liked, 'p-button-danger': liked}" class="p-button-rounded"
-                [pTooltip]="'Me gusta'"></button>
+                [pTooltip]="'object.like'|translate"></button>
 
                 <button aria-label="Boton de descarga" (click)="onDownloadFile(object.learning_object_file.file) " pButton pRipple type="button"
                 icon="pi pi-download" class="p-button-rounded p-button-outlined" 
@@ -80,12 +80,12 @@
     </div>
 </div>
 
-<p-dialog header="Califica este objeto de aprendizaje" [(visible)]="displayFormRating" [style]="{width: '60vw'}"
+<p-dialog header="{{'object.btnEvaluate' | translate}}" [(visible)]="displayFormRating" [style]="{width: '60vw'}"
     [baseZIndex]="10000">
    <app-view-questions></app-view-questions>
 </p-dialog>
 
-<p-dialog header="Calificar este objeto de aprendizaje como experto" [(visible)]="displayFormRatingExpert" 
+<p-dialog header="{{'object.btnEvaluateWithExpert'|translate}}" [(visible)]="displayFormRatingExpert" 
     [style]="{width: '60vw'}" [baseZIndex]="10000">
     <div *ngIf="!flagQuestionsEx">
         <app-view-questions-expert [object]="object" [flagQuestionsEx]="flagQuestionsEx" (commentEmit)="coutComment($event)" (commentEmit1)="coutComment1($event)" ></app-view-questions-expert>
@@ -93,7 +93,7 @@
  
 </p-dialog>
 
-<p-dialog header="Ver mi evaluacion del objeto de aprendizaje" [(visible)]="displayFormRatingExpertUpdate" 
+<p-dialog header="{{'object.btnEvaluateWithExpertView'|translate}}" [(visible)]="displayFormRatingExpertUpdate" 
     [style]="{width: '60vw'}" [baseZIndex]="10000">
     <div *ngIf="flagQuestionsEx">
         <app-view-questions-expert [object]="object" [flagQuestionsEx]="flagQuestionsEx" (commentEmit)="coutComment($event)" ></app-view-questions-expert>
@@ -101,13 +101,13 @@
    
 </p-dialog>
 <!----------------------------------------------------eva est----->
-<p-dialog header="Califica este objeto de aprendizaje como estudiante" [(visible)]="displayFormRatingStudent" [style]="{width: '50vw'}" [baseZIndex]="10000">
+<p-dialog header="{{'object.EvaluateWithStudent'|translate}}" [(visible)]="displayFormRatingStudent" [style]="{width: '50vw'}" [baseZIndex]="10000">
     <div *ngIf="!flagQuestionsEst">
         <app-view-questions-student [flagQuestionsEst]="flagQuestionsEst" [object]="object" (commentEmit1)="coutCommentstudent($event)" ></app-view-questions-student>
     </div>
 </p-dialog>
 
-<p-dialog *ngIf="displayFormRatingStudentUpdate" header="Ver mi evaluacion del objeto de aprendizaje" [(visible)]="displayFormRatingStudentUpdate" [style]="{width: '50vw'}" [baseZIndex]="10000">
+<p-dialog *ngIf="displayFormRatingStudentUpdate" header="{{'object.EvaluateWithStudentView'|translate}}" [(visible)]="displayFormRatingStudentUpdate" [style]="{width: '50vw'}" [baseZIndex]="10000">
     <div *ngIf="flagQuestionsEst">
         <app-view-questions-student [flagQuestionsEst]="flagQuestionsEst" [object]="object" (commentEmit1)="coutCommentstudent($event)" (commentEmit)="coutComments($event)"></app-view-questions-student>
     </div>

@@ -6,6 +6,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { Subscription } from 'rxjs';
 import { LearningObjectService } from 'src/app/services/learning-object.service';
 import { LoginService } from "src/app/services/login.service";
+import { LanguageService } from "src/app/services/language.service";
 
 
 @Component({
@@ -49,6 +50,7 @@ export class CardComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private loginService: LoginService,
+    private languageService: LanguageService
   ) { }
 
   ngOnInit(): void {
@@ -136,21 +138,7 @@ export class CardComponent implements OnInit {
     return this.object.id
   }
 
-  confirmDelete(evt) {
-    this.confirmationService.confirm({
-      target: evt.target,
-      message: "¿Estás segura de que quieres continuar?",
-      icon: "pi pi-exclamation-triangle",
-      accept: () => {
-        this.messageService.add({
-          severity: "info",
-          summary: "Eliminado",
-          detail: "Se ha eliminado el objeto de aprendizaje",
-        });
-      },
-      reject: () => { },
-    });
-  }
+ 
 
   onclickEdid() {
 
@@ -300,15 +288,15 @@ export class CardComponent implements OnInit {
     }
   }
 
-  deleteLearningObject(event) {
+  async deleteLearningObject(event) {
     this.confirmationService.confirm({
       target: event.target,
-      message: 'Esta seguro que desea eliminar el OA?',
+      message: await this.languageService.translate.get('object.oaQuestion').toPromise(),
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         //confirm action
         let eliminar = this.objectService.deleteObjestTeacher(this.object.learning_object_file.id).subscribe(
-          (result: any) => {
+          async (result: any) => {
             if (result.code === 200) {
               this.loadData();
               this.loadDataAutomatic();
@@ -317,7 +305,7 @@ export class CardComponent implements OnInit {
               } else {
                 this.loadstudentSingle();
               }
-              this.showSuccess('Se Elimino el registro correctamente');
+              this.showSuccess(await this.languageService.translate.get('object.delesteSuccess').toPromise());
               this.deleteOptions.emit(true);
             }
           }

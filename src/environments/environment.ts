@@ -10,7 +10,6 @@ export const environment = {
   //production: true,
   baseUrl: 'http://localhost:8000/api/v1',
   //baseUrl: 'https://repositorio.edutech-project.org/api/v1',
-
   cryptoSecretKey: "@ROA-QYpTatEMVQ3tem_A5ZHrglKBPuxe9IQjT@"
 
 };
@@ -18,7 +17,6 @@ export const environment = {
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
