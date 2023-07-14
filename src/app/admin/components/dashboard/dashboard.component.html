@@ -1,0 +1,108 @@
+
+<app-loading *ngIf="!isLoading"></app-loading>
+<div class="p-grid layout-dashboard">
+    <div class="p-col-12 p-xl-3 p-md-6">
+        <div class="p-grid p-nogutter widget-overview-box overview-box-4">
+            <div class="p-col-3 overview-box-icon">
+                <img src="assets/layout/images/dashboard/oa.png" alt="Objeto de aprendizaje" />
+            </div>
+            <div class="p-col-6 overview-box-text">
+                <h5>{{ 'admin.learningObjectToAprove' | translate }}</h5>
+                <p-button (click)="learningObjectToAprove(1)" label="Ver más..." styleClass="p-button-link p-mr-2"></p-button>
+            </div>
+                <div class="badges">
+                    <p-badge [value]="total_oa_disapproved" size="xlarge" severity="info" styleClass="p-mr-2"></p-badge>
+                </div>
+        </div>
+    </div>
+    
+    <div class="p-col-12 p-xl-3 p-md-6">
+        <div class="p-grid p-nogutter widget-overview-box overview-box-4">
+            <div class="p-col-3 overview-box-icon">
+                <img src="assets/layout/images/dashboard/oa.png" alt="Objeto de aprendizaje" />
+            </div>
+            <div class="p-col-6 overview-box-text">
+                <h5>{{ 'admin.learningObjectAproved' | translate }}</h5>
+                <p-button (click)="learningObjectToAprove(2)" label="Ver más..." styleClass="p-button-link p-mr-2"></p-button>
+            </div>
+            <div class="badges">
+                <p-badge [value]="total_oa_approved" size="xlarge" severity="info" styleClass="p-mr-2"></p-badge>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-col-12 p-xl-3 p-md-6">
+        <div class="p-grid p-nogutter widget-overview-box overview-box-4">
+            <div class="p-col-3 overview-box-icon">
+                <img src="assets/layout/images/dashboard/teacher.png" alt="Doncente" />
+            </div>
+            <div class="p-col-6 overview-box-text">
+                <h5>{{ 'admin.teacherToAprove' | translate }}</h5>
+                <br/>
+                <p-button (click)="learningObjectToAprove(3)" label="Ver más..." styleClass="p-button-link p-mr-2"></p-button>
+            </div>
+                <div class="badges">
+                    <p-badge [value]="total_teacher_disapproved" size="xlarge" severity="info" styleClass="p-mr-2"></p-badge>
+                </div>
+        </div>
+    </div>
+    <div class="p-col-12 p-xl-3 p-md-6">
+        <div class="p-grid p-nogutter widget-overview-box overview-box-4">
+            <div class="p-col-3 overview-box-icon">
+                <img src="assets/layout/images/dashboard/teacher.png" alt="Docente" />
+            </div>
+            <div class="p-col-6 overview-box-text">
+                <h5>{{ 'admin.teacherAproved' | translate }}</h5>
+                <br/>
+                <p-button (click)="learningObjectToAprove(4)" label="Ver más..." styleClass="p-button-link p-mr-2"></p-button>
+            </div>
+            <div class="badges">
+                <p-badge [value]="total_teacher_approved" size="xlarge" severity="info" styleClass="p-mr-2"></p-badge>
+            </div>
+        </div>
+    </div>
+    <div class="p-col-12 p-xl-3 p-md-6">
+        <div class="p-grid p-nogutter widget-overview-box overview-box-4">
+            <div class="p-col-3 overview-box-icon">
+                <img src="assets/layout/images/dashboard/expert.png" alt="Experto" />
+            </div>
+            <div class="p-col-6 overview-box-text">
+                <h5>{{ 'admin.expertToAprove' | translate }}</h5>
+                <p-button (click)="learningObjectToAprove(3)" label="Ver más..." styleClass="p-button-link"></p-button>
+            </div>
+            <div class="badges">
+                <p-badge [value]="total_expert_disapproved" size="xlarge" severity="info" styleClass="p-mr-2"></p-badge>
+            </div>
+        </div>
+    </div>
+    <div class="p-col-12 p-xl-3 p-md-6">
+        <div class="p-grid p-nogutter widget-overview-box overview-box-4">
+            <div class="p-col-3 overview-box-icon">
+                <img src="assets/layout/images/dashboard/expert.png" alt="Experto" />
+            </div>
+            <div class="p-col-6 overview-box-text">
+                <h5>{{ 'admin.expertAproved' | translate }}</h5>
+                <p-button (click)="learningObjectToAprove(4)" label="Ver más..." styleClass="p-button-link p-mr-0"></p-button>
+            </div>
+            <div class="badges">
+                <p-badge [value]="total_expert_approved" size="xlarge" severity="info" styleClass="p-mr-2"></p-badge>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-col-12 p-xl-3 p-md-6">
+        <div class="p-grid p-nogutter widget-overview-box overview-box-4">
+            <div class="p-col-3 overview-box-icon">
+                <img src="assets/layout/images/dashboard/student.png" alt="Estudiante" />
+            </div>
+            <div class="p-col-6 overview-box-text">
+                <h5>{{ 'admin.students' | translate }}</h5>
+                <p-button (click)="learningObjectToAprove(5)" label="Ver más..." styleClass="p-button-link p-mr-0"></p-button>
+            </div>
+            <div class="badges">
+                <p-badge [value]="total_student" size="xlarge" severity="info" styleClass="p-mr-2"></p-badge>
+            </div>
+        </div>
+    </div>
+    
+</div>

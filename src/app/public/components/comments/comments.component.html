@@ -1,0 +1,33 @@
+<ng-container *ngIf="commentView && currentUser; else commentViewTemplate">
+    <div class="comment-form animate__animated animate__fadeIn">
+        <textarea [(ngModel)]="commentDescription" rows="10" pInputTextarea id="description" aria-describedby="description-help"
+            [placeholder]="'object.placeholderComment' | translate"></textarea>
+
+        <span class="p-buttonset">
+            <button [disabled]="!commentDescription || loadingComment" (click)="onComment()" pButton pRipple [label]="'object.btnSubmit' | translate"
+                [icon]=" loadingComment ? 'pi pi-spin pi-spinner' : 'pi pi-check'"></button> &nbsp;
+            <button (click)="commentView = false" pButton pRipple [label]="'object.btnCancel' | translate" icon="pi pi-times"></button>
+        </span>
+    </div>
+    <p-messages [(value)]="msg" [enableService]="false"></p-messages>
+</ng-container>
+<ng-template #commentViewTemplate>
+    <p-button *ngIf="currentUser" (click)="commentView = true" [label]="'object.btnAddComment' | translate"></p-button>
+</ng-template>
+
+<div class="comments">
+    <ng-container *ngIf="comments?.length > 0; else commentsTemplate">
+        <div class="comment-item animate__animated animate__fadeIn" *ngFor="let comment of comments">
+            <p-avatar [image]="comment.user.image_url" styleClass="p-mr-2" size="xlarge" shape="circle"></p-avatar>
+            <div class="cooment-detail">
+                <h6>{{comment.user.first_name +' ' +comment.user.last_name}}</h6>
+                <span>{{comment.created | moment}}</span>
+                <p>{{comment.description}}</p>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #commentsTemplate>
+        <p class="comments-empty">{{'object.noComments' | translate}}</p>
+    </ng-template>
+
+</div>

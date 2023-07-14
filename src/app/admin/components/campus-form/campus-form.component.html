@@ -1,0 +1,60 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <form autocomplete="off" [formGroup]="form" id="crearUsuario">
+                <h5>Ciudad</h5>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col-12 p-md-3">
+                        <label for="name">Universidad*</label>
+                        <p-dropdown [options]="universities" formControlName="university" placeholder="Universidad"
+                            optionLabel="name" optionValue="id"></p-dropdown>
+                        <p-message severity="error" text="El campo es obligatorio"
+                            *ngIf="getErrorRequired('university')">
+                        </p-message>
+                    </div>
+                    <div class="p-field p-col-12 p-md-3">
+                        <label for="name">Ciudad*</label>
+                        <p-dropdown [options]="cities" formControlName="city" placeholder="Ciudad" optionLabel="name"
+                            optionValue="id"></p-dropdown>
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('city')">
+                        </p-message>
+                    </div>
+
+                    <div class="p-field p-col-12 p-md-3">
+                        <label for="name">Nombre*</label>
+                        <input id="name" type="text" pInputText formControlName="name">
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('name')">
+                        </p-message>
+                    </div>
+                    <div class="p-field p-col-12 p-md-3">
+                        <label for="name">Direccion*</label>
+                        <input id="name" type="text" pInputText formControlName="address">
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('address')">
+                        </p-message>
+                    </div>
+
+                    <div class="p-field p-col-12 p-md-3" style="display: flex; flex-direction: column;">
+                        <label for="is_active">Activo *</label>
+                        <p-inputSwitch formControlName="is_active"></p-inputSwitch>
+                        <p-message severity="error" text="El campo es obligatorio"
+                            *ngIf="getErrorRequired('is_active')"></p-message>
+                    </div>
+
+                </div>
+
+                <div class="p-fluid p-grid p-mb-3"></div>
+                <div class="p-fluid p-grid">
+                    <div class="p-field p-col-12 p-md-6">
+
+                        <button (click)="onSave()" pButton pRipple type="submit" label="{{'admin.save'| translate }}"
+                            class="p-button-success p-mr-2 p-mb-0"></button>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <button (click)="back()" pButton pRipple type="button" label="{{'admin.cancel'| translate }}"
+                            class="p-button-danger p-mr-0 p-mb-0"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

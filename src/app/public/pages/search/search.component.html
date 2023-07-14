@@ -1,0 +1,113 @@
+<app-header [header_title]="'menu.searchUp' | translate"></app-header>
+<div class="main-content">
+    <div class="p-grid">
+        <div class="p-col-12 p-md-4 p-lg-3 ">
+            <div class="box sidebar">
+                <div class="input-search">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input (keyup.enter)="onSearch()" [(ngModel)]="querySearchService.queryParams.general_title"
+                            type="text" pInputText [placeholder]="'input.search' | translate" />
+                    </span>
+                    <p-button (click)="onSearch()" [label]="'input.search' | translate"></p-button>
+                </div>
+                <app-sidebar-search></app-sidebar-search>
+                <!-- [queryParams]="queryParams" -->
+            </div>
+        </div>
+
+        <div class="p-col-12 p-md-8 p-lg-9 ">
+
+            <div class="box content">
+
+                <div class="header-search">
+                    <div class="p-ai-center">
+                        <!-- <p-chip label="Todo" styleClass="p-mr-2 custom-chip"></p-chip> -->
+                        <ng-container *ngIf="chipsSearch.length > 0 && idQueryEmpty">
+                            <!-- <p-chip *ngFor="let chip of chipsSearch; let i = index" [label]="chip.value" tabindex="0"
+                                (onRemove)="removeChip(chip)" [removable]="true"  role="tooltip"
+                                styleClass="p-mr-2 custom-chip animate__animated animate__fadeIn"></p-chip> -->
+
+                            <div class="chip" *ngFor="let chip of chipsSearch; let i = index" tabindex="0">
+                                {{chip.value}}
+                                <span class="closebtn" onclick="this.parentElement.style.display='none'" tabindex="0"
+                                    aria-label="Eliminar filtro" (click)="removeChip(chip)" (keyup.Space)="removeChip(chip)"><i
+                                        class="pi pi-times"></i></span>
+                            </div>
+
+                        </ng-container>
+                        <p-button *ngIf="idQueryEmpty" (click)="onClearFilters()"
+                            label="{{'search.filterClean'| translate}}" icon="pi pi-sliders-v"
+                            iconPos="right"></p-button>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="loading; else loadingTemplate">
+                    <!-- <div class="spinner">
+                        <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner"
+                            strokeWidth="4" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
+                    </div> -->
+
+                    <!-- <div class="p-grid card-content">
+                        <div class="p-col-12 p-md-6 p-lg-3">
+
+                        </div>
+                    </div> -->
+
+                    <!--  Spinner para mostrar las tarjetas dentro de la herramienta -->
+                    <div class="p-grid card-content">
+                        <div class="p-col-12 p-md-6 p-lg-3 card-skeleton" *ngFor="let objectS of objectsSkeleton ">
+                            <div class="animate__animated animate__fadeIn card-content">
+                                <p-card styleClass="p-card-shadow" [style]="{ width: '100%' }">
+                                    <ng-template pTemplate="header">
+                                        <p-skeleton width="262px" height="150px"></p-skeleton>
+                                    </ng-template>
+
+                                    <div style="flex: 1">
+                                        <p-skeleton width="100%" styleClass="mb-2"></p-skeleton>
+                                        <p-skeleton width="75%"></p-skeleton>
+                                    </div>
+                                    <p-divider></p-divider>
+                                    <div style="flex: 1">
+                                        <p-skeleton width="100%" styleClass="mb-2"></p-skeleton>
+                                    </div>
+                                    <ng-template pTemplate="footer">
+                                        <p-skeleton width="205px" height="50px"></p-skeleton>
+                                    </ng-template>
+                                </p-card>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-template #loadingTemplate>
+                    <div class="p-grid card-content">
+                        <div class="p-col-12 p-md-12 p-lg-12" *ngIf="resultOAsNone == true">
+                            <div class="container-message">
+                                <p style="font-size: 18px;">{{'search.filterErrorSearchNone'|translate}}</p>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="objects?.length > 0">
+                            <div class="p-col-12 p-md-6 p-lg-3" *ngFor="let object of objects">
+                                <!--[teacherOptions]="true"--->
+                                <div class="rol-expert" *ngIf="roleExpert">
+                                    <app-card [object]="object" [expertOptions]="true"></app-card>
+                                </div>
+                                <div class="rol-student" *ngIf="roleStudent">
+                                    <app-card [object]="object" [studentOptions]="true"></app-card>
+                                </div>
+                                <div class="rol-others" *ngIf="!roleExpert && !roleStudent">
+                                    <app-card [object]="object"></app-card>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="objects?.length === 0">
+                            <h3>{{'search.noResults' | translate}}</h3>
+                        </ng-container>
+                    </div>
+                </ng-template>
+                <p-paginator [rows]="rows" [totalRecords]="totalRecords"
+                    (onPageChange)="paginate($event)"></p-paginator>
+            </div>
+        </div>
+    </div>
+</div>

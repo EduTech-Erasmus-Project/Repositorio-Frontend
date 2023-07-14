@@ -1,0 +1,114 @@
+<div #webView class="web-view animate__animated animate__fadeIn">
+    <iframe [title]="'object.titleIframe' | translate" [src]="object.learning_object_file.url | urlsanitizer" frameborder="0" allowfullscreen></iframe>
+    <div class="controls">
+        <h2>{{object.general_title}}</h2>
+        <div class="buttons">
+            <p-button  *ngIf="roleExpert && !flagQuestionsEx && flagQuestionsExNumber == 0" (click)="displayFormRatingExpert=true"
+                [label]="'object.btnEvaluateExpert'| translate "></p-button>
+            
+            <p-button  *ngIf="roleExpert && flagQuestionsEx && flagQuestionsExNumber == 1" (click)="displayFormRatingExpertUpdate=true"
+                [label]="'object.objectQualification'| translate " title="Editar evaluacion" ><i class="pi pi-pencil">&nbsp;</i></p-button>
+            
+                <!-- <button aria-label="Boton para calificar este objeto de aprendizaje" *ngIf="roleUser" (click)="displayFormRating=true" pButton pRipple type="button" icon="pi pi-star-o"
+                class="p-button-rounded p-button-outlined" [pTooltip]="'object.btnEvaluate'| translate "></button> -->
+            <!--   NUEVO BOTON     -->
+
+            <button aria-label="Boton para calificar " *ngIf="roleUser && !flagQuestionsEst && flagQuestionsEstNumber == 0"  (click)="displayFormRatingStudent=true" pButton pRipple type="button"
+            class="p-button-rounded p-button-outlined" [label]="'registesest.btnEva'| translate "></button>
+
+            <button aria-label="Boton para calificar actualizar" *ngIf="roleUser && flagQuestionsEst && flagQuestionsEstNumber == 1"  (click)="displayFormRatingStudentUpdate=true" pButton pRipple type="button"
+            class="p-button-rounded p-button-outlined" title="Actualizar calificacion" [label]="'registesest.btnEvaU'| translate "></button>
+
+            <!--   NUEVO BOTON     -->
+
+            <button *ngIf="roleUser" aria-label="Boton me gusta"  (click)="onLike()" pButton pRipple type="button" icon="pi pi-heart"
+                [ngClass]="{'p-button-outlined': !liked, 'p-button-danger': liked}" class="p-button-rounded"
+                [pTooltip]="'object.like'|translate"></button>
+
+                <button aria-label="Boton de descarga" (click)="onDownloadFile(object.learning_object_file.file) " pButton pRipple type="button"
+                icon="pi pi-download" class="p-button-rounded p-button-outlined" 
+                [pTooltip]="'object.btnDownload'| translate "></button>
+
+            <button aria-label="Boton de descarga" *ngIf="object.source_file" (click)="onDownloadFile(object.source_file) " pButton pRipple type="button"
+                icon="pi pi-cloud-download" class="p-button-rounded p-button-outlined"
+                [pTooltip]="'Descargar el fichero fuente de eXeLearning'"></button>
+
+            
+                <a aria-label="Boton de pantalla completa" style="margin-left: 2px;" *ngIf="!fullScreen" href="{{object.learning_object_file.url}}" target="_blanck" pButton pRipple type="button"
+                icon="pi pi-window-maximize" class="p-button-rounded p-button-outlined"
+                [pTooltip]="'object.btnFullScreen'| translate "></a>
+            
+                <button aria-label="Boton de salir de la pantalla completa" *ngIf="fullScreen" (click)="closeFullscreen()" pButton pRipple type="button"
+                icon="pi pi-window-minimize" class="p-button-rounded p-button-outlined"></button>
+        </div>
+    </div>
+</div>
+
+<div class="description">
+    <div class="profile">
+        <div class="profile-image">
+            <img loading="lazy" [src]="object.user_created.image_url"
+                [alt]="object.user_created.first_name +' '+object.user_created.last_name" />
+        </div>
+        <div>
+            <p class="profile-name">{{object.user_created.first_name +' '+object.user_created.last_name}}</p>
+            <div *ngIf="object.rating" class="rating">
+                <span class="profile-downloads"><i class="pi pi-star"></i> {{'object.labelValorate'| translate }}
+                    {{object.rating | number:'1.1-2'}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="object-description">
+        <p>{{object.general_description}}</p>
+        <p-divider></p-divider>
+        <div class="object-metadata">
+            <p *ngIf="object.created">{{'object.date'| translate }} <span>{{object.created | date:'MM/dd/yyyy'}}</span>
+            </p>
+            <p *ngIf="object.knowledge_area.name">{{'object.labelKnowledgeArea'| translate }}
+                <span>{{object.knowledge_area.name}}</span></p>
+            <p *ngIf="object.education_levels?.length > 0">{{'object.labelLevelEducation'| translate }} <span
+                    *ngFor="let level of object.education_levels">{{level.description}}, </span></p>
+            <p *ngIf="object.general_keyword">{{'object.labelKeywords'| translate }}
+                <span>{{object.general_keyword}}</span></p>
+            <p *ngIf="object.license.description">{{'object.labelLicense'| translate }}
+                <span>{{object.license.description}}</span></p>
+        </div>
+        <!-- <div>
+            <p-splitButton [label]="'object.btnShared'| translate" icon="pi pi-share-alt" [model]="items">
+            </p-splitButton>
+        </div> -->
+    </div>
+</div>
+
+<p-dialog header="{{'object.btnEvaluate' | translate}}" [(visible)]="displayFormRating" [style]="{width: '60vw'}"
+    [baseZIndex]="10000">
+   <app-view-questions></app-view-questions>
+</p-dialog>
+
+<p-dialog header="{{'object.btnEvaluateWithExpert'|translate}}" [(visible)]="displayFormRatingExpert" 
+    [style]="{width: '60vw'}" [baseZIndex]="10000">
+    <div *ngIf="!flagQuestionsEx">
+        <app-view-questions-expert [object]="object" [flagQuestionsEx]="flagQuestionsEx" (commentEmit)="coutComment($event)" (commentEmit1)="coutComment1($event)" ></app-view-questions-expert>
+    </div>
+ 
+</p-dialog>
+
+<p-dialog header="{{'object.btnEvaluateWithExpertView'|translate}}" [(visible)]="displayFormRatingExpertUpdate" 
+    [style]="{width: '60vw'}" [baseZIndex]="10000">
+    <div *ngIf="flagQuestionsEx">
+        <app-view-questions-expert [object]="object" [flagQuestionsEx]="flagQuestionsEx" (commentEmit)="coutComment($event)" ></app-view-questions-expert>
+    </div>
+   
+</p-dialog>
+<!----------------------------------------------------eva est----->
+<p-dialog header="{{'object.EvaluateWithStudent'|translate}}" [(visible)]="displayFormRatingStudent" [style]="{width: '50vw'}" [baseZIndex]="10000">
+    <div *ngIf="!flagQuestionsEst">
+        <app-view-questions-student [flagQuestionsEst]="flagQuestionsEst" [object]="object" (commentEmit1)="coutCommentstudent($event)" ></app-view-questions-student>
+    </div>
+</p-dialog>
+
+<p-dialog *ngIf="displayFormRatingStudentUpdate" header="{{'object.EvaluateWithStudentView'|translate}}" [(visible)]="displayFormRatingStudentUpdate" [style]="{width: '50vw'}" [baseZIndex]="10000">
+    <div *ngIf="flagQuestionsEst">
+        <app-view-questions-student [flagQuestionsEst]="flagQuestionsEst" [object]="object" (commentEmit1)="coutCommentstudent($event)" (commentEmit)="coutComments($event)"></app-view-questions-student>
+    </div>
+</p-dialog>

@@ -1,0 +1,48 @@
+<p-toast></p-toast>
+<div class="login-body layout-light">
+    <div class="login-content animate__animated animate__fadeIn">
+        <div class="login-panel">
+            <div class="login-panel-content">
+                    
+                <div class="confirm-message" *ngIf="state_success">
+                    <p-card header="Tu cuenta ha sido activada" [style]="{'width': '100%', 'margin-bottom': '2em'}">
+                        <ng-template pTemplate="header" style="text-align: center">
+                            <img alt="Card" src="assets/img/edutech-icon.png" class="img-responsive-header">
+                        </ng-template>
+                        <p>¡Gracias por unirte a él Repositorio de Objetos de Aprendizaje ROA!</p>
+                        <button pButton pRipple type="button" label="Iniciar Sesión" icon="pi pi-arrow-right"
+                            (click)="_router.navigate(['/login']);" iconPos="right" class="p-button-success"></button>
+                    </p-card>
+                </div>
+                
+                <div class="error-message" *ngIf="state_request">
+                    <p-card header="Error de confirmación"
+                        [style]="{'width': '100%', 'margin-bottom': '2em' ,'border':'red 1px solid'}">
+                        <ng-template pTemplate="header" style="text-align: center">
+                            <img alt="Card" src="../../../../assets/img/edutech-icon.png" class="img-responsive-header">
+                        </ng-template>
+                        <p>¡Existió un error al momento de verificar su cuenta!</p>
+                        <button pButton pRipple type="button" label="Enviar nuevo enlace" icon="pi pi-refresh"
+                            (click)="set_token_user()" iconPos="right" class="p-button-danger"></button>
+                    </p-card>
+                </div>
+                
+                <div class="error-message" *ngIf="state_success_token">
+                    <p-card header="Enviado correctamente"
+                        [style]="{'width': '100%', 'margin-bottom': '2em' ,'border':'green 1px solid'}">
+                        <ng-template pTemplate="header" style="text-align: center">
+                            <img alt="Card" src="../../../../assets/img/edutech-icon.png" class="img-responsive-header">
+                        </ng-template>
+                        <p-message severity="success"
+                            text="¡Se envio un nuevo enlace a tu correo electrónico con exito!" styleClass="mr-2">
+                        </p-message>
+                    </p-card>
+                </div>
+
+                <div class="form-permission" *ngIf=" !state_success && !state_success_token && !state_request "> 
+                    <p-progressSpinner></p-progressSpinner>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

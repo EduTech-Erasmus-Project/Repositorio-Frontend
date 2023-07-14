@@ -1,0 +1,38 @@
+.p-grid{
+    margin: 0;
+}
+
+.box{
+    //background-color: royalblue;
+    //background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    border-radius: 10px;
+    figure{
+        width: 250px;
+        height: 250px;
+        margin: 0;
+        background-color: #fff;
+        border-radius: 50%;
+        border: 10px solid #F8F9FB;
+        img{
+            width: 100%;
+            height: 100%;
+        }
+    }
+    
+}
+
+.buttons{
+    button:nth-child(1){
+        margin-right: 10px;
+    }
+}
+
+:host ::ng-deep .p-button{
+    background: transparent;
+    color: #3B5B68;
+    border-color: #3B5B68;
+}

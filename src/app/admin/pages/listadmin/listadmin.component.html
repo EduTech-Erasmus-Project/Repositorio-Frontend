@@ -1,0 +1,100 @@
+<div class="p-grid table-demo">
+	<div class="p-col-12">
+		<div class="card">
+			<p-table #dt [value]="uselrAdminList" dataKey="id"
+					 styleClass="p-datatable-customers"
+					>
+				<ng-template pTemplate="caption">
+					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+						Usuario administrador
+				<span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+						   placeholder="Global Search"/>
+                </span>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+	
+						<th style="width: 5rem" pSortableColumn="imagen">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								Imagen
+							</div>
+						</th>
+						<th pSortableColumn="nombre">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								Nombre
+							</div>
+						</th>
+						<th pSortableColumn="apellido">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								Apellido
+							</div>
+						</th>
+						<th pSortableColumn="correo">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								Correo
+							</div>
+						</th>
+						<th pSortableColumn="estado">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								Estado
+							</div>
+						</th>
+						<th pSortableColumn="direccion">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								Dirección
+							</div>
+						</th>
+						<th style="width: 8rem"></th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-user>
+					<tr class="p-selectable-row">
+						<td>
+							<span class="p-column-title">Imagen</span>
+							<img loading="lazy" [alt]="user.first_name"
+								 [src]="user.image_url" width="45"
+								 style="vertical-align: middle"/>
+						</td>
+						<td>
+							<span class="p-column-title">Nombre</span>
+							<span class="image-text" style="margin-left: .5em;vertical-align: middle">{{user.first_name}}</span>
+						</td>
+						<td>
+							<span class="p-column-title">Apellido</span>
+							<span class="image-text" style="margin-left: .5em;vertical-align: middle">{{user.last_name}}</span>
+						</td>
+
+						<td>
+							<span class="p-column-title">Correo</span>
+							<span class="image-text" style="margin-left: .5em;vertical-align: middle">{{user.email}}</span>
+						</td>
+						<td>
+							<span class="p-column-title">Status</span>
+							<span [class]="'customer-badge'">{{user.administrator.is_active}}</span>
+							<!-- <span class="p-column-title">Estado</span>
+							<span [class]="'product-badge status-'">{{user.administrator.is_active}}</span> -->
+							<!-- <span [class]="'customer-badge status-'">{{user.administrator.is_active}}</span> -->
+						</td>
+						<td>
+							<span class="p-column-title">Dirección</span>
+							{{user.administrator.city}} - {{user.administrator.country}}
+						</td>
+						<td style="text-align: center">
+							<button pButton type="button" class="p-button-secondary" icon="pi pi-cog"></button>
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">No customers found.</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	</div>
+
+</div>
+

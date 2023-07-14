@@ -1,0 +1,125 @@
+<p-toast>
+</p-toast>
+<div class="card">
+    <div class="p-grid">
+        <div class="p-col-6">
+            <h2 class="title">{{'security.titlePass' | translate}}</h2>
+        </div>
+        <div class="p-col-6">
+            <div class="box animate__animated animate__fadeIn" tabindex="0">
+                <figure>
+                    <img loading="lazy" class="imgLoad" loading="lazy"
+                        src="./../../../../../../assets/img/key-Security.png"
+                        [alt]="'Imagen referente a cambio de contraseña'">
+                </figure>
+            </div>
+        </div>
+        <div class="p-col-6">
+            <label class="title">
+                <p style="font-size: 1.1em; font-weight: bold;">{{'login.labelPassword' | translate}}</p>
+            </label>
+        </div>
+        <div class="p-col-6">
+            <button label="{{'security.changePass' | translate}}" (click)="show=!show" pButton style="width:100%">
+                <i [ngClass]="{'pi-chevron-right':!show,'pi-chevron-down':show}" class="pi"> &nbsp;</i>
+            </button>
+        </div>
+    </div>
+
+    <p-toast></p-toast>
+
+    <div class="p-grid" *ngIf="show">
+        <div class="p-col-6">
+            <div class="forms">
+                <label class="labelPass">{{'security.oldPass' | translate }}</label>
+            </div>
+            <br>
+            <div class="forms">
+                <label class="labelPass">{{'security.newPass' | translate }}</label>
+            </div>
+            <br>
+            <div class="forms">
+                <label class="labelPass">{{'security.againNewPass' | translate }}</label>
+            </div>
+            <br>
+
+        </div>
+        <div class="p-col-6">
+            <form autocomplete="off" [formGroup]="angForm" (ngSubmit)="sendPasswordRest()" id="loginForm">
+
+                <div class="forms">
+                    <div class="viewPass">
+
+                        <input class="passPass" id="passwordOldInput" formControlName="passwordOld"
+                            [type]="show2?'text':'password'"
+                            aria-describedby="passwordOld passwordOld1"
+                            [ngClass]="{'ng-dirty ng-invalid':(passwordOld.invalid && (passwordOld.dirty || passwordOld.touched)) || passError}"
+                            placeholder="{{'security.oldPass'|translate}}" type="password" pInputText>
+                        <i tabindex="0" [ngClass]="{'pi-eye':!show2,'pi-eye-slash':show2}" class="pi" aria-label="Ver contraseña"
+                            (click)="show2=!show2" (keyup.enter)="show2=!show2"></i>
+                    </div>
+                    <div *ngIf="passwordOld.invalid && (passwordOld.dirty || passwordOld.touched)">
+                        <small id="passwordOld" class="p-error"
+                            *ngIf="passwordOld.errors.required">*{{'validation.obligatoryCamp'|
+                            translate}}*</small>
+                    </div>
+                    <small id="passwordOld1" class="p-error"
+                            *ngIf="passError">*{{'security.passError'|translate}}*</small>
+
+                </div>
+                <br>
+                <div class="forms">
+                    <input class="passPass" id="passwordNew" formControlName="passwordNew"
+                    aria-describedby="password passwordNewErr passwordNew" (keypress)="enabled_Password()"
+                        [ngClass]="{'ng-dirty ng-invalid':passwordNew.invalid && (passwordNew.dirty || passwordNew.touched) || passsword_invalid}" key
+                        placeholder="{{'security.newPass'|translate}}" type="password" pInputText>
+                    <div *ngIf="passwordNew.invalid && (passwordNew.dirty || passwordNew.touched)">
+                        <small id="passwordNew " class="p-error"
+                            *ngIf="passwordNew.errors.required">*{{'validation.obligatoryCamp'|
+                            translate}}*</small>
+                        <small id="password" class="p-error"
+                            *ngIf="passwordNew.errors.pattern">*{{'validation.passwordEnter'|translate}}*
+                            <ul class="p-pl-2 p-ml-2 p-mt-0" style="line-height: 1.5">
+                                <li>{{'validation.passDigit'|translate}}</li>
+                                <li>{{'validation.passMinu'|translate}}</li>
+                                <li>{{'validation.passMayu'|translate}}</li>
+                                <li>{{'validation.passChar'|translate}}</li>
+                            </ul>
+                        </small>
+                        <small id="passwordNewErr" class="p-error"
+                            *ngIf="passsword_invalid">*La contraseña no puede ser la misma que la anterior*</small>
+                    </div>
+                </div>
+                <br>
+                <div class="forms">
+                    <input class="passPass" id="passwordNewAgain" formControlName="passwordAgain"
+                    aria-describedby="passwordAgain passwordOldNo passwordNewErr2"
+                        [ngClass]="{'ng-dirty ng-invalid':passwordAgain.invalid && (passwordAgain.dirty || passwordAgain.touched) || passsword_invalid}"
+                        (keyup)="validatorPassword()" placeholder="{{'security.againNewPass'|translate}}"
+                        type="password" pInputText>
+
+                    <div *ngIf="passwordAgain.invalid && (passwordAgain.dirty || passwordAgain.touched)">
+                        <small id="passwordAgain " class="p-error"
+                            *ngIf="passwordAgain.errors.required">*{{'validation.obligatoryCamp'|
+                            translate}}*</small>
+
+                    </div>
+                    <small id="passwordOldNo" class="p-error"
+                        *ngIf="!flagConfirm && passwordAgain.dirty ">{{'security.confirmPassError' | translate}}</small>
+                        <small id="passwordNewErr2" class="p-error"
+                        *ngIf="passsword_invalid">*La contraseña no puede ser la misma que la anterior*</small>
+                </div>
+                <br>
+                <div class="forms">
+                    <div class="butonC">
+                        <button pButton pRipple (click)="resetForm()" label="Cancel" icon="pi pi-times"></button>
+                        &nbsp;
+                        <button pButton pRipple type="submit" label="{{'newObject.form.btnSubmit'|translate}}" icon="pi pi-check"></button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="hr1"></div>
+</div>

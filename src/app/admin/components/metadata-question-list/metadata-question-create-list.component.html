@@ -1,0 +1,231 @@
+<div class="p-grid">
+	<div class="p-col-12">
+		<div class="card">
+			<button pButton pRipple label="Evaluación para metadatos con conceptos" 
+				class="p-button-primary p-mr-2 p-mb-2"
+				(click)=" this.router.navigate(['/admin/expert/automatic'])"></button>
+			<button pButton pRipple label="Evaluación para metadatos con preguntas" disabled 
+				class="p-button-primary p-mr-2 p-mb-2"
+				(click)=" this.router.navigate(['/admin/expert/automatic-question'])"></button>
+		</div>
+	</div>
+</div>
+
+<div class="p-grid">
+	<div class="p-col-12">
+		<div class="card">
+			<h5>Evaluación para Metadatos con preguntas</h5>
+			<button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"
+				(click)="openNew()"></button>
+			<p-dialog [(visible)]="createConceptDialog" [style]="{width: '450px'}" header="Agregar pregunta de evaluación"
+				[modal]="true" styleClass="p-fluid">
+				<ng-template pTemplate="content">
+					<div class="contentInit">
+						<div class="p-field">
+							<label for="name">Pregunta de evaluación.</label>
+							<input type="text" pInputText id="name" [(ngModel)]="selfQuestion.description" required autofocus />
+							<small class="p-invalid" *ngIf="submitted && !product.name">{{ 'admin.conceptRequired' | translate }}</small>
+						</div>
+						<div class="p-field">
+							<label for="name">Pregunta de evaluación en ingles.</label>
+							<input type="text" pInputText id="name" [(ngModel)]="selfQuestion.descriptionEnglish" required autofocus />
+							<!-- <small class="p-invalid" *ngIf="submitted && !product.name">{{ 'admin.conceptRequired' | translate }}</small> -->
+						</div>
+						<div class="p-field">
+							<label for="name">Conceptos</label>
+								<p-dropdown [options]="conceptEvaluation" [(ngModel)]="selfQuestion.evaluation_concept"
+								[showClear]="true" optionValue="id" (onChange)="captureConceptId()"
+								placeholder="Selecione un concepto" [filter]="true" filterBy="concept" optionLabel="concept"></p-dropdown>
+						</div>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="footer">
+					<button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+						(click)="hideDialogConcept()"></button>
+					<button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+						(click)="registerEvaluationData()"></button>
+				</ng-template>
+			</p-dialog>
+
+			<p-dialog [(visible)]="schemaDialog" [style]="{width: '480px'}" header="Agregar Metadato" [modal]="true"
+				styleClass="p-fluid">
+				<ng-template pTemplate="content">
+					<div class="contentInit">
+						<div class="p-field">
+							<strong>{{ 'admin.conceptEvaluation' | translate }}</strong>
+							<p-divider layout="horizontal" align="left"></p-divider>
+							<p>{{selfQuestionSelect.description}}</p>
+							<p-divider layout="horizontal" align="left"></p-divider>
+						</div>
+						<div class="p-field">
+							<label for="name">Concepto</label>
+								<p-dropdown [options]="conceptEvaluation" [(ngModel)]="metadataSchemaQuestion.id_concept"
+								[showClear]="true" optionValue="id" (onChange)="captureConceptId()"  [disabled]="true"
+								placeholder="Selecione un concepto" [filter]="true" filterBy="concept" optionLabel="concept"></p-dropdown>
+						</div>
+						<div class="p-field">
+							<label for="name">Metadato</label>
+								<p-dropdown [options]="metadataSchemasFilter" [(ngModel)]="metadataSchemaQuestion.id_schema"
+								[showClear]="true" optionValue="id" (onChange)="captureDescriptionSchema()"
+								placeholder="Selecione un metadato" [filter]="true" filterBy="description" optionLabel="schema"></p-dropdown>
+						</div>
+						<div class="p-field">
+							<label for="name">Descripcion del metadato</label>
+							<input type="text" pInputText value="{{descriptionMetadata}}" disabled>
+						</div>
+					</div>
+					
+				</ng-template>
+
+				<ng-template pTemplate="footer">
+					<button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+						(click)="hideDialog()"></button>
+					<button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"
+						(click)="saveSchema()"></button>
+				</ng-template>
+			</p-dialog>
+
+			
+
+			<p-dialog [(visible)]="editConceptDialog" [style]="{width: '450px'}" header="Editar pregunta de evaluacion" [modal]="true"
+				styleClass="p-fluid">
+				<ng-template pTemplate="content">
+					<div class="p-field">
+						<label for="conceptE">Editar pregunta de evaluación</label>
+						<input [(ngModel)]="selfQuestionSelect.description" type="text" pInputText id="conceptE" required
+							autofocus />
+						<small class="p-invalid">{{ 'admin.required' | translate }}</small>
+					</div>
+					<div class="p-field">
+						<label for="name">Pregunta de evaluación en ingles.</label>
+						<input type="text" pInputText id="name" [(ngModel)]="selfQuestionSelect.descriptionEnglish" required autofocus />
+						<!-- <small class="p-invalid" *ngIf="submitted && !product.name">{{ 'admin.conceptRequired' | translate }}</small> -->
+					</div>
+				</ng-template>
+				<ng-template pTemplate="footer">
+					<button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+						(click)="hideDialogUpdate()"></button>
+					<button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"
+						(click)="updateConcept()"></button>
+				</ng-template>
+			</p-dialog>
+			<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+		</div>
+	</div>
+</div>
+
+<div class="p-grid">
+	<div class="p-col-12 p-md-6">
+		<div class="card">
+			<div class="p-grid table-demo">
+				<p-table #dt [value]="selfQuestionList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true">
+					<ng-template pTemplate="caption">
+						<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+							<label for="">Preguntas de evaluación</label>
+						</div>
+					</ng-template>
+					<ng-template pTemplate="header">
+						<tr>
+							<th style="width: 4%">
+								<div class="p-d-flex p-jc-between p-ai-center">#</div>
+							</th>
+							<th style="width: 60%">
+								<div class="p-d-flex p-jc-between p-ai-center">
+									{{'admin.question'| translate }}
+								</div>
+							</th>
+							<th style="text-align: center">{{ 'admin.actions'| translate }}</th>
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="body" let-selfQuestion let-rowIndex="rowIndex">
+						<tr class="p-selectable-row">
+							<td>
+								<strong>{{rowIndex+1}}</strong>
+							</td>
+							<td>
+								<h6>{{selfQuestion.description}}</h6>
+							</td>
+							<td style="text-align: center">
+								<button (click)="openSchema(selfQuestion)" pButton pRipple icon="pi pi-plus"
+									class="p-button-success p-mr-1 p-mb-1"></button>
+								<button (click)="retrieveEvaluationData(selfQuestion.id)" pButton type="button"
+									class="p-mr-1 p-mb-1 p-button-success" icon="pi pi-list"></button>
+								<button (click)="openEditConceptDialog(selfQuestion)" pButton type="button"
+									class="p-mr-1 p-mb-1 p-button-success" icon="pi pi-pencil"></button>
+								<p-toast></p-toast>
+								<button (click)="deleteSelfQuestion($event,selfQuestion.id)" pTooltip="Eliminar" pButton
+									type="button" class="p-mr-1 p-mb-1 p-button-danger" icon="pi pi-trash"></button>
+								<p-confirmPopup key="confirmDelete"></p-confirmPopup>
+							</td>
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="emptymessage">
+						<tr>
+							<td colspan="8">No existe concepto de avaluación.</td>
+						</tr>
+					</ng-template>
+				</p-table>
+			</div>
+		</div>
+	</div>
+
+	<div class="p-col-12 p-md-6">
+		<div class="card">
+			<div class="p-grid table-demo">
+				<p-table #dt [value]="schemaList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true"
+					[rows]="5" [paginator]="true">
+					<ng-template pTemplate="caption">
+						<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+							{{ 'admin.questionEvaluation'| translate }}
+						</div>
+					</ng-template>
+					<ng-template pTemplate="header">
+						<tr>
+							<th style="width: 4%">
+								<div class="p-d-flex p-jc-between p-ai-center">#</div>
+							</th>
+							<th style="width: 70%">
+								<div class="p-d-flex p-jc-between p-ai-center">
+									{{'admin.question' | translate }}
+								</div>
+							</th>
+							<th style="text-align: center">{{'admin.actions' | translate}}</th>
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="body" let-schema let-rowIndex="rowIndex">
+						<tr class="p-selectable-row">
+							<td>
+								<strong>{{rowIndex+1}}</strong>
+							</td>
+							<!-- Inclusion de los nuevos campos -->
+							<td>
+								<strong>Schema</strong>
+								<p>{{schema.schema}}</p>
+								<strong>Descripción</strong>
+								<p>{{schema.description}}</p>
+								<strong>Peso</strong>
+								<p>{{schema.value_importance_schema}}</p>
+							</td>
+							<td style="text-align: center">
+								<!-- <button (click)="openEditSchemaDialog(schema)" pButton type="button"
+									class="p-mr-1 p-mb-1 p-button-success" icon="pi pi-pencil"></button> -->
+								<p-toast></p-toast>
+								<button (click)="deleteSchema($event,schema.id)"
+									pTooltip="Eliminar" pButton type="button" class="p-mr-1 p-mb-1 p-button-danger"
+									icon="pi pi-trash"></button>
+								<p-confirmPopup key="confirmDelete"></p-confirmPopup>
+							</td>
+
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="emptymessage">
+						<tr>
+							<td colspan="8">{{'admin.questionEmpty'| translate }}</td>
+						</tr>
+					</ng-template>
+				</p-table>
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,37 @@
+<div class="input-search">
+    <span class="p-input-icon-left"> 
+        <i class="pi pi-search"></i>
+        <input  aria-labelledby="searchbutton" name="search" id="search" [(ngModel)]="title" type="text" pInputText [placeholder]="'input.search' | translate" />
+    </span>
+    <p-button id="searchbutton" (click)="onSearch()" [label]="'input.search' | translate"></p-button>
+</div>
+
+<ng-container *ngIf="objects && objects?.length > 0">
+    <ng-container *ngIf="studentRole || expertRole; else sideTemplate">
+        <h2 *ngIf="studentRole">{{'object.labelRecommended' | translate}}</h2>
+        <h2 *ngIf="expertRole">{{'object.labelNoRated' | translate}}</h2>
+    </ng-container>
+    <ng-template #sideTemplate>
+        <h2>{{'object.labelPopulars' | translate}}</h2>
+    </ng-template>
+
+    <p-scrollPanel styleClass="side-bar">
+        <div  (click)="onClick(object.slug)" class="card-container p-d-flex"
+            *ngFor="let object of objects">
+            <p-card tabindex="0" (keyup.enter)="onClick(object.slug)" pRipple [header]="object.general_title" styleClass="item-object card primary-box">
+                <ng-template pTemplate="header">
+                    <img loading="lazy" [src]="object.avatar" [alt]="object.general_title">
+                </ng-template>
+                <div class="detail">
+                    <p class="user">{{object.user_created.first_name}}
+                        {{object.user_created.last_name}}</p>
+                    <span class="categorie">{{object.knowledge_area.name}}</span>
+                    <div class="rating">
+                        <p-rating [ngModel]="object.rating" readonly="true" [cancel]="false" stars="5"></p-rating>
+                        <!-- <span>{{object.rating | number: '1.1-0'}}</span> -->
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </p-scrollPanel>
+</ng-container>

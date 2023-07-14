@@ -1,0 +1,127 @@
+.container-message {
+  background: #fff;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar {
+  //background-color: royalblue;
+  padding: 25px 0;
+}
+
+.content {
+  //background-color: saddlebrown;
+  padding: 25px 0;
+  min-height: 125vh;
+  //margin-bottom: 25px;
+  //background-color: red;
+}
+
+:host ::ng-deep .p-chip.custom-chip {
+  background: var(--primary-color);
+  color: var(--primary-color-text);
+  //background-color: royalblue;
+}
+
+.card-content {
+  margin-top: 15px;
+}
+
+.input-search {
+  display: flex;
+  margin-bottom: 10px;
+  input {
+    //background-color: red;
+    width: 100%;
+  }
+  p-button {
+    margin-left: 5px;
+  }
+}
+
+.spinner{
+    //background-color: royalblue;
+    height: 55vh;
+    width: 100%;
+    position: relative;
+    transform: none;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rol-others{
+  height: 100%;
+}
+
+:host ::ng-deep .p-chip.custom-chip {
+margin-top: 3px;
+}
+
+:host ::ng-deep  .p-chip .p-chip-text {
+  line-height: 1.5;
+  margin-top: 0.40rem;
+  margin-bottom: 0.40rem;
+  /* border-radius: 2px !important; */
+}
+
+.chip {
+  display: inline-block;
+    padding: 0 10px;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 10px;
+    background-color: #3B5B68;
+    color: white;
+    margin: 0px 10px 0px 0px;
+}
+
+.closebtn {
+  padding-left: 4px;
+  padding-right: 4px;
+  color: white;
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.closebtn:hover {
+ color: #b60000;
+}
+
+//Eskeleton
+:host ::ng-deep .p-card-content {
+  padding: 0;
+}
+
+.card-content {
+  height: 100%;
+
+  :host ::ng-deep .p-card-shadow {
+    height: 100%;
+    //position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  :host ::ng-deep .p-card-body {
+    //height: 100%;
+    //background-color: red;
+    padding: 15px;
+
+
+  }
+}
+
+:host ::ng-deep .p-card-shadow {
+  //background-color: red;
+  position: relative;
+}
+
+
+

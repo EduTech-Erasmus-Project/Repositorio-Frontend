@@ -1,0 +1,49 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <!-- <img [src]="learningobjectdetail.avatar"  class="p-col-4" alt="Cinque Terre"> -->
+            <iframe [src]="index_url | sanitizerurl" class="p-col-12" height="450"></iframe>
+            <h4>{{learningobjectdetail.general_title || ' '}}</h4>
+            <p-divider layout="horizontal" align="left">
+            </p-divider>
+            <p>
+                {{learningobjectdetail.general_description}}
+            </p>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <button (click)="onClick()" *ngIf="readMore" pButton pRipple type="button" label="Expandir metadatos ..."
+                class="p-button-info p-button-text p-mr-2 p-mb-2"></button>
+            <p-divider *ngIf="readMore" layout="horizontal" align="left"></p-divider>
+            <div class="card" *ngIf="!readMore">
+                <app-metadata *ngIf="learningobjectdetail" [learningobjectdetail]="learningobjectdetail"></app-metadata>
+            </div>
+            <p-divider *ngIf="!readMore" layout="horizontal" align="left"></p-divider>
+            <button (click)="onClick()" *ngIf="!readMore" pButton pRipple type="button" label="Ver menos ..."
+                class="p-button-info p-button-text p-mr-2 p-mb-2"></button>
+            <p>
+                {{learningobjectdetail.created | date:'medium' }}
+            </p>
+            <p-divider layout="horizontal" align="left">
+            </p-divider>
+            <p>
+                <span class="p-tag">Autor:</span>
+                <a [routerLink]="[ '/admin/teacher/request/approved/learning-object/upload', autor.id ]"> {{
+                    autor.first_name }} {{ autor.last_name }}</a>
+            </p>
+            <div class="card">
+
+                <p-toast></p-toast>
+                <button *ngIf="!statusUpdate" (click)="confirm2($event)" pButton icon="pi pi-check"
+                    label="Aprobar"></button>
+                <p-confirmPopup key="confirm2"></p-confirmPopup>
+
+                <button class="p-ml-2" (click)="onDelete()" pButton icon="pi pi-times" label="Borrar"></button>
+                <button class="p-ml-2" (click)="onNotificate()" pButton icon="pi pi-bell" label="Notificar"></button>
+
+            </div>
+
+
+            <!-- <button pButton pRipple type="button" label="Success" class="p-button-success p-button-text p-mr-2 p-mb-2"></button> -->
+            <!-- <a [href]="learningobjectdetail.learning_object_file.url" target="_blank">Ver objeto de aprendizaje...</a> -->
+        </div>
+    </div>
+</div>

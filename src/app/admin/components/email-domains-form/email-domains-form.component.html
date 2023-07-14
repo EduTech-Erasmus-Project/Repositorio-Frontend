@@ -1,0 +1,53 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <form autocomplete="off" [formGroup]="form" id="crearUsuario">
+                <h5>Registrar correos electrónicos para perfiles</h5>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col-12 p-md-3">
+                        <label for="domain">Dominio*</label>
+                        <input id="domain" type="text" pInputText formControlName="domain">
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('domain')">
+                        </p-message>
+                    </div>
+
+                    <div class="p-field p-col-12 p-md-3">
+                        <label for="name">Opciones de registro*</label>
+                        <p-dropdown [options]="optionsRegister" formControlName="option_register_email" placeholder="Tipo" optionLabel="type_option"
+                            optionValue="id"></p-dropdown>
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('option_register_email')">
+                        </p-message>
+                    </div>
+
+                    <div class="p-field p-col-12 p-md-3">
+                        <label for="domain">Rol*</label>
+                        <input id="domain" type="text" pInputText formControlName="type" >
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('type')">
+                        </p-message>
+                    </div>
+   
+                    <div class="p-field p-col-12 p-md-3" style="display: flex; flex-direction: column;">
+                        <label for="is_active">Activo *</label>
+                        <p-inputSwitch formControlName="is_active"></p-inputSwitch>
+                        <p-message severity="error" text="El campo es obligatorio"
+                            *ngIf="getErrorRequired('is_active')"></p-message>
+                    </div>
+
+                </div>
+
+                <div class="p-fluid p-grid p-mb-3"></div>
+                <div class="p-fluid p-grid">
+                    <div class="p-field p-col-12 p-md-6">
+
+                        <button (click)="onSave()" pButton pRipple type="submit" label="{{'admin.save'| translate }}"
+                            class="p-button-success p-mr-2 p-mb-0"></button>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <button (click)="back()" pButton pRipple type="button" label="{{'admin.cancel'| translate }}"
+                            class="p-button-danger p-mr-0 p-mb-0"></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

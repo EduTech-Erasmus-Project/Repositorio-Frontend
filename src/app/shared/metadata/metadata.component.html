@@ -1,0 +1,89 @@
+<div class="content">
+    <h6>General</h6>
+    <ul>
+        <li>Catalog: {{learningobjectdetail.general_catalog||"unknown"}}</li>
+        <li>Coverage: {{learningobjectdetail.general_coverage||"unknown"}}</li>
+        <li>Entry: {{learningobjectdetail.general_entry||"unknown"}}</li>
+        <li>Keyword: {{learningobjectdetail.general_keyword||"unknown"}}</li>
+        <li>Language: {{learningobjectdetail.general_language||"unknown"}}</li>
+        <li>Structure: {{learningobjectdetail.general_structure||"unknown"}}</li>
+    </ul>
+    <p-divider layout="horizontal" align="left"></p-divider>
+    <h6>Life Cycle</h6>
+    <ul>
+        <li><strong>{{learningobjectdetail.life_cycle_description||"unknown"}}</strong>
+            {{learningobjectdetail.life_cycle_dateTime | date:'medium'}}</li>
+        <li>Role: {{learningobjectdetail.life_cycle_role||"unknown"}}</li>
+        <li>Version: {{learningobjectdetail.life_cycle_version||"unknown"}}</li>
+    </ul>
+    <p-divider layout="horizontal" align="left"></p-divider>
+    <h6>Meta-Metadata</h6>
+    <ul>
+        <li>Catalog: {{learningobjectdetail.meta_metadata_catalog||"unknown"}}</li>
+        <li>Description: <strong>{{learningobjectdetail.meta_metadata_description||"unknown"}}</strong>
+            {{learningobjectdetail.meta_metadata_dateTime | date:'medium'}}</li>
+    </ul>
+    <p-divider layout="horizontal" align="left"></p-divider>
+    <h6>Technical</h6>
+    <ul>
+        <li>Description: {{learningobjectdetail.technical_description||"unknown"}}</li>
+        <li>Format: {{learningobjectdetail.technical_format||""}}</li>
+        <li>Installation remarks: {{learningobjectdetail.technical_installationRremarks||""}}</li>
+        <li>Location: {{learningobjectdetail.technical_location||""}}</li>
+    </ul>
+    <p-divider layout="horizontal" align="left"></p-divider>
+    <h6>Educational</h6>
+    <ul>
+        <li>Description: {{learningobjectdetail.educational_description||"unknown"}}</li>
+        <li>difficulty: {{learningobjectdetail.educational_difficulty||""}}</li>
+        <li>Language: {{learningobjectdetail.educational_language||""}}</li>
+        <li>Learning resource Type: {{learningobjectdetail.educational_learningResourceType||""}}</li>
+        <li>Procces cognitve: {{learningobjectdetail.educational_procces_cognitve||""}}</li>
+        <li>Typical age range: {{learningobjectdetail.educational_typicalAgeRange||""}}</li>
+        <li>Description: {{learningobjectdetail.educational_typicalLearningTime_description||""}}</li>
+    </ul>
+    <p-divider layout="horizontal" align="left"></p-divider>
+    <h6>Rights</h6>
+    <ul>
+        <li>Copyright and Other Restrictions: {{learningobjectdetail.rights_copyrightAndOtherRestrictions||"unknown"}}
+        </li>
+        <li>Cost: {{learningobjectdetail.rights_cost||"unknown"}}</li>
+    </ul>
+    <p-divider layout="horizontal" align="left"></p-divider>
+    <h6>Annotation</h6>
+    <ul>
+        <li><strong>{{learningobjectdetail.annotation_date_description||"unknown"}}</strong>
+            {{learningobjectdetail.annotation_date_dateTime | date:'medium' }}</li>
+        <li>Description: {{learningobjectdetail.annotation_description||"unknown"}}</li>
+        <li>Entity: {{learningobjectdetail.annotation_entity||"unknown"}}</li>
+        <li>Modeaccess: {{learningobjectdetail.annotation_modeaccess||"unknown"}}</li>
+        <li>Modeaccess sufficient: {{learningobjectdetail.annotation_modeaccesssufficient||"unknown"}}</li>
+        <li>Rol: {{learningobjectdetail.annotation_rol||"unknown"}}</li>
+    </ul>
+    <p-divider layout="horizontal" align="left"></p-divider>
+    <h6>Relation</h6>
+    <ul>
+        <li>Catalog: {{learningobjectdetail.relation_catalog||"unknown"}}</li>
+        <li>Description: {{learningobjectdetail.relation_description||"unknown"}}</li>
+        <li>Kind: {{learningobjectdetail.relation_kind||"unknown"}}</li>
+        <li>Entry: {{learningobjectdetail.relation_entry||"unknown"}}</li>
+    </ul>
+    <p-divider layout="horizontal" align="left"></p-divider>
+    <h6>Classification</h6>
+    <ul>
+        <li>Description: {{learningobjectdetail.classification_description||"unknown"}}</li>
+        <li>Keyword: {{learningobjectdetail.classification_keyword||"unknown"}}</li>
+        <li>Purpose: {{learningobjectdetail.classification_purpose||"unknown"}}</li>
+        <li>TaxonPath_source: {{learningobjectdetail.classification_taxonPath_source||"unknown"}}</li>
+        <li>TaxonPath_taxon: {{learningobjectdetail.classification_taxonPath_taxon||"unknown"}}</li>
+    </ul>
+    <p-divider layout="horizontal" align="left"></p-divider>
+    <h6>Accessibility</h6>
+    <ul>
+        <li>Summary: {{learningobjectdetail.accesibility_summary||"unknown"}}</li>
+        <li>Features: {{learningobjectdetail.accesibility_features||"unknown"}}</li>
+        <li>Hazard: {{learningobjectdetail.accesibility_hazard||"unknown"}}</li>
+        <li>Control: {{learningobjectdetail.accesibility_control||"unknown"}}</li>
+        <li>Api: {{learningobjectdetail.accesibility_api||"unknown"}}</li>
+    </ul>
+</div>

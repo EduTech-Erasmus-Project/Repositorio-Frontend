@@ -1,0 +1,30 @@
+.labelQu{
+    background-color: #203f4d;
+    padding: 9px 9px;
+    border-radius: 5px;
+    position: relative;
+    color: white;
+    display: flex;
+}
+.labelQutwo{
+    background-color: #3B5B68;
+    padding: 9px 9px;
+    border-radius: 5px;
+    position: relative;
+    color: white;
+    display: flex;
+}
+.labelQ{
+    background-color: #254755;
+    padding: 9px 9px;
+    border-radius: 5px;
+    position: relative;
+    color: white;
+    display: flex;
+}
+
+:host ::ng-deep .p-overlaypanel {
+top: 0px !important;
+left: 270px !important;
+transform: translateY(40px) !important;
+}

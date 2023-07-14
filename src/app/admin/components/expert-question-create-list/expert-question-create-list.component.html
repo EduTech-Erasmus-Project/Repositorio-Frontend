@@ -1,0 +1,285 @@
+<div class="p-grid">
+	<div class="p-col-12">
+		<div class="card">
+			<h5>{{'admin.test'| translate }}</h5>
+			<button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"
+				(click)="openNew()"></button>
+			<p-dialog [(visible)]="createConceptDialog" [style]="{width: '450px'}" header="{{ 'admin.conceptEvaluation' | translate }}"
+				[modal]="true" styleClass="p-fluid">
+				<ng-template pTemplate="content">
+					<div class="p-field">
+						<label for="name">{{ 'admin.concept' | translate }}</label>
+						<input type="text" pInputText id="name" [(ngModel)]="concept.concept" required autofocus />
+						<small class="p-invalid" *ngIf="submitted && !product.name">{{ 'admin.conceptRequired' | translate }}</small>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="footer">
+					<button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+						(click)="hideDialogConcept()"></button>
+					<button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+						(click)="registerEvaluationData()"></button>
+				</ng-template>
+			</p-dialog>
+
+			<p-dialog [(visible)]="questionDialog" [style]="{width: '450px'}" header="Agregar pregunta" [modal]="true"
+				styleClass="p-fluid">
+				<ng-template pTemplate="content">
+					<div class="p-field">
+						<strong>{{ 'admin.conceptEvaluation' | translate }}</strong>
+						<p-divider layout="horizontal" align="left"></p-divider>
+						<p>{{conceptSelect.concept}}</p>
+						<p-divider layout="horizontal" align="left"></p-divider>
+					</div>
+					<div class="p-field">
+						<label for="name">{{ 'admin.question' | translate }}</label>
+						<input [(ngModel)]="question.question" type="text" pInputText id="name" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="code">{{ 'admin.code' | translate }}</label>
+						<input [(ngModel)]="question.code" type="text" pInputText id="code" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="squema">{{ 'admin.schema' | translate }}</label>
+						<input [(ngModel)]="question.schema" type="text" pInputText id="squema" required autofocus />
+					</div>
+					<!--Nuevos campos de la pregunta-->
+					<div class="p-field">
+						<label for="interpreter_yes">Especificación->"Bueno"</label>
+						<input [(ngModel)]="question.interpreter_yes" type="text" pInputText id="interpreter_yes" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="interpreter_partially">Especificación->"Regular"</label>
+						<input [(ngModel)]="question.interpreter_partially" type="text" pInputText id="interpreter_partially" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="interpreter_no">Especificación->"Malo"</label>
+						<input [(ngModel)]="question.interpreter_no" type="text" pInputText id="interpreter_no" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="weight">Peso</label>
+						<input [(ngModel)]="question.weight" type="text" pInputText id="weight" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="relevance">Relevancia</label>
+						<input [(ngModel)]="question.relevance" type="text" pInputText id="relevance" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="description">{{ 'admin.description' | translate }}</label>
+						<textarea [(ngModel)]="question.description" id="description" pInputTextarea required rows="3"
+							cols="20"></textarea>
+					</div>
+					
+				</ng-template>
+
+				<ng-template pTemplate="footer">
+					<button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+						(click)="hideDialog()"></button>
+					<button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"
+						(click)="saveQuestion()"></button>
+				</ng-template>
+			</p-dialog>
+
+			<p-dialog [(visible)]="updateQuestionDialog" [style]="{width: '450px'}" header="Actualizar pregunta"
+				[modal]="true" styleClass="p-fluid">
+				<ng-template pTemplate="content">
+					<div class="p-field">
+						<label for="conceptU">{{ 'admin.concept' | translate }}</label>
+						<input [(ngModel)]="questionSelect.question" type="text" pInputText id="conceptU" required
+							autofocus />
+					</div>
+					<div class="p-field">
+						<label for="conceptU">{{ 'admin.concept' | translate }}</label>
+						<input [(ngModel)]="questionSelect.code" type="text" pInputText id="conceptU" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="squemaU">{{ 'admin.schema' | translate }}</label>
+						<input [(ngModel)]="questionSelect.schema" type="text" pInputText id="squemaU" required
+							autofocus />
+					</div>
+					<!--Nuevos campos de las preguntas-->
+					<div class="p-field">
+						<label for="interpreter_yesU">Especificación->"Bueno"</label>
+						<input [(ngModel)]="questionSelect.interpreter_yes" type="text" pInputText id="interpreter_yesU" required
+							autofocus />
+					</div>
+					<div class="p-field">
+						<label for="interpreter_partiallyU">Especificación->"Regular"</label>
+						<input [(ngModel)]="questionSelect.interpreter_partially" type="text" pInputText id="interpreter_partiallyU" required
+							autofocus />
+					</div>
+					<div class="p-field">
+						<label for="interpreter_noU">Especificación->"Malo"</label>
+						<input [(ngModel)]="questionSelect.interpreter_no" type="text" pInputText id="interpreter_noU" required
+							autofocus />
+					</div>
+					<div class="p-field">
+						<label for="relevanceU">Relevancia</label>
+						<input [(ngModel)]="questionSelect.relevance" type="text" pInputText id="relevanceU" required autofocus />
+					</div>
+					<div class="p-field">
+						<label for="weightU">Peso</label>
+						<input [(ngModel)]="questionSelect.weight" type="number" pInputText id="weightU" required
+							autofocus />
+					</div>
+					<div class="p-field">
+						<label for="descriptionU">{{ 'admin.description' | translate }}</label>
+						<textarea [(ngModel)]="questionSelect.description" id="descriptionU" pInputTextarea required
+							rows="3" cols="20"></textarea>
+					</div>
+				</ng-template>
+
+				<ng-template pTemplate="footer">
+					<button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+						(click)="hideDialogUpdateQuestion()"></button>
+					<button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"
+						(click)="saveUpdateQuestion()"></button>
+				</ng-template>
+			</p-dialog>
+
+			<p-dialog [(visible)]="editConceptDialog" [style]="{width: '450px'}" header="Editar concepto" [modal]="true"
+				styleClass="p-fluid">
+				<ng-template pTemplate="content">
+					<div class="p-field">
+						<label for="conceptE">{{ 'admin.conceptEvaluation' | translate }}</label>
+						<input [(ngModel)]="conceptSelect.concept" type="text" pInputText id="conceptE" required
+							autofocus />
+						<small class="p-invalid">{{ 'admin.required' | translate }}</small>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="footer">
+					<button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+						(click)="hideDialogUpdate()"></button>
+					<button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"
+						(click)="updateConcept()"></button>
+				</ng-template>
+			</p-dialog>
+			<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+		</div>
+	</div>
+</div>
+
+<div class="p-grid">
+	<div class="p-col-12 p-md-6">
+		<div class="card">
+			<div class="p-grid table-demo">
+				<p-table #dt [value]="conceptList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true">
+					<ng-template pTemplate="caption">
+						<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+							{{ 'admin.conceptEvaluation'| translate }}
+						</div>
+					</ng-template>
+					<ng-template pTemplate="header">
+						<tr>
+							<th style="width: 4%">
+								<div class="p-d-flex p-jc-between p-ai-center">#</div>
+							</th>
+							<th style="width: 60%">
+								<div class="p-d-flex p-jc-between p-ai-center">
+									{{'admin.question'| translate }}
+								</div>
+							</th>
+							<th style="text-align: center">{{ 'admin.actions'| translate }}</th>
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="body" let-concept let-rowIndex="rowIndex">
+						<tr class="p-selectable-row">
+							<td>
+								<strong>{{rowIndex+1}}</strong>
+							</td>
+							<td>
+								<h6>{{concept.concept}}</h6>
+							</td>
+							<td style="text-align: center">
+								<button (click)="openQuestion(concept)" pButton pRipple icon="pi pi-plus"
+									class="p-button-success p-mr-1 p-mb-1"></button>
+								<button (click)="retrieveEvaluationData(concept.id)" pButton type="button"
+									class="p-mr-1 p-mb-1 p-button-success" icon="pi pi-list"></button>
+								<button (click)="openEditConceptDialog(concept)" pButton type="button"
+									class="p-mr-1 p-mb-1 p-button-success" icon="pi pi-pencil"></button>
+								<p-toast></p-toast>
+								<button (click)="deleteEvaluationExpert($event,concept.id)" pTooltip="Eliminar" pButton
+									type="button" class="p-mr-1 p-mb-1 p-button-danger" icon="pi pi-trash"></button>
+								<p-confirmPopup key="confirmDelete"></p-confirmPopup>
+							</td>
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="emptymessage">
+						<tr>
+							<td colspan="8">No existe concepto de avaluación.</td>
+						</tr>
+					</ng-template>
+				</p-table>
+			</div>
+		</div>
+	</div>
+
+	<div class="p-col-12 p-md-6">
+		<div class="card">
+			<div class="p-grid table-demo">
+				<p-table #dt [value]="questionList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true"
+					[rows]="5" [paginator]="true">
+					<ng-template pTemplate="caption">
+						<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+							{{ 'admin.questionEvaluation'| translate }}
+						</div>
+					</ng-template>
+					<ng-template pTemplate="header">
+						<tr>
+							<th style="width: 4%">
+								<div class="p-d-flex p-jc-between p-ai-center">#</div>
+							</th>
+							<th style="width: 70%">
+								<div class="p-d-flex p-jc-between p-ai-center">
+									{{'admin.question' | translate }}
+								</div>
+							</th>
+							<th style="text-align: center">{{'admin.actions' | translate}}</th>
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="body" let-question let-rowIndex="rowIndex">
+						<tr class="p-selectable-row">
+							<td>
+								<strong>{{rowIndex+1}}</strong>
+							</td>
+							<!-- Inclusion de los nuevos campos -->
+							<td>
+								<strong>Pregunta</strong>
+								<p>{{question.question}}</p>
+								<strong>Descripción</strong>
+								<p>{{question.description}}</p>
+								<strong>Esquema</strong>
+								<p>{{question.schema}}</p>
+								<strong>Especificación->"Bueno"</strong>
+								<p>{{question.interpreter_yes}}</p>
+								<strong>Especificación->"Regular"</strong>
+								<p>{{question.interpreter_partially}}</p>
+								<strong>Especificación->"Malo"</strong>
+								<p>{{question.interpreter_no}}</p>
+								<strong>Relevancia</strong>
+								<p>{{question.relevance}}</p>
+								<strong>Peso</strong>
+								<p>{{question.weight}}</p>
+								
+							</td>
+							<td style="text-align: center">
+								<button (click)="openEditQuestionDialog(question)" pButton type="button"
+									class="p-mr-1 p-mb-1 p-button-success" icon="pi pi-pencil"></button>
+								<p-toast></p-toast>
+								<button (click)="deleteQuestion($event,question.id,concept.evaluation_concept)"
+									pTooltip="Eliminar" pButton type="button" class="p-mr-1 p-mb-1 p-button-danger"
+									icon="pi pi-trash"></button>
+								<p-confirmPopup key="confirmDelete"></p-confirmPopup>
+							</td>
+
+						</tr>
+					</ng-template>
+					<ng-template pTemplate="emptymessage">
+						<tr>
+							<td colspan="8">{{'admin.questionEmpty'| translate }}</td>
+						</tr>
+					</ng-template>
+				</p-table>
+			</div>
+		</div>
+	</div>
+</div>

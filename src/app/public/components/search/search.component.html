@@ -1,0 +1,48 @@
+<div class="search">
+    <h2 tabindex="0"><label for="searchValue">{{ 'home.tittle' | translate }}</label></h2>
+
+    <form class="search-bar" [formGroup]="formSearch" (ngSubmit)="onSearch()">
+        <p-dropdown id="dropdown" name="dropdown" formControlName="dropdownValue" [options]="interestAreas"
+            [placeholder]="'input.dropdown' | translate" [showClear]="true"></p-dropdown>
+
+        <span class="p-input-icon-right">
+            <input id="searchValue" name="searchValue" formControlName="searchValue" type="text" pInputText
+                [placeholder]="'input.search' | translate" />
+            <i class="pi pi-search"></i>
+        </span>
+        <p-button type="submit" [label]="'input.search' | translate"></p-button>
+    </form>
+
+    <p-messages></p-messages>
+
+</div>
+
+<div class="p-grid sarch-info">
+    <div class="p-col">
+        <div class="box item animate__animated animate__fadeIn" tabindex="0">
+            <i class="pi pi-user" style="font-size: 5rem"></i>
+            <div class="info">
+                <span style="font-weight: bold; font-size: 3em;">{{countStudents}}</span>
+                <span>{{'home.students' | translate}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="p-col">
+        <div class="box item animate__animated animate__fadeIn" tabindex="0">
+            <i class="pi pi-users" style="font-size: 5rem"></i>
+            <div class="info">
+                <span style="font-weight: bold; font-size: 3em;">{{countTeachers}}</span>
+                <span>{{'home.teachers' | translate}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="p-col">
+        <div class="box item animate__animated animate__fadeIn" tabindex="0">
+            <i class="pi pi-file" style="font-size: 5rem"></i>
+            <div class="info">
+                <span style="font-weight: bold; font-size: 3em;">{{countObjectLearning}}</span>
+                <span>{{'home.learning' | translate}}</span>
+            </div>
+        </div>
+    </div>
+</div>

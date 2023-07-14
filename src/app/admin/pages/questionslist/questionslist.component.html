@@ -1,0 +1,67 @@
+<div class="p-grid table-demo">
+	<div class="p-col-12">
+		<div class="card">
+			<h5>Row Expand</h5>
+			<p-table [value]="products" dataKey="name" styleClass="p-datatable-customers rowexpand-table">
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="width: 3rem"></th>
+						<th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+						<th>Image</th>
+						<th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+						<th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
+						<th pSortableColumn="rating">Reviews <p-sortIcon field="rating"></p-sortIcon></th>
+						<th pSortableColumn="inventoryStatus">Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-product let-expanded="expanded">
+					<tr>
+						<td>
+							<button type="button" pButton pRipple [pRowToggler]="product" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+						</td>
+						<td><span class="p-column-title">Name</span>{{product.name}}</td>
+						<td><span class="p-column-title">Image</span><img loading="lazy" [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" /></td>
+						<td><span class="p-column-title">Price</span>{{product.price | currency:'USD'}}</td>
+						<td><span class="p-column-title">Category</span>{{product.category}}</td>
+						<td><span class="p-column-title">Reviews</span><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td>
+						<td><span class="p-column-title">Status</span><span [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span></td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="rowexpansion" let-product>
+					<tr>
+						<td colspan="7">
+							<div class="p-p-3">
+								<p-table [value]="product.orders" dataKey="id">
+									<ng-template pTemplate="header">
+					<tr>
+						<th pSortableColumn="id">Id <p-sortIcon field="price"></p-sortIcon></th>
+						<th pSortableColumn="customer">Customer <p-sortIcon field="customer"></p-sortIcon></th>
+						<th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+						<th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
+						<th pSortableColumn="stats">Status <p-sortIcon field="status"></p-sortIcon></th>
+						<th style="width: 4rem"></th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-order>
+					<tr>
+						<td><span class="p-column-title">Id</span>{{order.id}}</td>
+						<td><span class="p-column-title">Customer</span>{{order.customer}}</td>
+						<td><span class="p-column-title">Date</span>{{order.date}}</td>
+						<td><span class="p-column-title">Amount</span>{{order.amount | currency:'USD'}}</td>
+						<td><span class="p-column-title">Status</span><span [class]="'order-badge order-' + order.status.toLowerCase()">{{order.status}}</span></td>
+						<td><p-button type="button" icon="pi pi-search"></p-button></td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="6">There are no order for this product yet.</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+		</td>
+		</tr>
+		</ng-template>
+		</p-table>
+	</div>
+</div>

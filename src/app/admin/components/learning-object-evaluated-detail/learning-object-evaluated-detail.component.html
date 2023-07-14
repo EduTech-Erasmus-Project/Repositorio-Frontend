@@ -1,0 +1,127 @@
+<div class="p-grid table-demo">
+   <div class="p-col-12">
+      <div class="card">
+         <iframe [src]="index_url | sanitizerurl" class="p-col-12" height="450"></iframe>
+         <h5>{{oaDetail.general_title || ' ' }}</h5>
+         <p-divider layout="horizontal" align="left">
+         </p-divider>
+         <p>
+            {{oaDetail.general_description}}
+         </p>
+         <p-divider layout="horizontal" align="left"></p-divider>
+         <button (click)="onClick()" *ngIf="readMore" pButton pRipple type="button" label="Expandir metadatos ..."
+            class="p-button-info p-button-text p-mr-2 p-mb-2"></button>
+         <p-divider *ngIf="showEvaluation" layout="horizontal" align="left"></p-divider>
+         <div class="card" *ngIf="!readMore">
+            <h6>General</h6>
+            <ul>
+               <li>Catalog: {{oaDetail.general_catalog||"unknown"}}</li>
+               <li>Coverage: {{oaDetail.general_coverage||"unknown"}}</li>
+               <li>Entry: {{oaDetail.general_entry||"unknown"}}</li>
+               <li>Keyword: {{oaDetail.general_keyword||"unknown"}}</li>
+               <li>Language: {{oaDetail.general_language||"unknown"}}</li>
+               <li>Structure: {{oaDetail.general_structure||"unknown"}}</li>
+            </ul>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Life Cycle</h6>
+            <ul>
+               <li><strong>{{oaDetail.life_cycle_description||"unknown"}}</strong> {{oaDetail.life_cycle_dateTime |
+                  date:'medium'}}</li>
+               <li>Role: {{oaDetail.life_cycle_role||"unknown"}}</li>
+               <li>Version: {{oaDetail.life_cycle_version||"unknown"}}</li>
+            </ul>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Meta-Metadata</h6>
+            <ul>
+               <li>Catalog: {{oaDetail.meta_metadata_catalog||"unknown"}}</li>
+               <li>Description: <strong>{{oaDetail.meta_metadata_description||"unknown"}}</strong>
+                  {{oaDetail.meta_metadata_dateTime | date:'medium'}}</li>
+            </ul>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Technical</h6>
+            <ul>
+               <li>Description: {{oaDetail.technical_description||"unknown"}}</li>
+               <li>Format: {{oaDetail.technical_format||""}}</li>
+               <li>Installation remarks: {{oaDetail.technical_installationRremarks||""}}</li>
+               <li>Location: {{oaDetail.technical_location||""}}</li>
+            </ul>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Educational</h6>
+            <ul>
+               <li>Description: {{oaDetail.educational_description||"unknown"}}</li>
+               <li>difficulty: {{oaDetail.educational_difficulty||""}}</li>
+               <li>Language: {{oaDetail.educational_language||""}}</li>
+               <li>Learning resource Type: {{oaDetail.educational_learningResourceType||""}}</li>
+               <li>Procces cognitve: {{oaDetail.educational_procces_cognitve||""}}</li>
+               <li>Typical age range: {{oaDetail.educational_typicalAgeRange||""}}</li>
+               <li>Description: {{oaDetail.educational_typicalLearningTime_description||""}}</li>
+            </ul>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Rights</h6>
+            <ul>
+               <li>Copyright and Other Restrictions: {{oaDetail.rights_copyrightAndOtherRestrictions||"unknown"}}</li>
+               <li>Cost: {{oaDetail.rights_cost||"unknown"}}</li>
+            </ul>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Annotation</h6>
+            <ul>
+               <li><strong>{{oaDetail.annotation_date_description||"unknown"}}</strong>
+                  {{oaDetail.annotation_date_dateTime | date:'medium' }}</li>
+               <li>Description: {{oaDetail.annotation_description||"unknown"}}</li>
+               <li>Entity: {{oaDetail.annotation_entity||"unknown"}}</li>
+               <li>Modeaccess: {{oaDetail.annotation_modeaccess||"unknown"}}</li>
+               <li>Modeaccess sufficient: {{oaDetail.annotation_modeaccesssufficient||"unknown"}}</li>
+               <li>Rol: {{oaDetail.annotation_rol||"unknown"}}</li>
+            </ul>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Relation</h6>
+            <ul>
+               <li>Catalog: {{oaDetail.relation_catalog||"unknown"}}</li>
+               <li>Description: {{oaDetail.relation_description||"unknown"}}</li>
+               <li>Kind: {{oaDetail.relation_kind||"unknown"}}</li>
+               <li>Entry: {{oaDetail.relation_entry||"unknown"}}</li>
+            </ul>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Classification</h6>
+            <ul>
+               <li>Description: {{oaDetail.classification_description||"unknown"}}</li>
+               <li>Keyword: {{oaDetail.classification_keyword||"unknown"}}</li>
+               <li>Purpose: {{oaDetail.classification_purpose||"unknown"}}</li>
+               <li>TaxonPath_source: {{oaDetail.classification_taxonPath_source||"unknown"}}</li>
+               <li>TaxonPath_taxon: {{oaDetail.classification_taxonPath_taxon||"unknown"}}</li>
+            </ul>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Accessibility</h6>
+            <ul>
+               <li>Summary: {{oaDetail.accesibility_summary||"unknown"}}</li>
+               <li>Features: {{oaDetail.accesibility_features||"unknown"}}</li>
+               <li>Hazard: {{oaDetail.accesibility_hazard||"unknown"}}</li>
+               <li>Control: {{oaDetail.accesibility_control||"unknown"}}</li>
+               <li>Api: {{oaDetail.accesibility_api||"unknown"}}</li>
+            </ul>
+         </div>
+         <p-divider *ngIf="!readMore" layout="horizontal" align="left"></p-divider>
+         <button (click)="onClick()" *ngIf="!readMore" pButton pRipple type="button" label="Ver menos ..."
+            class="p-button-info p-button-text p-mr-2 p-mb-2"></button>
+         <p-divider *ngIf="showEvaluation && !readMore" layout="horizontal" align="left"></p-divider>
+         <div *ngIf="disableEvaluation">
+            <button (click)="onClick1()" *ngIf="showEvaluation" pButton pRipple type="button" label="Ver evaluación ..."
+            class="p-button-info p-button-text p-mr-2 p-mb-2"></button>
+            <div class="card" *ngIf="!showEvaluation">
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <h6>Evaluación</h6>
+            <p *ngIf="oa.observation !== null"><strong>Observación:</strong> {{oa.observation}}</p>
+            <ul *ngFor="let evaluation of conceptEvaluations">
+               <li><strong>{{evaluation.evaluation_concept.concept}}</strong></li>
+               <div *ngFor="let concept of evaluation.question_evaluations">
+                  <p>{{concept.evaluation_question.question}}. <strong>{{concept.qualification}}</strong></p>
+               </div>
+            </ul>
+         </div>
+         <p-divider *ngIf="!showEvaluation" layout="horizontal" align="left"></p-divider>
+         <button (click)="onClick1()" *ngIf="!showEvaluation" pButton pRipple type="button" label="Ver menos ..."
+            class="p-button-info p-button-text p-mr-2 p-mb-2"></button>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,22 @@
+.labelQu {
+  background-color: var(--primary-color);
+  padding: 9px 9px;
+  border-radius: 5px;
+}
+.labelQT {
+  color: white;
+}
+
+span.blue {
+  background: var(--primary-color);
+  border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1em;
+  margin-right: 15px;
+  text-align: center;
+  width: 1em;
+}

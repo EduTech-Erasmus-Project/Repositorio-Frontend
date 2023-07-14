@@ -1,0 +1,84 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <form autocomplete="off" [formGroup]="form" id="crearUsuario">
+                <h5>Servidor de email</h5>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col-12 p-md-5">
+                        <label for="host">Host*</label>
+                        <input id="host" type="text" pInputText formControlName="host">
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('host')">
+                        </p-message>
+                    </div>
+
+                    <div class="p-field p-col-12 p-md-5">
+                        <label for="username">Username*</label>
+                        <input id="username" type="text" pInputText formControlName="username">
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('username')">
+                        </p-message>
+                    </div>
+
+                    <div class="p-field p-col-12 p-md-2">
+                        <label for="port">Port*</label>
+                        <input id="port" type="number" pInputText formControlName="port">
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('port')">
+                        </p-message>
+                    </div>
+
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="password">Password</label>
+                        <input id="password" type="text" pInputText formControlName="password">
+                        <p-message severity="error" text="El campo es obligatorio" *ngIf="getErrorRequired('password')">
+                        </p-message>
+                    </div>
+
+                    
+
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="email_from">Email de envio*</label>
+                        <input id="email_from" type="text" pInputText formControlName="email_from">
+                        <p-message severity="error" text="El campo es obligatorio"
+                            *ngIf="getErrorRequired('email_from')">
+                        </p-message>
+                    </div>
+
+                    <div class="p-field p-col-12 p-md-4" style="display: flex; flex-direction: column;">
+                        <label for="tls">TLS *</label>
+                        <p-inputSwitch formControlName="tls" id="tls"></p-inputSwitch>
+                        <p-message severity="error" text="El campo es obligatorio"
+                            *ngIf="getErrorRequired('tls')"></p-message>
+                    </div>
+
+                </div>
+
+                <div class="p-field p-col-12 p-md-12">
+                    <h5>Prueba de servidor</h5>
+                    <div class="p-fluid p-formgrid p-grid">
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="emailtest">Mail de envio de mensaje de prueba</label>
+                            <input id="emailtest" type="text" pInputText formControlName="emailtest">
+                        </div>
+                        <div class="p-field p-col-12 p-md-6 p-mt-4">
+                            <button [disabled]="loader" (click)="onTestEmail()" pButton pRipple type="submit" label="Enviar mensaje de prueba"
+                                class="p-button-success p-mr-2 p-mb-0"></button>
+                        </div>
+                    </div>
+                   
+                </div>
+
+                <div class="p-fluid p-grid p-mb-3"></div>
+                <div class="p-fluid p-grid" style="display: flex; justify-content: center;">
+                    <div class="p-field p-col-12 p-md-6">
+
+                        <button [disabled]="loader" (click)="onSave()" pButton pRipple type="submit" label="{{'admin.save'| translate }}"
+                            class="p-button-success p-mr-2 p-mb-0"></button>
+                    </div>
+                    <!-- <div class="p-field p-col-12 p-md-6">
+                        <button (click)="back()" pButton pRipple type="button" label="{{'admin.cancel'| translate }}"
+                            class="p-button-danger p-mr-0 p-mb-0"></button>
+                    </div> -->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

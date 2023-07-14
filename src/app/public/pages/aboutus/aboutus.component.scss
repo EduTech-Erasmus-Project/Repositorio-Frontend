@@ -1,0 +1,211 @@
+.about-us {
+  margin-bottom: 50px;
+
+  img {
+    width: 100%;
+  }
+
+  .content-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+
+    p {
+      text-align: justify;
+      font-size: 1.2em;
+    }
+
+  }
+}
+
+.card-about {
+  text-align: center;
+  padding: 15px 5px;
+  border-radius: 25px;
+  border-bottom: 3px solid #18a4fb;
+
+  .icon {
+    i {
+      font-size: 4em;
+      color: #18a4fb;
+    }
+  }
+
+  .title {
+
+    // h3 {
+    //   text-transform: uppercase;
+    //   margin: 5px 0;
+    //   font-weight: bold;
+    // }
+    p {
+      font-weight: bold;
+      text-align: center;
+      font-size: 1.1em;
+    }
+  }
+}
+
+.yellow {
+  border-bottom: 3px solid #ffd100;
+
+  .icon {
+    i {
+      font-size: 4em;
+      color: #ffd100;
+    }
+  }
+}
+
+.red {
+  border-bottom: 3px solid #ff005a;
+
+  .icon {
+    i {
+      font-size: 4em;
+      color: #ff005a;
+    }
+  }
+}
+
+.purple {
+  border-bottom: 3px solid #7e57c2;
+
+  .icon {
+    i {
+      font-size: 4em;
+      color: #7e57c2;
+    }
+  }
+}
+
+:host ::ng-deep .p-card-title {
+  font-size: 1em;
+}
+
+:host ::ng-deep .p-card-footer {
+  i {
+    color: var(--primary-color);
+    margin-right: 5px;
+  }
+}
+
+:host ::ng-deep .p-card-shadow {
+  height: 100%;
+}
+
+.email {
+  height: 100%;
+  //  display: flex;
+  align-items: center;
+  //background-color: red;
+}
+
+
+//divider 
+.devider {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 6em;
+  margin-bottom: 6em;
+  width: 100%;
+
+  hr {
+    height: 2px;
+    width: 40%;
+    background-color: #3b5b6881;
+    align-self: center;
+    margin-left: 2em;
+    margin-right: 2em;
+  }
+
+  h3 {
+    font-weight: bold;
+  }
+}
+
+// p {
+//   text-align: justify;
+// }
+
+.img-comp {
+  align-self: center;
+}
+
+.description-comp {
+  h4 {
+    text-decoration: underline;
+
+  }
+}
+
+.servicios {
+  margin-top: 4em;
+}
+
+
+
+.custom-marker {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+::ng-deep {
+
+  .p-timeline-event-content,
+  .p-timeline-event-opposite {
+    line-height: 1;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  ::ng-deep {
+    .customized-timeline {
+      .p-timeline-event:nth-child(even) {
+        flex-direction: row !important;
+
+        .p-timeline-event-content {
+          text-align: left !important;
+        }
+      }
+
+      .p-timeline-event-opposite {
+        flex: 0;
+      }
+
+      .p-card {
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+
+
+
+.footer {
+  .email {
+    padding: 3px;
+  }
+}
+
+
+.developers {
+  width: 80%;
+  margin-left: 10%;
+  padding-top: 2em;
+  //   background: #ffffff;
+  margin-bottom: 4em;
+}
+
+:host::ng-deep .p-card-body {
+  text-align: center;
+}

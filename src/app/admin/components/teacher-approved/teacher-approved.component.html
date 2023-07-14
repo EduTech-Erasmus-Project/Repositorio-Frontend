@@ -1,0 +1,85 @@
+
+<div class="p-grid table-demo">
+	<div class="p-col-12">
+		<div class="card">
+			<app-loading *ngIf="!isLoading"></app-loading>
+			<p-table *ngIf="isLoading" #dt [value]="user_student_teacher_lists"  [(selection)]="userList" dataKey="id"
+					 styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [paginator]="true"
+					 [filterDelay]="0" [globalFilterFields]="['first_name','last_name']">
+				<ng-template pTemplate="caption">
+					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+						{{'admin.teacherExpertApproved' | translate }}
+						<span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+						   placeholder="Buscar"/>
+                </span>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+                        <th style="width: 4rem">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.image' | translate }}
+							</div>
+						</th>
+						<th style="width: 16%" >
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.first_name' | translate}}
+							</div>
+						</th>
+						<th style="width: 10%">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.email' | translate}}
+							</div>
+						</th>
+						<th style="width: 22%">
+								{{'admin.role' | translate }}
+						</th>
+						<th style="width: 15%">{{'admin.activity' | translate }}</th>
+						<th style="text-align: center">{{'admin.actions' | translate }}</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-user>
+					<tr class="p-selectable-row">
+                        <td>
+							<img src="{{user.image_url}}" alt="user.first_name" width="50">
+						</td>
+						<td>
+							<span class="p-column-title">{{'admin.first_name' | translate}}</span>
+							<p>{{user.first_name || ""}} {{user.last_name || ""}}</p>
+						</td>
+						<td>
+							<span class="p-column-title">{{'admin.email' | translate}}</span>
+							<p>{{user.email || ""}}</p>
+						</td>
+						<td>
+							<span class="p-column-title esty">{{'admin.role' | translate}}</span>
+                            <ul *ngFor="let rol of user.rol_aprovados" class="list-group">
+                                <p-tag styleClass="p-mr-2" severity="warning" value="{{rol | slice:0:7}}"></p-tag>
+                             </ul>
+                       
+						</td>
+						<td>
+							<button *ngIf="user.collaboratingExpert !== null" (click)="getLearningObjectEvaluatedByExpert(user.collaboratingExpert.id)" pButton pRipple type="button" label="OA evaluados" class="p-button-help p-button-text p-mr-2 p-mb-2"></button>
+							<button *ngIf="user.teacher !== null " (click)="getLearningObjectUploadByTeacher(user.teacher.id)" pButton pRipple type="button" label="OA cargados" class="p-button-help p-button-text p-mr-2 p-mb-2"></button>
+							
+						</td>
+						<td style="text-align: center">
+							<p-toast></p-toast>
+							<button *ngIf="user.teacher !== null && user.teacher.is_active" (click)="confirm2($event,user.id,0,1)" pButton pRipple type="button" label="Docente" pTooltip="Deshabilitar" class="p-button-danger p-mr-2 p-mb-2"></button>
+							<button *ngIf="user.collaboratingExpert !== null && user.collaboratingExpert.is_active" (click)="confirm2($event,user.id,1,0)"  pButton pRipple type="button" pTooltip="Deshabilitar" label="Experto" class="p-button-danger p-mr-2 p-mb-2"></button>
+							<p-confirmPopup key="confirm2"></p-confirmPopup>
+							<button  (click)="getProfile(user.id)" pButton pRipple type="button" label="Perfil" class="p-button-info p-mr-2 p-mb-2"></button>
+						</td>
+						
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">{{'admin.emptyTeachExpert' | translate }}</td>
+					</tr>
+				</ng-template>
+			</p-table>
+	</div>
+</div>

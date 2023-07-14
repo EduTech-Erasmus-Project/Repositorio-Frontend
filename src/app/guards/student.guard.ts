@@ -1,0 +1,23 @@
+import { Injectable } from '@angular/core';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { LoginService } from '../services/login.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class StudentGuard implements CanActivate {
+  constructor(private loginService:LoginService, private router:Router){}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot) {
+      if(this.loginService.validateRole('student')){
+        return true;
+      }else{
+        this.router.navigate(['home'])
+        //console.log("teacher guard")
+        return false
+      }
+  }
+  
+}

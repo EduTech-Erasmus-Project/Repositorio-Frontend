@@ -1,0 +1,274 @@
+<div class="main-content">
+    <div class="p-grid">
+        <div class="p-col-12 p-md-8 p-lg-9">
+            <div class="box content">
+
+                <ng-container *ngIf="objectData; else objectDataTemplate">
+                    <app-web-view [object]="objectData" (commentEmit1)="coutComment1($event)" ></app-web-view>
+                </ng-container>
+                <ng-template #objectDataTemplate>
+                    <div class="custom-skeleton p-p-4">
+
+                        <p-skeleton width="100%" height="70vh"></p-skeleton>
+                        <div class="p-d-flex p-jc-between p-mt-3">
+                            <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                            <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                        </div>
+                    </div>
+                    <div class="p-d-flex p-mb-3">
+                        <p-skeleton shape="circle" size="4rem" styleClass="p-mr-2"></p-skeleton>
+                        <div>
+                            <p-skeleton width="10rem" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="5rem" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton height=".5rem"></p-skeleton>
+                        </div>
+                    </div>
+                    <div class="p-field p-col-12 p-md-12">
+                        <p-skeleton styleClass="p-mb-2"></p-skeleton>
+                        <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                        <p-skeleton width="75%" styleClass="p-mb-2"></p-skeleton>
+                        <p-skeleton height="50%" styleClass="p-mb-2"></p-skeleton>
+                        <p-skeleton width="10rem" height="3rem"></p-skeleton>
+                    </div>
+
+                </ng-template>
+
+
+                <p-tabView>
+                    <!-- "'object.comments' | translate +' ('+commentsData?.count+')'" -->
+                    <p-tabPanel [header]="('object.comments' | translate) + ' ('+commentsData?.count+')'">
+                        <ng-container *ngIf="commentsData; else commentsTemplate">
+                            <div class="animate__animated animate__fadeIn">
+                                <app-comments [objectId]="objectData.id" [comments]="commentsData.results"
+                                    (commentEmit)="coutComment($event)"></app-comments>
+                            </div>
+                        </ng-container>
+                        <ng-template #commentsTemplate>
+                            <div class="custom-skeleton p-p-4">
+                                <ul class="p-m-0 p-p-0">
+                                    <li class="p-mb-3">
+                                        <div class="p-d-flex">
+                                            <p-skeleton shape="circle" size="4rem" styleClass="p-mr-2"></p-skeleton>
+                                            <div style="flex: 1">
+                                                <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                                                <p-skeleton width="75%"></p-skeleton>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="p-mb-3">
+                                        <div class="p-d-flex">
+                                            <p-skeleton shape="circle" size="4rem" styleClass="p-mr-2"></p-skeleton>
+                                            <div style="flex: 1">
+                                                <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                                                <p-skeleton width="75%"></p-skeleton>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="p-mb-3">
+                                        <div class="p-d-flex">
+                                            <p-skeleton shape="circle" size="4rem" styleClass="p-mr-2"></p-skeleton>
+                                            <div style="flex: 1">
+                                                <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                                                <p-skeleton width="75%"></p-skeleton>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="p-d-flex">
+                                            <p-skeleton shape="circle" size="4rem" styleClass="p-mr-2"></p-skeleton>
+                                            <div style="flex: 1">
+                                                <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                                                <p-skeleton width="75%"></p-skeleton>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </ng-template>
+
+
+                    </p-tabPanel>
+                    <p-tabPanel [header]="'object.metadata' | translate">
+                        <ng-container *ngIf="objectData; else metadataTemplate">
+                            <div class="metadata-content">
+
+                                <button (click)="showMetadata = !showMetadata"
+                                    [ngClass]="{'pi-eye': !showMetadata, 'pi-eye-slash': showMetadata}" pButton pRipple
+                                    type="button" icon="pi" class="pi p-button-rounded show"></button>
+
+                                <ng-container *ngIf="showMetadata; else metatdataTemplate">
+                                    <pre class="animate__animated animate__fadeIn metadata-content pretty"
+                                        [innerHTML]="objectData | prettyprint"></pre>
+                                </ng-container>
+                                <ng-template #metatdataTemplate>
+                                    <div class="animate__animated animate__fadeIn metadata-content">
+                                        <app-metadata *ngIf="objectData" [learningobjectdetail]="objectData"></app-metadata>
+                                    </div>
+                                </ng-template>
+
+                            </div>
+
+                        </ng-container>
+                        <ng-template #metadataTemplate>
+                            <p-skeleton styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="10rem" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="70%" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="5%" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="90%" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="50%" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="60%" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="40%" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="20%" styleClass="p-mb-2"></p-skeleton>
+                            <p-skeleton width="10rem" height="4rem"></p-skeleton>
+                        </ng-template>
+
+
+                    </p-tabPanel>
+
+                    <p-tabPanel [header]="'object.insert' | translate">
+
+                        <textarea disabled class="code animate__animated animate__fadeIn" rows="6" [value]="embedCode"
+                            pInputTextarea></textarea>
+                        <button (click)="copyText()" pButton pRipple type="button" label="{{'object.copy' | translate}}"
+                            class="p-button-raised"></button>
+                    </p-tabPanel>
+
+                    <p-tabPanel [header]="'object.evaluation' | translate" >                       
+                        <!------------------------------------------------------------------------------------------>
+                        <div *ngIf="roleStudent && (!roleExpert && !roleTeacher)">
+                            <div *ngFor="let item of resultsEva" class="tableP">
+                                <table class="table table-bordered" *ngFor="let itemQ of item.concepts">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">{{itemQ.concepto.concept}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="pi pi-star"></i> {{itemQ.total | number:'1.1-2'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        
+                        <div *ngIf="roleTeacher &&(!roleStudent && !roleExpert) ">
+                            <div *ngFor="let item of groupedQuestionsTeacher">
+                                <div *ngFor="let item1 of item.conceptEvaluations">
+                                    <div class="forms">
+                                        <h2>{{item1.evaluationConcept}}</h2>
+                                        <ul>
+                                            <li *ngFor="let itemQ of item1.questionEvaluations">
+                                                <div class="labelQu">
+                                                    <label class="labelQT">{{itemQ.questions}}.<strong>{{itemQ.qualification}}</strong></label>
+                                                </div>
+                        
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="forms">
+                                <h6>{{'object.observation' | translate}}</h6>
+                                <div *ngFor="let item of groupedQuestionsTeacher">
+                                    <label>{{item.observation}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        <div *ngIf="roleExpert && flagConfirm">
+                            <div *ngFor="let item of groupedQuestionsEx">
+                                <div *ngFor="let item1 of item.conceptEvaluations">
+                                    <div class="forms">
+                                        <h6>{{item1.evaluationConcept}}</h6>
+                                        <ul>
+                                            <li *ngFor="let itemQ of item1.questionEvaluations">
+                                                <div class="labelQu">
+                                                    <label class="labelQT">{{itemQ.questions}}.<strong>{{itemQ.qualification}}</strong></label>
+                                                </div>
+                        
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="forms">
+                                <h6>{{'object.observation' | translate}}</h6>
+                                <div *ngFor="let item of groupedQuestionsEx">
+                                    <label>{{item.observation}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="di" *ngIf="!flagConfirm" style="text-align: center;">
+                        <label style="color: darkgray;" >{{'object.evaluationErrorView'|translate}}</label>
+                        </div>
+                        <!------------------------------------------------------------------------------------------>
+                    </p-tabPanel>
+                </p-tabView>
+            </div>
+        </div>
+        <div class="p-col-12 p-md-4 p-lg-3">
+            <div class="box sidebar">
+                <ng-container *ngIf="objectData; else slideTemplate">
+                    <app-side-object></app-side-object>
+                </ng-container>
+                <ng-template #slideTemplate>
+
+                    <div class="custom-skeleton p-p-2">
+                        <p-skeleton height="3rem" styleClass="p-mb-2"></p-skeleton>
+                    </div>
+
+
+                    <div class="custom-skeleton p-p-4">
+                        <ul class="p-m-0 p-p-0">
+                            <li class="p-mb-3">
+                                <div class="p-d-flex">
+                                    <p-skeleton shape="circle" size="4rem" styleClass="p-mr-2"></p-skeleton>
+                                    <div style="flex: 1">
+                                        <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                                        <p-skeleton width="75%"></p-skeleton>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="p-mb-3">
+                                <div class="p-d-flex">
+                                    <p-skeleton shape="circle" size="4rem" styleClass="p-mr-2"></p-skeleton>
+                                    <div style="flex: 1">
+                                        <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                                        <p-skeleton width="75%"></p-skeleton>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="p-mb-3">
+                                <div class="p-d-flex">
+                                    <p-skeleton shape="circle" size="4rem" styleClass="p-mr-2"></p-skeleton>
+                                    <div style="flex: 1">
+                                        <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                                        <p-skeleton width="75%"></p-skeleton>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="p-d-flex">
+                                    <p-skeleton shape="circle" size="4rem" styleClass="p-mr-2"></p-skeleton>
+                                    <div style="flex: 1">
+                                        <p-skeleton width="100%" styleClass="p-mb-2"></p-skeleton>
+                                        <p-skeleton width="75%"></p-skeleton>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </ng-template>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast></p-toast>

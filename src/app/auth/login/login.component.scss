@@ -1,0 +1,29 @@
+.login-content{
+    position: relative;
+    height: 70vh;
+    .desert{
+        position: absolute;
+        bottom: 0;
+    }
+    .login-panel{
+        height: 100%;
+    }
+}
+
+.viewPass{
+    position: relative;
+    i{
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      padding: 5px;
+      cursor: pointer;
+    }
+  }
+
+  .links{
+    display: grid;
+    .first{
+        text-align: right;  
+    }
+  }

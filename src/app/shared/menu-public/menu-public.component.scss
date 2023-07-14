@@ -1,0 +1,69 @@
+.menu{
+  padding: 15px 0 0;
+
+}
+
+.title_principal{
+  position: fixed;
+  color: #ff000000;
+  z-index: -50;
+}
+
+:host ::ng-deep .p-menubar.p-component {
+  padding: 5px 0;
+}
+
+:host ::ng-deep .p-menubar{
+  background:#ffffff;
+}
+
+:host ::ng-deep .p-menuitem-link-active {
+  .p-menuitem-text {
+    //color: #3B5B68; //Declarar en variable
+    //background-color: red;
+    color: var(--primary-color);
+  }
+}
+
+:host ::ng-deep .profile-image-wrapper {
+  img {
+    border-radius: 50%;
+  }
+}
+
+:host ::ng-deep .profile {
+  img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+  }
+}
+
+.items-login {
+  width: 250px;
+  //background-color: red;
+  .box {
+    text-align: right;
+  }
+}
+
+.layout-topbar {
+  //display: block;
+  position: relative;
+  width: 100%;
+  box-shadow: none;
+}
+
+.name-user {
+  text-transform: capitalize;
+}
+
+:host ::ng-deep .p-menuitem-link-active{
+  background-color: var(--primary-color);
+  span{
+    color: #FFF !important;
+  }
+  &:hover{
+    background-color: var(--primary-color) !important;
+  }
+}

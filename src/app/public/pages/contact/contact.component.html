@@ -1,0 +1,183 @@
+<app-header [header_title]="'menu.contactUp' | translate"></app-header>
+<div class="login-body layout-light">
+  <div class="login-content animate__animated animate__fadeIn">
+    <div class="login-panel" style="width: 80%">
+      <div class="login-panel-content" style="width: 100%">
+        <div class="forms">
+          <form
+            autocomplete="off"
+            [formGroup]="angForm"
+            (ngSubmit)="validateUser()"
+            id="loginForm"
+          >
+            <div class="p-grid">
+              <div class="p-col-12 p-md-6 p-lg-6">
+                <div class="p-field p-fluid">
+                  <label for="firstnamelabel"
+                    >{{ "register.name" | translate }}*</label
+                  >
+                  <input type="text" formControlName="name" pInputText />
+
+                  <div *ngIf="name.invalid && (name.dirty || name.touched)">
+                    <small
+                      id="name "
+                      class="p-error"
+                      *ngIf="name.errors.required"
+                      >*{{ "validation.obligatoryCamp" | translate }}*</small
+                    >
+                  </div>
+                </div>
+                <div class="p-field p-fluid">
+                  <label for="firstnamelabel"
+                    >{{ "register.email" | translate }}*</label
+                  >
+                  <input type="text" formControlName="email" pInputText />
+                  <div *ngIf="email.invalid && (name.dirty || email.touched)">
+                    <small
+                      id="name "
+                      class="p-error"
+                      *ngIf="email.errors.required"
+                      >*{{ "validation.obligatoryCamp" | translate }}*</small
+                    >
+                    <small
+                      id="name "
+                      class="p-error"
+                      *ngIf="email.errors.email"
+                      >*{{ "validation.obligatoryCamp" | translate }}*</small
+                    >
+                  </div>
+                </div>
+                <div class="p-field p-fluid">
+                  <label for="firstnamelabel"
+                    >{{ "search.message" | translate }}*</label
+                  >
+                  <div>
+                    <textarea
+                      name=""
+                      id=""
+                      rows="5"
+                      cols="30"
+                      style="width: 100%"
+                      formControlName="message"
+                      pInputTextarea
+                    ></textarea>
+                  </div>
+                  <div
+                    *ngIf="
+                      message.invalid && (message.dirty || message.touched)
+                    "
+                  >
+                    <small
+                      id="name "
+                      class="p-error"
+                      *ngIf="message.errors.required"
+                      >*{{ "validation.obligatoryCamp" | translate }}*</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- Estruct 2-->
+              <div class="p-col-12 p-md-6 p-lg-6">
+                <img
+                  src="assets/img/contacts.svg"
+                  alt="{{ 'login.sendImage' | translate }}"
+                  tabindex="0"
+                  style="width: 100%; height: 100%"
+                />
+              </div>
+            </div>
+            <span class="p-buttonset">
+              <button
+                pButton
+                pRipple
+                type="submit"
+                label="{{ 'login.send' | translate }}"
+                icon="pi pi-check"
+              ></button>
+            </span>
+          </form>
+        </div>
+        <div class="developers">
+          <div
+            class="p-grid about-us"
+            style="padding-bottom: 4em; justify-content: center"
+          >
+            <div class="p-col-12 p-md-6 p-lg-6" tabindex="0">
+              <div class="content-info">
+                <h2 tabindex="0">{{ "developers.title" | translate }}</h2>
+                <p tabindex="0">{{ "developers.description" | translate }}</p>
+              </div>
+            </div>
+            <!-- <div class="p-col-12 p-md-6 p-lg-6">
+                            <img src="assets/img/developW.svg" alt="Imagen hace referecia el trabajo en equipo" tabindex="0">
+                        </div> -->
+          </div>
+          <div class="p-grid">
+            <div class="p-col-12 p-md-6 p-lg-12">
+              <p-timeline [value]="events1">
+                <!-- <ng-template pTemplate="marker" let-event>
+                                <span class="custom-marker shadow-2" [style.backgroundColor]="event.color">
+                                    <i [ngClass]="event.icon"></i>
+                                </span>
+                            </ng-template> -->
+                <ng-template pTemplate="content" let-event tabindex="0">
+                  <p-card
+                    [header]="event.user1.status"
+                    [subheader]="event.user1.date"
+                    [tabIndex]="0"
+                  >
+                    <div class="footer">
+                      <div class="email" *ngIf="event.user1.email">
+                        <i class="pi pi-envelope"></i>
+                        <span tabindex="0"
+                          ><a href="mailto:{{ event.user1.email }}">
+                            {{ event.user1.email }}</a
+                          ></span
+                        >
+                      </div>
+                      <div class="email" *ngIf="event.user1.email1">
+                        <i class="pi pi-envelope"></i>
+                        <span tabindex="0"
+                          ><a href="mailto:{{ event.user1.email1 }}">
+                            {{ event.user1.email1 }}</a
+                          ></span
+                        >
+                      </div>
+                    </div>
+                  </p-card>
+                </ng-template>
+                <ng-template pTemplate="opposite" let-event tabindex="0">
+                  <p-card
+                    [header]="event.user2.status"
+                    [subheader]="event.user2.date"
+                    [tabIndex]="0"
+                  >
+                    <div class="footer">
+                      <div class="email" *ngIf="event.user2.email">
+                        <i class="pi pi-envelope"></i>
+                        <span tabindex="0"
+                          ><a href="mailto:{{ event.user2.email }}">
+                            {{ event.user2.email }}</a
+                          ></span
+                        >
+                      </div>
+                      <div class="email" *ngIf="event.user2.email1">
+                        <i class="pi pi-envelope"></i>
+                        <span tabindex="0"
+                          ><a href="mailto:{{ event.user2.email1 }}">
+                            {{ event.user2.email1 }}</a
+                          ></span
+                        >
+                      </div>
+                    </div>
+                  </p-card>
+                </ng-template>
+              </p-timeline>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p-toast></p-toast>
+    </div>
+  </div>
+</div>

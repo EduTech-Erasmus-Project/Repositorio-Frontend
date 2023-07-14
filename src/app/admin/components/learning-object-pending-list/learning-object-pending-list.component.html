@@ -1,0 +1,124 @@
+<p-toast></p-toast>
+<div class="p-grid table-demo">
+	<div class="p-col-12">
+		<app-loading *ngIf="!isLoading"></app-loading>
+
+		<div *ngIf="isLoading" class="card">
+
+			<form [formGroup]="form" class="p-mb2 p-grid">
+				<div class="flex flex-column gap-2 p-col-3" style="flex-direction: column;">
+					<label htmlFor="created_init">Fecha inicial</label>
+					<p-calendar formControlName="created_init" dateFormat="yy-mm-dd"  inputId="created_init" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="{{getYearRange()}}"></p-calendar>
+				</div>
+
+				<div class="flex flex-column gap-2 p-col-3" style="flex-direction: column;">
+					<label htmlFor="created_end">Fecha final</label>
+					<p-calendar formControlName="created_end" dateFormat="yy-mm-dd" inputId="created_end" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="{{getYearRange()}}"></p-calendar>
+				</div>
+
+				<div class="flex flex-column gap-2 p-col-3" style="flex-direction: column;">
+					<label htmlFor="created_end">Titulo</label>
+					<span class="p-input-icon-left">
+						<i class="pi pi-search"></i>
+						<input type="text" pInputText placeholder="Search" formControlName="general_title" />
+					</span>
+				</div>
+
+				<div class="p-col-2" style="display: flex; align-items: flex-end;">
+					<p-button (onClick)="listLearningObject()" label="Buscar" icon="pi pi-search" iconPos="right"></p-button>
+				</div>
+			</form>
+
+			<p-table #dt [value]="learningobjectList" [(selection)]="learningobjectsSelected" dataKey="id"
+				styleClass="p-datatable-customers" [rowHover]="true" [rows]="15" [filterDelay]="0"
+				[globalFilterFields]="['general_title']">
+				<!-- <ng-template pTemplate="caption">
+					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+						{{'admin.learningObjectToAprove'| translate }}
+						<span class="p-input-icon-left">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+								placeholder="Buscar" />
+						</span>
+					</div>
+				</ng-template> -->
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="width: 8rem">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.avatar' | translate }}
+							</div>
+						</th>
+						<th>
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.title' | translate }}
+							</div>
+						</th>
+						<th style="width: 8rem">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.status' | translate }}
+							</div>
+						</th>
+						<th style="width: 15rem">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.user'| translate }}
+							</div>
+						</th>
+						<th style="width: 15rem">
+							<div class="p-d-flex p-jc-between p-ai-center">
+								{{'admin.email'| translate }}
+							</div>
+						</th>
+						<th style="width: 15rem">{{'admin.actions' | translate }}</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-oa>
+					<tr class="p-selectable-row">
+						<td>
+							<span class="p-column-title">{{'admin.avatar' | translate }}</span>
+							<img src="{{oa.avatar}}" alt="avatar" width="75">
+						</td>
+						<td>
+							<span class="p-column-title">{{'admin.title' | translate }}</span>
+							<h4>{{oa.general_title}}</h4>
+							<p>
+								{{oa.general_description | slice:0:500}}
+							</p>
+							<p>
+								<strong>{{'admin.uploadDate' | translate }}: </strong>{{oa.created | date:'medium' }}
+							</p>
+						</td>
+						<td>
+							<label>{{oa.user_created.first_name}} {{oa.user_created.last_name}}</label>
+						</td>
+						<td>
+							<label>{{oa.user_created.email}}</label>
+						</td>
+						<td>
+							<span class="p-column-title">{{'admin.actions'| translate }}</span>
+							<p-tag *ngIf="!oa.public" styleClass="p-mr-2" severity="danger" value="APROBAR"></p-tag>
+						</td>
+						<td style="text-align: center">
+							<p-toast></p-toast>
+							<button *ngIf="!oa.public" (click)="confirm2($event,oa.id)" pButton pRipple type="button"
+								label="Aprobar" class="p-button-success p-mr-2 p-mb-2" pTooltip="Aprobar"></button>
+							<p-confirmPopup key="confirm2"></p-confirmPopup>
+							<button (click)="getDetail(oa.slug)" pButton pRipple type="button" label="Detalle"
+								class="p-button-info p-mr-2 p-mb-2"></button>
+							<!-- Boton para eliminar el objetos de aprendizaje-->
+							<button (click)="deleteLearningObject(oa.id)" pButton pRipple type="button"
+								label="{{'admin.delete' | translate}}" class="p-button-danger p-mr-2 p-mb-2"></button>
+						</td>
+
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">{{'admin.emptyoaToAprove' | translate }}</td>
+					</tr>
+				</ng-template>
+			</p-table>
+			<p-paginator [rows]="rows" [totalRecords]="totalRecords" (onPageChange)="paginate($event)"></p-paginator>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,37 @@
+$gutter: 0.5rem; //for primeflex grid system
+
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+@import "../node_modules/prismjs/themes/prism-coy.css";
+@import "../node_modules/@fullcalendar/core/main.min.css";
+@import "../node_modules/@fullcalendar/daygrid/main.min.css";
+@import "../node_modules/@fullcalendar/timegrid/main.min.css";
+@import "assets/demo/flags/flags.css";
+//@import "~animate.css/animate.min";
+
+.main-content {
+  padding: 0 75px;
+}
+
+.fl-prefsEditor-buttons{
+  z-index: 50000;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0 25px !important;
+  border: none !important;
+  background-color: var(--primary-color) !important;
+  box-shadow: none !important;
+  button{
+    background-color: var(--primary-color) !important;
+    color: #FFF !important;
+  }
+}
+
+
+@media (max-width: 700px) {
+  .main-content {
+    padding: 0 25px;
+  }
+}

@@ -1,0 +1,7 @@
+<div class="content">
+    <div class="p-grid">
+        <div *ngFor="let contributor of contributors" class="p-col-6 p-md-2 p-lg-1">
+            <a target="_blank" [href]="contributor.web"><img loading="lazy" [src]="contributor.img"
+                    [alt]="contributor.alt"></a>
+        </div>
+    </div>

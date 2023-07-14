@@ -1,0 +1,194 @@
+/*
+button-expert modelo para el boton
+*/
+.rating-heart {
+  display: flex;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 3.5rem;
+  background-color: var(--primary-color);
+  padding: 5px 15px;
+  border-radius: 15px;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+
+  i {
+    font-size: 13px;
+  }
+
+  span {
+    font-size: 10px;
+    margin-left:4px;
+  }
+}
+
+
+.button-expert {
+  padding-top: 1em;
+}
+
+.imagen {
+  height: 15rem;
+}
+
+.button-read {
+
+  position: relative;
+  padding: 0.6rem 3rem 0.6rem 1rem;
+
+  i {
+    background-color: var(--primary-color);
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: #fff;
+    position: absolute;
+    right: 2px;
+  }
+}
+
+:host ::ng-deep .p-card-content {
+  padding: 0;
+}
+
+.card-content {
+  height: 100%;
+
+  :host ::ng-deep .p-card-shadow {
+    height: 100%;
+    //position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  :host ::ng-deep .p-card-body {
+    //height: 100%;
+    //background-color: red;
+    padding: 15px;
+
+
+  }
+}
+
+:host ::ng-deep .p-card-footer {
+  text-align: center;
+}
+
+:host ::ng-deep .p-rating {
+  .p-rating-icon {
+    cursor: text;
+  }
+
+}
+
+:host ::ng-deep .p-card-shadow {
+  //background-color: red;
+  position: relative;
+}
+
+:host ::ng-deep .p-card-title {
+  font-size: 1em;
+}
+
+.rating {
+  display: flex;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 4rem;
+  background-color: var(--primary-color);
+  padding: 5px 15px;
+  border-radius: 15px;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+
+  i {
+    font-size: 12px;
+  }
+  span {
+    font-size: 10px;
+    margin-left: 4px;
+  }
+}
+
+.classBut {
+  text-align: center;
+}
+
+.pi {
+  text-align: center;
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.buttons {
+  margin-bottom: 10px;
+}
+
+.expert-view-eavluation {
+  text-align: center;
+}
+
+.student-view-evaluation {
+  text-align: center;
+}
+
+:host ::ng-deep .button-read {
+  width: 100%;
+
+}
+
+:host ::ng-deep .button-danger {
+  color: red;
+  margin: 0px 5px;
+}
+
+:host ::ng-deep .button-edit {
+  color: #28a745;
+  margin: 0px 5px;
+}
+
+
+.class-img {
+  height: 20vh;
+  background-position: center;
+  background-repeat: none;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.adapted_oer {
+  display: flex;
+  position: absolute;
+  top: 0.5rem;
+  left: 80%;
+  //width: 5rem;
+  background-color: img();
+  padding: 5px 5px;
+  border-radius: 15px;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+
+  img {
+    width: 4vh;
+  }
+}
+
+.button-adap {
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+
+:host ::ng-deep .p-overlaypanel {
+  top: 0px !important;
+  left: 0px !important;
+  transform: translateY(260px) !important;
+}
+
+:host ::ng-deep .animate__fadeIn {
+  animation-name: none !important;
+}

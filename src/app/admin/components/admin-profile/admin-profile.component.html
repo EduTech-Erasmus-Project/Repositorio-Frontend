@@ -1,0 +1,102 @@
+<div class="p-grid">
+    <div class="p-col-12 p-md-12">
+        <app-loading *ngIf="!isLoading"></app-loading>
+        <div class="card">
+            <div class="p-col-3 overview-box-icon">
+            </div>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <strong>{{ 'admin.first_name' | translate }}</strong>
+            <p>{{user.first_name}}</p>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <strong>{{ 'admin.last_name' | translate }}</strong>
+            <p>{{user.last_name}}</p>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <strong>{{ 'admin.email' | translate }}</strong>
+            <p>{{user.email}}</p>
+            <p-divider layout="horizontal" align="left"></p-divider>
+            <strong *ngIf="isEmpty">{{ 'admin.phone' | translate }}</strong>
+            <p>{{administrator.phone || ""}}</p>
+            <p-divider *ngIf="isEmpty" layout="horizontal" align="left"></p-divider>
+            <strong *ngIf="isEmpty">{{ 'admin.city' | translate }}</strong>
+            <p>{{administrator.country || ""}}</p>
+            <p-divider *ngIf="isEmpty" layout="horizontal" align="left"></p-divider>
+        </div>
+    </div>
+    <div class="p-field p-col-12 p-md-6">
+        <button *ngIf="!activeUpdate" (click)="openChangeData(user)" pButton pRipple type="button" label="{{ 'admin.btnUpdate' | translate }}"
+            class="p-button-primary p-mr-2 p-mb-0"></button>
+        <button *ngIf="!activeUpdate" (click)="openChangePassword()" pButton pRipple type="button" label="{{ 'admin.btnChangePassword' | translate }}"
+            class="p-button-primary p-mr-2 p-mb-0"></button>
+    </div>
+    <form autocomplete="off" [formGroup]="passwordUpdateForm" (ngSubmit)="udpatePassword()" id="udpatePassword">
+
+        <p-dialog [(visible)]="changePasswordDialog" [style]="{width: '450px'}" header="{{ 'admin.btnChangePassword' | translate }}" [modal]="true"
+        styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="p-field">
+                <label for="password1">{{ 'admin.passwprd1' | translate }} *</label>
+                <input formControlName="password" type="password" pInputText id="password1" required autofocus />
+                <p-message severity="error" text="Campo obligatorio" *ngIf="campoNoValido('password')">
+                </p-message>
+            </div>
+            <div class="p-field">
+                <label for="password2">{{ 'admin.passwprd2' | translate }} *</label>
+                <input formControlName="password2" type="password" pInputText id="password2" required autofocus />
+                <p-message severity="error" text="La contraseña no coinciden" *ngIf="campoNoValido('password2')">
+                </p-message>
+            </div>
+            <div class="p-field">
+                <label for="oldPassword">{{ 'admin.oldPassword' | translate }} *</label>
+                <input formControlName="old_password" type="password" pInputText id="old_password" required autofocus />
+                <p-message severity="error" text="Campo obligatorio" *ngIf="campoNoValido('old_password')">
+                </p-message>
+                <p-message severity="error" text="{{message}}" *ngIf="message !==null">
+                </p-message>
+            </div>
+        </ng-template>
+        
+        <ng-template pTemplate="footer">
+            <button (click)="resetValue()" pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"></button>
+            <button  pButton pRipple label="{{ 'admin.save' | translate }}" type="submit" icon="pi pi-check" class="p-button-text"></button>
+        </ng-template>
+    </p-dialog>
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    <p-toast></p-toast>
+</form>
+    <p-dialog [(visible)]="changeDataDialog" [style]="{width: '450px'}" header="Actualizar mis datos" [modal]="true"
+    styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="p-field">
+            <label for="first_name">{{ 'admin.first_name' | translate }}</label>
+                <input [(ngModel)]="userData.first_name" type="text" pInputText id="first_name" required autofocus />
+                <small *ngIf="userData.first_name.length === 0" style="color:red;">No puede estar vacio</small>
+            </div>
+            <div class="p-field">
+                <label for="last_name">{{ 'admin.last_name' | translate }}</label>
+                <input [(ngModel)]="userData.last_name" type="text" pInputText id="last_name" required autofocus />
+                <small *ngIf="userData.last_name.length === 0" style="color:red;">No puede estar vacio</small>
+            </div>
+            <div class="p-field">
+                <label for="phone">{{ 'admin.phone' | translate }}</label>
+                <input [(ngModel)]="userData.administrator.phone" type="text" pInputText id="phone" required autofocus />
+                <small *ngIf="userData.administrator.phone.length === 0" style="color:red;">No puede estar vacio</small>
+            </div>
+            <div class="p-field">
+                <label for="country">{{ 'admin.country' | translate }}</label>
+                <input [(ngModel)]="userData.administrator.country" type="text" pInputText id="country" required autofocus />
+                <small *ngIf="userData.administrator.country.length === 0" style="color:red;">No puede estar vacio</small>
+            </div>
+            <div class="p-field">
+                <label for="city">{{ 'admin.city' | translate }}</label>
+                <input [(ngModel)]="userData.administrator.city" type="text" pInputText id="city" required autofocus />
+                <small *ngIf="userData.administrator.city.length === 0" style="color:red;">No puede estar vacio</small>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button (click)="hideDialogUpdateData()" pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"></button>
+            <button (click)="saveData()" pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"></button>
+        </ng-template>
+    </p-dialog>
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    <p-toast></p-toast>
+</div>

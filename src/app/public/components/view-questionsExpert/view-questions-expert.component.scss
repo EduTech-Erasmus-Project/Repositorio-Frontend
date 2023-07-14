@@ -1,0 +1,32 @@
+.labelQu{
+    background-color: #3B5B68;
+    padding: 9px 9px;
+    border-radius: 5px;
+    position: relative;
+    color: white;
+    display: flex;
+}
+
+.labelQT{
+
+    color: white;
+}
+.forms{
+    padding: 10px 0px;
+}
+.buttonIncog{
+    position: relative;
+}
+:host ::ng-deep .p-overlaypanel{
+    position: absolute;
+    top: 20px !important;
+    left: 0px !important;
+}
+button {
+    min-width: 15rem;
+}
+
+.product-image {
+    width: 50px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
+}

@@ -1,0 +1,92 @@
+
+.login-panel{
+    width: 80%;
+}
+.login-panel-content{
+ width: 100%;       
+}
+.login-content{
+    position: relative;
+}
+
+:host::ng-deep .login-panel{
+    height: auto !important;
+}
+
+
+
+.custom-marker {
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+::ng-deep {
+    .p-timeline-event-content,
+    .p-timeline-event-opposite {
+        line-height: 1;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    ::ng-deep {
+        .customized-timeline {
+            .p-timeline-event:nth-child(even) {
+                flex-direction: row !important;
+                
+                .p-timeline-event-content {
+                    text-align: left !important;
+                }
+            }
+
+            .p-timeline-event-opposite {
+                flex: 0;
+            }
+
+            .p-card {
+                margin-top: 1rem;
+            }
+        }
+    }
+}
+
+
+.footer{
+    .email{
+        padding: 3px;
+    }
+}
+
+.developers{
+    padding-top:2em;
+ //   background: #ffffff;
+    margin-bottom:4em;
+}
+
+:host::ng-deep .p-card-body{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.about-us {
+    img {
+      width: 100%;
+    }
+    .content-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+    }
+  }
+
+  .forms{
+    padding-top: 2em;
+    padding-bottom: 4em;
+  }

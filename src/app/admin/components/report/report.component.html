@@ -1,0 +1,103 @@
+<div class="card p-mt-5">
+	<h2>Reporte</h2>
+	<form [formGroup]="form" class="p-mb2 p-grid">
+
+		<div class="flex flex-column p-col-1" style="flex-direction: column;">
+			<label htmlFor="created_init">Subidos*</label>
+			<!-- <p-checkbox formControlName="upload" [binary]="true" inputId="binary"></p-checkbox> -->
+			<p-dropdown [ngStyle]="{'width': '100%'}" [options]="types"
+				formControlName="upload" placeholder="Tipo" optionLabel="label"
+				optionValue="value" [showClear]="false"></p-dropdown>
+		</div>
+
+		<div class="flex flex-column p-col-1" style="flex-direction: column;">
+			<label htmlFor="created_init">Fecha inicial*</label>
+			<p-calendar [ngStyle]="{'width': '100%'}" formControlName="created_init" dateFormat="yy-mm-dd"
+				inputId="created_init" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true"
+				yearRange="{{getYearRange()}}"></p-calendar>
+		</div>
+
+		<div class="flex flex-column p-col-1" style="flex-direction: column;">
+			<label htmlFor="created_end">Fecha final*</label>
+			<p-calendar [ngStyle]="{'width': '100%'}" formControlName="created_end" dateFormat="yy-mm-dd"
+				inputId="created_end" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true"
+				yearRange="{{getYearRange()}}"></p-calendar>
+		</div>
+
+
+		<div class="flex flex-column p-col-2" style="flex-direction: column;">
+			<label htmlFor="city_id">Ciudad</label>
+			<p-dropdown [ngStyle]="{'width': '100%'}" [options]="cities"
+				formControlName="city" placeholder="Ciudad" optionLabel="name"
+				optionValue="id" [showClear]="true"></p-dropdown>
+		</div>
+
+		<div class="flex flex-column p-col-2" style="flex-direction: column;">
+			<label htmlFor="university_id">Universidad</label>
+			<p-dropdown [ngStyle]="{'width': '100%'}" [options]="universities"
+				formControlName="university" placeholder="Universidad" optionLabel="name"
+				optionValue="id" [showClear]="true"></p-dropdown>
+		</div>
+
+		<div class="flex flex-column p-col-2" style="flex-direction: column;">
+			<label htmlFor="campus_id">Campus</label>
+			<p-dropdown [ngStyle]="{'width': '100%'}" [options]="campus" formControlName="campus"
+				placeholder="Campus" optionLabel="name" optionValue="id" [showClear]="true"></p-dropdown>
+		</div>
+
+		<div class="flex flex-column p-col-2" style="flex-direction: column;">
+			<label htmlFor="query">Buscar</label>
+			<span class="p-input-icon-left">
+				<i class="pi pi-search"></i>
+				<input style="width: 100%;" type="text" pInputText placeholder="Nombre, Apellido o Email"
+					formControlName="query" />
+			</span>
+		</div>
+
+		<div class="p-col-1" style="display: flex; align-items: flex-end;">
+			<p-button [disabled]="form.invalid" [ngStyle]="{'width': '100%'}" (onClick)="listLearningObject()"
+				label="Buscar" icon="pi pi-search" iconPos="right"></p-button>
+		</div>
+	</form>
+
+	<p-table [value]="data" [tableStyle]="{'min-width': '60rem'}">
+		<ng-template pTemplate="caption">
+			<div style="display: flex; justify-content: space-between; align-items: center;">
+				Usuarios
+				<p-button (click)="generateXls()" icon="pi pi-file-excel"></p-button>
+			</div>
+		</ng-template>
+		<ng-template pTemplate="header">
+			<tr>
+				<th>Nombre/Apellido</th>
+				<th>Email</th>
+				<th>Universidad</th>
+				<th>Campus</th>
+				<th>Tot. OAs</th>
+				<th>OAs</th>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="body" let-user>
+			<tr>
+				<td>{{user?.first_name}} {{user?.last_name}}</td>
+				<td>{{user?.email}}</td>
+				<td>{{user?.university?.name}}</td>
+				<td>{{user?.campus?.name}}</td>
+				<td>{{user?.learning_objects?.length}}</td>
+				<td>
+					<ul>
+						<li *ngFor="let object of user?.learning_objects">
+							<a [href]="object.learning_object_file.url" target="_blank">{{object.general_title}}</a>
+						</li>
+					</ul>
+
+				</td>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="summary">
+			<div class="flex align-items-center justify-content-between">
+				Mostrando {{data ? data.length : 0 }} usuarios.
+			</div>
+		</ng-template>
+	</p-table>
+</div>

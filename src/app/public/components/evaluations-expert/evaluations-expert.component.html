@@ -1,0 +1,88 @@
+<div *ngIf="roleStudent && (!roleExpert && !roleTeacher)">
+    <div *ngFor="let item of resultsEv" class="tableP">
+        <table class="table table-bordered" *ngFor="let itemQ of item.concepts">
+            <thead>
+                <tr>
+                    <th scope="col">{{itemQ.concepto.concept}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><i class="pi pi-star"></i> {{itemQ.total | number:'1.1-2'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div *ngIf="roleTeacher &&(!roleStudent && !roleExpert) ">
+    <div *ngFor="let item of groupedQuestionsTeacher">
+        <div *ngFor="let item1 of item.conceptEvaluations">
+            <div class="forms">
+                <h6>{{item1.evaluationConcept}}</h6>
+                <ul>
+                    <li *ngFor="let itemQ of item1.questionEvaluations">
+                        <div class="labelQu">
+                            <label class="labelQT">{{itemQ.questions}}.<strong>{{itemQ.qualification}}</strong></label>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="forms">
+        <h6>{{'object.observation' | translate}}</h6>
+        <div *ngFor="let item of groupedQuestionsTeacher">
+            <label>{{item.observation}}</label>
+        </div>
+    </div>
+</div>
+
+
+
+<div *ngIf="roleExpert && flagConfirm">
+    <div *ngFor="let item of groupedQuestionsEx">
+        <div *ngFor="let item1 of item.conceptEvaluations">
+            <div class="forms">
+                <h6>{{item1.evaluationConcept}}</h6>
+                <ul>
+                    <li *ngFor="let itemQ of item1.questionEvaluations">
+                        <div class="labelQu">
+                            <label class="labelQT">{{itemQ.questions}}.<strong>{{itemQ.qualification}}</strong></label>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="forms">
+        <h6>{{'object.observation' | translate}}</h6>
+        <div *ngFor="let item of groupedQuestionsEx">
+            <label>{{item.observation}}</label>
+        </div>
+    </div>
+</div>
+
+<div class="di" *ngIf="!flagConfirm" style="text-align: center;">
+<label style="color: darkgray;" >{{'object.evaluationErrorView'|translate}}</label>
+</div>
+
+<!--
+    <div *ngFor="let item of resultsEv" class="tableP">
+    <table class="table table-bordered" >
+        <thead>
+            <tr>
+                <th scope="col">{{'object.conceptEval' | translate}}</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let item of resultsEv">
+            <tr *ngFor="let itemQ of item.concepts">
+                <td>{{itemQ.concepto.concept}} : <i class="pi pi-star"></i> {{itemQ.total | number:'1.1-2'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+-->
