@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="es"><head>
+    <meta charset="utf-8">
+    <title>ROA - EduTech</title>
+    <base href="/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="assets/img/edutech-icon.png">
+
+    <style>@charset "UTF-8";:root{--surface-a:#ffffff;--surface-b:#efefef;--surface-c:#e9ecef;--surface-d:#dee2e6;--surface-e:#ffffff;--surface-f:#ffffff;--text-color:#212529;--text-color-secondary:#6c757d;--primary-color:#3B5B68;--primary-color-text:#ffffff;--font-family:-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol}*{box-sizing:border-box}</style><link id="theme-css" rel="stylesheet" type="text/css" href="assets/theme/blue/theme-light.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/theme/blue/theme-light.css"></noscript>
+    <style>@-webkit-keyframes fadeInDown{from{opacity:0;-webkit-transform:translate3d(0, -20px, 0);transform:translate3d(0, -20px, 0)}to{opacity:1;-webkit-transform:none;transform:none}}@-webkit-keyframes fadeOutUp{from{opacity:1}to{opacity:0;-webkit-transform:translate3d(0, -20px, 0);transform:translate3d(0, -20px, 0)}}@-webkit-keyframes spin{from{-webkit-transform:rotate(0deg)}to{-webkit-transform:rotate(359deg)}}.splash-screen{width:100%;min-height:100vh;background-color:#F4F7F7}.spinner{position:absolute;top:50%;left:50%;z-index:1;height:40px;width:40px;transform:translate(-50%, -50%)}[class^=ball-]{position:absolute;display:block;left:30px;width:12px;height:12px;border-radius:6px;transition:all 0.5s;animation:circleRotate 4s both infinite;transform-origin:0 250% 0}@keyframes circleRotate{0%{transform:rotate(0deg)}100%{transform:rotate(1440deg)}}.ball-1{z-index:-1;background-color:#3B5B68;animation-timing-function:cubic-bezier(0.5, 0.3, 0.9, 0.9)}.ball-2{z-index:-2;background-color:#81A1C1;animation-timing-function:cubic-bezier(0.5, 0.6, 0.9, 0.9)}.ball-3{z-index:-3;background-color:#88C0D0;animation-timing-function:cubic-bezier(0.5, 0.9, 0.9, 0.9)}.ball-4{z-index:-4;background-color:#8FBCBB;animation-timing-function:cubic-bezier(0.5, 1.2, 0.9, 0.9)}.ball-5{z-index:-5;background-color:#D08770;animation-timing-function:cubic-bezier(0.5, 1.5, 0.9, 0.9)}.ball-6{z-index:-6;background-color:#EBCB8B;animation-timing-function:cubic-bezier(0.5, 1.8, 0.9, 0.9)}.ball-7{z-index:-7;background-color:#A3BE8C;animation-timing-function:cubic-bezier(0.5, 2.1, 0.9, 0.9)}.ball-8{z-index:-8;background-color:#B48EAD;animation-timing-function:cubic-bezier(0.5, 2.4, 0.9, 0.9)}*{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}html{height:100%;font-size:14px}body{font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";font-size:14px;color:#4c566a;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:0;margin:0;min-height:100%;background-color:#eceff4}</style><link id="layout-css" rel="stylesheet" type="text/css" href="assets/layout/css/blue/layout-light.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/layout/css/blue/layout-light.css"></noscript>
+
+    <!-- uiPreferences -->
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="assets/uiOptions/framework/core/css/fluid.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/uiOptions/framework/core/css/fluid.css"></noscript>
+    <link rel="stylesheet" type="text/css" href="assets/uiOptions/framework/preferences/css/Enactors.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/uiOptions/framework/preferences/css/Enactors.css"></noscript>
+    <link rel="stylesheet" type="text/css" href="assets/uiOptions/framework/preferences/css/PrefsEditor.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/uiOptions/framework/preferences/css/PrefsEditor.css"></noscript>
+    <style>@font-face{font-family:'OpenSans';src:url("../../../lib/fonts/OpenSans-Light.ttf");font-weight:300;font-style:normal}@font-face{font-family:'OpenSans';src:url("../../../lib/fonts/OpenSans-Regular.ttf");font-weight:normal;font-style:normal}@font-face{font-family:'OpenSans';src:url("../../../lib/fonts/OpenSans-Semibold.ttf");font-weight:600;font-style:normal}.fl-prefsEditor-separatedPanel .fl-panelBar{width:100%;background-color:#fff;border-bottom:1px solid #ccc}.fl-prefsEditor-separatedPanel .fl-panelBar .fl-prefsEditor-buttons{box-shadow:2px 2px 3px 0 #6f6f6f;border-bottom:1px solid #ccc;border-left:1px solid #ccc;border-right:1px solid #ccc;border-bottom-left-radius:8px;border-bottom-right-radius:8px;background-color:#fff;min-height:2em;margin-right:10em;display:block;float:right}.fl-prefsEditor-separatedPanel .fl-prefsEditor-showHide{min-width:15em}.fl-prefsEditor-separatedPanel .fl-prefsEditor-showHide,.fl-prefsEditor-separatedPanel .fl-prefsEditor-reset{text-transform:lowercase;font-weight:bold;border:0;background-color:#fff;height:1.8em;color:#2f2b2a;font-family:'OpenSans', "Myriad Pro", Helvetica, Arial, sans-serif;font-size:1.1em;margin-right:0.5em;margin-left:0.5em}.fl-prefsEditor-separatedPanel .fl-prefsEditor-reset{border-right:1px solid #ccc}.fl-prefsEditor-separatedPanel .fl-icon-undo{font-family:'InfusionIcons' !important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;-webkit-font-smoothing:antialiased;float:left;margin-right:0.3em;margin-top:-0.1em;font-size:1em}.fl-prefsEditor-separatedPanel .fl-icon-undo:before{content:"\e008"}</style><link rel="stylesheet" type="text/css" href="assets/uiOptions/framework/preferences/css/SeparatedPanelPrefsEditor.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/uiOptions/framework/preferences/css/SeparatedPanelPrefsEditor.css"></noscript>
+    <link rel="stylesheet" type="text/css" href="assets/uiOptions/components/overviewPanel/css/OverviewPanel.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/uiOptions/components/overviewPanel/css/OverviewPanel.css"></noscript>
+    </head><body><linl rel="stylesheet" type="text/css" href="assets/inputCss/input-type.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@duetds/date-picker@1.4.0/dist/duet/themes/default.css">
+
+        <!-- js -->
+        <script type="text/javascript" src="assets/uiOptions/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/lib/jquery/ui/js/jquery-ui.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidDocument.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/jquery.keyboard-a11y.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidRequests.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidIoC.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/ModelTransformation.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/ModelTransformationTransforms.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidView.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/ResourceLoader.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/RendererUtilities.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/enhancement/js/ContextAwareness.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/enhancement/js/ProgressiveEnhancement.js"></script>
+
+        <!-- For the IoC Inspector UI -->
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/URLUtilities.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Store.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/components/textfieldSlider/js/TextfieldSlider.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/UIEnhancer.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/PrefsEditor.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Panels.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Enactors.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/SeparatedPanelPrefsEditor.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/components/slidingPanel/js/SlidingPanel.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/components/tableOfContents/js/TableOfContents.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/PrimaryBuilder.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/AuxBuilder.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/StarterSchemas.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Builder.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/components/uiOptions/js/UIOptions.js"></script>
+
+        <script type="text/javascript" src="assets/uiOptions/components/overviewPanel/js/OverviewPanel.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="assets/lightbox/lightbox.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/lightbox/lightbox.css"></noscript>
+        <script type="text/javascript" src="assets/lightbox/lightbox.js"></script>
+
+        <!-- Google tag (gtag.js) -->
+        <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-5XDZTP6QXN"></script>
+
+<style>button{border-radius:0}.fl-prefsEditor-buttons{z-index:50000;position:absolute;top:0;right:0;margin:0 25px!important;border:none!important;background-color:var(--primary-color)!important;box-shadow:none!important}.fl-prefsEditor-buttons button{background-color:var(--primary-color)!important;color:#fff!important}@charset "UTF-8";:root{--animate-duration:1s;--animate-delay:1s;--animate-repeat:1}</style><link rel="stylesheet" href="styles.ed1ba22cb00a68db.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.ed1ba22cb00a68db.css"></noscript>
+
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-7WLDM22NHX');
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            fluid.uiOptions.prefsEditor(".flc-prefsEditor-separatedPanel", {
+                lazyLoad: true,
+                terms: {
+                    "templatePrefix": "assets/uiOptions/framework/preferences/html",
+                    "messagePrefix": "assets/uiOptions/framework/preferences/messages"
+                },
+                "tocTemplate": "assets/uiOptions/components/tableOfContents/html/TableOfContents.html",
+                "ignoreForToC": {
+                    "overviewPanel": ".flc-overviewPanel"
+                }
+            });
+        });
+    </script>
+
+    <!-- BEGIN markup for Preference Editor -->
+    <div class="flc-prefsEditor-separatedPanel fl-prefsEditor-separatedPanel">
+        <!-- This is the div that will contain the Preference Editor component -->
+        <div class="flc-slidingPanel-panel flc-prefsEditor-iframe"></div>
+
+        <!-- This div is for the sliding panel that shows and hides the Preference Editor controls -->
+        <div class="fl-panelBar">
+
+            <!-------------------------------Botones de Accesibilidad-------------------------------->
+            <span class="fl-prefsEditor-buttons" style="margin-right: 125px !important;">
+                <button id="reset" class="flc-prefsEditor-reset fl-prefsEditor-reset"><span class="fl-icon-undo"></span>
+                    Reset</button>
+                <button id="show-hide" class="flc-slidingPanel-toggleButton fl-prefsEditor-showHide">
+                    Show/Hide</button>
+            </span>
+        </div>
+    </div>
+    <!-- END markup for Preference Editor -->
+
+
+
+
+    <app-root>
+        <div class="splash-screen">
+            <div class="spinner">
+                <span class="ball-1"></span>
+                <span class="ball-2"></span>
+                <span class="ball-3"></span>
+                <span class="ball-4"></span>
+                <span class="ball-5"></span>
+                <span class="ball-6"></span>
+                <span class="ball-7"></span>
+                <span class="ball-8"></span>
+            </div>
+        </div>
+    </app-root>
+    <script type="text/javascript" src="assets/W3C_Components/W3C.js"></script>
+<script src="runtime.7bd125975f3c10f8.js" type="module"></script><script src="polyfills.13584519644f59bd.js" type="module"></script><script src="scripts.011fbf938f04b525.js" defer></script><script src="main.7e99a9682fcd7fdd.js" type="module"></script>
+
+</linl></body></html>
