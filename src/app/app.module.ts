@@ -101,7 +101,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   ],
   declarations: [AppComponent],
   providers: [
-    { provide: LocationStrategy, useClass: PathLocationStrategy }, //HashLocationStrategy
+    { provide: LocationStrategy, useClass: HashLocationStrategy }, //HashLocationStrategy
     {
       provide : HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
