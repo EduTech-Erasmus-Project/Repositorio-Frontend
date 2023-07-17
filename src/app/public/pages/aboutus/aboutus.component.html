@@ -1,30 +1,27 @@
-<app-header [header_title]="'aboutsUs.title' | translate"></app-header>
 <div class="main-content about-us">
     <div class="p-grid">
         <div class="p-col-12 p-md-6 p-lg-7" tabindex="0">
             <img src="assets/img/undraw_team_spirit_hrr4.svg" alt="Icono nosotros">
         </div>
         <div class="p-col-12 p-md-6 p-lg-3" tabindex="0">
-            <div class="content-info">
-                <!-- <h2>{{"aboutsUs.title" | translate}}</h2> -->
+            <div class="content-info" >
+                <h2>{{"aboutsUs.title" | translate}}</h2>
                 <p>{{"aboutsUs.desciption" | translate}}</p>
             </div>
         </div>
     </div>
     <div class="p-grid">
         <div class="p-col-12 p-md-6 p-lg-4">
-            <div class="card-about">
+            <div class="card-about" >
                 <div class="icon">
                     <i class="pi pi-users"></i>
                 </div>
                 <div class="title" tabindex="0">
-                    <a href="https://www.ups.edu.ec/en/home" title="{{'aboutsUs.ups' | translate}}">
-                        <p>{{"aboutsUs.ups" | translate}}</p>
-                    </a>
+                    <h2>{{"aboutsUs.mission" | translate}}</h2>
                 </div>
-                <!-- <div class="body" tabindex="0">
+                <div class="body" tabindex="0">
                     <p>{{"aboutsUs.missionDes" | translate}}</p>
-                </div> -->
+                </div>
             </div>
         </div>
         <div class="p-col-12 p-md-6 p-lg-4">
@@ -33,13 +30,11 @@
                     <i class="pi pi-sun"></i>
                 </div>
                 <div class="title" tabindex="0">
-                    <a href="https://virtual.ups.edu.ec/" title="{{'aboutsUs.unadedvi' | translate}}">
-                        <p>{{"aboutsUs.unadedvi" | translate}}</p>
-                    </a>
+                    <h2>{{"aboutsUs.vision" | translate}}</h2>
                 </div>
-                <!-- <div class="body" tabindex="0">
+                <div class="body" tabindex="0">
                     <p>{{"aboutsUs.visionDes" | translate}}</p>
-                </div> -->
+                </div>
             </div>
         </div>
         <div class="p-col-12 p-md-6 p-lg-4">
@@ -48,91 +43,11 @@
                     <i class="pi pi-thumbs-up"></i>
                 </div>
                 <div class="title" tabindex="0">
-                    <a href="https://edutech-project.org/" title="{{'aboutsUs.projectEdutech'| translate}}">
-                        <p>{{"aboutsUs.projectEdutech" | translate}}</p>
-                    </a>
+                    <h2>{{"aboutsUs.values" | translate}}</h2>
                 </div>
-                <!-- <div class="body" tabindex="0">
+                <div class="body" tabindex="0">
                     <p>{{"aboutsUs.valuesDes" | translate}}</p>
-                </div> -->
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- <div class="developers">
-    <div class="p-grid about-us" style="padding-bottom: 4em;justify-content: center;">
-        <div class="p-col-12 p-md-6 p-lg-6" tabindex="0">
-            <div class="content-info">
-                <h2 tabindex="0">{{"developers.title" | translate}}</h2>
-                <p tabindex="0">{{"developers.description" | translate}}</p>
-            </div>
-        </div>
-        <!-- <div class="p-col-12 p-md-6 p-lg-6">
-            <img src="assets/img/developW.svg" alt="Imagen hace referecia el trabajo en equipo" tabindex="0">
-        </div> -->
-
-    <!-- </div>
-    <p-timeline [value]="events1" align="alternate">
-        <ng-template pTemplate="marker" let-event>
-            <span class="custom-marker shadow-2" [style.backgroundColor]="event.color">
-                <i [ngClass]="event.icon"></i>
-            </span>
-        </ng-template>
-        <ng-template pTemplate="content" let-event tabindex="0">
-            <p-card [header]="event.status" [subheader]="event.date" [tabIndex]="0">
-                <div class="footer">
-                    <div class="email" *ngIf="event.email">
-                        <i class="pi pi-envelope"></i> <span tabindex="0"><a
-                                href="mailto:{{event.email}}">
-                                {{event.email}}</a></span>
-                    </div>
-                    <div class="email" *ngIf="event.email1">
-                        <i class="pi pi-envelope"></i> <span tabindex="0"><a
-                                href="mailto:{{event.email1}}">
-                                {{event.email1}}</a></span>
-                    </div>
                 </div>
-            </p-card>
-        </ng-template>
-    </p-timeline>
-</div> --> 
-
-
-<div class="devider">
-    <hr>
-    <h2 tabindex="0">{{"menu.servicesUp" | translate}}</h2>
-    <hr>
-</div>
-
-<div class="p-grid main-content about-us servicios" style="display: flex;">
-    <div class="p-col-12 p-md-6 p-lg-2 img-comp">
-        <img src="/assets/img/oeradap.png" alt="{{'aboutsUs.oerImage' | translate}}"
-            title="{{'aboutsUs.oerImage' | translate}}">
-    </div>
-    <div class="p-col-12 p-md-6 p-lg-3 description-comp">
-        <div class="card-about">
-            <div class="icon">
-                <a href="http://oeradap.ups.edu.ec/#/">
-                    <h3>{{"aboutsUs.oerTile"|translate}}</h3>
-                </a>
-                <p tabindex="0">{{"aboutsUs.oerDescription" | translate}}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="p-col-12 p-md-6 p-lg-2 img-comp">
-        <img src="/assets/img/lompadWeb.png" alt="{{'aboutsUs.lompadImage' | translate}}"
-            title="{{'aboutsUs.lompadImage' | translate}}">
-    </div>
-    <div class="p-col-12 p-md-6 p-lg-3 description-comp">
-        <div class="card-about">
-            <div class="icon">
-                <a href="https://lompads.edutech-project.org/#/">
-                    <h3>{{"aboutsUs.lompadTitle"|translate}}</h3>
-                </a>
-                <p tabindex="0">{{"aboutsUs.lompadDescription" | translate}}</p>
             </div>
         </div>
     </div>

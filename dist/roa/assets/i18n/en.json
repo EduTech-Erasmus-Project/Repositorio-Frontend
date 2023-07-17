@@ -94,15 +94,12 @@
   "aboutsUs": {
     "title": "WHO WE ARE",
     "desciption": "We are a group that works hard to serve the community by providing non-profit technology support.",
-    "ups": "SALESIAN POLYTECHNICAL UNIVERSITY",
-    "unadedvi": "UNADEDVI",
-    "projectEdutech": "PROJECT EDUTECH",
-    "oerTile": "OER ADAP",
-    "oerDescription": "The OerAdap tool provides the ease of adapting a learning object since it is possible to find multiple functionalities for the adaptation of each educational resource (OA). In order to adapt a learning object, it is necessary that the format of the Learning Object is of the SCROM type. The tool does not save the data of the learning objects because they are deleted within 24 hours.",
-    "oerImage": "Image representing the logo of the OerAdap tool",
-    "lompadTitle": "LOMPAD WEB",
-    "lompadDescription": "Lompad is a tool developed to create metadata tags for a learning object. The tool has a friendly interface so you can edit each of the learning object's metadata, then you can preview the metadata and be able to download your edited learning object.",
-    "lompadImage": "Type logo representing the lompad tool"
+    "mission": "Mission",
+    "missionDes": "Promote educational inclusion and diversity using accessible technologies, quality, innovation and teamwork as catalysts.",
+    "vision": "Vision",
+    "visionDes": "Become a network of knowledge and good practices for the efficient development and application of accessible technologies in Higher Education that contribute to inclusion, participation and employability.",
+    "values": "Values",
+    "valuesDes": "Teamwork, Innovation, Commitment, Diversity, Service"
   },
   "developers": {
     "title": "DEVELOPERS",

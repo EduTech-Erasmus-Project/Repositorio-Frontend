@@ -91,18 +91,15 @@
     "baneDescription": "Encuentra los mejores objetos de aprendizaje libres y gratuitos.",
     "btnLogin": "Inicia sesión en tu cuenta"
   },
-  "aboutsUs": {
-    "title": "QUIÉNES SOMOS",
-    "desciption": "Somos un grupo que trabaja arduamente por el servicio a la comunidad brindando apoyo tecnológico sin fines de lucro.",
-    "ups": "UNIVERSIDAD POLITECNICA SALESIANA",
-    "unadedvi": "UNADEDVI",
-    "projectEdutech": "PROYECTO EDUTECH",
-    "oerTile":"OER ADAP",
-    "oerDescription":"La herramienta OerAdap, brinda la facilidad de adaptar un objeto de aprendizaje ya que es posible encontrar múltiples funcionalidades para la adaptación de cada recurso educativo (OA). Para adaptar un objeto de aprendizaje es necesario que el formato del Objeto de aprendizaje sea de tipo SCROM.",
-    "oerImage":"Imagen que representa el logo de la herramienta OerAdap",
-    "lompadTitle":"LOMPAD WEB",
-    "lompadDescription":"Lompad es una herramienta desarrollada para crear etiquetas de metadatos para un objeto de aprendizaje. La herramienta tiene una interfaz amigable para que pueda editar cada uno de los metadatos del objeto de aprendizaje, luego puede realizar una previsualización de los metadatos y poder descargar su objeto de aprendizaje editado.",
-    "lompadImage":"Logo tipo que representa la herramienta lompad"
+  "aboutsUs":{
+    "title":"QUIÉNES SOMOS",
+    "desciption":"Somos un grupo que trabaja arduamente por el servicio a la comunidad brindando apoyo tecnológico sin fines de lucro.",
+    "mission":"Misión",
+    "missionDes":"Promover la inclusión educativa y la diversidad empleando como catalizadores a las tecnologías accesibles, la calidad, la innovación y el trabajo en equipo.",
+    "vision":"Visión",
+    "visionDes":"Constituirse en una red de conocimiento y buenas prácticas para el desarrollo y aplicación eficiente de tecnologías accesibles en la Educación Superior que contribuyan a la inclusión, participación y a la empleabilidad.",
+    "values":"Valores",
+    "valuesDes":"Trabajo en Equipo, Innovación, Compromiso, Diversidad, Servicio"
   },
   "developers": {
     "title": "DESARROLLADORES",
