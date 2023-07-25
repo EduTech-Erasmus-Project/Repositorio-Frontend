@@ -44,7 +44,7 @@ export class EmailDomainsListComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.loadDataOptionRegister();
+    this.loadDataOptionRegisterEmailType();
     this.loadDataTypeUserOptionRegister();
   }
 
@@ -56,22 +56,7 @@ export class EmailDomainsListComponent implements OnInit {
     try {
       let typeUserOption: any = await this.settingsService.getTypeUserOptionRegister().toPromise();
       if (typeUserOption.length > 0) {
-        if (this.selectedValue == "profesor") {
-          this.typeOptionRegisterArray = typeUserOption;
-          let typeRolOption = typeUserOption.filter(res => res.description == "TEACHER")
-          this.type_option_register_name = typeRolOption[0].option_register;
-          this.typeReference = this.type_option_register_name;
-        } else if (this.selectedValue == "experto") {
-          this.typeOptionRegisterArray = typeUserOption;
-          let typeRolOption = typeUserOption.filter(res => res.description == "EXPERT")
-          this.type_option_register_name = typeRolOption[0].option_register;
-          this.typeReference = this.type_option_register_name;
-        } else if (this.selectedValue == "estudiante") {
-          this.typeOptionRegisterArray = typeUserOption;
-          let typeRolOption = typeUserOption.filter(res => res.description == "STUDENT")
-          this.type_option_register_name = typeRolOption[0].option_register;
-          this.typeReference = this.type_option_register_name;
-        }
+        this.filterDataUserTypeOption(typeUserOption)
       }
     } catch (error) {
       Swal.fire({
@@ -82,13 +67,32 @@ export class EmailDomainsListComponent implements OnInit {
     }
   }
 
+  private filterDataUserTypeOption(typeUserOption) {
+    if (this.selectedValue == "profesor") {
+      this.typeOptionRegisterArray = typeUserOption;
+      let typeRolOption = typeUserOption.filter(res => res.description == "TEACHER")
+      this.type_option_register_name = typeRolOption[0].option_register.id;
+      this.typeReference = this.type_option_register_name;
+    } else if (this.selectedValue == "experto") {
+      this.typeOptionRegisterArray = typeUserOption;
+      let typeRolOption = typeUserOption.filter(res => res.description == "EXPERT")
+      this.type_option_register_name = typeRolOption[0].option_register.id;
+      this.typeReference = this.type_option_register_name;
+    } else if (this.selectedValue == "estudiante") {
+      this.typeOptionRegisterArray = typeUserOption;
+      let typeRolOption = typeUserOption.filter(res => res.description == "STUDENT")
+      this.type_option_register_name = typeRolOption[0].option_register.id;
+      this.typeReference = this.type_option_register_name;
+    }
+  }
+
 
   /**
    * Tipo de opcion de registro para 
    * los correos 
    * @method loadDataOptionRegister
    */
-  private async loadDataOptionRegister() {
+  private async loadDataOptionRegisterEmailType() {
     try {
       let optionRegister: any = await this.settingsService.getOptionRegister().toPromise();
       if (optionRegister.length > 0) {
@@ -117,6 +121,7 @@ export class EmailDomainsListComponent implements OnInit {
     try {
       //this.selectedValue = name_rol;
       this.isLoading = true;
+      if (this.typeOptionRegisterArray.length > 0) { this.filterDataUserTypeOption(this.typeOptionRegisterArray) }
       if (name_rol == 'profesor') {
         let optionRegisterObject = this.optionsResgister.filter(res => res.type_option == this.opntionValueSelected)
         this.id_option_register = optionRegisterObject[0].id;
@@ -157,7 +162,8 @@ export class EmailDomainsListComponent implements OnInit {
         option_id: data.option_register_email.id,
         domain: data.domain,
         is_active: data.is_active,
-        id:data.id      }
+        id: data.id
+      }
     });
 
     // if(this.domains.length > 0) {
@@ -231,8 +237,8 @@ export class EmailDomainsListComponent implements OnInit {
     this.router.navigate(['/admin/config/domain/new'], { queryParams: { type: this.selectedValue } })
   }
 
-  sendParamsEditEmailDomain(id:number) {
-    this.router.navigate(['/admin/config/domain/'+id], { queryParams: { type: this.selectedValue } })
+  sendParamsEditEmailDomain(id: number) {
+    this.router.navigate(['/admin/config/domain/' + id], { queryParams: { type: this.selectedValue } })
   }
 
   public async updateRelationTypeUserOption() {
@@ -242,11 +248,11 @@ export class EmailDomainsListComponent implements OnInit {
       data = this.typeOptionRegisterArray.filter(res => res.description === "TEACHER")[0];
       id = data.id;
       data.option_register = this.type_option_register_name
-    }else if (this.selectedValue == "experto") {
+    } else if (this.selectedValue == "experto") {
       data = this.typeOptionRegisterArray.filter(res => res.description === "EXPERT")[0];
       id = data.id;
       data.option_register = this.type_option_register_name
-    }else if (this.selectedValue == "estudiante") {
+    } else if (this.selectedValue == "estudiante") {
       data = this.typeOptionRegisterArray.filter(res => res.description === "STUDENT")[0];
       id = data.id;
       data.option_register = this.type_option_register_name
@@ -257,7 +263,8 @@ export class EmailDomainsListComponent implements OnInit {
         severity: "success",
         summary: "Modificado",
         detail: "Tipo de registro modificado correctamente",
-      })
+      });
+      this.loadDataTypeUserOptionRegister();
       this.typeReference_aux_boolean = false;
     } catch (error) {
       Swal.fire({
@@ -266,7 +273,6 @@ export class EmailDomainsListComponent implements OnInit {
         text: error.error?.message || error.message,
       });
     }
-
   }
 
   public changeNameOption() {
