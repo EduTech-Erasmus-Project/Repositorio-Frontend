@@ -328,7 +328,7 @@
                                 aria-label="Profesion seleccione una opcion" (change)="selectProfesion($event)"
                                 formControlName="profession" id="Profesion">
                                 <option *ngFor="let order of profesions" [value]="order.id"
-                                    [selected]="order.name === angForm.get('profession')?.value[0].name">
+                                    [selected]="order.id === angForm.get('profession')?.value">
                                     {{order.name}}
                                 </option>
                             </select>

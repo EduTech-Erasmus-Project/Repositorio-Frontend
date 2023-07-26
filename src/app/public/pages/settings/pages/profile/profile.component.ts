@@ -357,7 +357,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.angForm.addControl(
       "profession",
       new UntypedFormControl(
-        this.user.teacher ? this.getProfesionTeacher() : null,
+        this.user.teacher ? this.getProfesionTeacher()[0].id : null,
         Validators.required
       )
     );
