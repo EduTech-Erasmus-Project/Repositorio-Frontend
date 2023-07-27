@@ -218,7 +218,8 @@
                                     <label for="preferences">{{'register.preferences'|translate}}</label>
                                     <div *ngFor="let item of preferenceAreas">
                                         <div class="forms">
-                                            <p style="margin: 0; font-size: 1.1em; font-weight: bold;">{{item.label}}</p>
+                                            <p style="margin: 0; font-size: 1.1em; font-weight: bold;">{{item.label}}
+                                            </p>
                                             <div class="labelQu" *ngFor="let itemQ of item.items">
                                                 <p-checkbox group="button" [value]="itemQ.value"
                                                     aria-describedby="areasPrefer_message" formControlName="areasPrefer"
@@ -238,113 +239,8 @@
                         </div>
                     </div>
                 </div>
-
-
-                <!-- Teacher form -->
-                <div class="p-grid animate__animated animate__fadeIn position-relative" *ngIf=" checkTe">
-
-                    <!-- City -->
-                    <div class="p-col-12 p-md-6 p-lg-6">
-                        <div class="p-field p-fluid">
-                            <label for="city">{{'register.city'|translate}}*</label>
-                            <select name="city" class="class-dropdown-i" aria-label="Ciudad seleccione una opcion"
-                                [ngClass]="{'ng-dirty':city?.invalid && (city.dirty || city.touched)}"
-                                (change)="onChangeCity($event)" formControlName="city" id="city">
-                                <option *ngFor="let city of cities" [value]="city.id"
-                                    [selected]="city.id === angForm.get('city')?.value">
-                                    {{city.name}}
-                                </option>
-                            </select>
-
-                            <div *ngIf="city?.invalid && (city.dirty || city.touched)">
-                                <small id="profession " class="p-error"
-                                    *ngIf="city.errors.required">*{{'validation.obligatoryCamp'|
-                                    translate}}*
-                                </small>
-                                <small id="profession " class="p-error"
-                                    *ngIf="city.errors.first_item_default">*{{'validation.obligatoryCamp'|
-                                    translate}}*</small>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- University -->
-                    <div class="p-col-12 p-md-6 p-lg-6">
-                        <div class="p-field p-fluid">
-                            <label for="university">{{'register.university'|translate}}*</label>
-                            <select name="university" class="class-dropdown-i"
-                                aria-label="Universidad seleccione una opcion"
-                                [ngClass]="{'ng-dirty':university?.invalid && (university.dirty || university.touched)}"
-                                (change)="onChangeUniversity($event)" formControlName="university"
-                                id="university">
-                                <option *ngFor="let university of universities" [value]="university.id"
-                                [selected]="university.id === angForm.get('university')?.value">
-                                    {{university.name}}
-                                </option>
-                            </select>
-
-                            <div
-                                *ngIf="university?.invalid && (university.dirty || university.touched)">
-                                <small id="profession " class="p-error"
-                                    *ngIf="university.errors.required">*{{'validation.obligatoryCamp'|
-                                    translate}}*</small>
-                                    <small id="profession " class="p-error"
-                                    *ngIf="profession.errors.first_item_default">*{{'validation.obligatoryCamp'|
-                                    translate}}*</small>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Campus -->
-                    <div class="p-col-12 p-md-6 p-lg-6">
-                        <div class="p-field p-fluid">
-                            <label for="campus">{{'register.campus'|translate}}*</label>
-                            <select name="campus" class="class-dropdown-i"
-                                aria-label="campus seleccione una opcion"
-                                [ngClass]="{'ng-dirty':campus?.invalid && (campus.dirty || campus.touched)}"
-                                (change)="onChangeCampus($event)" formControlName="campus"
-                                id="campus">
-                                <option *ngFor="let camp of campusArray" [value]="camp.id"
-                                [selected]="camp.id === angForm.get('campus')?.value">
-                                    {{camp.name}}
-                                </option>
-                            </select>
-
-                            <div
-                                *ngIf="campus?.invalid && (campus.dirty || campus.touched)">
-                                <small id="profession " class="p-error"
-                                    *ngIf="campus.errors.required">*{{'validation.obligatoryCamp'|
-                                    translate}}*</small>
-                                    <small id="profession " class="p-error"
-                                    *ngIf="campus.errors.first_item_default">*{{'validation.obligatoryCamp'|
-                                    translate}}*</small>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="p-col-12 p-md-6 p-lg-6">
-                        <div class="p-field p-fluid">
-                            <label for="profession">{{'register.profession'|translate}}*</label>
-                            <select name="Profesion" class="class-dropdown-i"
-                                aria-label="Profesion seleccione una opcion" (change)="selectProfesion($event)"
-                                formControlName="profession" id="Profesion">
-                                <option *ngFor="let order of profesions" [value]="order.id"
-                                    [selected]="order.id === angForm.get('profession')?.value">
-                                    {{order.name}}
-                                </option>
-                            </select>
-
-                            <!-- <div
-                                *ngIf="profession?.invalid && (profession.dirty || profession.touched)">
-                                <small id="profession " class="p-error"
-                                    *ngIf="profession.errors.required">*{{'validation.obligatoryCamp'|
-                                    translate}}*</small>
-                            </div> -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Expert form -->
-                <div class="p-grid animate__animated animate__fadeIn" *ngIf="checkEx">
+                 <!-- Expert form -->
+                 <div class="p-grid animate__animated animate__fadeIn" *ngIf="checkEx">
                     <div class="p-col-12 p-md-12 p-lg-12">
                         <div class="p-field p-fluid">
                             <label for="firstname4">{{'register.expertLevel'|translate}}</label>
@@ -404,6 +300,106 @@
                         </div>
                     </div>
                 </div>
+                <!-- addres Form -->
+                <div class="p-grid animate__animated animate__fadeIn position-relative" *ngIf=" checkTe || checkEx">
+                    <!-- City -->
+                    <div class="p-col-12 p-md-6 p-lg-6">
+                        <div class="p-field p-fluid">
+                            <label for="city">{{'register.city'|translate}}*</label>
+                            <select name="city" class="class-dropdown-i" aria-label="Ciudad seleccione una opcion"
+                                [ngClass]="{'ng-dirty':city?.invalid && (city.dirty || city.touched)}"
+                                (change)="onChangeCity($event)" formControlName="city" id="city">
+                                <option *ngFor="let city of cities" [value]="city.id"
+                                    [selected]="city.id === angForm.get('city')?.value">
+                                    {{city.name}}
+                                </option>
+                            </select>
+
+                            <div *ngIf="city?.invalid && (city.dirty || city.touched)">
+                                <small id="profession " class="p-error"
+                                    *ngIf="city.errors.required">*{{'validation.obligatoryCamp'|
+                                    translate}}*
+                                </small>
+                                <small id="profession " class="p-error"
+                                    *ngIf="city.errors.first_item_default">*{{'validation.obligatoryCamp'|
+                                    translate}}*</small>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- University -->
+                    <div class="p-col-12 p-md-6 p-lg-6">
+                        <div class="p-field p-fluid">
+                            <label for="university">{{'register.university'|translate}}*</label>
+                            <select name="university" class="class-dropdown-i"
+                                aria-label="Universidad seleccione una opcion"
+                                [ngClass]="{'ng-dirty':university?.invalid && (university.dirty || university.touched)}"
+                                (change)="onChangeUniversity($event)" formControlName="university" id="university">
+                                <option *ngFor="let university of universities" [value]="university.id"
+                                    [selected]="university.id === angForm.get('university')?.value">
+                                    {{university.name}}
+                                </option>
+                            </select>
+
+                            <div *ngIf="university?.invalid && (university.dirty || university.touched)">
+                                <small id="profession " class="p-error"
+                                    *ngIf="university.errors.required">*{{'validation.obligatoryCamp'|
+                                    translate}}*</small>
+                                <small id="profession " class="p-error"
+                                    *ngIf="profession.errors.first_item_default">*{{'validation.obligatoryCamp'|
+                                    translate}}*</small>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Campus -->
+                    <div class="p-col-12 p-md-6 p-lg-6">
+                        <div class="p-field p-fluid">
+                            <label for="campus">{{'register.campus'|translate}}*</label>
+                            <select name="campus" class="class-dropdown-i" aria-label="campus seleccione una opcion"
+                                [ngClass]="{'ng-dirty':campus?.invalid && (campus.dirty || campus.touched)}"
+                                (change)="onChangeCampus($event)" formControlName="campus" id="campus">
+                                <option *ngFor="let camp of campusArray" [value]="camp.id"
+                                    [selected]="camp.id === angForm.get('campus')?.value">
+                                    {{camp.name}}
+                                </option>
+                            </select>
+
+                            <div *ngIf="campus?.invalid && (campus.dirty || campus.touched)">
+                                <small id="profession " class="p-error"
+                                    *ngIf="campus.errors.required">*{{'validation.obligatoryCamp'|
+                                    translate}}*</small>
+                                <small id="profession " class="p-error"
+                                    *ngIf="campus.errors.first_item_default">*{{'validation.obligatoryCamp'|
+                                    translate}}*</small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Teacher form -->
+                <div class="p-grid animate__animated animate__fadeIn position-relative" *ngIf=" checkTe">
+                    <div class="p-col-12 p-md-6 p-lg-6">
+                        <div class="p-field p-fluid">
+                            <label for="profession">{{'register.profession'|translate}}*</label>
+                            <select name="Profesion" class="class-dropdown-i"
+                                aria-label="Profesion seleccione una opcion" (change)="selectProfesion($event)"
+                                formControlName="profession" id="Profesion">
+                                <option *ngFor="let order of profesions" [value]="order.id"
+                                    [selected]="order.id === angForm.get('profession')?.value">
+                                    {{order.name}}
+                                </option>
+                            </select>
+
+                            <!-- <div
+                                *ngIf="profession?.invalid && (profession.dirty || profession.touched)">
+                                <small id="profession " class="p-error"
+                                    *ngIf="profession.errors.required">*{{'validation.obligatoryCamp'|
+                                    translate}}*</small>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+
+               
 
                 <div class="p-grid">
                     <div class="p-col-12 p-md-12 p-lg-12">

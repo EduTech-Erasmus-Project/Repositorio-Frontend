@@ -243,5 +243,8 @@ export class ViewQuestionsStudentComponent implements OnInit {
     });
   }
 
+  setValueReturnForm(value){
+    return this.angForm2.get(String(value));
+  }
 
 }

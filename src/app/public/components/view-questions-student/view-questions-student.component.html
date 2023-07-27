@@ -43,6 +43,11 @@
                                         <label for="group1">{{'register.notApply' |translate}}</label>
                                     </div>
                                 </div>
+                                <div *ngIf="setValueReturnForm(itemt.id).invalid && (setValueReturnForm(itemt.id).dirty || setValueReturnForm(itemt.id).touched)">
+                                    <small id="nameLabel" class="p-error"
+                                        *ngIf="setValueReturnForm(itemt.id).errors.required">*{{'validation.obligatoryCamp'|
+                                        translate}}*</small>
+                                </div> 
                             </ul>
                         </div>
                     </div>

@@ -40,13 +40,17 @@
                                 </div>
                                 
                                 <div class="p-field-radiobutton" style="padding: 0px 10px;">
-                                    <p-radioButton formControlName="{{itemQ.value}}" group="button"
+                                    <p-radioButton formControlName="{{itemQ.value}}" group="button" 
                                         value="No aplica">
                                     </p-radioButton>
                                     <label for="group1">{{'register.notApply' |translate}}</label>
                                 </div>
                             </div>
-
+                            <div *ngIf="setValueReturnForm(itemQ.value).invalid && (setValueReturnForm(itemQ.value).dirty || setValueReturnForm(itemQ.value).touched)">
+                                <small id="nameLabel" class="p-error"
+                                    *ngIf="setValueReturnForm(itemQ.value).errors.required">*{{'validation.obligatoryCamp'|
+                                    translate}}*</small>
+                            </div> 
                         </div>
                     </li>
                 </ul>

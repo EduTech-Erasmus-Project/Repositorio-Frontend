@@ -106,7 +106,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async loadData() {
-
     let userSub = await this.userService
       .getUserDetail(this.loginService.user.id)
       .subscribe((res) => {
@@ -185,7 +184,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     try {
       let res: any = await this._addressService
-        .getUniversitiesByCityActive(this.user.city.id)
+        .getUniversitiesByCityActive(this.user.city?.id)
         .toPromise();
       this.universities = res;
     } catch (e) {
@@ -195,7 +194,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     try {
       this.campusArray = [];
       let res: any = await this._addressService
-        .getCampusByUniversityActive(this.user.university.id)
+        .getCampusByUniversityActive(this.user.university?.id)
         .toPromise();
       this.campusArray = res;
     } catch (error) {
@@ -265,8 +264,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
     if (this.checkEx) {
       this.addExpertControls();
+      this.addCityControl();
+      this.addUniversityControl();
+      this.addCampusControl();
     } else {
       this.removeExpertControls();
+      this.removeCityControl();
+      this.removeUniversityControl();
+      this.removeCampusControl();
     }
   }
 
@@ -371,6 +376,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         Validators.required
       )
     );
+    console.log(this.angForm.get('city').value)
   }
 
   addUniversityControl() {
@@ -699,6 +705,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (this.checkEx) {
       this.user.expert_level = this.angForm.value.levelExpertF;
       this.user.collaboratingExpert.expert_level = this.angForm.value.levelExpertF;
+
+      this.user.city = this.angForm.value.city;
+      this.user.university = this.angForm.value.university;
+      this.user.campus = this.angForm.value.campus;
 
       if (this.angForm.value.url != "") {
         if (this.angForm.value.url != null) {

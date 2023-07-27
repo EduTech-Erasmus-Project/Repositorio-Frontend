@@ -404,7 +404,27 @@ export class SignUpComponent implements OnInit, OnDestroy {
       ])
     );
     this.angForm.addControl("academic", new UntypedFormControl(null));
-
+    this.angForm.addControl(
+      "city",
+      new UntypedFormControl(0, [
+        Validators.required,
+        this.validate_select_array_zero(),
+      ])
+    );
+    this.angForm.addControl(
+      "university",
+      new UntypedFormControl(0, [
+        Validators.required,
+        this.validate_select_array_zero(),
+      ])
+    );
+    this.angForm.addControl(
+      "campus",
+      new UntypedFormControl(0, [
+        Validators.required,
+        this.validate_select_array_zero(),
+      ])
+    );
     //  this.removeEmail();
     //  this.addEmailPathTeacherAndExpert();
   }
@@ -413,6 +433,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
     await this.angForm.removeControl("levelExpertF");
     await this.angForm.removeControl("url");
     await this.angForm.removeControl("academic");
+    await this.angForm.removeControl("city");
+    await this.angForm.removeControl("university");
+    await this.angForm.removeControl("campus");
   }
 
   async loadData() {

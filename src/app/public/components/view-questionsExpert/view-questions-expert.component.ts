@@ -287,4 +287,8 @@ export class ViewQuestionsExpertComponent implements OnInit {
 
     this.commentEmit.emit(false);
   }
+  
+  setValueReturnForm(value){
+    return this.angForm.get(String(value));
+  }
 }
