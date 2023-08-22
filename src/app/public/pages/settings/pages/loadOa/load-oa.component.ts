@@ -257,7 +257,9 @@ export class LoadOaComponent implements OnInit, OnDestroy {
         .toPromise(),
     });
 
-    this.getQuestionsEvaluation();
+    if(this.tag_count.is_adapted_oer != true){
+      this.getQuestionsEvaluation();
+    }
 
     this.loadForm();
     this.fill_in_the_answers_automatically_adpated_is_adapted(this.tag_count);
@@ -395,43 +397,58 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       this.object.avatar = object_adaptations.img;
       this.object.source_file = object_adaptations.sourceFile;
       this.object.is_adapted_oer = object_adaptations.is_adapted_oer;
-      const arrayQuestionsSchemaResponse = this.createOfQuestionsArray();
-      //this.object.arrayAnswer = arrayQuestionsSchemaResponse;
-      let data_answer = {
-        answerQuestion: arrayQuestionsSchemaResponse,
-        learning_object_id: this.object.learning_object_file,
-      };
-
-      let questionQualification = await this.learningObjectService
-        .addQuestionQualificationLearningObject(data_answer)
-        .subscribe(
-          async (res: any) => {
-            if (res.code === 200) {
-              let addMetadataSub = await this.learningObjectService
-                .addMetadata(this.object)
-                .subscribe(
-                  async (res) => {
-                    this.formatVariables();
-                  },
-                  async (err) => {
-                    this.captureImageError(err);
-                  }
-                );
-              this.subscriptions.push(addMetadataSub);
+      if(this.tag_count.is_adapted_oer != true){
+        const arrayQuestionsSchemaResponse = this.createOfQuestionsArray();
+        //this.object.arrayAnswer = arrayQuestionsSchemaResponse;
+        let data_answer = {
+          answerQuestion: arrayQuestionsSchemaResponse,
+          learning_object_id: this.object.learning_object_file,
+        };
+  
+        let questionQualification = await this.learningObjectService
+          .addQuestionQualificationLearningObject(data_answer)
+          .subscribe(
+            async (res: any) => {
+              if (res.code === 200) {
+                let addMetadataSub = await this.learningObjectService
+                  .addMetadata(this.object)
+                  .subscribe(
+                    async (res) => {
+                      this.formatVariables();
+                    },
+                    async (err) => {
+                      this.captureImageError(err);
+                    }
+                  );
+                this.subscriptions.push(addMetadataSub);
+              }
+            },
+            async (err) => {
+              this.loading = false;
+              this.messageService.add({
+                severity: "error",
+                summary: "Error",
+                detail: await this.languageService.translate
+                  .get("newObject.form.invalidForm")
+                  .toPromise(),
+              });
             }
-          },
-          async (err) => {
-            this.loading = false;
-            this.messageService.add({
-              severity: "error",
-              summary: "Error",
-              detail: await this.languageService.translate
-                .get("newObject.form.invalidForm")
-                .toPromise(),
-            });
-          }
-        );
+          );
       this.subscriptions.push(questionQualification);
+      }else{
+        let addMetadataSub = await this.learningObjectService
+                  .addMetadata(this.object)
+                  .subscribe(
+                    async (res) => {
+                      this.formatVariables();
+                    },
+                    async (err) => {
+                      this.captureImageError(err);
+                    }
+                  );
+                this.subscriptions.push(addMetadataSub);
+      }
+     
     } else {
       this.loading=false;
       this.messageService.add({
