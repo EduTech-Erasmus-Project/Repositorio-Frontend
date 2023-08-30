@@ -376,7 +376,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         Validators.required
       )
     );
-    console.log(this.angForm.get('city').value)
   }
 
   addUniversityControl() {

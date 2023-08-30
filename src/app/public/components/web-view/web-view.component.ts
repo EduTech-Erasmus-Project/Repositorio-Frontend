@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnDestroy } from "@angular/core";
-import { MenuItem, Message } from "primeng/api";
+import { MenuItem, Message, MessageService } from "primeng/api";
 import { LoginService } from "../../../services/login.service";
 import { TranslateService } from "@ngx-translate/core";
 import { LearningObjectService } from "src/app/services/learning-object.service";
@@ -41,15 +41,22 @@ export class WebViewComponent implements OnInit, OnDestroy {
   public displayFormRatingStudentUpdate: boolean = false;
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+  
+  public countViews: number = 0;
+  public countDownloads: number = 0;
+
   constructor(
     private loginService: LoginService,
-    private learningObject: LearningObjectService
+    private learningObject: LearningObjectService,
+    private messageService: MessageService
   ) {
   }
 
   ngOnDestroy(): void {
     this.subscribes.forEach((subscription) => {
-      subscription.unsubscribe();
+      if(subscription != undefined){
+        subscription.unsubscribe();
+        }
     });
   }
 
@@ -71,7 +78,7 @@ export class WebViewComponent implements OnInit, OnDestroy {
       },
     ];
 
-    this.onView();
+    this.loadData();
     this.loadDataExpertEvaluation();
     this.loadDataStudentEvaluation()
 
@@ -109,7 +116,7 @@ export class WebViewComponent implements OnInit, OnDestroy {
 
   async loadData() {
     var likedSub;
-    if (this.loginService.user && this.roleUser) {
+    if (this.loginService.user && (this.roleUserStudent || this.roleUserExpert || this.roleUserTeacher)) {
       likedSub = await this.learningObject
         .validateLike(this.object.id)
         .subscribe(
@@ -124,7 +131,74 @@ export class WebViewComponent implements OnInit, OnDestroy {
     }
 
     this.subscribes.push(likedSub);
+    this.getNumberOfDownloads();
+    this.getNumberOfViews();
   }
+
+  /**
+   * Funcion para obtener el numero de vistas que 
+   * existen dentro del objeto de aprendizaje.
+   */
+  private async getNumberOfViews(){
+    let numberViews = await  this.learningObject.getViewedCount(this.object.id).subscribe(
+      async (res:any)=>{
+        if(res.length > 0){
+            this.countUpdateViews(res);
+        }
+      }, error => {
+        this.createNumberViews();
+      }
+    );  
+    this.subscribes.push(numberViews);
+  }
+
+  /***
+   * Funcion para actulazar el numero de vistas del objeto de aprendizaje 
+   */
+  private async  countUpdateViews(res) {
+    this.countViews = res[0].view;
+    let dataUpdate={
+      learning_object : this.object.id,
+      view :this.countViews + 1
+    }
+
+    let dataUpdateView = await this.learningObject.viewedUpdateCount(dataUpdate, this.object.id).subscribe(
+      res => {
+      }, error => {
+      }
+    );
+    
+    this.subscribes.push(dataUpdateView);
+  }
+
+  private async createNumberViews(){
+    let data = {
+      learning_object : this.object.id,
+      view :1
+    }
+
+    let createViews = await this.learningObject.viewedCreateCount(data).subscribe(
+      (res:any)=>{
+        this.countViews = res.view;
+      }
+    );
+    this.subscribes.push(createViews);
+  }
+
+  /**
+   * Obtener numero de descargas que tiene el objeto de aprendizaje 
+   */
+  private async getNumberOfDownloads(){
+    let interationCountDownload = await this.learningObject.getdownloadCount(this.object.id).subscribe(
+      (res:any)=>{
+          this.countDownloads = res.number;
+      }, error => {
+      }
+    );  
+
+    this.subscribes.push(interationCountDownload);
+  } 
+
 
   openFullscreen() {
     const elem = this.webView.nativeElement;
@@ -157,7 +231,18 @@ export class WebViewComponent implements OnInit, OnDestroy {
     this.displayFormRatingExpertUpdate = true;
   }
   onDownloadFile(url: any){
-    window.open(url);
+    if(this.loginService.user && (this.roleUserStudent || this.roleUserTeacher || this.roleUserExpert)){
+      this.onDonwloaded();
+      window.open(url);
+    }else{
+      this.messageService.add(
+        {
+          severity: "error",
+          summary: "Error",
+          detail: "Debe iniciar sesión para realizar esta acción",
+        },
+      );
+    }
   }
 
   get roleExpert() {
@@ -168,8 +253,16 @@ export class WebViewComponent implements OnInit, OnDestroy {
     return this.loginService.user;
   }
 
-  get roleUser() {
+  get roleUserStudent() {
     return this.loginService.validateRole("student");
+  }
+
+  get roleUserExpert() {
+    return this.loginService.validateRole("expert");
+  }
+
+  get roleUserTeacher() {
+    return this.loginService.validateRole("teacher");
   }
 
   coutComment(evt) {
@@ -193,38 +286,84 @@ export class WebViewComponent implements OnInit, OnDestroy {
 
   async onLike() {
     this.liked = !this.liked;
-
-    this.interaction.liked = this.liked;
+    
+    if(this.interaction?.liked == undefined){
+      this.createILike();     
+    }else{
+    
+      this.interaction.liked = this.liked;
 
     let likeSub = await this.learningObject
       .interactionLike(this.interaction)
       .subscribe(
         (res) => {
+          this.interaction= res;
         },
         (err) => {
           this.liked = !this.liked;
         }
       );
-    this.subscribes.push(likeSub);
+    this.subscribes.push(likeSub); 
+  }
   }
 
-  async onView() {
-    try {
-      if (this.loginService.user && this.roleUser) {
-        let viewSub = await this.learningObject
-          .interactionView({ viewed: true, learning_object: this.object.id })
-          .subscribe(
-            (res) => {
-              this.interaction = res;
-            },
-            (err) => {
-              this.loadData();
-            }
-          );
-        this.subscribes.push(viewSub);
+  /**
+   *Funcion para crear la funcionalidad de me gusta
+   */
+   private async createILike(){
+    
+    this.interaction={
+      liked:this.liked,
+      learning_object: this.object.id
+    };
+  
+    let interaction = await this.learningObject.interactionView(this.interaction).subscribe(
+      res=>{
+        this.interaction = res;
+      }, error=>{
+      this.messageService.add({
+        severity:'error',
+        summary:'Error',
+        detail:'No se pudo guardar la interacción'
+      })
       }
-    } catch (error) {}
+    ); 
+    this.subscribes.push(interaction);
   }
+
+  public async onDonwloaded(){
+      if(this.countDownloads === 0){
+        const data = {
+          downloaded: 1, learning_object: this.object.id 
+        }
+        let downloaded = await this.learningObject.downloadCreateCount(data).subscribe(
+          (res:any)=>{
+            this.interaction = res[0];
+            this.countDownloads = 1;
+          },error=>{
+          
+          }
+        );
+        this.subscribes.push(downloaded);
+      }else{
+        const data = {
+          downloaded: this.interaction.downloaded, learning_object: this.object.id 
+        }
+        let downloadedUpdate = await this.learningObject.downloadUpdateCount(data, this.object.id).subscribe(
+          (res:any)=>{
+            if(res.length > 0){
+              this.interaction = res[0];
+              this.getNumberOfDownloads();
+            }
+          },error=>{
+          
+          }
+        );
+        this.subscribes.push(downloadedUpdate);
+      }
+  }
+
+  
 
   coutCommentstudent(evt) {
     this.displayFormRatingStudent = evt;
@@ -244,7 +383,7 @@ export class WebViewComponent implements OnInit, OnDestroy {
   }
 
   async loadDataStudentEvaluation() {
-    if (this.roleUser) {
+    if (this.roleUserStudent) {
       let resultsEvalStudent = await this.learningObject.getObjectResultsEvaluationStudent(this.object.id).subscribe(res => {
         if(res.length > 0) {
           if (res.length == 0) {

@@ -127,37 +127,48 @@ export class MenuComponent implements OnInit {
             routerLink: ["/admin/config"],
             items: [
               {
-                label: "Paises",
-                icon: "pi pi-fw pi-list",
-                routerLink: ["/admin/config/country"],
+                label:"Geografía",
+                icon:'pi pi-map-marker',
+                items:[
+                  {
+                    label: "Paises",
+                    icon: "pi pi-fw pi-list",
+                    routerLink: ["/admin/config/country"],
+                  },
+                  {
+                    label: "Provincias",
+                    icon: "pi pi-fw pi-list",
+                    routerLink: ["/admin/config/province"],
+                  },
+                  {
+                    label: "Ciudades",
+                    icon: "pi pi-fw pi-list",
+                    routerLink: ["/admin/config/city"],
+                  },
+                  {
+                    label: "Universidades",
+                    icon: "pi pi-fw pi-list",
+                    routerLink: ["/admin/config/university"],
+                  },
+                  {
+                    label: "Campus",
+                    icon: "pi pi-fw pi-list",
+                    routerLink: ["/admin/config/campus"],
+                  },
+                ]
               },
               {
-                label: "Provincias",
-                icon: "pi pi-fw pi-list",
-                routerLink: ["/admin/config/province"],
-              },
-              {
-                label: "Ciudades",
-                icon: "pi pi-fw pi-list",
-                routerLink: ["/admin/config/city"],
-              },
-              {
-                label: "Universidades",
-                icon: "pi pi-fw pi-list",
-                routerLink: ["/admin/config/university"],
-              },
-              {
-                label: "Campus",
-                icon: "pi pi-fw pi-list",
-                routerLink: ["/admin/config/campus"],
-              },
-              {
-                label: "Correos",
-                icon: "pi pi-fw pi-list",
+                label: "Dominios de correo",
+                icon: "pi pi-folder",
                 routerLink: ["/admin/config/domain"],
               },
               {
                 label: "Servidor de Email",
+                icon: "pi pi-fw pi-list",
+                routerLink: ["/admin/config/server"],
+              },
+              {
+                label: "Integraciones",
                 icon: "pi pi-fw pi-list",
                 routerLink: ["/admin/config/server"],
               },

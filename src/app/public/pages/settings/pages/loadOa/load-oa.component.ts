@@ -24,6 +24,7 @@ import { HttpClient } from "@angular/common/http";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { AdministratorService } from "src/app/services/administrator.service";
 import { QuestionEvaluation } from "src/app/core/interfaces/QuestionEvaluation";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-load-oa",
@@ -102,7 +103,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.baseUrl = this.learningObjectService.urlUpload;
-    let tokenSub = this.tokenService.refreshToken().subscribe((res) => {});
+    let tokenSub = this.tokenService.refreshToken().subscribe((res) => { });
     this.subscriptions.push(tokenSub);
     this.loadData();
 
@@ -257,7 +258,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
         .toPromise(),
     });
 
-    if(this.tag_count.is_adapted_oer != true){
+    if (this.tag_count.is_adapted_oer != true) {
       this.getQuestionsEvaluation();
     }
 
@@ -290,12 +291,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
 
     if (is_adapted === true) {
       this.objectForm.controls["is_adapted_oer"].setValue(true);
-      // this.objectForm.controls["item_v1"].setValue("yes");
-      // this.objectForm.controls["item_v2"].setValue("yes");
-      // this.objectForm.controls["item_t3"].setValue("yes");
-      // this.objectForm.controls["item_t4"].setValue("yes");
-      // this.objectForm.controls["item_a5"].setValue("yes");
-      // this.objectForm.controls["item_i6"].setValue("yes");
       this.objectForm.controls["adaptations"].setValue("yes");
       this.objectForm.controls["adaptations"].disable();
     }
@@ -344,6 +339,17 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   private load_img_preview_form(URL_img, name_img) {
     let image: Blob;
     let imageURL: SafeUrl;
+    /**
+     * Esto se realiza con la finalidad de 
+     * que el servidor pueda descargar las imagenes 
+     *  ya que no da acceso a descargar imagenes de una url no segura 
+     */
+    if (environment.production == true) {
+      let exist_security_url = URL_img.indexOf("http://");
+      if (exist_security_url !== -1) {
+        URL_img = URL_img.replace("http://", "https://");
+      }
+    }
 
     this.loadImage_blob(URL_img).subscribe((i) => {
       image = i;
@@ -397,14 +403,14 @@ export class LoadOaComponent implements OnInit, OnDestroy {
       this.object.avatar = object_adaptations.img;
       this.object.source_file = object_adaptations.sourceFile;
       this.object.is_adapted_oer = object_adaptations.is_adapted_oer;
-      if(this.tag_count.is_adapted_oer != true){
+      if (this.tag_count.is_adapted_oer != true) {
         const arrayQuestionsSchemaResponse = this.createOfQuestionsArray();
         //this.object.arrayAnswer = arrayQuestionsSchemaResponse;
         let data_answer = {
           answerQuestion: arrayQuestionsSchemaResponse,
           learning_object_id: this.object.learning_object_file,
         };
-  
+
         let questionQualification = await this.learningObjectService
           .addQuestionQualificationLearningObject(data_answer)
           .subscribe(
@@ -434,23 +440,22 @@ export class LoadOaComponent implements OnInit, OnDestroy {
               });
             }
           );
-      this.subscriptions.push(questionQualification);
-      }else{
+        this.subscriptions.push(questionQualification);
+      } else {
         let addMetadataSub = await this.learningObjectService
-                  .addMetadata(this.object)
-                  .subscribe(
-                    async (res) => {
-                      this.formatVariables();
-                    },
-                    async (err) => {
-                      this.captureImageError(err);
-                    }
-                  );
-                this.subscriptions.push(addMetadataSub);
+          .addMetadata(this.object)
+          .subscribe(
+            async (res) => {
+              this.formatVariables();
+            },
+            async (err) => {
+              this.captureImageError(err);
+            }
+          );
+        this.subscriptions.push(addMetadataSub);
       }
-     
     } else {
-      this.loading=false;
+      this.loading = false;
       this.messageService.add({
         severity: "error",
         summary: "Error",
@@ -525,8 +530,8 @@ export class LoadOaComponent implements OnInit, OnDestroy {
    */
   private createOfQuestionsArray() {
     let arrayResponse = new Array();
-  
-    this.questionsEvaluationSchema.forEach((element:any) => {
+
+    this.questionsEvaluationSchema.forEach((element: any) => {
       let data = {
         idQuestion: element.id,
         answer: this.objectForm.get("item" + element.id)?.value,

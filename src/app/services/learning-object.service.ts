@@ -106,6 +106,32 @@ export class LearningObjectService {
     return this.http.get(`${baseUrl}/learning-objects/liked/${id}`);
   }
 
+  downloadCreateCount(data){
+    return this.http.post(`${baseUrl}/learning-objects/downloaded`, data);
+  }
+
+  downloadUpdateCount(data, learningObjectId){
+    return this.http.put(`${baseUrl}/learning-objects/downloaded/${learningObjectId}`, data);
+  }
+
+  getdownloadCount(learningObjectId){
+    return this.http.get(`${baseUrl}/learning-objects/downloaded/${learningObjectId}`);
+  }
+
+
+ viewedCreateCount(data){
+    return this.http.post(`${baseUrl}/learning-objects/viewed`, data);
+  }
+
+  viewedUpdateCount(data, learningObjectId){
+    return this.http.put(`${baseUrl}/learning-objects/viewed/${learningObjectId}`, data);
+  }
+
+  getViewedCount(learningObjectId){
+    return this.http.get(`${baseUrl}/learning-objects/viewed/${learningObjectId}`);
+  }
+
+
   getRecommendedObjects() {
     return this.http.get(`${baseUrl}/learning-objects/recommended/`);
   }

@@ -407,7 +407,15 @@
     "evaluationMessage": "Datos enviados con exito, gracias por realizar la evaluación",
     "successSendData": "Los datos se actualizaron con exito",
     "messageErrorUpdate": "No se pudo actualizar la informacion correctamente",
-    "fillForm": "Llenar todos los campos requeridos"
+    "fillForm": "Llenar todos los campos requeridos",
+    "countDownloads":"Descargas",
+    "countViews":"Visitas",
+    "errorDownload":"Debe iniciar para realizar esta acción",
+    "buttonDownload":"Botón de descarga",
+    "buttonLiked":"Botón me gusta",
+    "buttonDownloadFile":"Boton de descarga fichero",
+    "buttonScreamFull":"Botón de pantalla completa",
+    "buttonExitScreamFull":"Botón de salir de la pantalla completa"
   },
   "security": {
     "titlePass": "Iniciar sesión en EduTech",
