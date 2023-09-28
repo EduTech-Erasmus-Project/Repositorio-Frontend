@@ -18,7 +18,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   public title: string;
   private subscribes: Subscription[] = [];
   public preferences: any[] = [];
-  public chipsSearch: any[] = [];
+  public chipsSearch: any[];
   public objects: ObjectLearning[];
   public objectsSkeleton: number[] = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
@@ -44,6 +44,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     private languageService: LanguageService
   ) {
     this.route.queryParams.subscribe((params) => {
+      this.chipsSearch = [];
       this.querySearchService.queryParams = JSON.parse(JSON.stringify(params));
       this.is_evaluated = params;
       this.add_breadcrumb();

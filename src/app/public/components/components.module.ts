@@ -18,6 +18,7 @@ import { ContributorsComponent } from './contributors/contributors.component';
 import { EvaluationChartComponent } from './evaluation-chart/evaluation-chart.component';
 import { ViewQuestionsStudentComponent } from './view-questions-student/view-questions-student.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { DropDownMenuLearningObjectComponent } from './drop-down-menu-learning-object/drop-down-menu-learning-object.component';
 
 @NgModule({
   declarations: [
@@ -37,13 +38,13 @@ import { TranslateModule } from '@ngx-translate/core';
     EvaluationChartComponent,
     ViewQuestionsStudentComponent,
     
-    
   ],
   imports: [
     CommonModule,
     SharedModule,
     ReactiveFormsModule,
-    TranslateModule
+    TranslateModule,
+    DropDownMenuLearningObjectComponent
   ],
   exports:[
     SearchComponent,

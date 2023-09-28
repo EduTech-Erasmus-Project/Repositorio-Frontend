@@ -8,7 +8,8 @@ export const environment = {
   //baseUrl: 'http://3.211.150.0/api/v1',
   //baseUrl: 'https://repositorio.edutech-project.org/api/v1',
   oerUrl:'http://34.224.255.163',
-  cryptoSecretKey: "@ROA-QYHJKA12524ayhak%%-ASHJUH_A5ZHrglKBPuxe9IQjT@"
+  cryptoSecretKey: "@ROA-QYHJKA12524ayhak%%-ASHJUH_A5ZHrglKBPuxe9IQjT@",
+  key_ref:"@-rcxionqt"
 };
 
 /*

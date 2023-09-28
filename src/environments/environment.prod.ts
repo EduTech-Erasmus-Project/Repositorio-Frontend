@@ -5,4 +5,5 @@ export const environment = {
   baseUrl: 'https://repositorio.edutech-project.org/api/v1',
   oerUrl: "http://34.224.255.163",
   cryptoSecretKey: "@ROA-QYpGJAyAHS&NGkj586tem_A5ZHrglKBPuxe9IQjT@",
+  key_ref:"@-rcxionqt"
 };

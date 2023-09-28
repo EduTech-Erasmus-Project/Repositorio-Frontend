@@ -1,0 +1,21 @@
+:host::ng-deep li{
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+.container-menu-items{
+    margin-top: 4em;
+      margin-left: 2em;
+      margin-right: 2em;
+  }
+  
+
+@media (max-width: 1300px){
+    .container-menu-items{
+        padding: 10px !important;
+        margin-top: 1em !important;
+      }
+}
+
+:host::ng-deep a{
+  cursor: pointer;
+}

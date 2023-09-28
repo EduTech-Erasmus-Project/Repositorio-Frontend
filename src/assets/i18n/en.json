@@ -263,7 +263,7 @@
       "OaAdapted":"Adapted learning object*",
       "observationsOA":"Your learning object has the following observations",
       "scormOA":"IMS Format - SCORM",
-       "webOA":"Export website format",
+       "webOA":"Export website format (recommendations)",
        "mediaOA":"Media content",
       "mediaTitle": "Multimedia Content",
       "descriptionMedia1": "It is important to know that we must add our multimedia content inside Exelearning in the correct way, copy and paste the multimedia content found on the web if you can inside Exelearning but at the moment of loading inside the ROA Learning Objects Repository, we must keep in mind that the tool verifies that the contents are added in the correct way.",

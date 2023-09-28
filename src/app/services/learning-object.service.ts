@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, EventEmitter } from "@angular/core";
 import { map } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { StorageService } from "./storage.service";
@@ -13,12 +13,20 @@ const baseUrlOer = environment.oerUrl;
   providedIn: "root",
 })
 export class LearningObjectService {
+  public interactionSideObjectSelect = new EventEmitter<boolean>;
   constructor(private http: HttpClient) {}
 
   getLearningObject() {
     return this.http
       .get(`${baseUrl}/areas-de-conocimiento/`)
       .pipe(map((data: any) => data));
+  }
+
+  public getReferenceUserView(){
+    const data = {
+      key_ref : environment.key_ref
+    }
+    return this.http.post(`${baseUrl}/interaction-ref/`, data);
   }
 
   uploadObject(file: File) {

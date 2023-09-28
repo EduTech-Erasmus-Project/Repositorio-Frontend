@@ -78,6 +78,8 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   public activateDisplayMedia: boolean = false;
   public activateDisplaySCORM: boolean = false;
   public activateDisplayWEBSTE: boolean = false;
+  public activateDisplayIsExelearning: boolean = false;
+  
   public viewInfoOA: boolean = false;
   constructor(
     private fb: UntypedFormBuilder,
@@ -238,6 +240,7 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     this.activateDisplaySCORM = evt.originalEvent.body.data.scorm;
     this.activateDisplayMedia = evt.originalEvent.body.data.media;
     this.activateDisplayWEBSTE = evt.originalEvent.body.data.web;
+    this.activateDisplayIsExelearning = evt.originalEvent.body.data.is_exelearning;
     this.isErrorUpload = true;
 
     let lom = JSON.parse(evt.originalEvent.body.metadata);
@@ -270,8 +273,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
     this.spinner = true;
   }
   onError(evt) {
-    //console.log(evt);
-    //console.log("on error upload", evt.error.error.message);
     this.spinner = false;
     this.activateDisplaySCORM = evt.error.error.data.scorm;
     this.activateDisplayMedia = evt.error.error.data.media;
@@ -373,18 +374,6 @@ export class LoadOaComponent implements OnInit, OnDestroy {
   async onSubmit() {
     this.objectForm.markAllAsTouched();
     this.objectForm.updateValueAndValidity();
-    /*Validacion para los nuevos items*/
-    // if (this.tag_count.img > 0) {
-    //   this.set_salidators_form_controls("item_v1");
-    //   this.set_salidators_form_controls("item_v2");
-    // }
-    // if (this.tag_count.paragraph > 0) {
-    //   this.set_salidators_form_controls("item_t3");
-    //   this.set_salidators_form_controls("item_t4");
-    // }
-    // if (this.tag_count.video > 0 || this.tag_count.audio > 0) {
-    //   this.set_salidators_form_controls("item_a5");
-    // }
 
     if (this.objectForm.valid) {
       //Obtener los campos por si estubieran desabilitados

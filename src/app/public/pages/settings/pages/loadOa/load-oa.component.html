@@ -37,10 +37,10 @@
                                         <i [class]="(activateDisplaySCORM == true) ? 'pi pi-times':'pi pi-check'"
                                                 [style]="(activateDisplaySCORM == true) ? 'font-size: 1.5rem;color:red':'font-size: 1.5rem;color:green'"></i>
                                 </div>
-                                <div class="forms-feedback" *ngIf="activateDisplaySCORM == false">
+                                <div class="forms-feedback" *ngIf="activateDisplaySCORM == false && activateDisplayIsExelearning == true">
                                         <label for="">{{'newObject.form.webOA' | translate}}</label>
-                                        <i [class]="(activateDisplayWEBSTE == true) ? 'pi pi-times':'pi pi-check'"
-                                                [style]="(activateDisplayWEBSTE == true) ? 'font-size: 1.5rem;color:red':'font-size: 1.5rem;color:green'"></i>
+                                        <i [class]="(activateDisplayWEBSTE == true) ? 'pi pi-exclamation-triangle':'pi pi-check'"
+                                                [style]="(activateDisplayWEBSTE == true) ? 'font-size: 1.5rem;color:orange':'font-size: 1.5rem;color:green'"></i>
                                 </div>
 
                                 <div class="forms-feedback"

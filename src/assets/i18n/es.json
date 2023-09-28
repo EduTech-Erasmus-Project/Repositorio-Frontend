@@ -263,7 +263,7 @@
       "OaAdapted": "Objeto de aprendizaje adaptado*",
       "observationsOA":"Su objeto de aprendizaje tiene las siguientes observaciones",
       "scormOA":"Formato IMS - SCORM",
-      "webOA":"Exportacion formato website",
+      "webOA":"Exportacion formato website (recomendaciones)",
       "mediaOA":"Contendio media",
       "mediaTitle":"Contenido Multimedia",
       "descriptionMedia1":"Es importante saber que debemos agregar nuestro contenido multimedia dentro de Exelearning de la manera correcta, copiar y pegar el contenido multimedia que se encuentra en la web si se puede dentro de Exelearning pero al momento de cargar dentro del Repositorio de Objetos de Aprendizaje ROA, debemos que tener en cuenta que la herramienta verifica que los contenidos estén agregados de la manera correcta.",

@@ -407,7 +407,15 @@
     "evaluationMessage": "Data sent successfully, thank you for performing the evaluation",
     "successSendData": "The data was successfully updated",
     "messageErrorUpdate": "The information could not be updated correctly",
-    "fillForm": "Fill in all required fields"
+    "fillForm": "Fill in all required fields",
+    "countDownloads": "Downloads",
+    "countViews": "Visits",
+    "errorDownload": "You must login to perform this action",
+    "buttonDownload": "Download button",
+    "buttonLiked": "Like button",
+    "buttonDownloadFile": "Download file button",
+    "buttonScreamFull": "Full screen button",
+    "buttonExitScreamFull": "Exit full screen button"
   },
   "security": {
     "titlePass": "Sign in to EduTech",

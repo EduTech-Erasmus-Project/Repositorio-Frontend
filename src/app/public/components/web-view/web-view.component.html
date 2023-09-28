@@ -1,6 +1,25 @@
 <div #webView class="web-view animate__animated animate__fadeIn">
-    <iframe [title]="'object.titleIframe' | translate" [src]="object.learning_object_file.url | urlsanitizer"
-        frameborder="0" allowfullscreen></iframe>
+    <div class="iframe" style="display: flex;">
+        <div class="menu-side"  style="background-color: white;" [style]="buttonMenuBoolean?'':'width:25%'" *ngIf="youNeedMenu == true">
+            <div class="" *ngIf="buttonMenuBoolean == false">
+                <div class="close" style="position: absolute; left: 18%; ">
+                    <p-button class="btn btn-primary" (click)="buttonMenuBoolean = true" icon="pi pi-arrow-left">
+                    </p-button>
+                </div>
+                <app-drop-down-menu-learning-object [object]="object" [buttonMenuBoolean]="buttonMenuBoolean"
+                    [objectCollectionMenu]="objectCollectionMenu"></app-drop-down-menu-learning-object>
+            </div>
+            <div class="openButton">
+                <p-button class="btn btn-primary" icon="pi pi-arrow-right" (click)="buttonMenuBoolean = false" title="Boton para desplegar el menu" aria-label="Boton para desplegar el menu"
+                    *ngIf="buttonMenuBoolean == true" style="position: absolute;margin-top: 10px;">
+                </p-button>
+            </div>
+        </div>
+        <iframe [title]="'object.titleIframe' | translate"
+            [style]="sizeWindowMaxValue()"
+            [src]="object.learning_object_file.url | urlsanitizer" frameborder="0" allowfullscreen></iframe>
+    </div>
+
     <div class="controls">
         <h2>{{object.general_title}}</h2>
         <div class="buttons">
@@ -11,10 +30,8 @@
                 <label for=""><i class="pi pi-eye" style="top: 1px;
                     position: relative;"></i> {{countViews}} {{'object.countViews' | translate}}</label>
             </div>
-
             <p-button *ngIf="roleExpert && !flagQuestionsEx && flagQuestionsExNumber == 0"
                 (click)="displayFormRatingExpert=true" [label]="'object.btnEvaluateExpert'| translate "></p-button>
-
             <p-button *ngIf="roleExpert && flagQuestionsEx && flagQuestionsExNumber == 1"
                 (click)="displayFormRatingExpertUpdate=true" [label]="'object.objectQualification'| translate "
                 title="Editar evaluacion"><i class="pi pi-pencil">&nbsp;</i></p-button>
@@ -27,7 +44,6 @@
                 *ngIf="roleUserStudent && !flagQuestionsEst && flagQuestionsEstNumber == 0"
                 (click)="displayFormRatingStudent=true" pButton pRipple type="button"
                 class="p-button-rounded p-button-outlined" [label]="'registesest.btnEva'| translate "></button>
-
             <button aria-label="Boton para calificar actualizar"
                 *ngIf="roleUserStudent && flagQuestionsEst && flagQuestionsEstNumber == 1"
                 (click)="displayFormRatingStudentUpdate=true" pButton pRipple type="button"
@@ -35,12 +51,12 @@
                 [label]="'registesest.btnEvaU'| translate "></button>
 
             <!--   NUEVO BOTON     -->
+            <!--*ngIf="roleUserStudent"  Boton me gusta para todos los usuarios-->
             <button [aria-label]="'object.buttonLiked'| translate "
                 *ngIf="roleUserStudent || roleUserExpert ||roleUserTeacher " (click)="onLike()" pButton pRipple
                 type="button" icon="pi pi-heart" [ngClass]="{'p-button-outlined': !liked, 'p-button-danger': liked}"
                 class="p-button-rounded" [pTooltip]="'object.like'|translate"></button>
-
-            <button aria-label="Boton de descarga" (click)="onDownloadFile(object.learning_object_file.file) " pButton
+            <button aria-label="Botón de descarga" (click)="onDownloadFile(object.learning_object_file.file) " pButton
                 pRipple type="button" icon="pi pi-download" class="p-button-rounded p-button-outlined"
                 [pTooltip]="'object.btnDownload'| translate "></button>
 
@@ -48,8 +64,6 @@
                 (click)="onDownloadFile(object.source_file) " pButton pRipple type="button" icon="pi pi-cloud-download"
                 class="p-button-rounded p-button-outlined"
                 [pTooltip]="'Descargar el fichero fuente de eXeLearning'"></button>
-
-
             <a [aria-label]="'object.buttonScreamFull'| translate " style="margin-left: 2px;" *ngIf="!fullScreen"
                 href="{{object.learning_object_file.url}}" target="_blanck" pButton pRipple type="button"
                 icon="pi pi-window-maximize" class="p-button-rounded p-button-outlined"
@@ -74,8 +88,11 @@
                 <span class="profile-downloads"><i class="pi pi-star"></i> {{'object.labelValorate'| translate }}
                     {{object.rating | number:'1.1-2'}}</span>
             </div>
+
         </div>
     </div>
+
+
     <div class="object-description">
         <p>{{object.general_description}}</p>
         <p-divider></p-divider>
@@ -100,6 +117,7 @@
         </div> -->
     </div>
 </div>
+
 
 <p-dialog header="{{'object.btnEvaluate' | translate}}" [(visible)]="displayFormRating" [style]="{width: '60vw'}"
     [baseZIndex]="10000">
