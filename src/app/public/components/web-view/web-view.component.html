@@ -1,25 +1,5 @@
 <div #webView class="web-view animate__animated animate__fadeIn">
-    <div class="iframe" style="display: flex;">
-        <div class="menu-side"  style="background-color: white;" [style]="buttonMenuBoolean?'':'width:25%'" *ngIf="youNeedMenu == true">
-            <div class="" *ngIf="buttonMenuBoolean == false">
-                <div class="close" style="position: absolute; left: 18%; ">
-                    <p-button class="btn btn-primary" (click)="buttonMenuBoolean = true" icon="pi pi-arrow-left">
-                    </p-button>
-                </div>
-                <app-drop-down-menu-learning-object [object]="object" [buttonMenuBoolean]="buttonMenuBoolean"
-                    [objectCollectionMenu]="objectCollectionMenu"></app-drop-down-menu-learning-object>
-            </div>
-            <div class="openButton">
-                <p-button class="btn btn-primary" icon="pi pi-arrow-right" (click)="buttonMenuBoolean = false" title="Boton para desplegar el menu" aria-label="Boton para desplegar el menu"
-                    *ngIf="buttonMenuBoolean == true" style="position: absolute;margin-top: 10px;">
-                </p-button>
-            </div>
-        </div>
-        <iframe [title]="'object.titleIframe' | translate"
-            [style]="sizeWindowMaxValue()"
-            [src]="object.learning_object_file.url | urlsanitizer" frameborder="0" allowfullscreen></iframe>
-    </div>
-
+    <app-iframe-integrated-menu [object]="object" [youNeedMenu]="youNeedMenu"></app-iframe-integrated-menu>
     <div class="controls">
         <h2>{{object.general_title}}</h2>
         <div class="buttons">
@@ -65,7 +45,7 @@
                 class="p-button-rounded p-button-outlined"
                 [pTooltip]="'Descargar el fichero fuente de eXeLearning'"></button>
             <a [aria-label]="'object.buttonScreamFull'| translate " style="margin-left: 2px;" *ngIf="!fullScreen"
-                href="{{object.learning_object_file.url}}" target="_blanck" pButton pRipple type="button"
+                [href]="redirectPreviewAddress(object.learning_object_file.url)" target="_blanck" pButton pRipple type="button"
                 icon="pi pi-window-maximize" class="p-button-rounded p-button-outlined"
                 [pTooltip]="'object.btnFullScreen'| translate "></a>
 

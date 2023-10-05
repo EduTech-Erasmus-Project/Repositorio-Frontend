@@ -5,7 +5,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { LearningObjectService } from "src/app/services/learning-object.service";
 import { ObjectLearning } from "../../../core/interfaces/ObjectLearning";
 import { Subscription } from "rxjs";
-import { NavigationEnd, Router } from "@angular/router";
+import { NavigationExtras, Router } from "@angular/router";
 import { StorageService } from "src/app/services/storage.service";
 
 @Component({
@@ -46,8 +46,6 @@ export class WebViewComponent implements OnInit, OnDestroy {
   public countViews: number = 0;
   public countDownloads: number = 0;
 
-  public buttonMenuBoolean: boolean = false;
-  public objectCollectionMenu: Object;
   public youNeedMenu: boolean = false;
 
   constructor(
@@ -55,14 +53,16 @@ export class WebViewComponent implements OnInit, OnDestroy {
     private learningObject: LearningObjectService,
     private messageService: MessageService,
     private router: Router,
-    private localStorage: StorageService
+    private localStorage: StorageService,
   ) {
 
     let interactionOA = this.learningObject.interactionSideObjectSelect.subscribe(
       res => {
         if (res) {
+          this.object = res;
           this.getNumberOfDownloads();
           this.getNumberOfViews();
+          (this.object.learning_object_file.url.indexOf('website_index.html') === -1) ? this.youNeedMenu = true : this.youNeedMenu = false;
         }
       }
     );
@@ -177,9 +177,7 @@ export class WebViewComponent implements OnInit, OnDestroy {
         }
       }, error => {
         this.createNumberViews();
-
-      }
-    );
+      });
     this.subscribes.push(numberViews);
   }
 
@@ -499,14 +497,13 @@ export class WebViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  public sizeWindowMaxValue() {
-    var ancho = window.innerWidth
-    if (ancho <= 1300) {
-      return '';
-    } else {
-      if(!this.buttonMenuBoolean && this.youNeedMenu == true ){
-        return 'width:75%'
-      }
+  public redirectPreviewAddress(url) {
+    let new_ulr = '';
+    if (this.youNeedMenu) {
+      new_ulr = "/#/preview-learning-object/"+this.object.slug
+      return new_ulr;
     }
+    return url;
   }
+
 }

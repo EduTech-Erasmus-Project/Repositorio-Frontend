@@ -6,6 +6,7 @@ import { StorageService } from "./storage.service";
 import { serialize } from "object-to-formdata";
 import { Observable } from "rxjs";
 import { AnswerAnswerEvaluationResponse } from "../core/interfaces/QuestionEvaluation";
+import { ObjectLearning } from "../core/interfaces/ObjectLearning";
 
 const baseUrl = environment.baseUrl;
 const baseUrlOer = environment.oerUrl;
@@ -13,7 +14,7 @@ const baseUrlOer = environment.oerUrl;
   providedIn: "root",
 })
 export class LearningObjectService {
-  public interactionSideObjectSelect = new EventEmitter<boolean>;
+  public interactionSideObjectSelect = new EventEmitter<ObjectLearning>;
   constructor(private http: HttpClient) {}
 
   getLearningObject() {

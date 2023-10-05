@@ -1,8 +1,4 @@
 .web-view {
-  iframe {
-    width: 100%;
-    height: 75vh;
-  }
   &:fullscreen {
     //border: 2px solid #f00;
     background-color: #fff;
@@ -29,71 +25,60 @@
     }
   }
 }
-.description{
-  .profile{
+
+:host::ng-deep iframe {
+  width: 100%;
+  height: 75vh !important;
+}
+
+.description {
+  .profile {
     display: flex;
     align-items: center;
     margin: 10px 0;
-    .profile-name{
+    .profile-name {
       text-transform: capitalize;
     }
-    img{
+    img {
       border-radius: 50%;
       height: 60px;
       width: 60px;
       margin-right: 5px;
     }
-    h6{
+    h6 {
       margin: 0;
     }
-    .profile-downloads{
+    .profile-downloads {
       opacity: 0.5;
     }
-    .rating{
+    .rating {
       display: flex;
       flex-direction: column;
     }
   }
-  .object-description{
+  .object-description {
     margin-bottom: 10px;
-    p{
+    p {
       text-align: justify;
     }
   }
 }
 
-.object-metadata{
+.object-metadata {
   margin-bottom: 10px;
-  p{
+  p {
     font-weight: bold;
     margin: 0;
     opacity: 0.8;
     //color: var(--primary-color);
-    span{
+    span {
       font-weight: normal;
     }
   }
 }
 
 @media (max-width: 750px) {
-  :host ::ng-deep .p-dialog{
+  :host ::ng-deep .p-dialog {
     width: 90vw !important;
   }
-}
-
-:host::ng-deep .link-ref{
-  text-decoration: underline !important;
-}
-
-@media (max-width: 1300px){
-      .iframe{
-        display: block !important; 
-      }
-      .menu-side{
-        width: 100% !important;
-      }
-      .close{
-        left: 60% !important;
-      }
-
 }

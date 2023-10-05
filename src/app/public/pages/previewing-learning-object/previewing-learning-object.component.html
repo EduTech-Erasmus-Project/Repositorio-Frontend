@@ -1,0 +1,8 @@
+<div class="container-information">
+    <div class="spinner" *ngIf="!spinnerFlag">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+    <div *ngIf="spinnerFlag" style="height: 100%;">
+        <app-iframe-integrated-menu [object]="object"></app-iframe-integrated-menu>
+    </div>
+</div>

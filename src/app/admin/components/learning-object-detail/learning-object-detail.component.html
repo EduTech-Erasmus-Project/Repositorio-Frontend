@@ -2,7 +2,13 @@
     <div class="p-col-12">
         <div class="card">
             <!-- <img [src]="learningobjectdetail.avatar"  class="p-col-4" alt="Cinque Terre"> -->
-            <iframe [src]="index_url | sanitizerurl" class="p-col-12" height="450"></iframe>
+            <div class="div-container" [style]="'height:70vh'">
+                <div class="div-spinner" *ngIf="!spinner">
+                <p-progressSpinner ></p-progressSpinner>
+                </div>
+                <app-iframe-integrated-menu *ngIf="spinner" [object]="learningobjectdetail" [youNeedMenu]="youNeedMenu"></app-iframe-integrated-menu>
+               </div>
+               
             <h4>{{learningobjectdetail.general_title || ' '}}</h4>
             <p-divider layout="horizontal" align="left">
             </p-divider>

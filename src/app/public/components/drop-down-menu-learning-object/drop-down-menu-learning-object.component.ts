@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { ObjectLearning } from 'src/app/core/interfaces/ObjectLearning';
 
 @Component({
   selector: 'app-drop-down-menu-learning-object',
@@ -10,10 +11,12 @@ import { ButtonModule } from 'primeng/button';
   imports: [ButtonModule, CommonModule]
 })
 export class DropDownMenuLearningObjectComponent implements OnInit {
-  @Input() buttonMenuBoolean: boolean = false;
-  @Input() objectCollectionMenu;
+  public objectCollectionMenu: {
+    title: string,
+    items: any
+  };
   private itemsStructure = [];
-  @Input() object;
+  @Input() object: ObjectLearning;
 
   private containUrlName: string = '';
 

@@ -1,0 +1,19 @@
+:host::ng-deep .link-ref{
+    text-decoration: underline !important;
+  }
+  
+.iframe{
+    height: 100%;
+  }
+    
+    @media (max-width: 1300px){
+      .iframe{
+        display: block !important; 
+      }
+      .menu-side{
+        width: 100% !important;
+      }
+      .close{
+        left: 60% !important;
+      }
+  }

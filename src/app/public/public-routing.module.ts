@@ -139,6 +139,10 @@ const routes: Routes = [
         path: 'guideExpert', 
         loadChildren: () => import('./pages/guideExpert/guide-expert.module').then(m => m.GuideExpertModule) 
       },
+      {
+        path:"preview-learning-object/:slug",
+        loadComponent: () => import('./pages/previewing-learning-object/previewing-learning-object.component').then(m => m.PreviewingLearningObjectComponent)
+      }
     ],
   },
  

@@ -1,0 +1,21 @@
+<div style="height: 100%;">
+    <div class="iframe" style="display: flex;">
+        <div class="menu-side"  style="background-color: white;" [style]="buttonMenuBoolean?'':'width:25%'" *ngIf="youNeedMenu == true">
+            <div class="" *ngIf="buttonMenuBoolean == false">
+                <div class="close" style="position: absolute; left: 18%; ">
+                    <p-button class="btn btn-primary" (click)="buttonMenuBoolean = true" icon="pi pi-arrow-left">
+                    </p-button>
+                </div>
+                <app-drop-down-menu-learning-object [object]="object"></app-drop-down-menu-learning-object>
+            </div>
+            <div class="openButton">
+                <p-button class="btn btn-primary" icon="pi pi-arrow-right" (click)="buttonMenuBoolean = false" title="Boton para desplegar el menu" aria-label="Boton para desplegar el menu"
+                    *ngIf="buttonMenuBoolean == true" style="position: absolute;margin-top: 10px;">
+                </p-button>
+            </div>
+        </div>
+        <iframe [title]="'object.titleIframe' | translate"
+            [style]="sizeWindowMaxValue()"
+            [src]="object.learning_object_file.url | urlsanitizer" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>

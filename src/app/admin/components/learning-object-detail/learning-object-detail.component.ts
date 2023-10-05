@@ -23,7 +23,9 @@ import { LearningObjectService } from "src/app/services/learning-object.service"
         }
       }
     `,
+    
   ],
+  styleUrls:["./learning-object-detail.component.scss"],
   providers: [MessageService, ConfirmationService],
 })
 export class LearningObjectDetailComponent implements OnInit {
@@ -35,7 +37,10 @@ export class LearningObjectDetailComponent implements OnInit {
   index_url: string = null;
   statusUpdate: boolean = false;
   readMore: boolean = true;
-
+  
+  public buttonMenuBoolean: boolean = false;
+  public youNeedMenu: boolean = false;
+  public spinner : boolean = false;
   constructor(
     private breadcrumbService: BreadcrumbService,
     private administratorService: AdministratorService,
@@ -101,6 +106,8 @@ export class LearningObjectDetailComponent implements OnInit {
         this.autor = resp.user_created;
         this.index_url = resp.learning_object_file.url ?? "";
         this.statusUpdate = this.learningobjectdetail.public;
+        (this.learningobjectdetail.learning_object_file.url.indexOf('website_index.html') === -1) ? this.youNeedMenu = true : this.youNeedMenu = false;
+        this.spinner = true;
       },
       (err) => {
         let route =
@@ -150,7 +157,6 @@ export class LearningObjectDetailComponent implements OnInit {
             showConfirmButton: true,
           });
         } catch (error) {
-          console.log(error);
           Swal.showValidationMessage(
             `Error: ${error.error?.message || error.message}}`
           );
@@ -193,21 +199,13 @@ export class LearningObjectDetailComponent implements OnInit {
         }
 
         try {
-          // let result = await this.expertoService
-          //   .aprobarEvaluador(data)
-          //   .toPromise();
-
-          //this.loadPendientes();
-          //this.expertoService.emitEvent(true);
-          //console.log(result);
-
+        
           Swal.fire({
             icon: "success",
             title: "Se ah rechazado el participante",
             showConfirmButton: true,
           });
         } catch (error) {
-          console.log(error);
           Swal.showValidationMessage(
             `Error: ${error.error?.message || error.message}}`
           );
@@ -225,4 +223,16 @@ export class LearningObjectDetailComponent implements OnInit {
     //   }
     // });
   }
+
+  public sizeWindowMaxValue() {
+    var ancho = window.innerWidth
+    if (ancho <= 1300) {
+      return '';
+    } else {
+      if(!this.buttonMenuBoolean && this.youNeedMenu == true ){
+        return 'width:75%'
+      }
+    }
+  }
+
 }

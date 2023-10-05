@@ -19,6 +19,7 @@ import { EvaluationChartComponent } from './evaluation-chart/evaluation-chart.co
 import { ViewQuestionsStudentComponent } from './view-questions-student/view-questions-student.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropDownMenuLearningObjectComponent } from './drop-down-menu-learning-object/drop-down-menu-learning-object.component';
+import { IframeIntegratedMenuComponent } from './iframe-integrated-menu/iframe-integrated-menu.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { DropDownMenuLearningObjectComponent } from './drop-down-menu-learning-o
     SharedModule,
     ReactiveFormsModule,
     TranslateModule,
-    DropDownMenuLearningObjectComponent
+    DropDownMenuLearningObjectComponent,
+    IframeIntegratedMenuComponent
   ],
   exports:[
     SearchComponent,
