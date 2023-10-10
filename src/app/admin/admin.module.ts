@@ -49,6 +49,8 @@ import { CampusFormComponent } from './components/campus-form/campus-form.compon
 import { EmailDomainsListComponent } from './components/email-domains-list/email-domains-list.component';
 import { EmailDomainsFormComponent } from './components/email-domains-form/email-domains-form.component';
 import { EmailServerFormComponent } from './components/email-server-form/email-server-form.component';
+import { IframeIntegratedMenuComponent } from '../public/components/iframe-integrated-menu/iframe-integrated-menu.component';
+import { DropDownMenuLearningObjectComponent } from '../public/components/drop-down-menu-learning-object/drop-down-menu-learning-object.component';
 
 
 
@@ -113,7 +115,9 @@ import { EmailServerFormComponent } from './components/email-server-form/email-s
     CommonModule,
     SharedModule,
     ReactiveFormsModule,
-    AdminRoutingModule
+    AdminRoutingModule, 
+    DropDownMenuLearningObjectComponent,
+    IframeIntegratedMenuComponent
   ]
 })
 export class AdminModule { }
