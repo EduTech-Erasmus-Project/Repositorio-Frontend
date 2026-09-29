@@ -1,0 +1,110 @@
+.admin-register-page {
+	justify-content: center;
+}
+
+.admin-register-card {
+	width: min(1280px, 100%);
+	max-width: 1280px;
+	margin: 0 auto;
+}
+
+.admin-register-title {
+	margin: 0 0 1.5rem;
+	color: #4c566a;
+	font-size: 1.35rem;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.admin-register-form-grid {
+	row-gap: .75rem;
+}
+
+.admin-register-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: .75rem;
+}
+
+.admin-register-field label {
+	color: #4c566a;
+	font-weight: 500;
+	line-height: 1.2;
+}
+
+.admin-register-field .p-inputtext {
+	width: 100%;
+	min-height: 42px;
+}
+
+.admin-register-password-input {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.admin-register-password-input .p-inputtext {
+	padding-right: 42px;
+}
+
+.admin-register-password-toggle {
+	position: absolute;
+	right: 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	color: #4c566a;
+	background: transparent;
+	border: 0;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.admin-register-password-toggle:hover,
+.admin-register-password-toggle:focus {
+	color: #344f5b;
+	background: #eef2f5;
+	outline: none;
+}
+
+:host ::ng-deep .admin-register-field .p-message,
+:host ::ng-deep .admin-register-password-message {
+	margin-top: .25rem;
+}
+
+.admin-register-password-rules {
+	margin-top: .25rem;
+	color: #b91c1c;
+	font-size: .875rem;
+}
+
+.admin-register-password-rules ul {
+	margin: .25rem 0 0;
+	padding-left: 1.25rem;
+	line-height: 1.5;
+}
+
+.admin-register-actions {
+	display: flex;
+	justify-content: flex-start;
+	gap: .75rem;
+	margin-top: 1.25rem;
+}
+
+.admin-register-actions .p-button {
+	min-width: 130px;
+	min-height: 42px;
+}
+
+@media screen and (max-width: 640px) {
+	.admin-register-actions {
+		flex-direction: column;
+	}
+
+	.admin-register-actions .p-button {
+		width: 100%;
+	}
+}

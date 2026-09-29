@@ -1,0 +1,238 @@
+.guide-student-shell {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 1.9rem;
+  background:
+    radial-gradient(circle at top right, rgba(22, 93, 160, 0.06), transparent 36%),
+    linear-gradient(180deg, #eceff4 0%, #e7ebf2 100%);
+}
+
+.guide-student-shell__hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.guide-student-shell__heading {
+  min-width: 0;
+}
+
+.guide-student-shell__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(55, 93, 120, 0.12);
+  color: #375d78;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.guide-student-shell__title {
+  margin: 0.9rem 0 0.35rem;
+  color: #4e6277;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.guide-student-shell__subtitle {
+  margin: 0;
+  color: #5e7185;
+  font-size: 1rem;
+}
+
+.guide-student-shell__content {
+  min-height: 60vh;
+}
+
+.guide-student-shell__steps {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.1rem;
+  border-radius: 1.4rem;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(31, 74, 117, 0.1);
+  box-shadow: 0 16px 32px rgba(18, 39, 65, 0.08);
+}
+
+.guide-student-shell__steps-center {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.guide-student-shell__steps-track {
+  min-width: 0;
+}
+
+.guide-student-shell__stepper {
+  display: grid;
+  grid-template-columns: repeat(var(--guide-steps, 3), minmax(0, 1fr));
+  gap: 0.9rem;
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guide-student-shell__step {
+  position: relative;
+}
+
+.guide-student-shell__step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 0.95rem;
+  left: calc(50% + 1.25rem);
+  right: calc(-50% + 1.25rem);
+  height: 1px;
+  background: rgba(28, 61, 95, 0.16);
+}
+
+.guide-student-shell__step-button {
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.guide-student-shell__step-button:disabled {
+  cursor: default;
+}
+
+.guide-student-shell__step-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  border: 2px solid rgba(26, 93, 157, 0.18);
+  background: #ffffff;
+  color: #6e8397;
+  font-size: 0.95rem;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.guide-student-shell__step-label {
+  display: block;
+  color: #4e6277;
+  font-size: 0.92rem;
+  line-height: 1.3;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.guide-student-shell__step.is-active .guide-student-shell__step-circle {
+  border-color: transparent;
+  background: #375d78;
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(26, 74, 122, 0.22);
+}
+
+.guide-student-shell__step.is-active .guide-student-shell__step-label {
+  color: #4e6277;
+  font-weight: 600;
+}
+
+.guide-student-shell__step.is-complete .guide-student-shell__step-circle {
+  border-color: rgba(55, 93, 120, 0.18);
+  color: #375d78;
+}
+
+.guide-student-shell__steps-current {
+  display: none;
+  margin: 0;
+  color: #4e6277;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+:host ::ng-deep .guide-student-shell__steps .p-button {
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .guide-student-shell__steps {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .guide-student-shell__steps-track {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .guide-student-shell__stepper {
+    gap: 0.7rem;
+  }
+
+  .guide-student-shell__step-label {
+    display: none;
+  }
+
+  .guide-student-shell__steps-current {
+    display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  .guide-student-shell {
+    padding: 1rem;
+    gap: 1rem;
+    border-radius: 1.35rem;
+  }
+
+  .guide-student-shell__hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .guide-student-shell__title {
+    font-size: 1.55rem;
+  }
+
+  .guide-student-shell__steps {
+    padding: 0.85rem;
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+  }
+
+  :host ::ng-deep .guide-student-shell__steps .p-button {
+    width: 100%;
+  }
+
+  .guide-student-shell__steps-track {
+    grid-column: auto;
+    order: initial;
+  }
+
+  .guide-student-shell__stepper {
+    gap: 0.4rem;
+  }
+
+  .guide-student-shell__step:not(:last-child)::after {
+    left: calc(50% + 1rem);
+    right: calc(-50% + 1rem);
+  }
+
+  .guide-student-shell__step-circle {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.9rem;
+  }
+}

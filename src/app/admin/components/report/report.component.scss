@@ -1,0 +1,277 @@
+.report-page {
+  margin-top: 0;
+}
+
+.report-header {
+  margin-bottom: 1.5rem;
+
+  h5 {
+    margin: 0;
+    color: #4c566a;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+}
+
+.report-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: end;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+
+  label {
+    color: #4c566a;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+}
+
+.filter-field-search {
+  min-width: 0;
+}
+
+.report-search-input {
+  position: relative;
+  display: block;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: end;
+}
+
+.report-table-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.report-table-title {
+  display: block;
+  color: #4c566a;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.report-table-caption small {
+  color: #64748b;
+}
+
+.user-name-cell,
+.user-email-cell {
+  word-break: break-word;
+}
+
+.learning-object-list {
+  margin: 0;
+  padding-left: 1rem;
+
+  li + li {
+    margin-top: 0.35rem;
+  }
+
+  a {
+    color: #344f5b;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.empty-cell,
+.report-summary {
+  color: #64748b;
+}
+
+:host ::ng-deep {
+  .report-filter-grid {
+    .p-select,
+    .p-select-label,
+    .p-datepicker,
+    .p-datepicker .p-inputtext,
+    .p-datepicker-input,
+    .report-search-input,
+    .report-search-input .p-inputtext,
+    .filter-submit-button,
+    .p-button {
+      width: 100%;
+    }
+
+    .p-select,
+    .p-select-label,
+    .p-datepicker .p-inputtext,
+    .p-datepicker-input,
+    .report-search-input .p-inputtext,
+    .filter-submit-button,
+    .p-button {
+      min-height: 42px;
+    }
+
+    .report-search-input > i {
+      position: absolute;
+      top: 50%;
+      left: 0.85rem;
+      z-index: 1;
+      color: #64748b;
+      pointer-events: none;
+      transform: translateY(-50%);
+    }
+
+    .report-search-input .p-inputtext {
+      padding-left: 2.5rem;
+    }
+  }
+
+  .report-table {
+    .p-datatable-table {
+      min-width: 72rem;
+    }
+
+    .p-datatable-header {
+      padding: 1rem;
+    }
+
+    .p-datatable-thead > tr > th {
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .p-datatable-tbody > tr > td {
+      vertical-align: top;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .p-paginator {
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 1rem;
+    }
+
+    .p-paginator-current {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.75rem;
+      padding: 0 0.9rem;
+      border: 1px solid #dbe5ec;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #4c566a;
+      line-height: 1.2;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .p-paginator-pages,
+    .p-paginator-first,
+    .p-paginator-prev,
+    .p-paginator-next,
+    .p-paginator-last,
+    .p-paginator-rpp-options {
+      align-self: center;
+    }
+
+    .p-column-title {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .report-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-actions {
+    width: 100%;
+  }
+
+  .report-table-caption {
+    align-items: stretch;
+  }
+
+  :host ::ng-deep {
+    .report-filter-grid {
+      .p-button {
+        width: 100%;
+      }
+    }
+
+    .report-table {
+      .p-datatable-table {
+        min-width: 0 !important;
+      }
+
+      .p-datatable-thead > tr > th,
+      .p-datatable-tfoot > tr > td {
+        display: none !important;
+      }
+
+      .p-datatable-tbody {
+        display: block;
+      }
+
+      .p-datatable-tbody > tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dbe5ec;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 10px 24px rgba(47, 69, 81, 0.06);
+        overflow: hidden;
+      }
+
+      .p-datatable-tbody > tr > td {
+        display: block;
+        width: 100% !important;
+        clear: both;
+        float: none;
+        border: 0 none !important;
+        text-align: left;
+        padding: 0.9rem 1rem !important;
+        border-top: 1px solid #eef2f6 !important;
+
+        &:first-child {
+          border-top: 0 !important;
+        }
+
+        .p-column-title {
+          display: block;
+          min-width: 0;
+          margin: 0 0 0.4rem;
+          padding: 0;
+          color: #4c566a;
+          font-size: 0.76rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    .report-table-caption .p-button {
+      width: 100%;
+    }
+  }
+}

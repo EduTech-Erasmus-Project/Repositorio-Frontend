@@ -1,0 +1,275 @@
+<div class="p-grid metadata-question-page">
+  <div class="p-col-12">
+    <div class="card metadata-question-navigation">
+      <button pButton pRipple label="Evaluacion para metadatos con conceptos" class="p-button-primary"
+      [routerLink]="['/admin/expert/automatic']"></button>
+      <button pButton pRipple label="Evaluacion para metadatos con preguntas" class="p-button-primary" disabled></button>
+    </div>
+  </div>
+</div>
+
+<div class="p-grid metadata-question-page">
+  <div class="p-col-12">
+    <div class="card metadata-question-toolbar">
+      <div class="metadata-question-heading">
+        <div>
+          <h5>Evaluacion para metadatos con preguntas</h5>
+          <p>Administra las preguntas automaticas y los metadatos relacionados a cada una.</p>
+        </div>
+        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success" (click)="openNew()"></button>
+      </div>
+
+      <p-toast></p-toast>
+      <p-confirmDialog styleClass="admin-confirm-dialog"></p-confirmDialog>
+      <p-confirmpopup key="confirmDelete"></p-confirmpopup>
+
+      <p-dialog [(visible)]="createConceptDialog"
+        header="Agregar pregunta de evaluacion" [modal]="true" styleClass="p-fluid metadata-question-dialog admin-dialog-md">
+        <ng-template pTemplate="content">
+          <div class="dialog-form-grid">
+            <div class="p-field field-full">
+              <label for="questionDescription">Pregunta de evaluacion</label>
+              <textarea [(ngModel)]="selfQuestion.description" id="questionDescription" pInputTextarea required rows="3" autofocus
+              [class.p-invalid]="isRequiredInvalid(selfQuestion.description)"></textarea>
+              @if (isRequiredInvalid(selfQuestion.description)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field field-full">
+              <label for="questionDescriptionEnglish">Pregunta de evaluacion en ingles</label>
+              <textarea [(ngModel)]="selfQuestion.descriptionEnglish" id="questionDescriptionEnglish" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(selfQuestion.descriptionEnglish)"></textarea>
+              @if (isRequiredInvalid(selfQuestion.descriptionEnglish)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field field-full">
+              <label for="questionConcept">Concepto</label>
+              <p-select inputId="questionConcept" [options]="conceptEvaluation" [(ngModel)]="selfQuestion.evaluation_concept"
+                [showClear]="true" optionValue="id" placeholder="Seleccione un concepto"
+                optionLabel="concept" appendTo="body" [fluid]="true"
+                [appNativeArrowSelect]="conceptEvaluation" nativeArrowValueField="id"
+              [styleClass]="isRequiredInvalid(selfQuestion.evaluation_concept) ? 'p-invalid' : ''"></p-select>
+              @if (isRequiredInvalid(selfQuestion.evaluation_concept)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialogConcept()"></button>
+          <button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check"
+          [loading]="isActionLoading('create-question')" [disabled]="busy"
+          (click)="registerEvaluationData()"></button>
+        </ng-template>
+      </p-dialog>
+
+      <p-dialog [(visible)]="schemaDialog" header="Relacionar metadato"
+        [modal]="true" styleClass="p-fluid metadata-question-dialog admin-dialog-wide">
+        <ng-template pTemplate="content">
+          <div class="selected-question-box">
+            <span>Pregunta de evaluacion</span>
+            <strong>{{ selfQuestionSelect.description }}</strong>
+          </div>
+
+          <div class="dialog-form-grid">
+            <div class="p-field field-full">
+              <label for="relationConcept">Concepto</label>
+              <p-select inputId="relationConcept" [options]="conceptEvaluation" [(ngModel)]="metadataSchemaQuestion.id_concept"
+                optionValue="id" [disabled]="true" placeholder="Seleccione un concepto"
+                optionLabel="concept" appendTo="body" [fluid]="true"
+              [appNativeArrowSelect]="conceptEvaluation" nativeArrowValueField="id"></p-select>
+            </div>
+            <div class="p-field field-full">
+              <label for="relationSchema">Metadato</label>
+              <p-select inputId="relationSchema" [options]="metadataSchemasFilter" [(ngModel)]="metadataSchemaQuestion.id_schema"
+                [showClear]="true" optionValue="id" (onChange)="captureDescriptionSchema()" placeholder="Seleccione un metadato"
+                optionLabel="schema" appendTo="body" [fluid]="true"
+                [appNativeArrowSelect]="metadataSchemasFilter" nativeArrowValueField="id"
+              [styleClass]="isRequiredInvalid(metadataSchemaQuestion.id_schema) ? 'p-invalid' : ''"></p-select>
+              @if (isRequiredInvalid(metadataSchemaQuestion.id_schema)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field field-full">
+              <label for="relationSchemaDescription">Descripcion del metadato</label>
+              <textarea id="relationSchemaDescription" pInputTextarea rows="3" [ngModel]="descriptionMetadata" [disabled]="true"></textarea>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialog()"></button>
+          <button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check"
+          [loading]="isActionLoading('save-relation')" [disabled]="busy"
+          (click)="saveSchema()"></button>
+        </ng-template>
+      </p-dialog>
+
+      <p-dialog [(visible)]="editConceptDialog"
+        header="Editar pregunta de evaluacion" [modal]="true" styleClass="p-fluid metadata-question-dialog admin-dialog-md">
+        <ng-template pTemplate="content">
+          <div class="dialog-form-grid">
+            <div class="p-field field-full">
+              <label for="editQuestionDescription">Pregunta de evaluacion</label>
+              <textarea [(ngModel)]="selfQuestionSelect.description" id="editQuestionDescription" pInputTextarea required rows="3" autofocus
+              [class.p-invalid]="isRequiredInvalid(selfQuestionSelect.description)"></textarea>
+              @if (isRequiredInvalid(selfQuestionSelect.description)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field field-full">
+              <label for="editQuestionDescriptionEnglish">Pregunta de evaluacion en ingles</label>
+              <textarea [(ngModel)]="selfQuestionSelect.descriptionEnglish" id="editQuestionDescriptionEnglish" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(selfQuestionSelect.descriptionEnglish)"></textarea>
+              @if (isRequiredInvalid(selfQuestionSelect.descriptionEnglish)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field field-full">
+              <label for="editQuestionConcept">Concepto</label>
+              <p-select inputId="editQuestionConcept" [options]="conceptEvaluation" [(ngModel)]="selfQuestionSelect.evaluation_concept"
+                [showClear]="true" optionValue="id" placeholder="Seleccione un concepto"
+                optionLabel="concept" appendTo="body" [fluid]="true"
+                [appNativeArrowSelect]="conceptEvaluation" nativeArrowValueField="id"
+              [styleClass]="isRequiredInvalid(selfQuestionSelect.evaluation_concept) ? 'p-invalid' : ''"></p-select>
+              @if (isRequiredInvalid(selfQuestionSelect.evaluation_concept)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialogUpdate()"></button>
+          <button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check"
+          [loading]="isActionLoading('update-question')" [disabled]="busy"
+          (click)="updateConcept()"></button>
+        </ng-template>
+      </p-dialog>
+    </div>
+  </div>
+</div>
+
+<div class="p-grid metadata-question-tables">
+  <div class="p-col-12 p-md-6">
+    <div class="card">
+      <p-table #dt [value]="selfQuestionList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true">
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="table-title">Preguntas de evaluacion</span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="index-column">#</th>
+            <th>{{ 'admin.question' | translate }}</th>
+            <th class="actions-column">{{ 'admin.actions' | translate }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-selfQuestion let-rowIndex="rowIndex">
+          <tr class="p-selectable-row">
+            <td class="index-cell">
+              <span class="p-column-title">#</span>
+              <strong>{{ rowIndex + 1 }}</strong>
+            </td>
+            <td>
+              <span class="p-column-title">{{ 'admin.question' | translate }}</span>
+              <div class="question-detail-list">
+                <div>
+                  <strong>Pregunta</strong>
+                  <p>{{ selfQuestion.description }}</p>
+                </div>
+                <div>
+                  <strong>Pregunta en ingles</strong>
+                  <p>{{ selfQuestion.descriptionEnglish }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="table-actions">
+              <span class="p-column-title">{{ 'admin.actions' | translate }}</span>
+              <div class="table-inline-actions table-inline-actions--buttons table-inline-actions--concepts">
+                <button (click)="openSchema(selfQuestion)" pButton pRipple icon="pi pi-plus" class="p-button-success"></button>
+                <button (click)="retrieveEvaluationData(selfQuestion.id)" pButton type="button" class="p-button-success" icon="pi pi-list"></button>
+                <button (click)="openEditConceptDialog(selfQuestion)" pButton type="button" class="p-button-success" icon="pi pi-pencil"></button>
+                <button (click)="deleteSelfQuestion($event, selfQuestion.id)" pTooltip="Eliminar" pButton type="button"
+                class="p-button-danger" icon="pi pi-trash"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3">No existen preguntas de evaluacion.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div class="p-col-12 p-md-6">
+    <div class="card">
+      <p-table #dt [value]="schemaList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true" [rows]="5"
+        [paginator]="true">
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="table-title">Metadatos relacionados</span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="index-column">#</th>
+            <th>Metadato</th>
+            <th class="actions-column">{{ 'admin.actions' | translate }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-schema let-rowIndex="rowIndex">
+          <tr class="p-selectable-row">
+            <td class="index-cell">
+              <span class="p-column-title">#</span>
+              <strong>{{ rowIndex + 1 }}</strong>
+            </td>
+            <td>
+              <span class="p-column-title">Metadato</span>
+              <div class="metadata-detail-list">
+                <div>
+                  <strong>Schema</strong>
+                  <p>{{ schema.schema }}</p>
+                </div>
+                <div>
+                  <strong>Codigo</strong>
+                  <p>{{ schema.code }}</p>
+                </div>
+                <div>
+                  <strong>Descripcion</strong>
+                  <p>{{ schema.description }}</p>
+                </div>
+                <div>
+                  <strong>Peso</strong>
+                  <p>{{ schema.value_importance_schema }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="table-actions">
+              <span class="p-column-title">{{ 'admin.actions' | translate }}</span>
+              <div class="table-inline-actions table-inline-actions--buttons">
+                <button (click)="deleteSchema($event, schema.id)" pTooltip="Eliminar" pButton type="button"
+                class="p-button-danger" icon="pi pi-trash"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3">No existen metadatos relacionados para la pregunta seleccionada.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,139 @@
+.introduction-guide {
+  display: grid;
+  gap: 1.35rem;
+}
+
+.introduction-guide__hero {
+  padding: 1.4rem 1.5rem 0;
+}
+
+.introduction-guide__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(55, 93, 120, 0.12);
+  color: #375d78;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.introduction-guide__title {
+  margin: 1rem 0 0;
+  color: #4e6277;
+  font-size: clamp(1.85rem, 3vw, 2.6rem);
+  line-height: 1.1;
+}
+
+.introduction {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
+  gap: 2rem;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 1.75rem;
+  background:
+    radial-gradient(circle at top right, rgba(22, 93, 160, 0.12), transparent 35%),
+    linear-gradient(145deg, #ffffff 0%, #f4f8fc 100%);
+  border: 1px solid rgba(44, 84, 126, 0.12);
+  box-shadow: 0 20px 45px rgba(24, 49, 83, 0.08);
+}
+
+.introduction__copy,
+.introduction__media {
+  min-width: 0;
+}
+
+.introduction__text {
+  display: grid;
+  gap: 0.95rem;
+  color: #3f556d;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.introduction__text p {
+  margin: 0;
+  text-align: justify;
+}
+
+.introduction__text a {
+  color: #375d78;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.introduction__text a:hover {
+  text-decoration: underline;
+}
+
+.introduction__media {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.introduction__video-shell {
+  width: 100%;
+  max-width: 40rem;
+  padding: 0.65rem;
+  border-radius: 1.45rem;
+  background: linear-gradient(180deg, rgba(17, 54, 89, 0.95), rgba(10, 34, 59, 0.98));
+  box-shadow: 0 22px 40px rgba(11, 28, 45, 0.2);
+}
+
+.introduction__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  background: #0a1928;
+}
+
+@media (max-width: 1080px) {
+  .introduction {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .introduction__media {
+    justify-content: center;
+  }
+
+  .introduction__video-shell {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .introduction-guide {
+    gap: 1rem;
+  }
+
+  .introduction-guide__hero {
+    padding: 1rem 1rem 0;
+  }
+
+  .introduction-guide__title {
+    font-size: 1.65rem;
+  }
+
+  .introduction {
+    padding: 1.1rem;
+    gap: 1.25rem;
+    border-radius: 1.35rem;
+  }
+
+  .introduction__text {
+    font-size: 0.96rem;
+    line-height: 1.7;
+  }
+
+  .introduction__video-shell {
+    padding: 0.5rem;
+    border-radius: 1.1rem;
+  }
+}

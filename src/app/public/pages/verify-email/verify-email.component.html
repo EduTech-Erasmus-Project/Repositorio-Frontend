@@ -1,0 +1,57 @@
+﻿<p-toast></p-toast>
+<div class="login-body layout-light">
+  <div class="login-content animate__animated animate__fadeIn">
+    <div class="login-panel">
+      <div class="login-panel-content">
+
+        @if (state_success) {
+          <div class="confirm-message">
+            <p-card [header]="'verifyEmail.success.title' | translate" [style]="{'width': '100%', 'margin-bottom': '2em'}">
+              <ng-template pTemplate="header" style="text-align: center">
+                <img alt="Card" src="assets/img/edutech-icon.png" class="img-responsive-header">
+              </ng-template>
+              <p>{{ "verifyEmail.success.description" | translate }}</p>
+              <button pButton pRipple type="button" [label]="'menu.login' | translate" icon="pi pi-arrow-right"
+              (click)="_router.navigate(['/login']);" iconPos="right" class="p-button-success"></button>
+            </p-card>
+          </div>
+        }
+
+        @if (state_request) {
+          <div class="error-message">
+            <p-card [header]="'verifyEmail.request.title' | translate"
+              [style]="{'width': '100%', 'margin-bottom': '2em' ,'border':'red 1px solid'}">
+              <ng-template pTemplate="header" style="text-align: center">
+                <img alt="Card" src="../../../../assets/img/edutech-icon.png" class="img-responsive-header">
+              </ng-template>
+              <p>{{ "verifyEmail.request.description" | translate }}</p>
+              <button pButton pRipple type="button" [label]="'verifyEmail.request.action' | translate" icon="pi pi-refresh"
+              [loading]="isResending" [disabled]="isResending"
+              (click)="set_token_user()" iconPos="right" class="p-button-danger"></button>
+            </p-card>
+          </div>
+        }
+
+        @if (state_success_token) {
+          <div class="error-message">
+            <p-card [header]="'verifyEmail.resent.title' | translate"
+              [style]="{'width': '100%', 'margin-bottom': '2em' ,'border':'green 1px solid'}">
+              <ng-template pTemplate="header" style="text-align: center">
+                <img alt="Card" src="../../../../assets/img/edutech-icon.png" class="img-responsive-header">
+              </ng-template>
+              <p-message severity="success"
+                [text]="'verifyEmail.resent.description' | translate" styleClass="mr-2">
+              </p-message>
+            </p-card>
+          </div>
+        }
+
+        @if (isLoading) {
+          <div class="form-permission">
+            <p-progressSpinner></p-progressSpinner>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+<div class="card universities-page">
+  <div class="universities-toolbar">
+    <div>
+      <h5>Listado de universidades</h5>
+      <p>Gestiona las universidades registradas, su pais asociado y su estado.</p>
+    </div>
+    <button
+      [routerLink]="['/admin/config/university/new']"
+      pButton
+      pRipple
+      label="Nuevo"
+      icon="pi pi-plus"
+      class="p-button-success"
+    ></button>
+  </div>
+
+  <p-toast></p-toast>
+
+  <p-table
+    #dt
+    [value]="universities"
+    dataKey="id"
+    styleClass="p-datatable-customers universities-table"
+    [rowHover]="true"
+    [rows]="10"
+    [paginator]="true"
+    [filterDelay]="0"
+    [loading]="isLoading"
+    [globalFilterFields]="['name', 'country.name']"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-header universities-table-header">
+        <span class="table-title">Universidades registradas</span>
+        <span class="p-input-icon-left universities-search-box">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar por universidad o pais"
+          />
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="index-column">#</th>
+        <th>Nombre</th>
+        <th>Pais</th>
+        <th class="status-column">Estado</th>
+        <th class="actions-column">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-university>
+      <tr class="p-selectable-row">
+        <td class="index-cell">
+          <span class="p-column-title">#</span>
+          <strong>{{ university.id }}</strong>
+        </td>
+        <td>
+          <span class="p-column-title">Nombre</span>
+          <div class="university-name-cell">{{ university.name }}</div>
+        </td>
+        <td>
+          <span class="p-column-title">Pais</span>
+          <div class="country-name-cell">{{ university.country?.name || "-" }}</div>
+        </td>
+        <td class="status-cell">
+          <span class="p-column-title">Estado</span>
+          <p-tag
+            [value]="getStatusLabel(university.is_active)"
+            [severity]="getStatusSeverity(university.is_active)"
+          ></p-tag>
+        </td>
+        <td class="table-actions">
+          <span class="p-column-title">Acciones</span>
+          <div class="table-inline-actions table-inline-actions--buttons">
+            <button
+              [routerLink]="['/admin/config/university', university.id]"
+              pButton
+              type="button"
+              class="p-button-success"
+              icon="pi pi-pencil"
+            ></button>
+            <button
+              (click)="onDelete(university.id)"
+              pButton
+              type="button"
+              class="p-button-danger"
+              icon="pi pi-trash"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">No existen universidades registradas.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+

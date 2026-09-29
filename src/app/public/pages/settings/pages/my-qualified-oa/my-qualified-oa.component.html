@@ -1,0 +1,52 @@
+<div class="content">
+  @if (isLoading) {
+    <div class="p-grid card-content card-content--skeleton">
+      @for (item of skeletonItems; track item) {
+        <div class="p-col-12 p-md-6 p-lg-4">
+          <div class="state-card state-card--skeleton">
+            <p-skeleton width="100%" height="12rem" borderRadius="1rem"></p-skeleton>
+            <p-skeleton width="65%" height="1.25rem"></p-skeleton>
+            <p-skeleton width="100%" height="1rem"></p-skeleton>
+            <p-skeleton width="90%" height="1rem"></p-skeleton>
+            <p-skeleton width="100%" height="2.75rem" borderRadius="999px"></p-skeleton>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (loadError) {
+    <div class="state-card state-card--feedback state-card--error">
+      <i class="pi pi-exclamation-triangle state-card__icon" aria-hidden="true"></i>
+      <h3 class="state-card__title">{{ 'states.errorTitle' | translate }}</h3>
+      <p class="state-card__copy">{{ 'states.errorDescription' | translate }}</p>
+      <p-button
+        icon="pi pi-refresh"
+        [label]="'buttons.refresh' | translate"
+        (onClick)="loadData()"
+      ></p-button>
+    </div>
+  } @else {
+    <div class="p-grid card-content">
+      @if (objects.length > 0) {
+        @for (object of objects; track object) {
+          <div class="p-col-12 p-md-6 p-lg-4">
+            @if (roleExpert) {
+              <app-card [object]="object" [expertOptionsView]="true"></app-card>
+            }
+            @if (roleStudent) {
+              <app-card [object]="object" [studentOptionsView]="true"></app-card>
+            }
+          </div>
+        }
+      }
+      @if (objects.length === 0) {
+        <div class="state-card state-card--feedback empty-state">
+          <i class="pi pi-inbox state-card__icon" aria-hidden="true"></i>
+          <h3 class="state-card__title">{{ 'states.emptyTitle' | translate }}</h3>
+          <p class="state-card__copy">
+            {{ (roleExpert ? 'object.emptyQualifiedExpert' : 'object.emptyQualifiedStudent') | translate }}
+          </p>
+        </div>
+      }
+    </div>
+  }
+</div>

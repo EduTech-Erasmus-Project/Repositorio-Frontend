@@ -1,0 +1,117 @@
+.guide-student-detail {
+  display: grid;
+}
+
+.guide-student-detail__card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(420px, 640px);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 1.75rem;
+  background:
+    radial-gradient(circle at top right, rgba(30, 101, 173, 0.12), transparent 38%),
+    linear-gradient(145deg, #ffffff 0%, #f5f8fc 100%);
+  border: 1px solid rgba(35, 84, 130, 0.12);
+  box-shadow: 0 18px 40px rgba(24, 49, 83, 0.08);
+}
+
+.guide-student-detail__copy {
+  min-width: 0;
+  color: #41576f;
+  line-height: 1.75;
+}
+
+.guide-student-detail__title {
+  position: relative;
+  margin: 0 0 1rem;
+  padding-bottom: 0.8rem;
+  color: #4e6277;
+  font-size: clamp(1.45rem, 2.2vw, 1.9rem);
+  line-height: 1.15;
+}
+
+.guide-student-detail__copy p {
+  margin: 0 0 0.9rem;
+  text-align: justify;
+}
+
+.guide-student-detail__copy p:last-child {
+  margin-bottom: 0;
+}
+
+.guide-student-detail__lead {
+  color: #5e7185;
+  font-size: 1.04rem;
+  font-weight: 600;
+}
+
+.guide-student-detail__media {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.guide-student-detail__video-shell {
+  width: min(100%, 45rem);
+  padding: 0.55rem;
+  border-radius: 1.45rem;
+  background: linear-gradient(180deg, rgba(18, 53, 87, 0.97), rgba(10, 31, 54, 0.99));
+  box-shadow: 0 20px 40px rgba(11, 28, 45, 0.2);
+}
+
+.guide-student-detail__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.95rem;
+  background: #071626;
+}
+
+@media (max-width: 1080px) {
+  .guide-student-detail__card {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-student-detail__media {
+    order: -1;
+    justify-content: center;
+  }
+
+  .guide-student-detail__video-shell {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .guide-student-detail__card {
+    padding: 1.1rem;
+    gap: 1rem;
+    border-radius: 1.35rem;
+  }
+
+  .guide-student-detail__copy {
+    font-size: 0.96rem;
+    line-height: 1.68;
+  }
+
+  .guide-student-detail__copy p {
+    text-align: left;
+  }
+
+  .guide-student-detail__title {
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.65rem;
+    font-size: 1.35rem;
+  }
+
+  .guide-student-detail__lead {
+    font-size: 1rem;
+  }
+
+  .guide-student-detail__video-shell {
+    padding: 0.5rem;
+    border-radius: 1.1rem;
+  }
+
+}

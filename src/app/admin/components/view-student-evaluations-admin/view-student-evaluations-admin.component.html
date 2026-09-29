@@ -1,0 +1,81 @@
+<p-toast></p-toast>
+
+@if (isLoading) {
+  <app-loading></app-loading>
+}
+
+@if (!isLoading) {
+  <div class="student-evaluation-view">
+    @if (groupedQuestionsUpdate?.length) {
+      @for (batch of groupedQuestionsUpdate; track batch) {
+        <section class="evaluation-batch">
+          @for (item of batch.evaluation_students; track item) {
+            <article class="principle-card">
+              <div class="principle-header">
+                <span class="principle-kicker">Principio de evaluacion</span>
+                <h4>{{ item.evaluation_principle }}</h4>
+              </div>
+              <div class="guideline-list">
+                @for (item3 of item.principle_gl; track item3) {
+                  <section class="guideline-card">
+                    <div class="guideline-header">
+                      <span class="guideline-kicker">Pauta</span>
+                      <h5>{{ item3.guideline_pr }}</h5>
+                    </div>
+                    <div class="question-list">
+                      @for (item4 of item3.guideline_evaluations; track item4) {
+                        <article class="question-card">
+                          <p class="question-text">{{ item4.question }}</p>
+                          <div class="answer-options">
+                            @for (option of qualificationOptions; track option) {
+                              <span
+                                class="answer-option"
+                                [class.answer-option-selected]="item4.qualification === option.value"
+                                >
+                                {{ option.labelKey | translate }}
+                              </span>
+                            }
+                          </div>
+                          <div class="recorded-answer">
+                            <span class="recorded-answer-label">Respuesta registrada</span>
+                            <strong>{{ getQualificationLabel(item4.qualification) }}</strong>
+                          </div>
+                        </article>
+                      }
+                    </div>
+                  </section>
+                }
+              </div>
+            </article>
+          }
+          <section class="observation-card">
+            <span class="observation-label">{{ "object.observation" | translate }}</span>
+            <p>{{ batch.observation || "Sin observacion registrada." }}</p>
+          </section>
+        </section>
+      }
+      <div class="dialog-actions">
+        <p-button
+          icon="pi pi-times"
+          type="button"
+          (click)="closeView2()"
+          [label]="'object.exit' | translate"
+          styleClass="p-button-text"
+        ></p-button>
+      </div>
+    } @else {
+      <div class="empty-state-card">
+        <span class="pi pi-inbox"></span>
+        <p>No existe un detalle de evaluacion disponible para este registro.</p>
+        <p-button
+          icon="pi pi-times"
+          type="button"
+          (click)="closeView2()"
+          [label]="'object.exit' | translate"
+          styleClass="p-button-text"
+        ></p-button>
+      </div>
+    }
+  </div>
+}
+

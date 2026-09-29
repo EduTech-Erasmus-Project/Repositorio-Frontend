@@ -1,0 +1,42 @@
+
+/*
+*Css para dropdown accesible
+*/
+.class-dropdown-i{
+    font-size: 1rem;
+    color: #FFF;
+    background: #3b5b68;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    /* appearance: none; */
+    border-radius: 6px;
+    border-color: #3b5b68;
+    height: 28px;
+//	font-family: 'OpenSans', "Myriad Pro", Helvetica, Arial, sans-serif;
+    font-size: 1.0em;
+
+    &:hover{
+      box-shadow: 0 0 0 0.2rem #bfcdde;
+      outline: none;
+      outline-offset: 0;
+      border-color: #3B5B68;
+    }
+    &:focus {
+      box-shadow: 0 0 0 0.2rem #bfcdde;
+     outline: none;
+     outline-offset: 0;
+     border-color: #3B5B68;
+    }
+}
+
+.fl-prefsEditor-buttons-edit{
+  z-index: 50000;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0 25px !important;
+  border: none !important;
+  background-color: var(--primary-color) !important;
+  box-shadow: none !important;
+  border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}

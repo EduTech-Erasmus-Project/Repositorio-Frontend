@@ -1,0 +1,199 @@
+<div class="p-grid email-server-page">
+  <div class="p-col-12">
+    <div class="card">
+      <div class="email-server-header">
+        <h5>Servidor de correo</h5>
+        <p>
+          Configura el host, credenciales y parametros necesarios para el envio
+          de correos desde la plataforma.
+        </p>
+      </div>
+
+      <form
+        autocomplete="off"
+        [formGroup]="form"
+        class="email-server-form"
+        (ngSubmit)="onSave()"
+        >
+        <div class="form-grid">
+          <div class="fields-stack">
+            <div class="form-row">
+              <div class="p-field">
+                <label for="host">Host*</label>
+                <input
+                  id="host"
+                  type="text"
+                  pInputText
+                  formControlName="host"
+                  placeholder="smtp.ejemplo.com"
+                  />
+                @if (fieldInvalid('host')) {
+                  <small class="field-error">
+                    El campo es obligatorio.
+                  </small>
+                }
+              </div>
+
+              <div class="p-field port-field">
+                <label for="port">Puerto*</label>
+                <input
+                  id="port"
+                  type="number"
+                  pInputText
+                  formControlName="port"
+                  placeholder="587"
+                  />
+                @if (fieldInvalid('port')) {
+                  <small class="field-error">
+                    El campo es obligatorio.
+                  </small>
+                }
+              </div>
+            </div>
+
+            <div class="p-field">
+              <label for="username">Usuario*</label>
+              <input
+                id="username"
+                type="text"
+                pInputText
+                formControlName="username"
+                placeholder="usuario@dominio.com"
+                />
+              @if (fieldInvalid('username')) {
+                <small class="field-error">
+                  El campo es obligatorio.
+                </small>
+              }
+            </div>
+
+            <div class="p-field">
+              <label for="password">Password</label>
+              <div class="password-input-wrapper">
+                <input
+                  id="password"
+                  [type]="showPassword ? 'text' : 'password'"
+                  pInputText
+                  formControlName="password"
+                  placeholder="********"
+                  />
+                <button
+                  type="button"
+                  class="password-visibility-toggle"
+                  [attr.aria-label]="showPassword ? 'Ocultar contrasena' : 'Ver contrasena'"
+                  (click)="showPassword = !showPassword"
+                  >
+                  <i
+                    class="pi"
+                    [ngClass]="{ 'pi-eye': !showPassword, 'pi-eye-slash': showPassword }"
+                  ></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="p-field">
+              <label for="email_from">Email de envio*</label>
+              <input
+                id="email_from"
+                type="email"
+                pInputText
+                formControlName="email_from"
+                placeholder="noreply@dominio.com"
+                />
+              @if (fieldInvalid('email_from')) {
+                <small class="field-error">
+                  El campo es obligatorio.
+                </small>
+              }
+              @if (fieldInvalid('email_from', 'email')) {
+                <small class="field-error">
+                  Ingrese un correo valido.
+                </small>
+              }
+            </div>
+          </div>
+
+          <div class="settings-stack">
+            <div class="p-field switch-field">
+              <div class="switch-card" [class.is-active]="form.get('tls')?.value">
+                <div class="switch-copy">
+                  <div class="switch-copy-header">
+                    <strong>
+                      {{ form.get("tls")?.value ? "TLS habilitado" : "TLS deshabilitado" }}
+                    </strong>
+
+                    <p-toggleswitch
+                      inputId="tls"
+                      formControlName="tls"
+                    ></p-toggleswitch>
+                  </div>
+                  <span>
+                    {{
+                    form.get("tls")?.value
+                    ? "La conexion al servidor usara seguridad TLS."
+                    : "La conexion se enviara sin TLS. Verifica que el servidor realmente lo permita."
+                    }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="test-card">
+              <div class="test-card-header">
+                <h6>Prueba de servidor</h6>
+                <span>
+                  Envia un correo de prueba para verificar que la configuracion
+                  actual responde correctamente.
+                </span>
+              </div>
+
+              <div class="p-field">
+                <label for="emailtest">Correo de prueba</label>
+                <input
+                  id="emailtest"
+                  type="email"
+                  pInputText
+                  formControlName="emailtest"
+                  placeholder="destino@dominio.com"
+                  />
+              </div>
+
+              <button
+                pButton
+                pRipple
+                type="button"
+                label="Enviar mensaje de prueba"
+                icon="pi pi-send"
+                class="test-button"
+                [class.p-button-success]="hasTestEmailValue()"
+                [class.p-button-secondary]="!hasTestEmailValue()"
+                [disabled]="saving || testing"
+                [loading]="testing"
+                (click)="onTestEmail()"
+              ></button>
+              @if (fieldInvalid('emailtest', 'email')) {
+                <small class="field-error">
+                  Ingrese un correo valido para la prueba.
+                </small>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            pButton
+            pRipple
+            type="submit"
+            label="{{ 'admin.save' | translate }}"
+            class="p-button-success"
+            [disabled]="saving || testing"
+            [loading]="saving"
+          ></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+

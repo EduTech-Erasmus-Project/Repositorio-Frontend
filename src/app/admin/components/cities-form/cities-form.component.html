@@ -1,0 +1,125 @@
+<div class="p-grid city-form-page">
+  <div class="p-col-12">
+    <div class="card">
+      <div class="city-form-header">
+        <h5>{{ isEditMode ? "Editar ciudad" : "Nueva ciudad" }}</h5>
+        <p>
+          {{
+          isEditMode
+          ? "Actualiza la ciudad, su provincia, el pais asociado y su estado de disponibilidad."
+          : "Registra una nueva ciudad y define en que provincia y pais quedara disponible."
+          }}
+        </p>
+      </div>
+
+      <form
+        autocomplete="off"
+        [formGroup]="form"
+        class="city-form"
+        (ngSubmit)="onSave()"
+        >
+        <div class="form-grid">
+          <div class="fields-stack">
+            <div class="p-field">
+              <label for="country">Pais*</label>
+              <p-select
+                inputId="country"
+                [options]="countries"
+                formControlName="country"
+                placeholder="Selecciona un pais"
+                optionLabel="name"
+                optionValue="id"
+                (onChange)="onChangeCountry()"
+              ></p-select>
+              @if (fieldInvalid('country')) {
+                <small class="field-error">
+                  El campo es obligatorio.
+                </small>
+              }
+            </div>
+
+            <div class="p-field">
+              <label for="province">Provincia*</label>
+              <p-select
+                inputId="province"
+                [options]="provinces"
+                formControlName="province"
+                placeholder="Selecciona una provincia"
+                optionLabel="name"
+                optionValue="id"
+                [disabled]="!form.controls.country.value"
+              ></p-select>
+              @if (fieldInvalid('province')) {
+                <small class="field-error">
+                  El campo es obligatorio.
+                </small>
+              }
+            </div>
+
+            <div class="p-field">
+              <label for="name">Nombre*</label>
+              <input id="name" type="text" pInputText formControlName="name" />
+              @if (fieldInvalid('name')) {
+                <small class="field-error">
+                  El campo es obligatorio.
+                </small>
+              }
+            </div>
+          </div>
+
+          <div class="p-field switch-field">
+            <label for="is_active">Activo</label>
+            <div
+              class="switch-card"
+              [class.is-active]="form.get('is_active')?.value"
+              >
+              <div class="switch-copy">
+                <strong>
+                  {{
+                  form.get("is_active")?.value
+                  ? "Ciudad habilitada"
+                  : "Ciudad deshabilitada"
+                  }}
+                </strong>
+                <span>
+                  {{
+                  form.get("is_active")?.value
+                  ? "La ciudad estara disponible para formularios, registros y selecciones de ubicacion."
+                  : "La ciudad seguira registrada, pero no aparecera para nuevas selecciones."
+                  }}
+                </span>
+              </div>
+
+              <p-toggleswitch
+                inputId="is_active"
+                formControlName="is_active"
+              ></p-toggleswitch>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="{{ 'admin.cancel' | translate }}"
+            class="p-button-secondary"
+            (click)="back()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="submit"
+            label="{{ 'admin.save' | translate }}"
+            class="p-button-success"
+            [loading]="saving"
+            [disabled]="saving"
+          ></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,53 @@
+<section class="guide-shell">
+
+  <div class="guide-shell__content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <footer class="guide-shell__steps">
+    <p-button
+      [disabled]="activeIndex === 0"
+      label="{{ 'buttons.back' | translate }}"
+      icon="pi pi-angle-left"
+      (onClick)="prevPage()">
+    </p-button>
+
+    <div class="guide-shell__steps-center">
+      <div class="guide-shell__steps-track">
+        @if (items.length) {
+          <ol class="guide-shell__stepper">
+            @for (item of items; track item; let index = $index) {
+              <li
+                class="guide-shell__step"
+                [class.is-active]="index === activeIndex"
+                [class.is-complete]="index < activeIndex">
+                <button
+                  type="button"
+                  class="guide-shell__step-button"
+                  [disabled]="index === activeIndex"
+                  (click)="goToStep(index)">
+                  <span class="guide-shell__step-circle">{{ index + 1 }}</span>
+                  <span class="guide-shell__step-label">{{ item.label }}</span>
+                </button>
+              </li>
+            }
+          </ol>
+        }
+      </div>
+
+      @if (currentStepLabel) {
+        <p class="guide-shell__steps-current">
+          {{ currentStepLabel }}
+        </p>
+      }
+    </div>
+
+    <p-button
+      [disabled]="!items.length || activeIndex >= items.length - 1"
+      label="{{ 'buttons.next' | translate }}"
+      icon="pi pi-angle-right"
+      iconPos="right"
+      (onClick)="nextPage()">
+    </p-button>
+  </footer>
+</section>

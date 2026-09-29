@@ -1,0 +1,12 @@
+<div class="container-information">
+  @if (!spinnerFlag) {
+    <div class="spinner">
+      <p-progressSpinner></p-progressSpinner>
+    </div>
+  }
+  @if (spinnerFlag) {
+    <div style="height: 100%;">
+      <app-iframe-integrated-menu [object]="object"></app-iframe-integrated-menu>
+    </div>
+  }
+</div>

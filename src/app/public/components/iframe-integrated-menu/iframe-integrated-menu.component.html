@@ -1,0 +1,50 @@
+<div
+  class="iframe-shell"
+  [class.iframe-shell--without-menu]="!youNeedMenu"
+  [class.iframe-shell--fullscreen]="fullscreenMode"
+>
+  @if (youNeedMenu) {
+    <aside
+      class="iframe-menu"
+      [class.iframe-menu--collapsed]="buttonMenuBoolean"
+      role="navigation"
+      [attr.aria-label]="'object.resourceIndexNavigation' | translate"
+    >
+      <div class="iframe-menu__header" [class.iframe-menu__header--compact]="buttonMenuBoolean">
+        @if (!buttonMenuBoolean) {
+          <div class="iframe-menu__heading">
+            <span class="iframe-menu__eyebrow">{{ 'object.resourceIndexEyebrow' | translate }}</span>
+            <span class="iframe-menu__caption">{{ 'object.resourceIndexCaption' | translate }}</span>
+          </div>
+        }
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="iframe-menu__toggle-button"
+          [icon]="buttonMenuBoolean ? 'pi pi-angle-right' : 'pi pi-angle-left'"
+          (click)="buttonMenuBoolean = !buttonMenuBoolean"
+          [title]="(buttonMenuBoolean ? 'object.showResourceIndex' : 'object.hideResourceIndex') | translate"
+          [attr.aria-label]="(buttonMenuBoolean ? 'object.showResourceIndex' : 'object.hideResourceIndex') | translate"
+        ></button>
+      </div>
+      <div
+        class="iframe-menu__content"
+        [class.iframe-menu__content--hidden]="buttonMenuBoolean"
+        [attr.aria-hidden]="buttonMenuBoolean"
+        >
+        <app-drop-down-menu-learning-object [object]="object"></app-drop-down-menu-learning-object>
+      </div>
+    </aside>
+  }
+
+  <div class="iframe-stage" [class.iframe-stage--full]="!youNeedMenu">
+    <iframe
+      class="iframe-stage__frame"
+      [title]="'object.titleIframe' | translate"
+      [src]="iframeSource | urlsanitizer"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>
+  </div>
+</div>

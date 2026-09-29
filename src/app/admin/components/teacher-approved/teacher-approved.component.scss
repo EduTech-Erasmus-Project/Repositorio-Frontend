@@ -1,0 +1,321 @@
+:host ::ng-deep {
+	.p-paginator {
+		gap: 0.5rem;
+		flex-wrap: wrap;
+		margin-top: 1rem;
+		padding: 1rem 0 0;
+		border-top: 1px solid #eef2f6;
+		background: transparent;
+
+		.p-paginator-current {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 2.75rem;
+			margin-left: auto;
+			padding: 0 0.9rem;
+			border: 1px solid #dbe5ec;
+			border-radius: 12px;
+			background: #ffffff;
+			color: #4c566a;
+			line-height: 1.2;
+			text-align: center;
+			box-sizing: border-box;
+		}
+	}
+
+	.p-progressbar {
+		height: .5rem;
+		background-color: #D8DADC;
+
+		.p-progressbar-value {
+			background-color: #607D8B;
+		}
+	}
+
+	.table-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.table-title {
+		color: #4c566a;
+		font-size: 1.25rem;
+		font-weight: 600;
+		line-height: 1.2;
+	}
+
+	.table-search {
+		position: relative;
+		display: block;
+		width: min(320px, 100%);
+	}
+
+	.table-search > .pi-search {
+		position: absolute;
+		top: 50%;
+		left: 12px;
+		z-index: 1;
+		pointer-events: none;
+		transform: translateY(-50%);
+	}
+
+	.table-search .p-inputtext {
+		width: 100%;
+		min-height: 42px;
+		padding-left: 40px;
+		padding-right: 40px;
+	}
+
+	.table-search-clear {
+		position: absolute;
+		top: 50%;
+		right: 12px;
+		z-index: 1;
+		left: auto;
+		cursor: pointer;
+		transform: translateY(-50%);
+	}
+
+	.p-calendar .p-datepicker {
+		min-width: 25rem;
+
+		td {
+			font-weight: 400;
+		}
+	}
+
+	.p-datatable.p-datatable-customers {
+		.p-datatable-header {
+			padding: 1rem;
+			text-align: left;
+			font-size: 1.5rem;
+		}
+
+		.p-paginator {
+			padding: 1rem;
+		}
+
+		.p-datatable-thead > tr > th {
+			text-align: left;
+		}
+
+		.p-datatable-tbody > tr > td {
+			padding-top: 1rem;
+			padding-bottom: 1rem;
+			vertical-align: middle;
+		}
+
+		.p-dropdown-label:not(.p-placeholder) {
+			text-transform: uppercase;
+		}
+	}
+
+	.p-datatable.p-datatable-customers:not(.p-datatable-gridlines) {
+		.p-datatable-tbody > tr > td {
+			cursor: auto;
+		}
+	}
+
+	/* Responsive */
+	.p-datatable-customers .p-datatable-tbody > tr > td .p-column-title {
+		display: none;
+	}
+
+	.table-cell-copy p {
+		margin: 0;
+		line-height: 1.45;
+	}
+
+	.table-role-list {
+		margin: 0;
+		padding: 0;
+	}
+
+	.table-role-list + .table-role-list {
+		margin-top: 0.35rem;
+	}
+
+	.table-actions-cell {
+		text-align: center;
+	}
+
+	.table-inline-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	.table-inline-actions--links {
+		justify-content: flex-start;
+	}
+
+	.table-inline-actions--buttons {
+		justify-content: center;
+	}
+
+	.table-inline-actions--buttons .p-button {
+		min-width: 8.75rem;
+		justify-content: center;
+	}
+}
+
+.customer-badge {
+	border-radius: 2px;
+	padding: .25em .5rem;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 12px;
+	letter-spacing: .3px;
+
+	&.status-qualified {
+		background: #C8E6C9;
+		color: #256029;
+	}
+
+	&.status-unqualified {
+		background: #FFCDD2;
+		color: #C63737;
+	}
+
+	&.status-negotiation {
+		background: #FEEDAF;
+		color: #8A5340;
+	}
+
+	&.status-new {
+		background: #B3E5FC;
+		color: #23547B;
+	}
+
+	&.status-renewal {
+		background: #ECCFFF;
+		color: #694382;
+	}
+
+	&.status-proposal {
+		background: #FFD8B2;
+		color: #805B36;
+	}
+}
+
+.product-badge {
+	border-radius: 2px;
+	padding: .25em .5rem;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 12px;
+	letter-spacing: .3px;
+
+	&.status-instock {
+		background: #C8E6C9;
+		color: #256029;
+	}
+
+	&.status-outofstock {
+		background: #FFCDD2;
+		color: #C63737;
+	}
+
+	&.status-lowstock {
+		background: #FEEDAF;
+		color: #8A5340;
+	}
+}
+
+.order-badge {
+	border-radius: 2px;
+	padding: .25em .5rem;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 12px;
+	letter-spacing: .3px;
+
+	&.order-delivered {
+		background: #C8E6C9;
+		color: #256029;
+	}
+
+	&.order-cancelled {
+		background: #FFCDD2;
+		color: #C63737;
+	}
+
+	&.order-pending {
+		background: #FEEDAF;
+		color: #8A5340;
+	}
+
+	&.order-returned {
+		background: #ECCFFF;
+		color: #694382;
+	}
+}
+
+@media screen and (max-width: 960px) {
+	:host ::ng-deep {
+		.p-datatable {
+			&.p-datatable-customers {
+				.p-datatable-thead > tr > th,
+				.p-datatable-tfoot > tr > td {
+					display: none !important;
+				}
+
+				.p-datatable-tbody {
+					display: block;
+				}
+
+				.p-datatable-tbody > tr {
+					display: block;
+					margin-bottom: 1rem;
+					border: 1px solid #dbe5ec;
+					border-radius: 16px;
+					background: #ffffff;
+					box-shadow: 0 10px 24px rgba(47, 69, 81, 0.06);
+					overflow: hidden;
+
+					> td {
+						text-align: left;
+						display: block;
+						border: 0 none !important;
+						width: 100% !important;
+						float: none;
+						clear: both;
+						padding: 0.9rem 1rem !important;
+						border-top: 1px solid #eef2f6 !important;
+
+						&:first-child {
+							border-top: 0 !important;
+						}
+
+						.p-column-title {
+							display: block;
+							margin: 0 0 0.4rem;
+							padding: 0;
+							min-width: 0;
+							color: #4c566a;
+							font-size: 0.76rem;
+							font-weight: 700;
+							letter-spacing: 0.04em;
+							text-transform: uppercase;
+						}
+
+						.p-progressbar {
+							margin-top: .5rem;
+						}
+
+						.table-inline-actions--buttons,
+						.table-inline-actions--links {
+							justify-content: flex-start;
+						}
+					}
+				}
+			}
+		}
+	}
+
+}

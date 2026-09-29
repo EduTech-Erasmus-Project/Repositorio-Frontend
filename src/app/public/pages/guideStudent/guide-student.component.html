@@ -1,0 +1,66 @@
+<section class="guide-student-shell">
+  <header class="guide-student-shell__hero">
+    <div class="guide-student-shell__heading">
+      <span class="guide-student-shell__eyebrow">{{ "menu.studentGuide" | translate }}</span>
+      <h2 class="guide-student-shell__title">{{ currentStepLabel }}</h2>
+    </div>
+
+    <p-button
+      label="{{ 'guideTeacher.buttonProfiles' | translate }}"
+      icon="pi pi-users"
+      iconPos="right"
+      (onClick)="resetPage()">
+    </p-button>
+  </header>
+
+  <div class="guide-student-shell__content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <footer class="guide-student-shell__steps">
+    <p-button
+      [disabled]="activeIndex === 0"
+      label="{{ 'buttons.back' | translate }}"
+      icon="pi pi-angle-left"
+      (onClick)="prevPage()">
+    </p-button>
+
+    <div class="guide-student-shell__steps-center">
+      <div class="guide-student-shell__steps-track">
+        @if (items.length) {
+          <ol class="guide-student-shell__stepper">
+            @for (item of items; track item; let index = $index) {
+              <li
+                class="guide-student-shell__step"
+                [class.is-active]="index === activeIndex"
+                [class.is-complete]="index < activeIndex">
+                <button
+                  type="button"
+                  class="guide-student-shell__step-button"
+                  [disabled]="index === activeIndex"
+                  (click)="goToStep(index)">
+                  <span class="guide-student-shell__step-circle">{{ index + 1 }}</span>
+                  <span class="guide-student-shell__step-label">{{ item.label }}</span>
+                </button>
+              </li>
+            }
+          </ol>
+        }
+      </div>
+
+      @if (currentStepLabel) {
+        <p class="guide-student-shell__steps-current">
+          {{ currentStepLabel }}
+        </p>
+      }
+    </div>
+
+    <p-button
+      [disabled]="!items.length || activeIndex >= items.length - 1"
+      label="{{ 'buttons.next' | translate }}"
+      icon="pi pi-angle-right"
+      iconPos="right"
+      (onClick)="nextPage()">
+    </p-button>
+  </footer>
+</section>

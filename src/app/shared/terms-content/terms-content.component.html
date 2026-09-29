@@ -1,0 +1,101 @@
+<div class="terms-panel__content" [class.terms-panel__content--compact]="compact">
+  <section class="terms-hero" tabindex="0">
+    <div class="terms-hero__copy">
+      <h1>{{ "termsandconditions.title" | translate }}</h1>
+      <p>{{ "termsandconditions.intro" | translate }}</p>
+    </div>
+
+    <aside class="terms-hero__summary" tabindex="0">
+      <h2>{{ "termsandconditions.summaryTitle" | translate }}</h2>
+      <p class="terms-hero__summary-text">{{ "termsandconditions.summaryText" | translate }}</p>
+
+      <div class="terms-hero__tags">
+        <p-tag [value]="'termsandconditions.subtitle1' | translate"></p-tag>
+        <p-tag [value]="'termsandconditions.subtitle2' | translate"></p-tag>
+        <p-tag [value]="'termsandconditions.subtitle3' | translate"></p-tag>
+      </div>
+
+      <ul class="terms-hero__summary-list">
+        <li>
+          <i class="pi pi-compass"></i>
+          <span>{{ "termsandconditions.subtitle1" | translate }}</span>
+        </li>
+        <li>
+          <i class="pi pi-shield"></i>
+          <span>{{ "termsandconditions.subtitle2" | translate }}</span>
+        </li>
+        <li>
+          <i class="pi pi-lock"></i>
+          <span>{{ "termsandconditions.subtitle3" | translate }}</span>
+        </li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="terms-sections">
+    <article class="terms-section" tabindex="0">
+      <div class="terms-section__header">
+        <span class="terms-section__icon">
+          <i class="pi pi-compass"></i>
+        </span>
+
+        <div class="terms-section__title-block">
+          <h2>{{ "termsandconditions.subtitle1" | translate }}</h2>
+        </div>
+      </div>
+
+      <p>{{ "termsandconditions.p1" | translate }}</p>
+    </article>
+
+    <p-divider></p-divider>
+
+    <article class="terms-section" tabindex="0">
+      <div class="terms-section__header">
+        <span class="terms-section__icon">
+          <i class="pi pi-shield"></i>
+        </span>
+
+        <div class="terms-section__title-block">
+          <h2>{{ "termsandconditions.subtitle2" | translate }}</h2>
+        </div>
+      </div>
+
+      <p>{{ "termsandconditions.p2" | translate }}</p>
+
+      <ul class="terms-points">
+        <li class="terms-point" tabindex="0">
+          <i class="pi pi-check-circle"></i>
+          <span>{{ "termsandconditions.points.point1" | translate }}</span>
+        </li>
+        <li class="terms-point" tabindex="0">
+          <i class="pi pi-check-circle"></i>
+          <span>{{ "termsandconditions.points.point2" | translate }}</span>
+        </li>
+        <li class="terms-point" tabindex="0">
+          <i class="pi pi-check-circle"></i>
+          <span>{{ "termsandconditions.points.point3" | translate }}</span>
+        </li>
+        <li class="terms-point" tabindex="0">
+          <i class="pi pi-check-circle"></i>
+          <span>{{ "termsandconditions.points.point4" | translate }}</span>
+        </li>
+      </ul>
+    </article>
+
+    <p-divider></p-divider>
+
+    <article class="terms-section terms-section--accent" tabindex="0">
+      <div class="terms-section__header">
+        <span class="terms-section__icon">
+          <i class="pi pi-lock"></i>
+        </span>
+
+        <div class="terms-section__title-block">
+          <h2>{{ "termsandconditions.subtitle3" | translate }}</h2>
+        </div>
+      </div>
+
+      <p>{{ "termsandconditions.p3" | translate }}</p>
+    </article>
+  </section>
+</div>

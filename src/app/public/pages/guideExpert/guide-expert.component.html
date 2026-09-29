@@ -1,0 +1,66 @@
+<section class="guide-expert-shell">
+  <header class="guide-expert-shell__hero">
+    <div class="guide-expert-shell__heading">
+      <span class="guide-expert-shell__eyebrow">{{ "menu.expertGuide" | translate }}</span>
+      <h2 class="guide-expert-shell__title">{{ currentStepLabel }}</h2>
+    </div>
+
+    <p-button
+      label="{{ 'guideTeacher.buttonProfiles' | translate }}"
+      icon="pi pi-users"
+      iconPos="right"
+      (onClick)="resetPage()">
+    </p-button>
+  </header>
+
+  <div class="guide-expert-shell__content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <footer class="guide-expert-shell__steps">
+    <p-button
+      [disabled]="activeIndex === 0"
+      label="{{ 'buttons.back' | translate }}"
+      icon="pi pi-angle-left"
+      (onClick)="prevPage()">
+    </p-button>
+
+    <div class="guide-expert-shell__steps-center">
+      <div class="guide-expert-shell__steps-track">
+        @if (items.length) {
+          <ol class="guide-expert-shell__stepper">
+            @for (item of items; track item; let index = $index) {
+              <li
+                class="guide-expert-shell__step"
+                [class.is-active]="index === activeIndex"
+                [class.is-complete]="index < activeIndex">
+                <button
+                  type="button"
+                  class="guide-expert-shell__step-button"
+                  [disabled]="index === activeIndex"
+                  (click)="goToStep(index)">
+                  <span class="guide-expert-shell__step-circle">{{ index + 1 }}</span>
+                  <span class="guide-expert-shell__step-label">{{ item.label }}</span>
+                </button>
+              </li>
+            }
+          </ol>
+        }
+      </div>
+
+      @if (currentStepLabel) {
+        <p class="guide-expert-shell__steps-current">
+          {{ currentStepLabel }}
+        </p>
+      }
+    </div>
+
+    <p-button
+      [disabled]="!items.length || activeIndex >= items.length - 1"
+      label="{{ 'buttons.next' | translate }}"
+      icon="pi pi-angle-right"
+      iconPos="right"
+      (onClick)="nextPage()">
+    </p-button>
+  </footer>
+</section>

@@ -1,0 +1,86 @@
+<div class="menu-panel">
+  @if (objectCollectionMenu) {
+    <div class="menu-panel__intro">
+      <span class="menu-panel__eyebrow">{{ 'object.resourceMapEyebrow' | translate }}</span>
+      <h2 class="menu-panel__title">{{ objectCollectionMenu.title }}</h2>
+      <p class="menu-panel__description">
+        {{ 'object.resourceMapDescription' | translate }}
+      </p>
+    </div>
+  }
+
+  @if (isLoadingMenu) {
+    <p class="menu-state" role="status" aria-live="polite">
+      {{ 'object.resourceIndexLoading' | translate }}
+    </p>
+  }
+
+  @if (!isLoadingMenu && menuLoadError) {
+    <p class="menu-state menu-state--error">
+      {{ 'object.resourceIndexError' | translate }}
+    </p>
+  }
+
+  @if (!isLoadingMenu && !menuLoadError && !objectCollectionMenu?.items?.length) {
+    <p class="menu-state">
+      {{ 'object.resourceIndexEmpty' | translate }}
+    </p>
+  }
+
+  @if (!isLoadingMenu && objectCollectionMenu?.items?.length) {
+    <ng-template #treeTemplate let-items let-level="level">
+      <ul
+        class="menu-tree"
+        [class.menu-tree--nested]="level > 0"
+        [attr.data-level]="level"
+        [attr.aria-label]="level === 0 ? ('object.resourceIndexNavigation' | translate) : null"
+      >
+        @for (item of items; track trackByResourcePath($index, item)) {
+          <li class="menu-tree__item">
+            <div
+              class="menu-row"
+              [class.menu-row--active]="isSelectedResource(item.resource_path)"
+              [class.menu-row--in-path]="hasSelectedDescendant(item) && !isSelectedResource(item.resource_path)"
+              [class.menu-row--child]="level > 0"
+              [class.menu-row--branch]="item.children?.length"
+              [class.menu-row--expanded]="isExpanded(item)"
+              [attr.data-level]="level"
+              >
+              <button
+                type="button"
+                class="menu-link"
+                [class.menu-link--child]="level > 0"
+                [class.menu-link--branch-only]="!item.resource_path && item.children?.length"
+                [attr.aria-current]="isSelectedResource(item.resource_path) ? 'page' : null"
+                [attr.aria-expanded]="!item.resource_path && item.children?.length ? isExpanded(item) : null"
+                (click)="onActivateItem(item)"
+                >
+                <span class="menu-link__title">{{ item.title }}</span>
+              </button>
+              @if (item.children?.length) {
+                <button
+                  type="button"
+                  class="menu-toggle"
+                  [class.menu-toggle--expanded]="isExpanded(item)"
+                  [attr.aria-label]="(isExpanded(item) ? 'object.collapseResourceSection' : 'object.expandResourceSection') | translate"
+                  [attr.aria-expanded]="isExpanded(item)"
+                  (click)="onToggleBranch($event, item)"
+                  >
+                  <span class="menu-toggle__chevron"></span>
+                </button>
+              }
+            </div>
+            @if (item.children?.length && isExpanded(item)) {
+              <ng-container
+                *ngTemplateOutlet="treeTemplate; context: { $implicit: item.children, level: level + 1 }"
+              ></ng-container>
+            }
+          </li>
+        }
+      </ul>
+    </ng-template>
+    <ng-container
+      *ngTemplateOutlet="treeTemplate; context: { $implicit: objectCollectionMenu.items, level: 0 }"
+    ></ng-container>
+  }
+</div>

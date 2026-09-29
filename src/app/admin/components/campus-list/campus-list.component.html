@@ -1,0 +1,116 @@
+<div class="card campus-page">
+  <div class="campus-toolbar">
+    <div>
+      <h5>Listado de campus</h5>
+      <p>Gestiona los campus registrados, su universidad, ciudad y estado.</p>
+    </div>
+    <button
+      [routerLink]="['/admin/config/campus/new']"
+      pButton
+      pRipple
+      label="Nuevo"
+      icon="pi pi-plus"
+      class="p-button-success"
+    ></button>
+  </div>
+
+  <p-toast></p-toast>
+
+  <p-table
+    #dt
+    [value]="campus"
+    dataKey="id"
+    styleClass="p-datatable-customers campus-table"
+    [rowHover]="true"
+    [rows]="10"
+    [paginator]="true"
+    [filterDelay]="0"
+    [loading]="isLoading"
+    [globalFilterFields]="['name', 'university.name', 'city.name', 'address']"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-header campus-table-header">
+        <span class="table-title">Campus registrados</span>
+        <span class="p-input-icon-left campus-search-box">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar por campus, universidad, ciudad o direccion"
+          />
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="index-column">#</th>
+        <th>Nombre</th>
+        <th>Universidad</th>
+        <th>Ciudad</th>
+        <th class="address-column">Direccion</th>
+        <th class="status-column">Estado</th>
+        <th class="actions-column">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-item>
+      <tr class="p-selectable-row">
+        <td class="index-cell">
+          <span class="p-column-title">#</span>
+          <strong>{{ item.id }}</strong>
+        </td>
+        <td>
+          <span class="p-column-title">Nombre</span>
+          <div class="campus-name-cell">{{ item.name }}</div>
+        </td>
+        <td>
+          <span class="p-column-title">Universidad</span>
+          <div class="university-name-cell">{{ item.university?.name || "-" }}</div>
+        </td>
+        <td>
+          <span class="p-column-title">Ciudad</span>
+          <div class="city-name-cell">{{ item.city?.name || "-" }}</div>
+        </td>
+        <td>
+          <span class="p-column-title">Direccion</span>
+          <div class="address-cell">{{ item.address || "-" }}</div>
+        </td>
+        <td class="status-cell">
+          <span class="p-column-title">Estado</span>
+          <p-tag
+            [value]="getStatusLabel(item.is_active)"
+            [severity]="getStatusSeverity(item.is_active)"
+          ></p-tag>
+        </td>
+        <td class="table-actions">
+          <span class="p-column-title">Acciones</span>
+          <div class="table-inline-actions table-inline-actions--buttons">
+            <button
+              [routerLink]="['/admin/config/campus', item.id]"
+              pButton
+              type="button"
+              class="p-button-success"
+              icon="pi pi-pencil"
+            ></button>
+            <button
+              (click)="onDelete(item.id)"
+              pButton
+              type="button"
+              class="p-button-danger"
+              icon="pi pi-trash"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">No existen campus registrados.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+

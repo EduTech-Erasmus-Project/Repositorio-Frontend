@@ -1,0 +1,106 @@
+<div class="card cities-page">
+  <div class="cities-toolbar">
+    <div>
+      <h5>Listado de ciudades</h5>
+      <p>Gestiona las ciudades registradas, su provincia asociada y su estado.</p>
+    </div>
+    <button
+      [routerLink]="['/admin/config/city/new']"
+      pButton
+      pRipple
+      label="Nuevo"
+      icon="pi pi-plus"
+      class="p-button-success"
+    ></button>
+  </div>
+
+  <p-toast></p-toast>
+
+  <p-table
+    #dt
+    [value]="cities"
+    dataKey="id"
+    styleClass="p-datatable-customers cities-table"
+    [rowHover]="true"
+    [rows]="10"
+    [paginator]="true"
+    [filterDelay]="0"
+    [loading]="isLoading"
+    [globalFilterFields]="['name', 'province.name']"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-header cities-table-header">
+        <span class="table-title">Ciudades registradas</span>
+        <span class="p-input-icon-left cities-search-box">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar por ciudad o provincia"
+          />
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="index-column">#</th>
+        <th>Nombre</th>
+        <th>Provincia</th>
+        <th class="status-column">Estado</th>
+        <th class="actions-column">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-city>
+      <tr class="p-selectable-row">
+        <td class="index-cell">
+          <span class="p-column-title">#</span>
+          <strong>{{ city.id }}</strong>
+        </td>
+        <td>
+          <span class="p-column-title">Nombre</span>
+          <div class="city-name-cell">{{ city.name }}</div>
+        </td>
+        <td>
+          <span class="p-column-title">Provincia</span>
+          <div class="province-name-cell">{{ city.province?.name || "-" }}</div>
+        </td>
+        <td class="status-cell">
+          <span class="p-column-title">Estado</span>
+          <p-tag
+            [value]="getStatusLabel(city.is_active)"
+            [severity]="getStatusSeverity(city.is_active)"
+          ></p-tag>
+        </td>
+        <td class="table-actions">
+          <span class="p-column-title">Acciones</span>
+          <div class="table-inline-actions table-inline-actions--buttons">
+            <button
+              [routerLink]="['/admin/config/city', city.id]"
+              pButton
+              type="button"
+              class="p-button-success"
+              icon="pi pi-pencil"
+            ></button>
+            <button
+              (click)="onDelete(city.id)"
+              pButton
+              type="button"
+              class="p-button-danger"
+              icon="pi pi-trash"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">No existen ciudades registradas.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+

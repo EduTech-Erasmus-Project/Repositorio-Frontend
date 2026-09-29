@@ -1,0 +1,106 @@
+<div class="card provinces-page">
+  <div class="provinces-toolbar">
+    <div>
+      <h5>Listado de provincias</h5>
+      <p>Gestiona las provincias registradas, su pais asociado y su estado.</p>
+    </div>
+    <button
+      [routerLink]="['/admin/config/province/new']"
+      pButton
+      pRipple
+      label="Nuevo"
+      icon="pi pi-plus"
+      class="p-button-success"
+    ></button>
+  </div>
+
+  <p-toast></p-toast>
+
+  <p-table
+    #dt
+    [value]="provinces"
+    dataKey="id"
+    styleClass="p-datatable-customers provinces-table"
+    [rowHover]="true"
+    [rows]="10"
+    [paginator]="true"
+    [filterDelay]="0"
+    [loading]="isLoading"
+    [globalFilterFields]="['name', 'country.name']"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-header provinces-table-header">
+        <span class="table-title">Provincias registradas</span>
+        <span class="p-input-icon-left provinces-search-box">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Buscar por nombre o pais"
+          />
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="index-column">#</th>
+        <th>Nombre</th>
+        <th>Pais</th>
+        <th class="status-column">Estado</th>
+        <th class="actions-column">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-province>
+      <tr class="p-selectable-row">
+        <td class="index-cell">
+          <span class="p-column-title">#</span>
+          <strong>{{ province.id }}</strong>
+        </td>
+        <td>
+          <span class="p-column-title">Nombre</span>
+          <div class="province-name-cell">{{ province.name }}</div>
+        </td>
+        <td>
+          <span class="p-column-title">Pais</span>
+          <div class="country-name-cell">{{ province.country?.name || "-" }}</div>
+        </td>
+        <td class="status-cell">
+          <span class="p-column-title">Estado</span>
+          <p-tag
+            [value]="getStatusLabel(province.is_active)"
+            [severity]="getStatusSeverity(province.is_active)"
+          ></p-tag>
+        </td>
+        <td class="table-actions">
+          <span class="p-column-title">Acciones</span>
+          <div class="table-inline-actions table-inline-actions--buttons">
+            <button
+              [routerLink]="['/admin/config/province', province.id]"
+              pButton
+              type="button"
+              class="p-button-success"
+              icon="pi pi-pencil"
+            ></button>
+            <button
+              (click)="onDelete(province.id)"
+              pButton
+              type="button"
+              class="p-button-danger"
+              icon="pi pi-trash"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">No existen provincias registradas.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+

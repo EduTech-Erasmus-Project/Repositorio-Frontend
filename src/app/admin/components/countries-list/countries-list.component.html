@@ -1,0 +1,74 @@
+<div class="card countries-page">
+  <div class="countries-toolbar">
+    <div>
+      <h5>Listado de paises</h5>
+      <p>Gestiona los paises registrados y su estado de activacion.</p>
+    </div>
+    <button [routerLink]="['/admin/config/country/new']" pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success"></button>
+  </div>
+
+  <p-toast></p-toast>
+
+  <p-table
+    #dt
+    [value]="countries"
+    dataKey="id"
+    styleClass="p-datatable-customers countries-table"
+    [rowHover]="true"
+    [rows]="10"
+    [paginator]="true"
+    [filterDelay]="0"
+    [loading]="isLoading"
+    [globalFilterFields]="['name']"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-header countries-table-header">
+        <span class="table-title">Paises registrados</span>
+        <span class="p-input-icon-left countries-search-box">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar por nombre" />
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="index-column">#</th>
+        <th>Nombre</th>
+        <th class="status-column">Estado</th>
+        <th class="actions-column">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-country>
+      <tr class="p-selectable-row">
+        <td class="index-cell">
+          <span class="p-column-title">#</span>
+          <strong>{{ country.id }}</strong>
+        </td>
+        <td>
+          <span class="p-column-title">Nombre</span>
+          <div class="country-name-cell">{{ country.name }}</div>
+        </td>
+        <td class="status-cell">
+          <span class="p-column-title">Estado</span>
+          <p-tag [value]="getStatusLabel(country.is_active)" [severity]="getStatusSeverity(country.is_active)"></p-tag>
+        </td>
+        <td class="table-actions">
+          <span class="p-column-title">Acciones</span>
+          <div class="table-inline-actions table-inline-actions--buttons">
+            <button [routerLink]="['/admin/config/country', country.id]" pButton type="button" class="p-button-success" icon="pi pi-pencil"></button>
+            <button (click)="onDelete(country.id)" pButton type="button" class="p-button-danger" icon="pi pi-trash"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No existen paises registrados.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+

@@ -1,0 +1,215 @@
+<div class="card report-page">
+  <div class="report-header">
+    <div>
+      <h5>Reporte de usuarios</h5>
+      <p>Filtra por rango de fechas, estado de carga y ubicacion para consultar los objetos de aprendizaje.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" class="report-filter-grid" (ngSubmit)="listLearningObject()">
+    <div class="filter-field">
+      <label for="uploadType">Subidos</label>
+      <p-select
+        inputId="uploadType"
+        [options]="types"
+        formControlName="upload"
+        placeholder="Tipo"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="false"
+        appendTo="body"
+        [fluid]="true"
+      ></p-select>
+    </div>
+
+    <div class="filter-field">
+      <label for="created_init">Fecha inicial</label>
+      <p-datepicker
+        formControlName="created_init"
+        dateFormat="yy-mm-dd"
+        inputId="created_init"
+        placeholder="AAAA-MM-DD"
+        [showIcon]="true"
+        appendTo="body"
+        [fluid]="true"
+      ></p-datepicker>
+    </div>
+
+    <div class="filter-field">
+      <label for="created_end">Fecha final</label>
+      <p-datepicker
+        formControlName="created_end"
+        dateFormat="yy-mm-dd"
+        inputId="created_end"
+        placeholder="AAAA-MM-DD"
+        [showIcon]="true"
+        appendTo="body"
+        [fluid]="true"
+      ></p-datepicker>
+    </div>
+
+    <div class="filter-field">
+      <label for="city_id">Ciudad</label>
+      <p-select
+        inputId="city_id"
+        [options]="cities"
+        formControlName="city"
+        placeholder="Ciudad"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        appendTo="body"
+        [fluid]="true"
+      ></p-select>
+    </div>
+
+    <div class="filter-field">
+      <label for="university_id">Universidad</label>
+      <p-select
+        inputId="university_id"
+        [options]="universities"
+        formControlName="university"
+        placeholder="Universidad"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        appendTo="body"
+        [fluid]="true"
+      ></p-select>
+    </div>
+
+    <div class="filter-field">
+      <label for="campus_id">Campus</label>
+      <p-select
+        inputId="campus_id"
+        [options]="campus"
+        formControlName="campus"
+        placeholder="Campus"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        appendTo="body"
+        [fluid]="true"
+      ></p-select>
+    </div>
+
+    <div class="filter-field filter-field-search">
+      <label for="query">Buscar</label>
+      <span class="p-input-icon-left report-search-input">
+        <i class="pi pi-search"></i>
+        <input type="text" pInputText id="query" placeholder="Nombre, apellido o email" formControlName="query" />
+      </span>
+    </div>
+
+    <div class="filter-actions">
+      <p-button
+        type="submit"
+        label="Buscar"
+        icon="pi pi-search"
+        iconPos="right"
+        [disabled]="form.invalid || loader"
+        [loading]="loader"
+        styleClass="filter-submit-button"
+      ></p-button>
+    </div>
+  </form>
+
+  <p-table
+    [value]="data"
+    [loading]="loader"
+    [showLoader]="true"
+    styleClass="p-datatable-customers report-table"
+    [lazy]="true"
+    [paginator]="true"
+    [rows]="rows"
+    [first]="first"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[10, 25, 50, 100]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="{first} - {last} de {totalRecords} usuarios"
+    (onPage)="onPageChange($event)"
+    >
+    <ng-template pTemplate="caption">
+      <div class="report-table-caption">
+        <div>
+          <span class="report-table-title">Usuarios</span>
+          <small>{{ resultsCountLabel }} resultado(s)</small>
+        </div>
+        <p-button
+          label="Exportar"
+          icon="pi pi-file-excel"
+          severity="success"
+          [disabled]="!resultsCountLabel || loader || exporting"
+          [loading]="exporting"
+          (onClick)="generateXls()"
+        ></p-button>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre/Apellido</th>
+        <th>Email</th>
+        <th>Universidad</th>
+        <th>Campus</th>
+        <th>Tot. OAs</th>
+        <th>OAs</th>
+        <th>Fecha</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td>
+          <span class="p-column-title">Nombre/Apellido</span>
+          <div class="user-name-cell">{{ user?.first_name }} {{ user?.last_name }}</div>
+        </td>
+        <td>
+          <span class="p-column-title">Email</span>
+          <div class="user-email-cell">{{ user?.email }}</div>
+        </td>
+        <td>
+          <span class="p-column-title">Universidad</span>
+          {{ user?.university?.name || '-' }}
+        </td>
+        <td>
+          <span class="p-column-title">Campus</span>
+          {{ user?.campus?.name || '-' }}
+        </td>
+        <td>
+          <span class="p-column-title">Tot. OAs</span>
+          <strong>{{ user?.learning_objects?.length || 0 }}</strong>
+        </td>
+        <td>
+          <span class="p-column-title">OAs</span>
+          @if (user?.learning_objects?.length) {
+            <ul class="learning-object-list">
+              @for (object of user?.learning_objects; track object) {
+                <li>
+                  <a [href]="object.learning_object_file.url" target="_blank" rel="noopener noreferrer">{{ object.general_title }}</a>
+                </li>
+              }
+            </ul>
+          } @else {
+            <span class="empty-cell">Sin objetos registrados</span>
+          }
+        </td>
+        <td>
+          <span class="p-column-title">Fecha</span>
+          {{ user?.created | date }}
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">No hay usuarios para los filtros seleccionados.</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="summary">
+      <div class="report-summary">Mostrando {{ currentRangeLabel }} usuarios.</div>
+    </ng-template>
+  </p-table>
+</div>
+

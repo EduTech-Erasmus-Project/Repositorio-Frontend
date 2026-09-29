@@ -1,0 +1,264 @@
+<div class="email-domains-page">
+  <div class="card email-domains-toolbar">
+    <div>
+      <h5>Dominios de registro</h5>
+      <p>
+        Configura los dominios permitidos por perfil y la relacion de opcion
+        de registro que se aplicara a cada tipo de usuario.
+      </p>
+    </div>
+    <button
+      (click)="sendParamsCreateEmailDomain()"
+      pButton
+      pRipple
+      label="Nuevo"
+      icon="pi pi-plus"
+      class="p-button-success"
+    ></button>
+  </div>
+
+  <p-toast></p-toast>
+
+  <div class="email-domains-filters">
+    <div class="card filter-card">
+      <div class="filter-card-header">
+        <h6>Tipo de dominio</h6>
+        <span>Selecciona el perfil que quieres administrar.</span>
+      </div>
+
+      <div class="radio-group">
+        <div class="radio-item">
+          <div class="radio-control">
+            <p-radioButton
+              inputId="domain-teacher"
+              name="domainType"
+              value="profesor"
+              (onClick)="loadData('profesor')"
+              [(ngModel)]="selectedValue"
+            ></p-radioButton>
+            <label for="domain-teacher">Dominios Profesor</label>
+          </div>
+        </div>
+        <div class="radio-item">
+          <div class="radio-control">
+            <p-radioButton
+              inputId="domain-student"
+              name="domainType"
+              value="estudiante"
+              (onClick)="loadData('estudiante')"
+              [(ngModel)]="selectedValue"
+            ></p-radioButton>
+            <label for="domain-student">Dominios Estudiante</label>
+          </div>
+        </div>
+        <div class="radio-item">
+          <div class="radio-control">
+            <p-radioButton
+              inputId="domain-expert"
+              name="domainType"
+              value="experto"
+              (onClick)="loadData('experto')"
+              [(ngModel)]="selectedValue"
+            ></p-radioButton>
+            <label for="domain-expert">Dominios Experto</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card filter-card">
+      <div class="filter-card-header">
+        <h6>Opcion de registro</h6>
+        <span>Filtra los dominios por el tipo de regla aplicada.</span>
+      </div>
+
+      <div class="radio-group">
+        <div class="radio-item">
+          <div class="radio-control">
+            <p-radioButton
+              inputId="option-all"
+              name="registerOption"
+              value="TODOS"
+              (onClick)="loadData(selectedValue)"
+              [(ngModel)]="selectedRegisterOptionLabel"
+            ></p-radioButton>
+            <label for="option-all">Todos</label>
+          </div>
+        </div>
+        <div class="radio-item">
+          <div class="radio-control">
+            <p-radioButton
+              inputId="option-only"
+              name="registerOption"
+              value="SOLO"
+              (onClick)="loadData(selectedValue)"
+              [(ngModel)]="selectedRegisterOptionLabel"
+            ></p-radioButton>
+            <label for="option-only">Solo</label>
+          </div>
+        </div>
+        <div class="radio-item">
+          <div class="radio-control">
+            <p-radioButton
+              inputId="option-except"
+              name="registerOption"
+              value="EXCEPTO"
+              (onClick)="loadData(selectedValue)"
+              [(ngModel)]="selectedRegisterOptionLabel"
+            ></p-radioButton>
+            <label for="option-except">Excepto</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card relation-card">
+      <div class="filter-card-header">
+        <h6>Relacion de privacidad</h6>
+        <span>
+          Define la opcion que se aplicara al perfil
+          <strong>{{ getSelectedRoleLabel() }}</strong>.
+        </span>
+      </div>
+
+      <div class="relation-form">
+        <div class="p-field">
+          <label for="relation-option">Opcion asociada</label>
+          <p-select
+            inputId="relation-option"
+            [options]="registerOptions"
+            [(ngModel)]="selectedRoleOptionId"
+            optionLabel="type_option"
+            optionValue="id"
+            appendTo="body"
+            (onChange)="changeNameOption()"
+            placeholder="Selecciona una opcion"
+          ></p-select>
+        </div>
+
+        <div class="relation-actions">
+          @if (hasPendingRelationChange) {
+            <button
+              pButton
+              pRipple
+              type="button"
+              label="Guardar seleccion"
+              icon="pi pi-save"
+              class="p-button-success"
+              (click)="updateRelationTypeUserOption()"
+            ></button>
+          }
+          @if (!hasPendingRelationChange) {
+            <button
+              pButton
+              pRipple
+              type="button"
+              label="Seleccion sin cambios"
+              icon="pi pi-check"
+              class="p-button-secondary"
+              [disabled]="true"
+            ></button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p-table
+      #dt
+      [value]="domains"
+      dataKey="id"
+      styleClass="p-datatable-customers email-domains-table"
+      [rowHover]="true"
+      [rows]="10"
+      [paginator]="true"
+      [filterDelay]="0"
+      [loading]="isLoading"
+      [globalFilterFields]="['domain', 'type_option']"
+      >
+      <ng-template pTemplate="caption">
+        <div class="table-header email-domains-table-header">
+          <div>
+            <span class="table-title">
+              Dominios configurados para {{ getSelectedRoleLabel() }}
+            </span>
+            <p class="table-subtitle">
+              Mostrando la regla de registro:
+              <strong>{{ selectedRegisterOptionLabel }}</strong>
+            </p>
+          </div>
+          <span class="p-input-icon-left email-domains-search-box">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="Buscar por dominio o tipo"
+              />
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="index-column">#</th>
+          <th>Dominio</th>
+          <th class="type-column">Opcion</th>
+          <th class="status-column">Estado</th>
+          <th class="actions-column">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-domain>
+        <tr class="p-selectable-row">
+          <td class="index-cell">
+            <span class="p-column-title">#</span>
+            <strong>{{ domain?.id }}</strong>
+          </td>
+          <td>
+            <span class="p-column-title">Dominio</span>
+            <div class="domain-cell">{{ domain?.domain }}</div>
+          </td>
+          <td class="type-cell">
+            <span class="p-column-title">Opcion</span>
+            <p-tag [value]="domain?.type_option" severity="info"></p-tag>
+          </td>
+          <td class="status-cell">
+            <span class="p-column-title">Estado</span>
+            <p-tag
+              [value]="getStatusLabel(domain?.is_active)"
+              [severity]="getStatusSeverity(domain?.is_active)"
+            ></p-tag>
+          </td>
+          <td class="table-actions">
+            <span class="p-column-title">Acciones</span>
+            <div class="table-inline-actions table-inline-actions--buttons">
+              <button
+                (click)="sendParamsEditEmailDomain(domain.id)"
+                pButton
+                type="button"
+                class="p-button-success"
+                icon="pi pi-pencil"
+              ></button>
+              <button
+                (click)="onDelete(domain.id)"
+                pButton
+                type="button"
+                class="p-button-danger"
+                icon="pi pi-trash"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">No existen dominios registrados para este filtro.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+

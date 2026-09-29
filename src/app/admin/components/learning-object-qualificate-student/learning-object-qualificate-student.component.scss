@@ -1,0 +1,295 @@
+.student-qualification-page {
+  margin-top: 0;
+}
+
+.student-qualification-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+
+  h5 {
+    margin: 0;
+    color: #4c566a;
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+}
+
+.object-title-cell {
+  margin-bottom: 0.45rem;
+  color: #344f5b;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.object-description-cell,
+.object-date-cell,
+.email-cell,
+.observation-cell {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.object-date-cell {
+  margin-top: 0.6rem;
+}
+
+.person-cell strong {
+  color: #344f5b;
+  line-height: 1.5;
+}
+
+:host ::ng-deep {
+  .p-paginator {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding: 1rem 0 0;
+    border-top: 1px solid #eef2f6;
+    background: transparent;
+
+    .p-paginator-current {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.75rem;
+      margin-left: auto;
+      padding: 0 0.9rem;
+      border: 1px solid #dbe5ec;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #4c566a;
+      line-height: 1.2;
+      text-align: center;
+      box-sizing: border-box;
+    }
+  }
+
+  .student-qualification-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .table-title {
+    color: #4c566a;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .student-search-box {
+    position: relative;
+    display: block;
+    width: min(360px, 100%);
+  }
+
+  .student-search-box > i {
+    position: absolute;
+    top: 50%;
+    left: 0.85rem;
+    z-index: 1;
+    color: #64748b;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+
+  .student-search-box .p-inputtext {
+    width: 100%;
+    min-height: 42px;
+    padding-left: 2.5rem;
+  }
+
+  .avatar-column {
+    width: 6rem;
+  }
+
+  .status-column {
+    width: 9rem;
+  }
+
+  .rating-column {
+    width: 8rem;
+    text-align: center !important;
+  }
+
+  .avatar-cell img {
+    display: block;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .status-cell,
+  .rating-cell {
+    text-align: center;
+  }
+
+  .rating-button {
+    min-width: 5.25rem;
+  }
+
+  .student-qualification-table {
+    .p-paginator {
+      padding: 1rem 0 0;
+    }
+
+    .p-datatable-header {
+      padding: 1rem;
+    }
+
+    .p-datatable-thead > tr > th {
+      text-align: left;
+    }
+
+    .p-datatable-tbody > tr > td {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      vertical-align: top;
+    }
+
+    .p-column-title {
+      display: none;
+    }
+  }
+
+  .evaluation-detail-dialog {
+    .p-dialog-header {
+      padding: 1.15rem 1.25rem;
+      border-bottom: 1px solid #e2e8f0;
+      background: linear-gradient(180deg, #f8fbfc 0%, #eef4f7 100%);
+      color: #344f5b;
+    }
+
+    .p-dialog-title {
+      font-weight: 700;
+    }
+
+    .p-dialog-content {
+      padding: 1.25rem;
+      background: #f8fafc;
+    }
+  }
+}
+
+.dialog-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.dialog-summary-item {
+  padding: 0.9rem 1rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 14px;
+  background: #ffffff;
+
+  strong {
+    display: block;
+    color: #344f5b;
+    line-height: 1.45;
+    word-break: break-word;
+  }
+}
+
+.dialog-summary-item-wide {
+  min-width: 0;
+}
+
+.dialog-summary-label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dialog-content-shell {
+  padding: 1rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+@media screen and (max-width: 960px) {
+  :host ::ng-deep {
+    .student-qualification-table {
+      .p-datatable-thead > tr > th,
+      .p-datatable-tfoot > tr > td {
+        display: none !important;
+      }
+
+      .p-datatable-tbody {
+        display: block;
+      }
+
+      .p-datatable-tbody > tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dbe5ec;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 10px 24px rgba(47, 69, 81, 0.06);
+        overflow: hidden;
+      }
+
+      .p-datatable-tbody > tr > td {
+        display: block;
+        width: 100% !important;
+        clear: both;
+        float: none;
+        border: 0 none !important;
+        text-align: left;
+        padding: 0.9rem 1rem !important;
+        border-top: 1px solid #eef2f6 !important;
+
+        &:first-child {
+          border-top: 0 !important;
+        }
+
+        .p-column-title {
+          display: block;
+          min-width: 0;
+          margin: 0 0 0.4rem;
+          padding: 0;
+          color: #4c566a;
+          font-size: 0.76rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    .student-search-box {
+      width: 100%;
+    }
+
+    .status-cell,
+    .rating-cell {
+      text-align: left;
+    }
+  }
+
+  .dialog-summary {
+    grid-template-columns: 1fr;
+  }
+}

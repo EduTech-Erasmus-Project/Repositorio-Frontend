@@ -1,0 +1,220 @@
+.email-server-page {
+  margin-top: 0;
+}
+
+.email-server-header {
+  margin-bottom: 1.5rem;
+
+  h5 {
+    margin: 0;
+    color: #4c566a;
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+}
+
+.email-server-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.95fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.fields-stack,
+.settings-stack {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(120px, 0.35fr);
+  gap: 1rem;
+}
+
+.field-error {
+  display: block;
+  margin-top: 0.35rem;
+  color: #dc2626;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.password-input-wrapper {
+  position: relative;
+
+  .p-inputtext,
+  input[pInputText] {
+    padding-right: 2.9rem;
+  }
+}
+
+.password-visibility-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: #64748b;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.password-visibility-toggle:hover {
+  color: #344f5b;
+}
+
+.switch-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.switch-card,
+.test-card {
+  border: 1px solid #d7dee8;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.switch-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 100%;
+  padding: 1rem 1.1rem;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.switch-card.is-active {
+  border-color: rgba(52, 79, 91, 0.35);
+  background: rgba(59, 91, 104, 0.08);
+}
+
+.switch-copy {
+  display: grid;
+  gap: 0.3rem;
+
+  .switch-copy-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  strong {
+    color: #344f5b;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  span {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+}
+
+.test-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+
+  .test-button {
+    justify-self: flex-start;
+    min-width: 220px;
+  }
+}
+
+.test-card-header {
+  h6 {
+    margin: 0;
+    color: #4c566a;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  span {
+    display: block;
+    margin-top: 0.35rem;
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+:host ::ng-deep {
+  .email-server-form {
+    .p-field {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.45rem;
+      color: #4c566a;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .p-inputtext {
+      width: 100%;
+    }
+
+    .p-inputswitch {
+      flex-shrink: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .form-grid,
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .switch-card {
+    align-items: flex-start;
+  }
+
+  .switch-copy .switch-copy-header {
+    align-items: flex-start;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+
+    .p-button {
+      width: 100%;
+    }
+  }
+}

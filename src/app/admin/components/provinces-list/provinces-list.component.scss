@@ -1,0 +1,221 @@
+.provinces-page {
+  margin-top: 0;
+}
+
+.provinces-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+
+  h5 {
+    margin: 0;
+    color: #4c566a;
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+}
+
+.province-name-cell,
+.country-name-cell {
+  word-break: break-word;
+}
+
+:host ::ng-deep {
+  .provinces-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .table-title {
+    color: #4c566a;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .provinces-search-box {
+    position: relative;
+    display: block;
+    width: min(340px, 100%);
+  }
+
+  .provinces-search-box > i {
+    position: absolute;
+    top: 50%;
+    left: 0.85rem;
+    z-index: 1;
+    color: #64748b;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+
+  .provinces-search-box .p-inputtext {
+    width: 100%;
+    padding-left: 2.5rem;
+    min-height: 42px;
+  }
+
+  .index-column {
+    width: 4rem;
+  }
+
+  .status-column {
+    width: 10rem;
+  }
+
+  .actions-column {
+    width: 9rem;
+    text-align: center !important;
+  }
+
+  .index-cell {
+    color: #344f5b;
+  }
+
+  .status-cell,
+  .table-actions {
+    text-align: center;
+  }
+
+  .table-actions {
+    white-space: nowrap;
+
+    .p-button {
+      width: 2.75rem;
+      height: 2.75rem;
+      min-width: 2.75rem;
+    }
+  }
+
+  .table-inline-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .table-inline-actions--buttons {
+    justify-content: center;
+  }
+
+  .provinces-table {
+    .p-datatable-header {
+      padding: 1rem;
+    }
+
+    .p-paginator {
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 1rem;
+      border-top: 1px solid #eef2f6;
+    }
+
+    .p-paginator-current {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.75rem;
+      margin-left: auto;
+      padding: 0 0.9rem;
+      border: 1px solid #dbe5ec;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #4c566a;
+      line-height: 1.2;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .p-datatable-thead > tr > th {
+      text-align: left;
+    }
+
+    .p-datatable-tbody > tr > td {
+      vertical-align: middle;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .p-column-title {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 960px) {
+  :host ::ng-deep {
+    .provinces-table {
+      .p-datatable-thead > tr > th,
+      .p-datatable-tfoot > tr > td {
+        display: none !important;
+      }
+
+      .p-datatable-tbody {
+        display: block;
+      }
+
+      .p-datatable-tbody > tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dbe5ec;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 10px 24px rgba(47, 69, 81, 0.06);
+        overflow: hidden;
+      }
+
+      .p-datatable-tbody > tr > td {
+        display: block;
+        width: 100% !important;
+        clear: both;
+        float: none;
+        border: 0 none !important;
+        text-align: left;
+        padding: 0.9rem 1rem !important;
+        border-top: 1px solid #eef2f6 !important;
+
+        &:first-child {
+          border-top: 0 !important;
+        }
+
+        .p-column-title {
+          display: block;
+          min-width: 0;
+          margin: 0 0 0.4rem;
+          padding: 0;
+          color: #4c566a;
+          font-size: 0.76rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    .status-cell,
+    .table-actions {
+      text-align: left;
+    }
+
+    .provinces-search-box {
+      width: 100%;
+    }
+
+    .table-inline-actions--buttons {
+      justify-content: flex-start;
+    }
+  }
+}

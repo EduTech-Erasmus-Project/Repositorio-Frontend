@@ -1,0 +1,196 @@
+<div class="card expert-qualification-page">
+  <div class="expert-qualification-toolbar">
+    <div>
+      <h5>Evaluaciones de expertos</h5>
+      <p>
+        Revisa las calificaciones emitidas por expertos colaboradores y define
+        cuál debe quedar como prioritaria para este objeto de aprendizaje.
+      </p>
+    </div>
+  </div>
+
+  <p-toast></p-toast>
+  <p-confirmpopup></p-confirmpopup>
+
+  @if (isLoading) {
+    <app-loading></app-loading>
+  }
+
+  @if (!isLoading) {
+    <p-table
+      #dt
+      [value]="learningobjectList"
+      [(selection)]="learningobjectsSelected"
+      dataKey="id"
+      styleClass="p-datatable-customers expert-qualification-table"
+      [rowHover]="true"
+      [rows]="10"
+      [paginator]="true"
+      [filterDelay]="0"
+      [globalFilterFields]="[
+        'learning_object.general_title',
+        'collaborating_expert.first_name',
+        'collaborating_expert.last_name',
+        'collaborating_expert.email'
+      ]"
+      >
+      <ng-template pTemplate="caption">
+        <div class="table-header expert-qualification-table-header">
+          <span class="table-title">Resultados registrados</span>
+          <span class="p-input-icon-left expert-search-box">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="Buscar por titulo, experto o correo"
+              />
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="avatar-column">Avatar</th>
+          <th>Objeto de aprendizaje</th>
+          <th class="status-column">Estado</th>
+          <th>Experto evaluador</th>
+          <th>Correo</th>
+          <th class="rating-column">Calificacion</th>
+          <th>Observacion</th>
+          <th class="priority-column">Prioridad</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-oa>
+        <tr class="p-selectable-row">
+          <td class="avatar-cell">
+            <span class="p-column-title">Avatar</span>
+            <img [src]="oa.learning_object.avatar" [alt]="oa.learning_object.general_title" width="72" />
+          </td>
+          <td>
+            <span class="p-column-title">Objeto de aprendizaje</span>
+            <div class="object-title-cell">{{ oa.learning_object.general_title }}</div>
+            <p class="object-description-cell">
+              {{ oa.learning_object.general_description | slice: 0: 240 }}
+            </p>
+            <p class="object-date-cell">
+              <strong>Fecha de carga:</strong>
+              {{ oa.learning_object.created | date: "MM/dd/yyyy" }}
+            </p>
+          </td>
+          <td class="status-cell">
+            <span class="p-column-title">Estado</span>
+            <p-tag
+              [value]="getStatusLabel(oa.learning_object.public)"
+              [severity]="getStatusSeverity(oa.learning_object.public)"
+            ></p-tag>
+          </td>
+          <td>
+            <span class="p-column-title">Experto evaluador</span>
+            <div class="person-cell">
+              <strong>
+                {{
+                  join_last_name_first_name(
+                    oa.collaborating_expert.first_name,
+                    oa.collaborating_expert.last_name
+                  )
+                }}
+              </strong>
+            </div>
+          </td>
+          <td>
+            <span class="p-column-title">Correo</span>
+            <div class="email-cell">{{ oa.collaborating_expert.email }}</div>
+          </td>
+          <td class="rating-cell">
+            <span class="p-column-title">Calificacion</span>
+            <button
+              pButton
+              pRipple
+              type="button"
+              [label]="oa.displayRating"
+              class="p-button-warning p-button-sm rating-button"
+              title="Ver evaluación"
+              (click)="openEvaluationDialog(oa)"
+            ></button>
+          </td>
+          <td>
+            <span class="p-column-title">Observacion</span>
+            <div class="observation-cell">
+              {{ oa.observation || "Sin observacion" }}
+            </div>
+          </td>
+          <td class="priority-cell">
+            <span class="p-column-title">Prioridad</span>
+            <div class="priority-stack">
+              <p-tag
+                [value]="oa.is_priority ? 'Prioritaria' : 'Secundaria'"
+                [severity]="oa.is_priority ? 'success' : 'info'"
+              ></p-tag>
+              <button
+                (click)="confirm($event, oa)"
+                pButton
+                [disabled]="oa.is_priority"
+                [loading]="oa.isUpdatingPriority"
+                [icon]="oa.is_priority ? 'pi pi-save' : 'pi pi-check'"
+                [class]="class_color(oa.is_priority)"
+                [label]="name_label(oa.is_priority)"
+                class="priority-button"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No existen objetos de aprendizaje calificados por expertos.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+
+  @if (activeEvaluation) {
+    <p-dialog
+      header="Evaluación del objeto de aprendizaje"
+      [(visible)]="showEvaluationDialog"
+      [breakpoints]="{ '960px': '92vw', '640px': '96vw' }"
+      [modal]="true"
+      [blockScroll]="true"
+      [dismissableMask]="true"
+      [closeOnEscape]="true"
+      [draggable]="false"
+      [resizable]="false"
+      [appendTo]="'body'"
+      (onHide)="closeEvaluationDialog()"
+      styleClass="evaluation-detail-dialog admin-dialog-lg"
+      >
+      <div class="dialog-summary">
+        <div class="dialog-summary-item dialog-summary-item-wide">
+          <span class="dialog-summary-label">Objeto</span>
+          <strong>{{ activeEvaluation.learning_object.general_title }}</strong>
+        </div>
+        <div class="dialog-summary-item">
+          <span class="dialog-summary-label">Experto</span>
+          <strong>
+            {{
+              join_last_name_first_name(
+                activeEvaluation.collaborating_expert.first_name,
+                activeEvaluation.collaborating_expert.last_name
+              )
+            }}
+          </strong>
+        </div>
+        <div class="dialog-summary-item">
+          <span class="dialog-summary-label">Calificación</span>
+          <strong>{{ activeEvaluation.displayRating }}</strong>
+        </div>
+      </div>
+      <div class="dialog-content-shell">
+        <app-view-expert-evaluations-admin
+          [student_id]="activeEvaluation.collaborating_expert.id"
+          [oa_id]="activeEvaluation.learning_object.id"
+          (displayFormRatingExpert)="change_value($event)"
+        ></app-view-expert-evaluations-admin>
+      </div>
+    </p-dialog>
+  }
+</div>

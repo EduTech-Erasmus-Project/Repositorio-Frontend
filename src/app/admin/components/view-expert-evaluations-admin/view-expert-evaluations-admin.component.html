@@ -1,0 +1,72 @@
+<p-toast></p-toast>
+
+@if (isLoading) {
+  <app-loading></app-loading>
+}
+
+@if (!isLoading) {
+  <div class="expert-evaluation-view">
+    @if (groupedQuestionsEx?.length) {
+      @for (batch of groupedQuestionsEx; track batch) {
+        <section class="evaluation-batch">
+          @for (item of batch.conceptEvaluations; track item) {
+            <article class="concept-card">
+              <div class="concept-header">
+                <div>
+                  <span class="concept-kicker">Concepto de evaluacion</span>
+                  <h4>{{ item.evaluationConcept }}</h4>
+                </div>
+              </div>
+              <div class="question-list">
+                @for (itemQ of item.questionEvaluations; track itemQ) {
+                  <article class="question-card">
+                    <p class="question-text">{{ itemQ.questions }}</p>
+                    <div class="answer-options">
+                      @for (option of qualificationOptions; track option) {
+                        <span
+                          class="answer-option"
+                          [class.answer-option-selected]="itemQ.qualification === option.value"
+                          >
+                          {{ option.labelKey | translate }}
+                        </span>
+                      }
+                    </div>
+                    <div class="recorded-answer">
+                      <span class="recorded-answer-label">Respuesta registrada</span>
+                      <strong>{{ getQualificationLabel(itemQ.qualification) }}</strong>
+                    </div>
+                  </article>
+                }
+              </div>
+            </article>
+          }
+          <section class="observation-card">
+            <span class="observation-label">{{ "object.observation" | translate }}</span>
+            <p>{{ batch.observation || "Sin observacion registrada." }}</p>
+          </section>
+        </section>
+      }
+      <div class="dialog-actions">
+        <p-button
+          icon="pi pi-times"
+          type="button"
+          (click)="closeView()"
+          [label]="'object.exit' | translate"
+          styleClass="p-button-text"
+        ></p-button>
+      </div>
+    } @else {
+      <div class="empty-state-card">
+        <span class="pi pi-inbox"></span>
+        <p>No existe un detalle de evaluacion disponible para este registro.</p>
+        <p-button
+          icon="pi pi-times"
+          type="button"
+          (click)="closeView()"
+          [label]="'object.exit' | translate"
+          styleClass="p-button-text"
+        ></p-button>
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,140 @@
+.campus-form-page {
+  margin-top: 1.5rem;
+}
+
+.campus-form-header {
+  margin-bottom: 1.5rem;
+
+  h5 {
+    margin: 0;
+    color: #4c566a;
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+}
+
+.campus-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.95fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.fields-stack {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.field-error {
+  display: block;
+  margin-top: 0.35rem;
+  color: #dc2626;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.switch-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.switch-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 100%;
+  padding: 1rem 1.1rem;
+  border: 1px solid #d7dee8;
+  border-radius: 10px;
+  background: #f8fafc;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.switch-card.is-active {
+  border-color: rgba(52, 79, 91, 0.35);
+  background: rgba(59, 91, 104, 0.08);
+}
+
+.switch-copy {
+  display: grid;
+  gap: 0.3rem;
+
+  strong {
+    color: #344f5b;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  span {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+:host ::ng-deep {
+  .campus-form {
+    .p-field {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.45rem;
+      color: #4c566a;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .p-inputtext,
+    .p-select {
+      width: 100%;
+    }
+
+    .p-inputswitch {
+      flex-shrink: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .switch-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+
+    .p-button {
+      width: 100%;
+    }
+  }
+}
