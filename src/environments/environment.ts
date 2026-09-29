@@ -5,15 +5,16 @@
 export const environment = {
 
   production: false,
-  baseUrl: 'http://127.0.0.1:8000/api/v1',
+  // baseUrl: 'http://localhost:8000/api/v1',
 
 
   //production: true,
   //baseUrl: 'http://localhost:8000/api/v1',
-  //baseUrl: 'https://repositorio.edutech-project.org/api/v1',
+  baseUrl: 'https://repositorio.edutech-project.org/api/v1',
 
-  cryptoSecretKey: "@ROA-QYpTatEMVQ3tem_A5ZHrglKBPuxe9IQjT@"
-
+  cryptoSecretKey: "@ROA-QYpTatEMVQ3tem_A5ZHrglKBPuxe9IQjT@",
+  oerUrl: "http://34.224.255.163",
+  key_ref:"@-rcxionqt"
 };
 
 /*
