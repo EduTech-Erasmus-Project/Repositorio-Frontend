@@ -1,25 +1,55 @@
-.profile{
+.settings-page {
     margin: 20px 0;
-    //background-color: royalblue;
     min-height: 84vh;
-    .profile-user{
-        display: flex;
-        margin: 15px 0;
-        img{
-            height: 40px;
-            width: 40px;
-            border-radius: 50%;
-        }
-        .user-name{
-            margin-left: 5px;
-            h5{
-                margin-bottom: 5px;
-                text-transform: capitalize;
-            }
-            p{
-                font-size: 0.9em;
-                opacity: .5;
-            }
-        }
+}
+
+.settings-page__profile {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 15px 0 1rem;
+}
+
+.settings-page__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.settings-page__identity {
+    min-width: 0;
+}
+
+.settings-page__name {
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: capitalize;
+}
+
+.settings-page__subtitle {
+    margin: 0.1rem 0 0;
+    font-size: 0.9em;
+    color: #5f7284;
+}
+
+.settings-page__layout {
+    display: grid;
+    grid-template-columns: minmax(16rem, 18rem) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.settings-page__sidebar,
+.settings-page__content {
+    min-width: 0;
+}
+
+@media (max-width: 991px) {
+    .settings-page__layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
 }

@@ -1,3 +1,26 @@
-.p-grid.p-fluid{
-    width: 100%;
+.public-shell {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: #eceff4;
+}
+
+.public-shell__header {
+  background: #ffffff;
+}
+
+.public-shell__main {
+  flex: 1 1 auto;
+}
+
+.public-shell__content {
+  min-height: 100%;
+}
+
+.public-shell__footer {
+  margin-top: auto;
+}
+
+.p-grid.p-fluid {
+  width: 100%;
 }

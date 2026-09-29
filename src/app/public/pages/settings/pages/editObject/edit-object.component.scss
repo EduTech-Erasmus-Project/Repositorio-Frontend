@@ -3,13 +3,351 @@
   height: 50vh;
 }
 
-.avatar-object {
+form .p-field.p-fluid,
+form .p-field.p-fluid input,
+form .p-field.p-fluid textarea {
   width: 100%;
 }
 
+form .p-field.p-fluid textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+.edit-object-title-field {
+  position: relative;
+}
+
+.edit-object-title-counter {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #5e7181;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.edit-object-field-helper {
+  display: block;
+  margin: 0.25rem 0 0.65rem;
+  color: #5e7181;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.web-view form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.edit-object-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+.edit-object-form-grid__item {
+  min-width: 0;
+}
+
+.edit-object-form-grid__item .box {
+  height: 100%;
+}
+
+:host ::ng-deep form .p-select,
+:host ::ng-deep form .p-slider {
+  width: 100%;
+}
+
+.edit-object-native-select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 42px;
+  box-sizing: border-box;
+  padding: 0.625rem 2.5rem 0.625rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #495057;
+  font: inherit;
+  line-height: 1.35;
+  appearance: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3.25 5.25L7 9l3.75-3.75' fill='none' stroke='%23586979' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.6'/%3E%3C/svg%3E");
+  background-position: right 0.85rem center;
+  background-repeat: no-repeat;
+  background-size: 0.85rem;
+}
+
+.edit-object-native-select:hover,
+.edit-object-native-select:focus {
+  box-shadow: 0 0 0 0.2rem #bfcdde;
+  outline: none;
+  outline-offset: 0;
+  border-color: #3B5B68;
+}
+
+.slider {
+  padding-top: 0.35rem;
+}
+
+.slider label {
+  display: block;
+  margin-bottom: 1rem;
+  color: #3b5b68;
+  font-weight: 500;
+}
+
+:host ::ng-deep .slider .p-slider {
+  margin: 0.3rem 0.5rem 0.5rem;
+  background: #d7e2e9;
+  border-radius: 999px;
+}
+
+:host ::ng-deep .slider .p-slider.p-slider-horizontal {
+  height: 0.42rem;
+}
+
+:host ::ng-deep .slider .p-slider .p-slider-range {
+  background: #3b5b68;
+  border-radius: 999px;
+}
+
+:host ::ng-deep .slider .p-slider .p-slider-handle {
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.5rem;
+  margin-left: -0.5rem;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 0.18rem solid #3b5b68;
+}
+
+:host ::ng-deep .slider .p-slider:not(.p-disabled) .p-slider-handle:hover {
+  background: #edf4f7;
+  border-color: #314750;
+}
+
+.edit-object-current-image {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.edit-object-current-image p {
+  margin: 0;
+}
+
+.edit-object-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.edit-object-form-actions :is(button, .p-button, p-button) {
+  min-width: 9rem;
+  justify-content: center;
+}
+
+.avatar-object {
+  display: block;
+  width: 100%;
+  max-height: 23rem;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 0.5rem;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .p-dialog-content {
+  padding: 0;
+  max-height: min(78vh, 54rem);
+}
+
+:host ::ng-deep .evaluation-dialog-mask {
+  backdrop-filter: blur(2px);
+}
+
+:host ::ng-deep .edit-object-metadata-dialog app-edit-metadata {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  padding: 1.25rem;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-editor {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-section {
+  width: 100%;
+  padding: 1rem 1.05rem;
+  border: 1px solid #dde7ee;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-section__header {
+  margin-bottom: 0.9rem;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-section__header h3 {
+  margin: 0;
+  color: #17384f;
+  font-size: 1.95rem;
+  font-weight: 700;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-section__header p {
+  margin: 0.3rem 0 0;
+  color: #647789;
+  line-height: 1.45;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1rem;
+  align-items: start;
+  width: 100%;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-field {
+  min-width: 0;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-field--full {
+  grid-column: 1 / -1;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-field label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #3b5b68;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-field input.p-inputtext {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.95rem;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-fact {
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.85rem;
+  background: #eef5f9;
+  border: 1px solid #dbe8f0;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-fact__label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #607285;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-fact__value {
+  color: #17384f;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0 1.25rem 1.25rem;
+}
+
+:host ::ng-deep .edit-object-metadata-dialog .metadata-actions .p-button {
+  min-width: 8.5rem;
+  justify-content: center;
+}
+
+@media (max-width: 960px) {
+  .edit-object-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 700px) {
-  :host ::ng-deep .p-dialog {
+
+  .edit-object-form-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .edit-object-form-actions :is(button, .p-button, p-button) {
+    width: 100%;
+    min-width: 0;
+  }
+
+  :host ::ng-deep .edit-object-metadata-dialog {
     width: 95vw !important;
-    //background-color: red;
+  }
+
+  :host ::ng-deep .edit-object-metadata-dialog .metadata-form {
+    padding: 1rem;
+  }
+
+  :host ::ng-deep .edit-object-metadata-dialog .metadata-section {
+    padding: 0.9rem;
+    border-radius: 0.85rem;
+  }
+
+  :host ::ng-deep .edit-object-metadata-dialog .metadata-grid {
+    grid-template-columns: 1fr;
+  }
+
+  :host ::ng-deep .edit-object-metadata-dialog .metadata-field--full {
+    grid-column: auto;
+  }
+
+  :host ::ng-deep .edit-object-metadata-dialog .metadata-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0 1rem 1rem;
+  }
+
+  :host ::ng-deep .edit-object-metadata-dialog .metadata-actions :is(.p-button, p-button) {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  :host ::ng-deep .edit-object-metadata-dialog .metadata-actions {
+    grid-template-columns: 1fr;
   }
 }

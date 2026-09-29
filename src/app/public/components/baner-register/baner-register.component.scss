@@ -1,22 +1,58 @@
 .content {
+  min-height: 180px;
+  padding: 3rem 0;
   background-image: url("/assets/img/bg-baner.jpg");
-  background-size: 50%;
-  //padding: 20px 0;
   background-repeat: no-repeat;
-  background-position: right;
-  -webkit-box-shadow: inset 60vw 0px 58px -13px rgba(236, 239, 244, 1);
-  -moz-box-shadow: inset 60vw 0px 58px -13px rgba(236, 239, 244, 1);
-  box-shadow: inset 60vw 0px 58px -13px rgba(236, 239, 244, 1);
-  //background-attachment: fixed;
+  background-position: right center;
+  background-size: 50%;
+  box-shadow: inset 60vw 0 58px -13px rgba(236, 239, 244, 1);
 }
-.content{
-  height: 100%;
-  .info{
-    padding: 50px 0;
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 520px;
+  padding: 1.5rem 0;
+}
+
+.info h2,
+.info p {
+  margin: 0;
+}
+
+.info p {
+  line-height: 1.7;
+}
+
+:host ::ng-deep .banner-login-button.p-button {
+  align-self: flex-start;
+  padding-inline: 1.5rem;
+}
+
+@media (max-width: 991px) {
+  .content {
+    min-height: auto;
+    padding: 2.5rem 0;
+    background-size: 280px;
+    background-position: right bottom;
+    box-shadow: inset 100vw 0 0 0 rgba(236, 239, 244, 0.94);
   }
 
-  
+  .info {
+    max-width: 100%;
+  }
 }
 
+@media (max-width: 700px) {
+  .content {
+    padding: 2rem 0;
+    background-image: none;
+    box-shadow: none;
+  }
 
-
+  :host ::ng-deep .banner-login-button.p-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

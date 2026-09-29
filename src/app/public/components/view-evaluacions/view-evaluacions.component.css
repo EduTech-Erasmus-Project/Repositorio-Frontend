@@ -1,31 +1,72 @@
-.labelQu {
-  background-color: var(--primary-color);
-  padding: 9px 9px;
-  border-radius: 5px;
-}
-.labelQT {
-  color: white;
-}
-.itemTotal {
-  padding: 10px 10px;
-  text-align: center;
+:host {
+  display: block;
+  min-width: 0;
+  width: 100%;
 }
 
-th {
-  color: #495d77;
-  padding: 5px 5px;
-  border-radius: 5px;
-  text-align: center;
+.evaluation-summary {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
-td {
-  text-align: center;
-  background-color: var(--primary-color);
-  color: white;
-  padding: 5px 5px;
-  border-radius: 5px;
+.evaluation-summary__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  min-width: 0;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 0.95rem;
+  background: #ffffff;
 }
 
-.tableP {
-  padding: 10px 10px;
+.evaluation-summary__concept {
+  flex: 1 1 auto;
+  margin: 0;
+  min-width: 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  color: #23445c;
+  word-break: break-word;
+}
+
+.evaluation-summary__score {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: #365f74;
+  color: #fff;
+  font-weight: 700;
+}
+
+.evaluation-summary__score .pi {
+  font-size: 0.85rem;
+}
+
+.evaluation-summary__empty {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .evaluation-summary {
+    min-width: 0;
+  }
+
+  .evaluation-summary__item {
+    padding: 0.7rem 0.8rem;
+  }
+
+  .evaluation-summary__concept {
+    font-size: 0.9rem;
+  }
 }

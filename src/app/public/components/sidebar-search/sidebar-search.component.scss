@@ -1,17 +1,192 @@
-h5{
-    background-color: #EFEFEF;
-    padding: 10px 5px;
-}
-.btn{
-    //background-color: seagreen;
-    text-align: center;
-    button{
-        width: 100%;
-    }
-}
-.recommended{
-    width: 100%;
-    margin: 10px 0;
+.sidebar-search {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.85rem, 1.6vw, 1rem);
+  min-width: 0;
 }
 
+.sidebar-search-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #314a61;
+}
 
+.sidebar-search-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.85rem 0.95rem 0.95rem;
+}
+
+.filter-option {
+  display: flex;
+  gap: 0.65rem;
+  margin: 0;
+  align-items: flex-start;
+  line-height: 1.4;
+  min-width: 0;
+}
+
+.filter-option label {
+  cursor: pointer;
+  color: #43566b;
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.filter-action {
+  padding-top: 0.25rem;
+}
+
+.filter-action button {
+  width: 100%;
+}
+
+.preferences {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.recommended {
+  width: 100%;
+  margin: 10px 0;
+}
+
+:host ::ng-deep .sidebar-search-accordion {
+  display: block;
+  background: #fff;
+  border: 1px solid #dbe3ea;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .sidebar-search-accordion .p-accordionpanel {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: transparent;
+  box-shadow: none;
+}
+
+:host ::ng-deep .sidebar-search-accordion .p-accordionpanel + .p-accordionpanel {
+  border-top: 1px solid #e2e8ef;
+}
+
+:host ::ng-deep .sidebar-search-accordion .p-accordionheader {
+  padding: 0.82rem 0.95rem;
+  font-weight: 600;
+  color: #314a61;
+  background: #fff;
+  border: 0;
+  border-radius: 0;
+}
+
+:host ::ng-deep .sidebar-search-accordion .p-accordionheader:hover {
+  background: #f8fbfd;
+}
+
+:host ::ng-deep .sidebar-search-accordion .p-accordionheader-toggle-icon {
+  color: #5c7391;
+}
+
+:host ::ng-deep .sidebar-search-accordion .p-accordioncontent {
+  overflow: hidden;
+}
+
+:host ::ng-deep .sidebar-search-accordion .p-accordioncontent-content {
+  padding: 0;
+  border: 0;
+  border-top: 0;
+  border-radius: 0;
+  background: #fff;
+}
+
+:host ::ng-deep .sidebar-search-accordion .p-checkbox,
+:host ::ng-deep .sidebar-search-accordion .p-radiobutton {
+  margin-top: 0.1rem;
+}
+
+@media (max-width: 991px) {
+  .sidebar-search-title {
+    font-size: 1.25rem;
+  }
+
+  :host ::ng-deep .sidebar-search-accordion .p-accordionheader {
+    padding: 0.78rem 0.88rem;
+  }
+
+  .filter-group {
+    padding: 0.82rem 0.88rem 0.9rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .sidebar-search {
+    gap: 0.85rem;
+  }
+
+  .sidebar-search-title {
+    font-size: 1.15rem;
+  }
+
+  .filter-group,
+  .preferences {
+    gap: 0.75rem;
+  }
+
+  .filter-group {
+    padding: 0.85rem;
+  }
+
+  .filter-option {
+    gap: 0.55rem;
+    font-size: 0.95rem;
+  }
+
+  :host ::ng-deep .sidebar-search-accordion .p-accordionheader {
+    padding: 0.74rem 0.82rem;
+    font-size: 0.98rem;
+  }
+
+  :host ::ng-deep .sidebar-search-accordion .p-accordioncontent-content {
+    padding: 0;
+  }
+
+  .sidebar-search-body {
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-search-title {
+    font-size: 1.05rem;
+  }
+
+  .filter-option {
+    font-size: 0.92rem;
+  }
+
+  :host ::ng-deep .sidebar-search-accordion {
+    border-radius: 12px;
+  }
+
+  :host ::ng-deep .sidebar-search-accordion .p-accordionheader {
+    padding: 0.7rem 0.78rem;
+  }
+
+  .filter-group {
+    padding: 0.78rem 0.8rem 0.85rem;
+  }
+}

@@ -1,23 +1,26 @@
-<div class="main-content profile">
-    <div class="profile-user">
-        <img [src]="loginService.user.image" [alt]="loginService.user.first_name+' '+loginService.user.last_name">
-        <div class="user-name">
-            <h5>{{loginService.user.first_name+' '+loginService.user.last_name}}</h5>
-            <p>Tu cuenta personal.</p>
+<div class="main-content settings-page">
+    <div class="settings-page__profile">
+        <img
+            class="settings-page__avatar"
+            [src]="profileImage"
+            alt=""
+            loading="lazy">
+        <div class="settings-page__identity">
+            <p class="settings-page__name">{{ displayName }}</p>
+            <p class="settings-page__subtitle">{{'profile.personalAccount'| translate}}.</p>
         </div>
     </div>
-    <div class="p-grid">
-        <div class="p-col-12 p-md-4 p-lg-3 side-menu">
+    <div class="settings-page__layout">
+        <aside class="settings-page__sidebar side-menu">
             <div class="box sidebar">
                 <app-side-menu></app-side-menu>
             </div>
-        </div>
-        <div class="p-col-12 p-md-8 p-lg-9 ">
+        </aside>
+        <section class="settings-page__content">
             <div class="box content">
-                <router-outlet></router-outlet> 
+                <router-outlet></router-outlet>
             </div>
-        </div>
+        </section>
     </div>
 </div>
-
 

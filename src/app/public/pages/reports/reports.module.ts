@@ -7,7 +7,7 @@ import { ReportsComponent } from './reports.component';
 import {SkeletonModule} from 'primeng/skeleton';
 import {SplitterModule} from 'primeng/splitter';
 import {PanelModule} from 'primeng/panel';
-import {TabViewModule} from 'primeng/tabview';
+import {TabsModule} from 'primeng/tabs';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -22,7 +22,7 @@ import { ComponentsModule } from '../../components/components.module';
     SkeletonModule,
     SplitterModule,
     PanelModule,
-    TabViewModule,
+    TabsModule,
     DialogModule,
     ButtonModule,
     SharedModule,

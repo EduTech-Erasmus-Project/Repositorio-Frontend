@@ -1,34 +1,150 @@
-<div class="main-content">
-    <ng-container *ngIf="!loading; else elseTemplate">
-        <h5>{{'recommended.recommended' | translate}}</h5>
-    <div class="p-grid card-content">
-        <ng-container *ngIf="recommended?.length > 0; else recomTemplate">
-            <div class="p-col-12 p-md-6 p-lg-2" *ngFor="let recom of recommended">
-                <app-card [object]='recom'></app-card>
-            </div>
-        </ng-container>
-        <ng-template #recomTemplate>
-            <p>{{'recommended.recommendedMsj' | translate}}</p>
-        </ng-template>
-    </div>
-
-    <h5>{{'recommended.populars' | translate}}</h5>
-    <div class="p-grid card-content">
-        <ng-container *ngIf="populars?.length > 0; else popuTemplate">
-            <div class="p-col-12 p-md-6 p-lg-2" *ngFor="let popu of populars">
-                <app-card [object]='popu'></app-card>
-            </div>
-        </ng-container>
-        <ng-template #popuTemplate>
-            <p>{{'recommended.popularsMsj' | translate}}</p>
-        </ng-template>
-    </div>
-    </ng-container>
-    <ng-template #elseTemplate>
-        <div class="spinner">
-            <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner"
-                strokeWidth="4" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
+<div class="recommended-page">
+  @if (!loading) {
+    @if (userRole) {
+      <section class="recommended-panel">
+        <header class="recommended-panel__header">
+          <div class="recommended-panel__copy">
+            <h2>{{ 'recommended.recommended' | translate }}</h2>
+            <p>{{ 'recommended.recommendedSubtitle' | translate }}</p>
+          </div>
+          <!-- <span class="recommended-panel__count">{{ recommendedCount }}</span> -->
+        </header>
+        @if (recommendedCount > 0) {
+          <div class="recommended-grid">
+            @for (recom of recommended; track trackByObject($index, recom)) {
+              <div
+                class="recommended-grid__item"
+                >
+                <app-card [object]="recom"></app-card>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="recommended-state" [class.recommended-state--error]="recommendedLoadFailed">
+            <i
+              class="pi"
+              [ngClass]="recommendedLoadFailed ? 'pi-exclamation-circle' : 'pi-inbox'"
+            ></i>
+            <h3>
+              {{
+              recommendedLoadFailed
+              ? ('recommended.recommendedErrorTitle' | translate)
+              : ('recommended.recommendedEmptyTitle' | translate)
+              }}
+            </h3>
+            <p>
+              {{
+              recommendedLoadFailed
+              ? ('recommended.recommendedError' | translate)
+              : ('recommended.recommendedMsj' | translate)
+              }}
+            </p>
+            @if (showPopularsFallbackHint) {
+              <p class="recommended-state__hint">
+                {{ 'recommended.recommendedFallbackHint' | translate }}
+              </p>
+              <button
+                class="recommended-state__action"
+                type="button"
+                (click)="scrollToPopulars()"
+              >
+                {{ 'recommended.recommendedFallbackAction' | translate }}
+              </button>
+            }
+          </div>
+        }
+      </section>
+    }
+    <section id="recommended-populars" class="recommended-panel recommended-panel--secondary">
+      <header class="recommended-panel__header">
+        <div class="recommended-panel__copy">
+          <h2>{{ 'object.labelPopulars' | translate }}</h2>
+          <p>{{ 'recommended.popularsSubtitle' | translate }}</p>
         </div>
-    </ng-template>
-    
+        <!-- <span class="recommended-panel__count">{{ popularsCount }}</span> -->
+      </header>
+      @if (popularsCount > 0) {
+        <div class="recommended-grid">
+          @for (popu of populars; track trackByObject($index, popu)) {
+            <div
+              class="recommended-grid__item"
+              >
+              <app-card [object]="popu"></app-card>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="recommended-state" [class.recommended-state--error]="popularsLoadFailed">
+          <i
+            class="pi"
+            [ngClass]="popularsLoadFailed ? 'pi-exclamation-circle' : 'pi-chart-line'"
+          ></i>
+          <h3>
+            {{
+            popularsLoadFailed
+            ? ('recommended.popularsErrorTitle' | translate)
+            : ('recommended.popularsEmptyTitle' | translate)
+            }}
+          </h3>
+          <p>
+            {{
+            popularsLoadFailed
+            ? ('recommended.popularsError' | translate)
+            : ('recommended.popularsMsj' | translate)
+            }}
+          </p>
+        </div>
+      }
+    </section>
+  } @else {
+    <div class="recommended-loading">
+      @if (userRole) {
+        <section class="recommended-panel">
+          <header class="recommended-panel__header">
+            <div class="recommended-panel__copy">
+              <div class="recommended-skeleton recommended-skeleton--title"></div>
+              <div class="recommended-skeleton recommended-skeleton--text"></div>
+            </div>
+            <div class="recommended-skeleton recommended-skeleton--count"></div>
+          </header>
+          <div class="recommended-grid">
+            @for (item of skeletonCards; track item) {
+              <div class="recommended-grid__item">
+                <div class="recommended-card-skeleton">
+                  <div class="recommended-skeleton recommended-skeleton--image"></div>
+                  <div class="recommended-skeleton recommended-skeleton--line"></div>
+                  <div class="recommended-skeleton recommended-skeleton--line medium"></div>
+                  <div class="recommended-skeleton recommended-skeleton--line short"></div>
+                  <div class="recommended-skeleton recommended-skeleton--button"></div>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+      <section class="recommended-panel recommended-panel--secondary">
+        <header class="recommended-panel__header">
+          <div class="recommended-panel__copy">
+            <div class="recommended-skeleton recommended-skeleton--title"></div>
+            <div class="recommended-skeleton recommended-skeleton--text"></div>
+          </div>
+          <div class="recommended-skeleton recommended-skeleton--count"></div>
+        </header>
+        <div class="recommended-grid">
+          @for (item of skeletonCards; track item) {
+            <div class="recommended-grid__item">
+              <div class="recommended-card-skeleton">
+                <div class="recommended-skeleton recommended-skeleton--image"></div>
+                <div class="recommended-skeleton recommended-skeleton--line"></div>
+                <div class="recommended-skeleton recommended-skeleton--line medium"></div>
+                <div class="recommended-skeleton recommended-skeleton--line short"></div>
+                <div class="recommended-skeleton recommended-skeleton--button"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    </div>
+  }
+
 </div>

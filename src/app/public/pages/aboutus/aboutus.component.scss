@@ -1,83 +1,143 @@
-.about-us {
-  margin-bottom: 50px;
-  img {
-    width: 100%;
-  }
-  .content-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    text-align: center;
+.about-us-page {
+  margin-bottom: 3.5rem;
+}
+
+.about-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr);
+  align-items: center;
+  gap: 1.25rem;
+  padding-top: 1rem;
+}
+
+.about-hero-media {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.about-hero-media img {
+  display: block;
+  width: min(100%, 700px);
+  height: auto;
+}
+
+.about-hero-copy {
+  justify-self: start;
+  max-width: 33rem;
+}
+
+.content-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  text-align: left;
+
+  p {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    text-align: left;
+    color: #42526f;
   }
 }
 
+.about-links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
 .card-about {
+  height: 100%;
+  padding: 1.5rem 1rem;
   text-align: center;
-  padding: 15px 5px;
-  border-radius: 25px;
+  background: #fff;
+  border-radius: 1.25rem;
   border-bottom: 3px solid #18a4fb;
-  .icon {
-    i {
-      font-size: 4em;
-      color: #18a4fb;
-    }
+  box-shadow: 0 14px 40px rgba(59, 91, 104, 0.08);
+
+  .icon i {
+    font-size: 4rem;
+    color: #18a4fb;
   }
-  .title {
-    h2 {
-      text-transform: uppercase;
-      margin: 15px 0;
-      font-weight: bold;
-    }
+
+  .title h2 {
+    margin: 1rem 0 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .body p {
+    margin: 0.75rem auto 0;
+    max-width: 22rem;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: #42526f;
   }
 }
 
 .yellow {
-  border-bottom: 3px solid #ffd100;
-  .icon {
-    i {
-      font-size: 4em;
-      color: #ffd100;
-    }
+  border-bottom-color: #ffd100;
+
+  .icon i {
+    color: #ffd100;
   }
 }
-.red {
-  border-bottom: 3px solid #ff005a;
-  .icon {
-    i {
-      font-size: 4em;
-      color: #ff005a;
-    }
-  }
-}
+
 .purple {
-  border-bottom: 3px solid #7e57c2;
-  .icon {
-    i {
-      font-size: 4em;
-      color: #7e57c2;
-    }
+  border-bottom-color: #7e57c2;
+
+  .icon i {
+    color: #7e57c2;
   }
 }
 
-:host ::ng-deep .p-card-title {
-  font-size: 1em;
-}
-
-:host ::ng-deep .p-card-footer {
-  i {
-    color: var(--primary-color);
-    margin-right: 5px;
+@media (max-width: 1199px) {
+  .about-hero {
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 1fr);
   }
 }
 
-:host ::ng-deep .p-card-shadow {
-  height: 100%;
+@media (max-width: 991px) {
+  .about-hero,
+  .about-links-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-hero {
+    gap: 1.75rem;
+  }
+
+  .about-hero-media {
+    justify-content: center;
+  }
+
+  .about-hero-copy {
+    max-width: 720px;
+    margin: 0 auto;
+    justify-self: center;
+  }
+
+  .content-info p {
+    text-align: center;
+  }
 }
 
-.email {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  //background-color: red;
+@media (max-width: 640px) {
+  .about-us-page {
+    margin-bottom: 2.5rem;
+  }
+
+  .card-about {
+    padding: 1.25rem 0.9rem;
+  }
+
+  .content-info p {
+    font-size: 1.05rem;
+  }
 }

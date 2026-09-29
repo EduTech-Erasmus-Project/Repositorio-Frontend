@@ -1,160 +1,207 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ChangeDetectorRef, Component, DestroyRef, ElementRef, OnInit, ViewChild, inject } from "@angular/core";
+import { ActivatedRoute, ParamMap, Router } from "@angular/router";
+import { firstValueFrom, forkJoin } from "rxjs";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { MessageService } from "primeng/api";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { LearningObjectService } from "../../../../../services/learning-object.service";
 import { ObjectLearning } from "../../../../../core/interfaces/ObjectLearning";
-import { Subscription } from "rxjs";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Preference } from "../../../../../core/interfaces/Preference";
 import { EducationLevel } from "../../../../../core/interfaces/EducationLevel";
 import { KnowledgeArea } from "../../../../../core/interfaces/KnowledgeArea";
-import { License } from "../../../../../core/interfaces/License";
-import { TokenService } from "../../../../../services/token.service";
-import { MessageService } from "primeng/api";
-import { SearchService } from "../../../../../services/search.service";
 import { LearningObjectFile } from "../../../../../core/interfaces/LearningObjectFile";
+import { SearchService } from "../../../../../services/search.service";
+import { LanguageService } from "src/app/services/language.service";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
+import { focusFirstInvalidControl } from "src/app/core/utils/accessibility-focus";
+import {
+  DEFAULT_AGE_RANGE,
+  OA_TITLE_MAX_LENGTH,
+  OA_LANGUAGE_OPTIONS,
+  REQUIRED_VALIDATORS,
+  SelectOption,
+  controlHasError,
+  controlInvalid,
+  formatAgeRange,
+  getRangeLabel,
+  mapCatalogOptions,
+  parseAgeRange,
+  resolveCatalogOptionValue,
+} from "../../shared/settings-form.utils";
+
+type EditObjectPayload = Record<string, unknown> & {
+  id: number;
+  educational_typicalAgeRange: string;
+  avatar?: File | null;
+};
 
 @Component({
-  selector: "app-edit-object",
-  templateUrl: "./edit-object.component.html",
-  styleUrls: ["./edit-object.component.scss"],
+    selector: "app-edit-object",
+    templateUrl: "./edit-object.component.html",
+    styleUrls: ["./edit-object.component.scss"],
+    standalone: false
 })
-export class EditObjectComponent implements OnInit, OnDestroy {
-  private subscribes: Subscription[] = [];
+/**
+ * Gestiona la edicion del formulario principal de un OA ya cargado.
+ *
+ * El componente necesita coordinar dos fuentes async: el detalle puntual del OA
+ * y los catalogos de seleccion. Solo cuando ambos bloques terminan de cargar se
+ * libera la interfaz completa.
+ */
+export class EditObjectComponent implements OnInit {
+  readonly titleMaxLength = OA_TITLE_MAX_LENGTH;
+
+  @ViewChild("editObjectFormHost") editObjectFormHost?: ElementRef<HTMLElement>;
+
+  private readonly destroyRef = inject(DestroyRef);
+
   public object: ObjectLearning;
   public file: File;
-  public displayWindow: boolean;
-  public objectForm: FormGroup;
-  public editData: boolean = false;
+  public displayWindow = false;
+  public objectForm!: FormGroup;
+  public editData = false;
+  public metadataDialogTriggerId = "edit-object-metadata-trigger";
 
   public preferencesData: Preference[];
   public educationLevels: EducationLevel[];
   public knowledgeArea: KnowledgeArea[];
-  public licenses: License[];
+  public licenses: SelectOption[];
 
-  public loading: boolean = false;
+  public loading = false;
+  private catalogsLoaded = false;
+  private objectLoaded = false;
   public currentFile: LearningObjectFile;
   public currentImg: string;
 
-  public language = [
-    { name: "Español", code: "es" },
-    { name: "Ingles", code: "en" },
-  ];
+  public language = OA_LANGUAGE_OPTIONS;
 
   constructor(
-    private tokenService: TokenService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private objectService: LearningObjectService,
     private searchService: SearchService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private languageService: LanguageService,
+    private breadcrumbService: BreadcrumbService,
+    private cdr: ChangeDetectorRef,
   ) {
-    this.route.params.subscribe((params) => {
-      this.getObjectDetail(Number(params.slug));
-    });
+    void this.configureBreadcrumb();
   }
 
   ngOnInit(): void {
     this.loading = true;
-    this.loadData();
+    this.cdr.detectChanges();
+    void this.loadData();
+    this.route.paramMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params: ParamMap) => {
+        const objectId = Number(params.get("slug"));
+
+        if (Number.isNaN(objectId)) {
+          this.router.navigateByUrl("/settings/my-objects");
+          return;
+        }
+
+        void this.getObjectDetail(objectId);
+      });
   }
 
-  ngOnDestroy(): void {
-    this.subscribes.forEach((item) => {
-      item.unsubscribe();
-    });
-  }
-
-  async getObjectDetail(id: number) {
-    let detailSub = await this.objectService.getObjectDetailById(id).subscribe(
-      (res: any) => {
-        this.object = res;
-        this.currentFile = res.learning_object_file;
-        this.currentImg = res.avatar;
-        this.loadForm();
-        this.loading = false;
+  /**
+   * Publica el breadcrumb del flujo de edicion dentro del area privada.
+   */
+  private async configureBreadcrumb(): Promise<void> {
+    this.breadcrumbService.setItems([
+      { label: "ROA" },
+      { label: await firstValueFrom(this.languageService.translate.get("menu.settings")) },
+      {
+        label: await firstValueFrom(this.languageService.translate.get("menu.editOa")),
+        routerLink: ["/settings/my-objects"],
       },
-      (err) => {
-        console.log("err", err);
-        this.router.navigateByUrl("/settings/my-objects");
-      }
-    );
-    this.subscribes.push(detailSub);
+    ]);
   }
 
-  async loadData() {
-    let tokenSub = await this.tokenService
-      .refreshToken()
-      .subscribe((res) => {});
-    let preferencesSub = await this.searchService
-      .getPreferences()
-      .subscribe((res) => {
-        this.preferencesData = res.results.map((res) => {
-          return { name: res.description, code: res.id };
-        });
-      });
-
-    let educationLevelsSub = await this.searchService
-      .getLevelEducation()
-      .subscribe((res) => {
-        this.educationLevels = res.results.map((res) => {
-          return { name: res.description, code: res.id };
-        });
-      });
-
-    let knowledgeAreaSub = await this.searchService
-      .getInterestAreas()
-      .subscribe((res) => {
-        this.knowledgeArea = res.map((res) => {
-          return { name: res.name, code: res.id };
-        });
-      });
-
-    let licensesSub = await this.searchService
-      .getLicenses()
-      .subscribe((res: any) => {
-        this.licenses = res.results.map((res) => {
-          return { name: res.description, code: res.id };
-        });
-      });
-
-    this.subscribes.push(
-      tokenSub,
-      preferencesSub,
-      educationLevelsSub,
-      knowledgeAreaSub,
-      licensesSub
-    );
+  /**
+   * Recupera el OA a editar y arma el formulario con su snapshot actual.
+   */
+  async getObjectDetail(id: number): Promise<void> {
+    try {
+      const res = await firstValueFrom(this.objectService.getObjectDetailById(id));
+      this.object = res;
+      this.currentFile = res.learning_object_file;
+      this.currentImg = res.avatar;
+      this.loadForm();
+      this.objectLoaded = true;
+      this.updateLoadingState();
+    } catch {
+      this.router.navigateByUrl("/settings/my-objects");
+    }
   }
 
-  loadForm() {
+  get previewUrl() {
+    return this.currentFile?.url;
+  }
+
+  /**
+   * Carga los catalogos auxiliares requeridos por el formulario de edicion.
+   */
+  async loadData(): Promise<void> {
+    try {
+      const {
+        preferences,
+        educationLevels,
+        knowledgeArea,
+        licenses,
+      } = await firstValueFrom(
+        forkJoin({
+          preferences: this.searchService.getPreferences(),
+          educationLevels: this.searchService.getLevelEducation(),
+          knowledgeArea: this.searchService.getInterestAreas(),
+          licenses: this.searchService.getLicenses(),
+        })
+      );
+
+      this.preferencesData = mapCatalogOptions(preferences, "description") as Preference[];
+      this.educationLevels = mapCatalogOptions(educationLevels.values, "name") as EducationLevel[];
+      this.knowledgeArea = mapCatalogOptions(knowledgeArea.values, "name") as KnowledgeArea[];
+      this.licenses = mapCatalogOptions(licenses.values, "description");
+      this.catalogsLoaded = true;
+    } finally {
+      this.updateLoadingState();
+    }
+  }
+
+  /**
+   * Construye el formulario reactivo usando el estado actual del OA.
+   */
+  loadForm(): void {
     this.objectForm = this.fb.group({
       general_title: [
         this.object?.general_title || null,
-        [Validators.required],
+        [...REQUIRED_VALIDATORS, Validators.maxLength(OA_TITLE_MAX_LENGTH)],
       ],
       general_description: [
         this.object?.general_description || null,
-        [Validators.required],
+        REQUIRED_VALIDATORS,
       ],
       general_keyword: [
         this.object?.general_keyword || null,
-        [Validators.required],
+        REQUIRED_VALIDATORS,
       ],
       education_levels: [
-        this.object?.education_levels.id || null,
-        [Validators.required],
+        resolveCatalogOptionValue(this.object?.education_levels),
+        REQUIRED_VALIDATORS,
       ],
       general_language: [
         this.object?.general_language || null,
-        [Validators.required],
+        REQUIRED_VALIDATORS,
       ],
       knowledge_area: [
-        this.object?.knowledge_area.id || null,
-        [Validators.required],
+        resolveCatalogOptionValue(this.object?.knowledge_area),
+        REQUIRED_VALIDATORS,
       ],
-      license: [this.object?.license.id || null, [Validators.required]],
-      adaptation: [this.object?.adaptation || "yes", [Validators.required]],
+      license: [resolveCatalogOptionValue(this.object?.license), REQUIRED_VALIDATORS],
+      adaptation: [this.object?.adaptation || "yes", REQUIRED_VALIDATORS],
       educational_typicalAgeRange: [
         this.getRageAge(),
         [Validators.required, Validators.min(5), Validators.max(150)],
@@ -163,105 +210,153 @@ export class EditObjectComponent implements OnInit, OnDestroy {
     });
   }
 
-  getRageAge() {
-    if (this.object.educational_typicalAgeRange) {
-      let range = this.object?.educational_typicalAgeRange.split("-");
-      if (range?.length === 2) {
-        return range.map((res) => {
-          return parseInt(res);
-        });
-      } else {
-        return [5, 100];
-      }
-    } else {
-      return [5, 100];
-    }
-  }
-
-  getErrorFormRequired(formValue): boolean {
-    return (
-      this.objectForm.get(formValue).hasError("required") &&
-      this.objectForm.get(formValue).touched
+  getRageAge(): [number, number] {
+    return parseAgeRange(
+      this.object?.educational_typicalAgeRange,
+      DEFAULT_AGE_RANGE
     );
   }
 
-  async onSubmit() {
+  getErrorFormRequired(formValue: string): boolean {
+    const control = this.objectForm.get(formValue);
+    return controlHasError(control, "required") && controlInvalid(control);
+  }
+
+  getErrorFormMaxLength(formValue: string): boolean {
+    const control = this.objectForm.get(formValue);
+    return controlHasError(control, "maxlength") && controlInvalid(control);
+  }
+
+  getControlValueLength(formValue: string): number {
+    const value = this.objectForm.get(formValue)?.value;
+    return typeof value === "string" ? value.length : 0;
+  }
+
+  get currentAgeRangeLabel(): string {
+    return getRangeLabel(this.objectForm?.controls?.educational_typicalAgeRange?.value);
+  }
+
+  /**
+   * Persiste la edicion del OA y refleja en pantalla la nueva miniatura cargada.
+   */
+  async onSubmit(): Promise<void> {
     if (this.objectForm.valid) {
-      //console.log("this.objectForm", this.objectForm.value);
       this.editData = true;
       this.loading = true;
-      let data = this.objectForm.value;
-      data.id = this.object.id;
+      this.cdr.detectChanges();
 
-      //console.log("data send before", this.objectForm);
+      const data: EditObjectPayload = {
+        ...this.objectForm.getRawValue(),
+        id: this.object.id,
+      };
 
-      data.educational_typicalAgeRange = `${this.objectForm.value.educational_typicalAgeRange[0]}-${this.objectForm.value.educational_typicalAgeRange[1]}`;
+      data.educational_typicalAgeRange = formatAgeRange(
+        this.objectForm.value.educational_typicalAgeRange
+      );
+
       if (!this.objectForm.value.avatar) {
         delete data.avatar;
       }
 
-      let addMetadataSub = await this.objectService
-        .editMetadata(data)
-        .subscribe(
-          (res: any) => {
-            //console.log("res send data", res);
-            //this.getObjectDetail(this.object.id);
-            this.object = res;
-            this.currentImg = res.avatar;
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Se han actualizado los datos.",
-            });
-            this.file = null;
-            this.loading = false;
-            this.editData = false;
-            //console.log("form ", this.objectForm.value);
-            //return this.router.navigateByUrl("/settings/my-objects");
-          },
-          (err) => {
-            console.log("err", err);
-            this.messageService.add({
-              severity: "error",
-              summary: "Error",
-              detail:
-                "Se ah producido un error al guardar los datos, intente de nuevo",
-            });
-            this.loading = false;
-          }
-        );
-      this.subscribes.push(addMetadataSub);
-    } else {
-      this.markTouchForm();
+      try {
+        const res = await firstValueFrom(this.objectService.editMetadata(data));
+        this.object = res;
+        this.currentImg = res.avatar;
+        this.messageService.add({
+          severity: "success",
+          summary: await firstValueFrom(this.languageService.translate.get("newObject.form.success")),
+          detail: await firstValueFrom(this.languageService.translate.get("object.messageSuccess")),
+        });
+        this.file = null;
+        this.loading = false;
+        this.editData = false;
+        this.cdr.detectChanges();
+      } catch {
+        this.messageService.add({
+          severity: "error",
+          summary: await firstValueFrom(this.languageService.translate.get("newObject.form.alert")),
+          detail: await firstValueFrom(this.languageService.translate.get("object.messageError")),
+        });
+        this.loading = false;
+        this.editData = false;
+        this.cdr.detectChanges();
+      }
+      return;
     }
+
+    this.markTouchForm();
+    this.focusInvalidControl();
   }
-  markTouchForm() {
-    (<any>Object).values(this.objectForm.controls).forEach((control) => {
+
+  /**
+   * Marca todos los controles para forzar la visualizacion de errores.
+   */
+  markTouchForm(): void {
+    Object.values(this.objectForm.controls).forEach((control) => {
       control.markAsTouched();
     });
   }
 
-  onSelectImage(evet: any) {
+  /**
+   * Sincroniza la imagen seleccionada por el usuario con el formulario.
+   */
+  onSelectImage(event: { currentFiles?: File[] }): void {
     this.objectForm.patchValue({
-      avatar: evet.currentFiles[0],
+      avatar: event.currentFiles?.[0] ?? null,
     });
   }
 
-  showBasicDialog2() {
+  /**
+   * Abre el editor avanzado de metadatos.
+   */
+  openMetadataDialog(): void {
     this.displayWindow = true;
+    this.cdr.detectChanges();
   }
 
-  navigateTo(path: string) {
+  /**
+   * Cierra el dialogo y devuelve el foco al disparador original.
+   */
+  restoreMetadataDialogFocus(): void {
+    this.displayWindow = false;
+    this.cdr.detectChanges();
+    requestAnimationFrame(() => {
+      document.getElementById(this.metadataDialogTriggerId)?.focus();
+    });
+  }
+
+  navigateTo(path: string): void {
     this.router.navigate([path]);
   }
 
-  clouceEvent(evt) {
-    this.displayWindow = evt;
+  /**
+   * Sincroniza el estado visible del dialogo hijo cuando este solicita cierre.
+   */
+  handleMetadataDialogVisibility(isVisible: boolean): void {
+    this.displayWindow = isVisible;
+    this.cdr.detectChanges();
   }
 
-  updateMetadataEvt(evt) {
-    if (evt) {
-      this.getObjectDetail(this.object.id);
+  /**
+   * Recarga el detalle del OA cuando el editor de metadatos confirma cambios.
+   */
+  handleMetadataUpdate(shouldRefresh: boolean): void {
+    if (shouldRefresh) {
+      void this.getObjectDetail(this.object.id);
     }
+  }
+
+  private focusInvalidControl() {
+    setTimeout(() => {
+      focusFirstInvalidControl(
+        this.editObjectFormHost?.nativeElement,
+        ".slider .p-slider-handle"
+      );
+    }, 0);
+  }
+
+  private updateLoadingState(): void {
+    this.loading = !(this.catalogsLoaded && this.objectLoaded);
+    this.cdr.detectChanges();
   }
 }

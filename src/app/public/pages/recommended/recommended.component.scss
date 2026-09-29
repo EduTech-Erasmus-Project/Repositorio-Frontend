@@ -1,13 +1,246 @@
-.main-content{
-    min-height: 95vh;
-    .p-grid{
-        width: 100%;
-        p{
-            margin: 25px 5px;
-        }
-    }
+.recommended-page {
+  background-color: #eceff4;
+  min-height: 95vh;
+  padding: 1.5rem 0 2.5rem;
 }
 
-h5{
-    text-transform: uppercase;
+.recommended-loading,
+.recommended-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.recommended-panel {
+  background-color: rgba(216, 222, 233, 0.3);
+  border: 1px solid rgba(59, 91, 104, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 18px 42px rgba(22, 58, 92, 0.07);
+  padding: 1.5rem;
+}
+
+.recommended-panel--secondary {
+  background-color: rgba(216, 222, 233, 0.3);
+}
+
+.recommended-panel__header {
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(22, 58, 92, 0.08);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+.recommended-panel__copy h2 {
+  color: #14344f;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.recommended-panel__copy p {
+  color: #5f7386;
+  margin: 0.45rem 0 0;
+}
+
+.recommended-panel__count {
+  align-items: center;
+  background: #ebf4fb;
+  border: 1px solid rgba(35, 91, 138, 0.12);
+  border-radius: 999px;
+  color: #1b4f7d;
+  display: inline-flex;
+  font-size: 0.95rem;
+  font-weight: 700;
+  justify-content: center;
+  min-width: 2.75rem;
+  padding: 0.5rem 0.9rem;
+}
+
+.recommended-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 320px));
+  justify-content: start;
+  margin: 0 0 0.35rem;
+}
+
+.recommended-grid__item {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+}
+
+.recommended-grid__item app-card {
+  width: 100%;
+  height: 100%;
+}
+
+.recommended-state {
+  align-items: center;
+  background: #f8fbfd;
+  border: 1px dashed rgba(22, 58, 92, 0.18);
+  border-radius: 20px;
+  color: #4b657c;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: center;
+  min-height: 220px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.recommended-state i {
+  color: #2b6d95;
+  font-size: 2rem;
+}
+
+.recommended-state h3 {
+  color: #14344f;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.recommended-state p {
+  margin: 0;
+  max-width: 32rem;
+}
+
+.recommended-state__hint {
+  color: #6d7f8d;
+  font-size: 0.95rem;
+}
+
+.recommended-state__action {
+  background: #2f5968;
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.7rem 1.25rem;
+}
+
+.recommended-state__action:hover {
+  background: #244755;
+}
+
+.recommended-state--error {
+  background: #fff8f7;
+  border-color: rgba(197, 74, 48, 0.24);
+  color: #8b4d43;
+}
+
+.recommended-state--error i {
+  color: #c54a30;
+}
+
+.recommended-card-skeleton {
+  background: linear-gradient(180deg, #ffffff, #f4f8fb);
+  border: 1px solid rgba(22, 58, 92, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 12px 28px rgba(22, 58, 92, 0.06);
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 1rem;
+}
+
+.recommended-skeleton {
+  animation: recommendedShimmer 1.4s ease-in-out infinite;
+  background: linear-gradient(90deg, #eef3f7 25%, #f8fafc 37%, #eef3f7 63%);
+  background-size: 400% 100%;
+  border-radius: 12px;
+}
+
+.recommended-skeleton--title {
+  height: 1.35rem;
+  max-width: 15rem;
+}
+
+.recommended-skeleton--text {
+  height: 0.9rem;
+  margin-top: 0.65rem;
+  max-width: 22rem;
+}
+
+.recommended-skeleton--count {
+  border-radius: 999px;
+  height: 2.4rem;
+  min-width: 3.2rem;
+}
+
+.recommended-skeleton--image {
+  aspect-ratio: 16 / 10;
+  border-radius: 16px;
+  width: 100%;
+}
+
+.recommended-skeleton--line {
+  height: 0.95rem;
+  margin-top: 0.85rem;
+  width: 100%;
+}
+
+.recommended-skeleton--line.short {
+  width: 62%;
+}
+
+.recommended-skeleton--line.medium {
+  width: 82%;
+}
+
+.recommended-skeleton--button {
+  border-radius: 999px;
+  height: 2.8rem;
+  margin-top: auto;
+  width: 100%;
+}
+
+@keyframes recommendedShimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .recommended-page {
+    padding-top: 1rem;
+  }
+
+  .recommended-panel {
+    border-radius: 18px;
+    padding: 1rem;
+  }
+
+  .recommended-panel__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .recommended-panel__count {
+    align-self: flex-start;
+  }
+
+  .recommended-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recommended-state {
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 769px) {
+  .recommended-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
 }

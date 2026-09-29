@@ -1,8 +1,15 @@
-<div class="content" loading="lazy">
-    <div class="info">
-        <h1>{{'home.banerName' | translate}}</h1>
-        <p>{{'home.baneDescription' | translate}}</p>
-        <a *ngIf="!user" routerLink="login" pButton type="button" [label]="'home.btnLogin' | translate"
-            class="p-button-outlined p-button-rounded"></a>
-    </div>
-</div>
+<section class="content">
+  <div class="info">
+    <h2>{{ "home.banerName" | translate }}</h2>
+    <p>{{ "home.baneDescription" | translate }}</p>
+    @if (!user) {
+      <a
+        routerLink="login"
+        pButton
+        type="button"
+        [label]="'home.btnLogin' | translate"
+        class="banner-login-button p-button-outlined p-button-rounded"
+      ></a>
+    }
+  </div>
+</section>

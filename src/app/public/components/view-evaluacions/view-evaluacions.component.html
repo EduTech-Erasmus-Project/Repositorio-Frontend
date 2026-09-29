@@ -1,32 +1,20 @@
-<div class="div" *ngIf="!roleExpert">
-    <div *ngFor="let item of resultsEv " class="tableP">
-        <table class="table table-bordered" *ngFor="let itemQ of item.concepts" style="width: 100%;">
-            <thead>
-                <tr>
-                    <th scope="col">{{itemQ.concepto.concept}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><i class="pi pi-star"></i> {{itemQ.total | number:'1.1-2'}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="forms" *ngIf="roleExpert">
-    <div *ngFor="let item of resultsEv " class="tableP">     
-            <table class="table table-bordered" *ngFor="let itemQ of item.conceptEvaluations"  style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th scope="col">{{itemQ.evaluationConcept}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><i class="pi pi-star"></i> {{itemQ.average | number:'1.1-2'}}</td>
-                    </tr>
-                </tbody>
-            </table>
-    </div>
-</div>
+@if (evaluationItems.length > 0) {
+  <div class="evaluation-summary">
+    @for (item of evaluationItems; track trackByConcept($index, item)) {
+      <article
+        class="evaluation-summary__item"
+        >
+        <h4 class="evaluation-summary__concept">{{ item.concept }}</h4>
+        <div class="evaluation-summary__score">
+          <i class="pi pi-star-fill"></i>
+          <span>{{ item.average | number:'1.1-2' }}</span>
+        </div>
+      </article>
+    }
+  </div>
+} @else {
+  <p class="evaluation-summary__empty">
+    No hay promedios de evaluación disponibles.
+  </p>
+}
+

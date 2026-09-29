@@ -1,54 +1,38 @@
 import { Component, OnInit, Renderer2 } from "@angular/core";
 import { MenuService } from "../services/app.menu.service";
-import { PrimeNGConfig } from "primeng/api";
+import { PrimeNG } from "primeng/config";
 import { AppComponent } from "../app.component";
 
 @Component({
-  selector: "app-public",
-  templateUrl: "./public.component.html",
-  styleUrls: ["./public.component.scss"],
+    selector: "app-public",
+    templateUrl: "./public.component.html",
+    styleUrls: ["./public.component.scss"],
+    standalone: false
 })
 export class PublicComponent implements OnInit {
   rightPanelClick: boolean;
-
   rightPanelActive: boolean;
-
   menuClick: boolean;
-
   staticMenuActive: boolean = true;
-
   menuMobileActive: boolean;
-
   megaMenuClick: boolean;
-
   megaMenuActive: boolean;
-
   megaMenuMobileClick: boolean;
-
   megaMenuMobileActive: boolean;
-
   topbarItemClick: boolean;
-
   topbarMobileMenuClick: boolean;
-
   topbarMobileMenuActive: boolean;
-
   sidebarActive: boolean;
-
-  activeTopbarItem: any;
-
+  activeTopbarItem: unknown | null;
   topbarMenuActive: boolean;
-
   menuHoverActive: boolean;
-
   configActive: boolean;
-
   configClick: boolean;
 
   constructor(
     public renderer: Renderer2,
     private menuService: MenuService,
-    private primengConfig: PrimeNGConfig,
+    private primengConfig: PrimeNG,
     public app: AppComponent
   ) {
     this.staticMenuActive =
@@ -98,18 +82,18 @@ export class PublicComponent implements OnInit {
     this.rightPanelClick = false;
   }
 
-  onMegaMenuButtonClick(event) {
+  onMegaMenuButtonClick(event: Event) {
     this.megaMenuClick = true;
     this.megaMenuActive = !this.megaMenuActive;
     event.preventDefault();
   }
 
-  onMegaMenuClick(event) {
+  onMegaMenuClick(event: Event) {
     this.megaMenuClick = true;
     event.preventDefault();
   }
 
-  onTopbarItemClick(event, item) {
+  onTopbarItemClick(event: Event, item: unknown) {
     this.topbarItemClick = true;
 
     if (this.activeTopbarItem === item) {
@@ -121,41 +105,41 @@ export class PublicComponent implements OnInit {
     event.preventDefault();
   }
 
-  onRightPanelButtonClick(event) {
+  onRightPanelButtonClick(event: Event) {
     this.rightPanelClick = true;
     this.rightPanelActive = !this.rightPanelActive;
 
     event.preventDefault();
   }
 
-  onRightPanelClose(event) {
+  onRightPanelClose(event: Event) {
     this.rightPanelActive = false;
     this.rightPanelClick = false;
 
     event.preventDefault();
   }
 
-  onRightPanelClick(event) {
+  onRightPanelClick(event: Event) {
     this.rightPanelClick = true;
 
     event.preventDefault();
   }
 
-  onTopbarMobileMenuButtonClick(event) {
+  onTopbarMobileMenuButtonClick(event: Event) {
     this.topbarMobileMenuClick = true;
     this.topbarMobileMenuActive = !this.topbarMobileMenuActive;
 
     event.preventDefault();
   }
 
-  onMegaMenuMobileButtonClick(event) {
+  onMegaMenuMobileButtonClick(event: Event) {
     this.megaMenuMobileClick = true;
     this.megaMenuMobileActive = !this.megaMenuMobileActive;
 
     event.preventDefault();
   }
 
-  onMenuButtonClick(event) {
+  onMenuButtonClick(event: Event) {
     this.menuClick = true;
     this.topbarMenuActive = false;
 
@@ -176,13 +160,13 @@ export class PublicComponent implements OnInit {
     event.preventDefault();
   }
 
-  onConfigClick(event) {
+  onConfigClick(event: Event) {
     this.configClick = true;
   }
 
-  onRippleChange(event) {
+  onRippleChange(event: { checked: boolean }) {
     this.app.ripple = event.checked;
-    this.primengConfig = event.checked;
+    this.primengConfig.ripple.set(event.checked);
   }
 
   isDesktop() {

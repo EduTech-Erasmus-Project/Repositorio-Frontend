@@ -1,112 +1,310 @@
-<div class="animate__animated animate__fadeIn card-content">
-    <p-card [header]="object.general_title"
-        [subheader]="(object.user_created?.first_name || '')+' '+(object.user_created?.last_name || '')"
-        styleClass="p-card-shadow" [style]="{width: '100%'}">
-        <ng-template pTemplate="header">
-            <img loading="lazy" [alt]="object.general_title" [src]="object.avatar">
-        </ng-template>
+﻿<div class="animate__animated animate__fadeIn card-content" [ngClass]="{'card-content--teacher': teacherOptions}">
+  <p-card
+    [styleClass]="teacherOptions ? 'p-card-shadow p-card-shadow--teacher' : 'p-card-shadow'"
+    [style]="cardStyle">
+    <ng-template pTemplate="header">
+      <a
+        class="class-img"
+        [routerLink]="['/object', object.slug]"
+        [ngStyle]="cardImageStyle"
+        [attr.aria-label]="object.general_title">
+      </a>
+    </ng-template>
 
-        <!--<button pButton type="button" class="classBut" label="{{'object.averageRating' | translate}}" > <i class="pi pi-angle-double-down"> &nbsp;</i> </button>
-        -->
+    @if (!teacherOptions) {
+      <div class="card-title-spacer" aria-hidden="true"></div>
+    }
 
-        <div class="accordion" id="accordionExample" *ngIf="resultsEv && (resultsEv.length > 0)">
-            <div class="accordion-item">
+    <div class="p-card-title">
+      <a href="#/object/{{object.slug}}" class="card-title-link">{{object.general_title}}</a>
+    </div>
+    @if (authorName) {
+      <div class="p-card-subtitle ng-star-inserted card-author">
+        {{ authorName }}
+      </div>
+    }
 
-                <!--<p>holaaaa</p>-->
+    @if (teacherOptions) {
+      <div class="oa-status-badge">
+        <span
+          class="p-tag p-component p-tag-rounded oa-status-pill"
+          [ngClass]="isObjectApproved ? 'p-tag-success' : 'p-tag-warning'">
+          <span class="p-tag-value">{{ publicationStatusLabelKey | translate }}</span>
+          <button
+            type="button"
+            class="oa-status-help"
+            [pTooltip]="publicationStatusHelpKey | translate"
+            tooltipPosition="top"
+            [attr.aria-label]="publicationStatusHelpKey | translate">
+            <i class="pi pi-info-circle" aria-hidden="true"></i>
+          </button>
+        </span>
+      </div>
+    }
 
-                <button pButton type="button" label="{{'object.averageRating' | translate}}" (click)="show=!show"
-                    style="width: 100%;">
-                    <i [ngClass]="{'pi-angle-down':!show,'pi-angle-up':show}" class="pi"> &nbsp;</i>
+    @if (resultsEv == null && resultEvalCero != true && !expertOptionsView && !expertOptions) {
+      <div class="field col-12 md:col-6"
+        >
+        <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
+      </div>
+    }
+
+    @if (resultsEv && (resultsEv.length > 0)) {
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+        <button
+          pButton
+          type="button"
+          label="{{'object.averageRating' | translate}}"
+          class="card-rating-trigger"
+          (click)="toggleRatingPopover(op, $event)"
+          >
+          <i [ngClass]="{'pi-angle-down':!show,'pi-angle-up':show}" class="pi"> &nbsp;</i>
+        </button>
+        <p-popover #op appendTo="body" styleClass="card-rating-popover" [style]="ratingPopoverStyle"
+          (onShow)="show = true" (onHide)="show = false">
+          @if (object) {
+            <app-view-evaluacions [resultsEv]="resultsEv"
+              [roleExpert]="roleExpert">
+            </app-view-evaluacions>
+          }
+        </p-popover>
+      </div>
+    </div>
+  }
+
+  <p-divider></p-divider>
+
+  <!-- Visualizacion de boton de evalucion para el estudiante -->
+  @if ((studentOptions) || (studentOptionsView)) {
+    <div class="student-view-evaluation">
+      @if (resultsEvStudent && (resultsEvStudent.length > 0)) {
+        <div>
+          <p-dialog header="{{'object.abstractEvalAdap'| translate}}"
+            [draggable]="false" [resizable]="false" appendTo="body" draggable="false"
+            [modal]="true" [blockScroll]="true" maskStyleClass="evaluation-dialog-mask"
+            [focusTrap]="true" [focusOnShow]="true" [closeOnEscape]="true" [dismissableMask]="true"
+            styleClass="card-evaluation-dialog" [(visible)]="displaystudent" [style]="{width: '72vw', maxWidth: '72rem'}"
+            (onHide)="restoreDialogFocus()"
+            [breakpoints]="{'960px': '88vw', '640px': '96vw'}">
+            <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
+            </app-evaluation-chart>
+            <ng-template pTemplate="footer">
+              @if (resultsEvStudent?.length>0 && !studentOptions) {
+                <button
+                  (click)="navigateToReport(true)" pButton pRipple type="button"
+                  label="{{'search.readPlus'|translate}}"
+                  class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
                 </button>
-
-                <div id="formsAr" *ngIf="show">
-                    <div class="accordion-body">
-                        <app-view-evaluacions *ngIf="object" [resultsEv]="resultsEv" [roleExpert]="roleExpert">
-                        </app-view-evaluacions>
-                    </div>
-                </div>
-            </div>
+              }
+            </ng-template>
+          </p-dialog>
+          <button [attr.id]="getDialogTriggerId('student-summary')" (click)="showDialogstudent($event, getDialogTriggerId('student-summary'))" class="button-read" pButton pRipple type="button"
+            icon="pi pi-external-link" label="{{'object.abstractEvaluaction' | translate}}">
+          </button>
         </div>
+      }
+    </div>
+  }
 
-        <p-divider></p-divider>
-        <p>{{object.knowledge_area.name}}</p>
-        <ng-container *ngIf="object.observation">
-            <h6>{{'object.Observations' | translate}}</h6>
-            <p>{{object.observation}}</p>
-        </ng-container>
-        <ng-template pTemplate="footer">
-            <div *ngIf="(teacherOptions && teacherOptions===true)">
-                <div class="buttons">
-
-                    <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
-                        class="p-button-rounded p-button-outlined"></button>
-                         
-                    <!-- 
-                    <ng-container *ngIf="resultsEv && (resultsEv.length > 0) ; else editTemplate">
-                        <button (click)="confirmDelete($event)" pButton pRipple type="button" icon="pi pi-trash"
-                        class="p-button-rounded p-button-danger p-button-outlined"></button> 
-                    </ng-container>
-                    <ng-template #editTemplate>
-                        <p>Este objeto de aprendizaje está en revisión.</p>
-                    </ng-template>
-                    -->
-                    <ng-container *ngIf="resultsEv && (resultsEv.length > 0) ; else editTemplate">
-                        <br><br>
-                        <ng-container *ngIf="resultsEv && (resultsEv.length > 0)">
-                            <div>
-                                <p-dialog *ngIf="display" header="Resumen Evaluacion de Accesibilidad" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="display" [style]="{width: '75vw',height: '557px'}" >
-                                    <div>
-                                        <app-evaluation-chart [resultEv]="resultsEv" [rating]="object.rating" idexpe="docente"></app-evaluation-chart>
-                                    </div>
-                                    <p-footer *ngIf="resultsEv?.length>0">
-                                        <button (click)="navigateToReport(false)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
-                                        </button>
-                                    </p-footer>            
-                                </p-dialog>
-                                <p-button (click)="showDialog()"  icon="pi pi-external-link" label="Evaluacion Experto"></p-button> 
-                            </div><br>
-                        </ng-container>
-                        <ng-container *ngIf="resultsEvStudent && (resultsEvStudent.length > 0) ; else editTemplate">
-                            <div>
-                                <p-dialog *ngIf="displaystudent" header="Resumen Evaluacion de Adaptabilidad" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="displaystudent" [style]="{width: '68vw',height: '575px'}">
-                                    <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante"></app-evaluation-chart>
-                                    <p-footer>
-                                        <button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
-                                        </button>
-                                    </p-footer>
-                                </p-dialog>
-                                <p-button (click)="showDialogstudent()" icon="pi pi-external-link" label="Evaluacion Estudiante"></p-button> 
-                            </div>
-                        </ng-container>
-                        <ng-template #editTemplate>
-                            <p>Este objeto de aprendizaje aun no fue revisado por el estudiante.</p>
-                        </ng-template>
-                    </ng-container>
-                    <ng-template #editTemplate>
-                        <br><br>
-                        <p-dialog *ngIf="displayautomatic" header="Resumen Evaluacion Preliminar" [draggable]="false" [resizable]="false" appendTo="body" draggable="false" modal="false" [(visible)]="displayautomatic" [style]="{width: '78vw',height: '42vw'}" >
-                            <app-evaluation-chart [resultsEvAut]="resultsEvAut" idexpe="automatic"></app-evaluation-chart>
-                            <p-footer>
-                                <!--<button (click)="navigateToReport(true)" pButton pRipple type="button" label="Leer más" class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
-                                </button>-->
-                            </p-footer>
-                        </p-dialog>
-                        <p-button (click)="showDialogautomatic()"  icon="pi pi-external-link" label="Evaluación Preliminar"></p-button>
-                        <br><br><p>Este objeto de aprendizaje está en revisión.</p>
-                    </ng-template>
-                </div>
-                <p-toast></p-toast>
-                <p-confirmPopup></p-confirmPopup>
-            </div>
-
-            <button (click)="navigateTo()" pButton pRipple type="button" label="Leer más"
-                class="p-button-rounded p-button-outlined button-read">
-                <i class="pi pi-arrow-right"></i>
-            </button>
-        </ng-template>
-
-        <div *ngIf="object.rating && (resultsEv && (resultsEv.length > 0))" class="rating">
-            <i class="pi pi-star"></i> <span>{{object.rating | number:'1.1-2'}}</span>
+  <!--  Visualizar boton de evalucion para el experto-->
+  @if (expertOptions  || expertOptionsView) {
+    <div class="expert-view-eavluation">
+      @if (resultsEvViewExpert == null && resultEvalCeroExpert != true) {
+        <div class="field col-12 md:col-6">
+          <p-skeleton height="2rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
         </div>
-    </p-card>
+      }
+      @if (resultsEvViewExpert && (resultsEvViewExpert.length > 0)) {
+        <div>
+          <p-dialog header="{{'object.abstractEvalAcc' | translate}}" [draggable]="false"
+            [resizable]="false" appendTo="body" draggable="false" [modal]="true"
+            [blockScroll]="true" maskStyleClass="evaluation-dialog-mask" styleClass="card-evaluation-dialog" [(visible)]="display"
+            [focusTrap]="true" [focusOnShow]="true" [closeOnEscape]="true" [dismissableMask]="true"
+            (onHide)="restoreDialogFocus()"
+            [style]="{width: '78vw', maxWidth: '78rem'}" [breakpoints]="{'960px': '90vw', '640px': '96vw'}">
+            <div>
+              <app-evaluation-chart [resultEv]="resultsEvViewExpert" [rating]="object.rating"
+              [idexpe]="'docente'" [object]="object"></app-evaluation-chart>
+            </div>
+            <ng-template pTemplate="footer">
+              @if (resultsEvViewExpert?.length > 0 && !expertOptions) {
+                <button
+                  (click)="navigateToReport(false)" pButton pRipple type="button"
+                  label="{{'search.readPlus'|translate}}"
+                  class="p-button-rounded p-button-outlined button-read"><i class="pi pi-arrow-right"></i>
+                </button>
+              }
+            </ng-template>
+          </p-dialog>
+          <button [attr.id]="getDialogTriggerId('expert-summary')" (click)="showDialog($event, getDialogTriggerId('expert-summary'))" icon="pi pi-external-link" pButton pRipple type="button"
+          class="button-read" label="{{'object.evalExpert' | translate}}"></button>
+        </div>
+      }
+    </div>
+  }
+
+
+  @if (object?.knowledge_area?.name) {
+    <p class="card-knowledge-area">{{object.knowledge_area.name}}</p>
+  }
+  @if (object.observation) {
+    <div class="card-observation-panel" [ngClass]="{'card-observation-panel--teacher': teacherOptions}">
+      <p class="card-observation-label">{{'object.Observations' | translate}}</p>
+      <div class="card-observation-scroll" [attr.title]="object.observation">
+        <p class="card-observation">{{object.observation}}</p>
+      </div>
+    </div>
+  }
+
+  <p-footer>
+    @if (teacherOptions) {
+      <div class="teacher-card-footer">
+        <div class="buttons teacher-card-actions">
+          <div class="teacher-card-actions__row">
+            <button (click)="onclickEdid()" pButton pRipple type="button" icon="pi pi-pencil"
+              title="{{'object.editOa'|translate}}"
+            class="p-button-rounded p-button-outlined button-edit"></button>
+            <button (click)="deleteLearningObject($event)" pButton pRipple icon="pi pi-trash" type="button"
+              class="p-button-rounded p-button-outlined button-danger"
+            title="{{'object.deleteOa'|translate}}"></button>
+          </div>
+          @if (resultsEv && (resultsEv.length > 0)) {
+            <div class="button-expert teacher-card-action-block teacher-card-action-block--expert">
+              <p-dialog header="{{'object.abstractEvalAcc' | translate}}"
+                [draggable]="false" [resizable]="false" appendTo="body" draggable="false"
+                [modal]="true" [blockScroll]="true" maskStyleClass="evaluation-dialog-mask"
+                [focusTrap]="true" [focusOnShow]="true" [closeOnEscape]="true" [dismissableMask]="true"
+                styleClass="card-evaluation-dialog" [(visible)]="display" [style]="{width: '78vw', maxWidth: '78rem'}"
+                (onHide)="restoreDialogFocus()"
+                [breakpoints]="{'960px': '90vw', '640px': '96vw'}">
+                <div>
+                  <app-evaluation-chart [resultEv]="resultsEv" [rating]="object.rating"
+                  [object]="object" [idexpe]="'docente'"></app-evaluation-chart>
+                </div>
+                <ng-template pTemplate="footer">
+                  @if (resultsEv?.length>0) {
+                    <button (click)="navigateToReport(false)"
+                      pButton pRipple type="button" label="{{'search.readPlus'|translate}}"
+                      class="p-button-rounded p-button-outlined button-read"><i
+                    class="pi pi-arrow-right"></i>
+                  </button>
+                }
+              </ng-template>
+            </p-dialog>
+            <p-button
+              [attr.id]="getDialogTriggerId('teacher-expert-summary')"
+              (click)="showDialog($event, getDialogTriggerId('teacher-expert-summary'))"
+              icon="pi pi-external-link"
+              label="{{'object.evalExpert'| translate}}"
+              styleClass="teacher-card-action-button"
+            >
+            </p-button>
+          </div>
+        } @else {
+          <div class="teacher-card-action-block teacher-card-action-block--preliminary">
+            <p-dialog header="{{'object.evalPre'|translate}}" [draggable]="false"
+              [resizable]="false" appendTo="body" draggable="false" [modal]="true"
+              [blockScroll]="true" maskStyleClass="evaluation-dialog-mask"
+              [focusTrap]="true" [focusOnShow]="true" [closeOnEscape]="true" [dismissableMask]="true"
+              styleClass="card-evaluation-dialog" [(visible)]="displayautomatic" [style]="{width: '78vw', maxWidth: '78rem'}"
+              (onHide)="restoreDialogFocus()"
+              [breakpoints]="{'960px': '90vw', '640px': '96vw'}">
+              @if (!automaticEvaluationLoaded) {
+                <div class="field col-12">
+                  <p-skeleton height="18rem" styleClass="mb-3" borderRadius="20px"></p-skeleton>
+                  <p-skeleton height="3rem" styleClass="mb-2" borderRadius="16px"></p-skeleton>
+                  <p-skeleton height="3rem" borderRadius="16px"></p-skeleton>
+                </div>
+              } @else if (resultsEvAut?.length) {
+                <app-evaluation-chart [resultsEvAut]="resultsEvAut" [object]="object" idexpe="automatic">
+                </app-evaluation-chart>
+              } @else {
+                <div class="card-evaluation-empty">
+                  <h4>{{ 'reportsPage.emptyTitle' | translate }}</h4>
+                  <p>{{ 'reportsPage.emptyDescription' | translate }}</p>
+                </div>
+              }
+            </p-dialog>
+            <p-button
+              [attr.id]="getDialogTriggerId('teacher-preliminary-summary')"
+              (click)="showDialogautomatic($event, getDialogTriggerId('teacher-preliminary-summary'))"
+              icon="pi pi-external-link"
+              label="{{'object.evalPre' |translate}}"
+              styleClass="teacher-card-action-button"
+            ></p-button>
+            <p class="teacher-card-note teacher-card-note--surface">{{'object.reviewObject' | translate}}</p>
+          </div>
+        }
+        <!--- Evaluacion por el estudiante para visualizacion -->
+        @if (resultsEvStudent && (resultsEvStudent.length > 0) ) {
+          <div class="teacher-card-action-block teacher-card-action-block--student">
+            <p-dialog header="{{'object.abstractEvalAdap'| translate}}"
+              [draggable]="false" [resizable]="false" appendTo="body" draggable="false"
+              [modal]="true" [blockScroll]="true" maskStyleClass="evaluation-dialog-mask"
+              [focusTrap]="true" [focusOnShow]="true" [closeOnEscape]="true" [dismissableMask]="true"
+              styleClass="card-evaluation-dialog" [(visible)]="displaystudent" [style]="{width: '72vw', maxWidth: '72rem'}"
+              (onHide)="restoreDialogFocus()"
+              [breakpoints]="{'960px': '88vw', '640px': '96vw'}">
+              <app-evaluation-chart [resultsEvStudent]="resultsEvStudent" idexpe="estudiante">
+              </app-evaluation-chart>
+              <ng-template pTemplate="footer">
+                <button (click)="navigateToReport(true)" pButton pRipple type="button"
+                  label="{{'search.readPlus'|translate}}"
+                class="p-button-rounded p-button-outlined button-read"><i
+                class="pi pi-arrow-right"></i>
+              </button>
+            </ng-template>
+          </p-dialog>
+          <p-button
+            [attr.id]="getDialogTriggerId('teacher-student-summary')"
+            (click)="showDialogstudent($event, getDialogTriggerId('teacher-student-summary'))"
+            icon="pi pi-external-link"
+            label="{{'object.evalStudent' |translate}}"
+            styleClass="teacher-card-action-button"
+          ></p-button>
+        </div>
+      } @else {
+        <p class="teacher-card-note teacher-card-note--surface">{{'object.reviewStudent'|translate}}</p>
+      }
+    </div>
+  @if (progressBarSpinner == true) {
+    <div class="teacher-card-progress">
+      <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+    </div>
+  }
+  <p-toast></p-toast>
+  <p-confirmpopup></p-confirmpopup>
 </div>
+}
+
+<button (click)="navigateTo()" pButton pRipple type="button" label="{{'search.readPlus'|translate}}"
+  class="p-button-rounded p-button-outlined button-read" [ngClass]="{'teacher-card-read': teacherOptions}">
+  <i class="pi pi-arrow-right"></i>
+</button>
+</p-footer>
+
+@if ((object.rating && (resultsEv && (resultsEv.length > 0))) || numberLikes != 0) {
+  <div class="card-badges">
+    @if (object.rating && (resultsEv && (resultsEv.length > 0))) {
+      <div class="rating">
+        <i class="pi pi-star"></i> <span>{{object.rating | number:'1.1-2'}}</span>
+      </div>
+    }
+    @if (numberLikes != 0) {
+      <div class="rating-heart" title="Puntuacion de me gustas">
+        <i class="pi pi-heart" ></i> <span>{{numberLikes | number}}</span>
+      </div>
+    }
+  </div>
+}
+
+@if (is_adapted_oer==true) {
+  <div class="adapted_oer">
+    <img src="assets/img/edutech-icon.png" title="Objeto de aprendizaje accessible"
+      alt="Objeto de aprendizaje accessible">
+  </div>
+}
+</p-card>
+</div>
+

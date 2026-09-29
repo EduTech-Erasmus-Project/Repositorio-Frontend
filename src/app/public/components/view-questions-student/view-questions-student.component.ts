@@ -1,246 +1,295 @@
-import { Component,  EventEmitter, Input,OnInit,Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
-import { ObjectLearning } from 'src/app/core/interfaces/ObjectLearning';
-import { LoginService } from 'src/app/services/login.service';
-import { SearchService } from 'src/app/services/search.service';
-import { LearningObjectService } from 'src/app/services/learning-object.service';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormControl, FormRecord, Validators } from "@angular/forms";
+import { firstValueFrom } from "rxjs";
+import { MessageService } from "primeng/api";
+import { ObjectLearning } from "src/app/core/interfaces/ObjectLearning";
+import {
+  StudentEvaluationResultResponse,
+  StudentPrincipleResponse,
+} from "src/app/core/interfaces/api-contracts";
+import { LanguageService } from "src/app/services/language.service";
+import { LearningObjectService } from "src/app/services/learning-object.service";
+import { LoginService } from "src/app/services/login.service";
+import { SearchService } from "src/app/services/search.service";
 
+interface AnswerOption {
+  labelKey: string;
+  value: string;
+}
+
+interface StudentQuestion {
+  id: number;
+  question: string;
+  description?: string;
+}
+
+interface StudentGuideline {
+  id?: number;
+  label: string;
+  questions: StudentQuestion[];
+}
+
+interface StudentPrincipleGroup {
+  id: number;
+  label: string;
+  guidelines: StudentGuideline[];
+}
+
+type StudentEvaluationForm = FormRecord<FormControl<string | null>>;
+
+/**
+ * Gestiona el formulario estudiantil de evaluacion del OA, tanto en alta como en actualizacion.
+ *
+ * Responsabilidades:
+ * - Construir controles dinamicos desde principios, pautas y preguntas.
+ * - Enviar payloads de creacion o actualizacion al backend.
+ * - Emitir al contenedor cuando cambia el estado de la evaluacion estudiantil.
+ */
 @Component({
-  selector: 'app-view-questions-student',
-  templateUrl: './view-questions-student.component.html',
-  styleUrls: ['./view-questions-student.component.scss']
+  selector: "app-view-questions-student",
+  templateUrl: "./view-questions-student.component.html",
+  styleUrls: ["./view-questions-student.component.scss"],
+  standalone: false
 })
 export class ViewQuestionsStudentComponent implements OnInit {
-  @Input() object: ObjectLearning;
+  @Input() object!: ObjectLearning;
   @Output() commentEmit1 = new EventEmitter<boolean>();
   @Output() commentEmit = new EventEmitter<boolean>();
-  @Input() flagQuestionsEst:boolean
+  @Input() flagQuestionsEst = false;
 
-  public groupedQuestionsSTUDENT: any[];
-  public groupedQuestionsUpdate:any[]
-  public selectedQuesions: any[];
-  public questionsupdates=[]
-  public resultquestions: any[];
-  public subscribes: Subscription[] = [];
-  public angForm2: FormGroup;
-  public myform: FormControl;
-  public answerEV:any
-  public flagConfirmSt: boolean; 
+  public groupedQuestionsSTUDENT: StudentPrincipleGroup[] = [];
+  public groupedQuestionsUpdate: StudentPrincipleGroup[] = [];
+  public angForm2: StudentEvaluationForm = new FormRecord<FormControl<string | null>>({});
+  public flagConfirmSt = false;
+  public updateEvaluationId: number | null = null;
+  public isSaving = false;
+
+  public readonly answerOptions: AnswerOption[] = [
+    { labelKey: "register.yes", value: "Si" },
+    { labelKey: "register.no", value: "No" },
+    { labelKey: "register.partially", value: "Parcialmente" },
+    { labelKey: "register.notApply", value: "No aplica" },
+  ];
 
   constructor(
     private searchService: SearchService,
     private loginService: LoginService,
-    public fb2: FormBuilder,
     private messageServicee: MessageService,
     private learningObject: LearningObjectService,
-  ) { }
+    private languageService: LanguageService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    
-    this.loadData();
     this.createForm2();
-   
-  }
-  createForm2() {
-    if (!this.flagQuestionsEst) {
-        this.angForm2 = this.fb2.group({
-          observation:
-            [null, [Validators.required]]
-        });
-    } else if (this.flagQuestionsEst) {
-      this.angForm2 = this.fb2.group({
-      });
-    }
+    void this.loadData();
   }
 
-  ngOnDestroy(): void {
-    this.subscribes.forEach((subscription) => {
-      subscription.unsubscribe();
+  get isUpdateMode(): boolean {
+    return !!this.flagQuestionsEst;
+  }
+
+  get observation(): FormControl<string | null> | null {
+    return this.angForm2.get("observation") as FormControl<string | null> | null;
+  }
+
+  createForm2() {
+    this.angForm2 = new FormRecord<FormControl<string | null>>({
+      observation: new FormControl<string | null>(null, { validators: [Validators.required] }),
     });
   }
 
   async loadData() {
-    if((this.loginService.validateRole('student') || this.loginService.validateRole('teacher')) && !this.flagQuestionsEst){
-      let groupedQes = await this.searchService.geQuestionsStudent().subscribe(
-      res => {
-        this.groupedQuestionsSTUDENT = res.results.map((item: any) => { return { value: item.id, label: item.principle, items: item.guidelines.map((item: any) => { return { value: item.id, label: item.guideline ,question:item.questions} }) } });
-        this.groupedQuestionsSTUDENT = this.groupedQuestionsSTUDENT;
-        this.groupedQuestionsSTUDENT.forEach((preguntas)=>{
-          preguntas.items.forEach((element)=>{
-            element.question.forEach(element1 => {
-                this.angForm2.addControl(
-                  element1.id,
-                  new FormControl(null, Validators.required)
-                ); 
-            });
+    if (this.loginService.validateRole("student") && !this.isUpdateMode) {
+      const res = await firstValueFrom(this.searchService.geQuestionsStudent());
+      this.groupedQuestionsSTUDENT = res.map((principle) => this.mapStudentPrincipleGroup(principle));
+      this.addQuestionControls(this.groupedQuestionsSTUDENT);
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!this.isUpdateMode) {
+      return;
+    }
+
+    const res = await firstValueFrom(
+      this.searchService.getObjectResultsEvaluationStudent(this.object.id)
+    );
+    this.updateEvaluationId = res[0]?.id ?? null;
+    this.groupedQuestionsUpdate = this.mapStudentEvaluationGroups(res);
+
+    res.forEach((evaluation) => {
+      evaluation.evaluation_students.forEach((studentEvaluation) => {
+        studentEvaluation.principle_gl.forEach((guidelineGroup) => {
+          guidelineGroup.guideline_evaluations.forEach((evaluationQuestion) => {
+            this.addQuestionControl(evaluationQuestion.question_id, evaluationQuestion.qualification);
           });
-        })
-        //console.log("-------",this.groupedQuestionsSTUDENT)
+        });
       });
-      this.subscribes.push(groupedQes);
-    }else if (this.flagQuestionsEst) {
-      let groupUpdate= await this.searchService.getObjectResultsEvaluationStudent(this.object.id).subscribe(
-        res =>{
-          this.groupedQuestionsUpdate=res.results.map((item1: any) => 
-          {return{
-            id:item1.id,
-            observation: item1.observation,
-            evaluation_students :item1.evaluation_students.map((item2: any)=>{return{
-              idevaluation:item2.id,
-              evaluation_principle:item2.evaluation_principle.principle,
-              principle_gl:item2.principle_gl.map((item3:any)=>{return{
-                guideline_pr:item3.guideline_pr.guideline,
-                guideline_evaluations:item3.guideline_evaluations.map((item4:any)=>{return{
-                  value:item4.id,
-                  question_id:item4.question_id,
-                  question:item4.question,
-                  qualification:item4.qualification
-                }})
-              }}),
-            }})
-          }})
-          this.groupedQuestionsUpdate =  this.groupedQuestionsUpdate; 
-          
-          //console.log("--222222---", this.groupedQuestionsUpdate[0].id)
-          this.groupedQuestionsUpdate.forEach(element => {
-            //console.log("---333",element.evaluation_principle)
-            element.evaluation_students.forEach(element2 => {
-              //console.log("---333",element2.evaluation_principle)
-              element2.principle_gl.forEach(element3 => {
-                element3.guideline_evaluations.forEach(element4 => {
-                  //element4.question_id,
-                  //element4.question,
-                  //element4.qualification
-                  this.angForm2.addControl(
-                    element4.question_id,
-                    new FormControl(element4.qualification, Validators.required)
-                  );
-                  //console.log("---333",element4.question_id,element4.qualification)
-                });
-              });
-            });
-            this.angForm2.addControl(
-              "observation",
-              new FormControl(element.observation, [Validators.required])
-            );
-          });
-          this.subscribes.push(groupUpdate);
-        }
-      )
-    }
+    });
+
+    this.observation?.setValue(res[0]?.observation ?? null);
+    this.cdr.detectChanges();
   }
+
   closeView() {
-    if(this.flagQuestionsEst == false){
+    if (!this.isUpdateMode) {
       this.angForm2.reset();
     }
-   
+
     this.commentEmit1.emit(false);
     this.commentEmit.emit(false);
   }
+
   closeView2() {
-    if(this.flagQuestionsEst == true){
-      this.angForm2.reset();
-    }
     this.commentEmit.emit(false);
-   
     this.commentEmit1.emit(false);
   }
-  getNumber(event){
-    //console.log('Numb', event)
-    return this.angForm2.get(String(event)).value
-  }
-  
 
-  get observation() {
-    return this.angForm2.get('observation')
+  getNumber(event: number) {
+    return this.angForm2.get(String(event))?.value;
   }
 
-  async sendAnswersStudent(){
-    //console.log("en el metodo------------",this.angForm2)
-    if(!this.flagQuestionsEst){
-      if (this.angForm2.valid){
-        let vecansw=Object.entries(this.angForm2.value)
-        let resp=[]
-        vecansw.forEach(element => {
-          let regresar={id:Number(element[0]),value:element[1]}
-          resp.push(regresar)
-        });
-        resp.pop();
-        //console.log("primera vez",this.angForm.value)
-        this.answerEV={
-          "learning_object": this.object.id,
-          "results": resp,
-          "observation": this.angForm2.get('observation').value
-        }
-        //console.log("-------aaaa",this.answerEV)
-        let sendEvalSt = await this.learningObject.sendQualificationStudent(this.answerEV).subscribe(
-          res => {
-            //console.log("respuesta del sendEvaluacion", res);
-            this.commentEmit1.emit(true);
-            this.flagConfirmSt = true;
-            this.ngOnInit();
-            this.showSuccess('Datos enviados con exito, gracias por realizar la evaluacion');
-          }, error => {
-            //console.log("err", error)
-            this.flagConfirmSt = false;
-          }
-        );
-        //console.log("servicio---",sendEvalSt)
-        this.angForm2.reset();
-      }else{
+  async sendAnswersStudent() {
+    if (this.angForm2.invalid || this.isSaving) {
       this.markTouchForm();
-      this.showError('Llenar todos los campos requeridos');
+      if (!this.isSaving) {
+        this.showError(await firstValueFrom(this.languageService.translate.get("object.fillForm")));
       }
-    }else if (this.flagQuestionsEst){
-      ///////
-      let vecansw=Object.entries(this.angForm2.value)
-        let resp=[]
-        vecansw.forEach(element => {
-          let regresar={id:Number(element[0]),value:element[1]}
-          resp.push(regresar)
-        });
-        resp.pop();
-        //console.log("-------resp",resp)
-        this.answerEV={
-          "id":this.groupedQuestionsUpdate[0].id,
-          "learning_object": this.object.id,
-          "results": resp,
-          "observation": this.angForm2.get('observation').value
-        }
-        //console.log("----actualiza",this.answerEV)
-        ////enviar nuevo path
-        let sendEvalSt = await this.learningObject.sendQualificationStudentUpdate(this.answerEV,this.groupedQuestionsUpdate[0].id).subscribe(
-          res => {
-            console.log("respuesta del sendEvaluacion", res);
-            this.commentEmit.emit(false);
-            this.commentEmit1.emit(false);
-            this.flagConfirmSt = true;
-            this.ngOnInit();  
-            this.showSuccess('Datos enviados con exito, gracias por realizar la evaluacion');
-          }, error => {
-            console.log("err", error)
-            this.flagConfirmSt = false;
-          }
-        );
-      ///////
+      return;
     }
-}
 
-showError(message) {
-  this.messageServicee.add({severity:'error', summary: 'Error', detail: message});
-}
+    const payload = {
+      id: this.updateEvaluationId,
+      learning_object: this.object.id,
+      results: Object.entries(this.angForm2.getRawValue())
+        .filter(([key]) => key !== "observation")
+        .map(([key, value]) => ({
+          id: Number(key),
+          value,
+        })),
+      observation: this.observation?.value,
+    };
 
-showSuccess(message) {
-      this.messageServicee.add({severity:'success', summary: 'Success', detail: message});
-}
+    this.isSaving = true;
 
-markTouchForm() {
-  (<any>Object).values(this.angForm2.controls).forEach((control) => {
-    control.markAsTouched();
-  });
-}
+    try {
+      if (!this.isUpdateMode) {
+        await firstValueFrom(this.learningObject.sendQualificationStudent(payload));
+        this.commentEmit1.emit(true);
+        this.flagConfirmSt = true;
+        this.closeView2();
+        this.showSuccess(await firstValueFrom(this.languageService.translate.get("object.evaluationMessage")));
+        return;
+      }
 
+      await firstValueFrom(
+        this.learningObject.sendQualificationStudentUpdate(payload, this.updateEvaluationId as number)
+      );
+      this.commentEmit.emit(false);
+      this.commentEmit1.emit(false);
+      this.flagConfirmSt = true;
+      this.showSuccess(await firstValueFrom(this.languageService.translate.get("object.successSendData")));
+    } catch {
+      this.flagConfirmSt = false;
+      this.showError(await firstValueFrom(this.languageService.translate.get("object.messageErrorUpdate")));
+    } finally {
+      this.isSaving = false;
+      this.cdr.detectChanges();
+    }
+  }
 
+  showError(message: string) {
+    this.messageServicee.add({ severity: "error", summary: "Error", detail: message });
+  }
+
+  showSuccess(message: string) {
+    this.messageServicee.add({ severity: "success", summary: "Success", detail: message });
+  }
+
+  markTouchForm() {
+    Object.values(this.angForm2.controls).forEach((control) => {
+      control.markAsTouched();
+    });
+  }
+
+  setValueReturnForm(value: number) {
+    return this.angForm2.get(String(value));
+  }
+
+  trackByGroup(index: number, item: StudentPrincipleGroup) {
+    return item.id;
+  }
+
+  trackByGuideline(index: number, item: StudentGuideline) {
+    return item.id ?? `${index}-${item.label}`;
+  }
+
+  trackByQuestion(index: number, item: StudentQuestion) {
+    return item.id;
+  }
+
+  trackByAnswerOption(index: number, item: AnswerOption) {
+    return item.value;
+  }
+
+  private addQuestionControls(groups: StudentPrincipleGroup[]) {
+    groups.forEach((principle) => {
+      principle.guidelines.forEach((guideline) => {
+        guideline.questions.forEach((question) => {
+          this.addQuestionControl(question.id);
+        });
+      });
+    });
+  }
+
+  private addQuestionControl(controlName: number, initialValue: string | null = null) {
+    const name = String(controlName);
+
+    if (this.angForm2.contains(name)) {
+      return;
+    }
+
+    this.angForm2.addControl(
+      name,
+      new FormControl<string | null>(initialValue, { validators: [Validators.required] })
+    );
+  }
+
+  private mapStudentPrincipleGroup(principle: StudentPrincipleResponse): StudentPrincipleGroup {
+    return {
+      id: principle.id,
+      label: principle.principle,
+      guidelines: (principle.guidelines || []).map((guideline) => ({
+        id: guideline.id,
+        label: guideline.guideline,
+        questions: (guideline.questions || []).map((question) => ({
+          id: question.id,
+          question: question.question,
+          description: question.description,
+        })),
+      })),
+    };
+  }
+
+  private mapStudentEvaluationGroups(
+    results: StudentEvaluationResultResponse[]
+  ): StudentPrincipleGroup[] {
+    return results.reduce<StudentPrincipleGroup[]>((groups, evaluation) => {
+      const mappedGroups = (evaluation.evaluation_students || []).map((studentEvaluation) => ({
+        id: studentEvaluation.id,
+        label: studentEvaluation.evaluation_principle?.principle || "",
+        guidelines: (studentEvaluation.principle_gl || []).map((guidelineGroup) => ({
+          id: guidelineGroup.guideline_pr?.id,
+          label: guidelineGroup.guideline_pr?.guideline || "",
+          questions: (guidelineGroup.guideline_evaluations || []).map((evaluationQuestion) => ({
+            id: evaluationQuestion.question_id,
+            question: evaluationQuestion.question,
+          })),
+        })),
+      }));
+
+      return groups.concat(mappedGroups);
+    }, []);
+  }
 }

@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { SettingsRoutingModule } from './settings-routing.module';
 import { SettingsComponent } from './settings.component';
 import { ComponentsModule } from './components/components.module';
-import { SharedModule } from 'primeng/api';
+import { SharedModule } from 'src/app/shared/shared.module';
+
 
 
 @NgModule({
-  declarations: [SettingsComponent],
+  declarations: [SettingsComponent,],
   imports: [
     CommonModule,
     SettingsRoutingModule,

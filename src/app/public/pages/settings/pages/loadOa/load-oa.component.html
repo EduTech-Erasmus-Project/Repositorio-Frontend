@@ -1,240 +1,655 @@
-<ng-container *ngIf="loading; else loadingTemplate">
-        <div class="spinner animate__animated animate__fadeIn">
-                <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner"
-                        strokeWidth="4" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
+﻿@if (loading) {
+  <div class="spinner animate__animated animate__fadeIn">
+    <p-progressSpinner styleClass="custom-spinner load-oa-loading-spinner"
+    strokeWidth="4" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
+  </div>
+} @else {
+  <p-fileUpload #mainUpload name="file" [url]="baseUrl" [chooseLabel]="'newObject.form.imgSelect' | translate"
+    [cancelLabel]="'newObject.form.imgCancel' | translate" (onRemove)="clearSelectedArchiveFile()"
+    (onClear)="clearSelectedArchiveFile()" (onSelect)="onMainFileSelect($event)" [uploadLabel]="'newObject.form.fileUpload' | translate" (onUpload)="onUpload($event);"
+    (onBeforeUpload)="progress_event($event);isErrorUpload=false" (onError)="onError($event)"
+    [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate" [multiple]="false"
+    accept=".zip,.rar" styleClass="load-oa-main-upload">
+    <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback"
+      let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
+      <p-button [label]="'newObject.form.imgSelect' | translate" icon="pi pi-plus"
+        [ariaLabel]="'newObject.form.selectArchiveAriaLabel' | translate"
+        styleClass="p-fileupload-choose-button"
+        (onClick)="chooseCallback()">
+      </p-button>
+      <p-button [label]="'newObject.form.fileUpload' | translate" icon="pi pi-upload"
+        styleClass="p-fileupload-upload-button"
+        [disabled]="!files?.length"
+        (onClick)="uploadCallback()">
+      </p-button>
+      <p-button [label]="'newObject.form.imgCancel' | translate" icon="pi pi-times"
+        styleClass="p-fileupload-cancel-button"
+        [disabled]="!files?.length"
+        (onClick)="clearCallback(); isErrorUpload=false">
+      </p-button>
+    </ng-template>
+    <ng-template pTemplate="content">
+      @if (file || selectedArchiveFile) {
+        <div class="upload-file-summary">
+          <div class="upload-file-summary__header">
+            <div class="upload-file-summary__meta">
+              <p class="upload-file-summary__name">{{(file || selectedArchiveFile)?.name}}</p>
+              <span class="upload-file-summary__size">{{formatFileSize((file || selectedArchiveFile)?.size)}}</span>
+            </div>
+            <button
+              type="button"
+              class="upload-file-summary__remove"
+              [attr.aria-label]="'Eliminar archivo seleccionado'"
+              (click)="removeSelectedArchiveFile()">
+              <i class="pi pi-times" aria-hidden="true"></i>
+            </button>
+          </div>
+          @if (objectUrl || object) {
+            <div class="upload-file-summary__actions">
+              <div #previewActionButtonHost>
+                <p-button (click)="navigate()" icon="pi pi-external-link"
+                  [label]="'newObject.form.btnPreview' | translate">
+                </p-button>
+              </div>
+              <div #metadataActionButtonHost>
+                <p-button (click)="showBasicDialog2()"
+                  icon="pi pi-external-link"
+                  [label]="'newObject.form.btnShowMetadata' | translate">
+                </p-button>
+              </div>
+            </div>
+          }
         </div>
-</ng-container>
-<ng-template #loadingTemplate>
-
-        <p-fileUpload name="file" [url]="baseUrl" [chooseLabel]="'newObject.form.imgSelect' | translate"
-                [cancelLabel]="'newObject.form.imgCancel' | translate"
-                [uploadLabel]="'newObject.form.fileUpload' | translate" (onUpload)="onUpload($event)"
-                (onError)="onError($event)" [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
-                [multiple]="false" accept=".zip,.rar">
-                <ng-template pTemplate="content">
-                        <ng-container *ngIf="file">
-                                <p>{{file.name}} - {{file.size}}</p>
-                                <!-- <a [href]="objectUrl" target="_blank">Previsualizar</a> -->
-                                <p-button (click)="navigate()" icon="pi pi-external-link"
-                                        [label]="'newObject.form.btnPreview' | translate">
-                                </p-button>
-                                <p-button [style]="{margin: '0 5px'}" (click)="showBasicDialog2()"
-                                        icon="pi pi-external-link"
-                                        [label]="'newObject.form.btnShowMetadata' | translate">
-                                </p-button>
-                        </ng-container>
-                </ng-template>
-        </p-fileUpload>
-
-        <ng-container *ngIf="object; else dataTemplate">
-
-                <p-dialog [header]="object.general_title" [(visible)]="displayWindow" [style]="{width: '50vw'}"
-                        [baseZIndex]="10000">
-
-                        <app-metadata *ngIf="object" [learningobjectdetail]="object"></app-metadata>
-
-                        <ng-template pTemplate="footer">
-                                <p-button icon="pi pi-check" (click)="displayWindow=false" label="Ok"
-                                        styleClass="p-button-text"></p-button>
-                        </ng-template>
-                </p-dialog>
-
-
-
-                <form class="animate__animated animate__fadeIn" [formGroup]="objectForm" (ngSubmit)="onSubmit()">
-
-                        <div class="p-field p-fluid">
-                                <label for="title">{{'newObject.form.titleLabel' | translate}}*</label>
-                                <input [ngClass]="{'ng-dirty': getErrorFormRequired('title')}"
-                                        aria-describedby="title-help" pInputText type="text" formControlName="title"
-                                        [placeholder]="'newObject.form.title' | translate" id="title" />
-                                <small *ngIf="getErrorFormRequired('title')" id="title-help"
-                                        class="p-error">{{'newObject.errors.title' | translate}}</small>
+      }
+    </ng-template>
+  </p-fileUpload>
+  @if (isErrorUpload == true) {
+    <div class="loadFeedback"
+      >
+      <p class="p-mt-2 loadFeedback__title">{{'newObject.form.observationsOA' | translate}}</p>
+      <div class="button-feedback">
+        <div class="card flex justify-content-center button-feedback__card">
+          <div class="forms-feedback">
+            <span class="forms-feedback__label">{{'newObject.form.scormOA' | translate}}</span>
+            <i [class]="(activateDisplaySCORM == true) ? 'pi pi-times':'pi pi-check'"
+            [ngClass]="activateDisplaySCORM ? 'loadFeedback__icon loadFeedback__icon--danger' : 'loadFeedback__icon loadFeedback__icon--success'"></i>
+          </div>
+          @if (activateDisplaySCORM == false && activateDisplayIsExelearning == true) {
+            <div class="forms-feedback">
+              <span class="forms-feedback__label">{{'newObject.form.webOA' | translate}}</span>
+              <i [class]="(activateDisplayWEBSTE == true) ? 'pi pi-exclamation-triangle':'pi pi-check'"
+              [ngClass]="activateDisplayWEBSTE ? 'loadFeedback__icon loadFeedback__icon--warn' : 'loadFeedback__icon loadFeedback__icon--success'"></i>
+            </div>
+          }
+          @if (activateDisplaySCORM == false && activateDisplayWEBSTE == false) {
+            <div class="forms-feedback"
+              >
+              <span class="forms-feedback__label">{{'newObject.form.mediaOA' | translate}}</span>
+              <i [class]="(activateDisplayMedia == true) ? 'pi pi-times':'pi pi-check'"
+              [ngClass]="activateDisplayMedia ? 'loadFeedback__icon loadFeedback__icon--danger' : 'loadFeedback__icon loadFeedback__icon--success'"></i>
+            </div>
+          }
+        </div>
+      </div>
+      @if (activateDisplayWEBSTE == true || activateDisplaySCORM == true || activateDisplayMedia == true) {
+        <div class="view-plus"
+          >
+          <p-button [label]="'buttons.viewMore' | translate" (click)="viewInfoOA = true"></p-button>
+        </div>
+      }
+      @if (viewInfoOA == true) {
+        <div class="upload-info-panel">
+          <p-accordion [value]="uploadInfoAccordionValue">
+            @if (activateDisplayMedia == true) {
+              <p-accordion-panel value="media">
+                <p-accordion-header>{{'newObject.form.mediaTitle' | translate}}</p-accordion-header>
+                <p-accordion-content>
+                  <p>
+                    {{'newObject.form.descriptionMedia1' | translate}}
+                  </p>
+                  <p>{{'newObject.form.descriptionMedia2' | translate}}</p>
+                  <div class="imgPage">
+                    <img src="assets/img/hipervinculosImagenes.png"
+                      alt="{{'newObject.form.imgAltMedia' | translate}}">
+                    </div>
+                  </p-accordion-content>
+                </p-accordion-panel>
+              }
+              @if (activateDisplaySCORM == true) {
+                <p-accordion-panel value="scorm">
+                  <p-accordion-header>{{'newObject.form.scormTitle' | translate}}</p-accordion-header>
+                  <p-accordion-content>
+                    <p>{{'newObject.form.descriptionScorm1' | translate}}</p>
+                    <div class="imgPage">
+                      <img src="assets/img/exportacionS.png"
+                        alt="{{'newObject.form.imgAltScorm' | translate}}">
+                      </div>
+                    </p-accordion-content>
+                  </p-accordion-panel>
+                }
+                @if (activateDisplayWEBSTE == true) {
+                  <p-accordion-panel value="website">
+                    <p-accordion-header>{{'newObject.form.websiteTitle' | translate}}</p-accordion-header>
+                    <p-accordion-content>
+                      <p>
+                        {{'newObject.form.descriptionWeb1' | translate}}
+                      </p>
+                      <div class="imgPage">
+                        <img src="assets/img/scromIMS.png"
+                          alt="{{'newObject.form.imgAltWeb' | translate}}">
                         </div>
-
-                        <div class="p-field p-fluid">
-                                <label for="description">{{'newObject.form.descriptionLabel' | translate}}*</label>
-                                <textarea rows="10" [ngClass]="{'ng-dirty': getErrorFormRequired('description')}"
-                                        pInputTextarea formControlName="description" id="description"
-                                        aria-describedby="description-help"
-                                        [placeholder]="'newObject.form.description' | translate"></textarea>
-
-                                <small *ngIf="getErrorFormRequired('description')" id="description-help"
-                                        class="p-error">{{'newObject.errors.description' | translate}}</small>
+                          <p class="upload-info-panel__description">
+                            {{'newObject.form.descriptionWeb2' | translate}}
+                          </p>
+                        </p-accordion-content>
+                      </p-accordion-panel>
+                    }
+                  </p-accordion>
+                </div>
+              }
+            </div>
+          }
+          @if (object && objectForm) {
+            <p-dialog [header]="object.general_title" [(visible)]="displayWindow"
+              styleClass="load-oa-metadata-dialog"
+              [style]="{ width: '76vw', maxWidth: '82rem' }"
+              [baseZIndex]="10000"
+              [modal]="true"
+              [blockScroll]="true"
+              [focusTrap]="true"
+              [focusOnShow]="true"
+              [closeOnEscape]="true"
+              [dismissableMask]="true"
+              maskStyleClass="evaluation-dialog-mask"
+              [draggable]="false"
+              [resizable]="false"
+              appendTo="body"
+              (onHide)="onMetadataDialogHide()"
+              [breakpoints]="{'960px': '90vw', '640px': '96vw'}">
+            @if (object) {
+              <app-metadata [learningobjectdetail]="object"></app-metadata>
+            }
+            <ng-template pTemplate="footer">
+              <p-button icon="pi pi-check" (click)="displayWindow=false" label="Ok"
+              styleClass="p-button-text"></p-button>
+            </ng-template>
+          </p-dialog>
+          @if (objectForm) {
+            <form #loadOaFormHost class="animate__animated animate__fadeIn load-oa-form" [formGroup]="objectForm" (ngSubmit)="onSubmit()"
+              (keydown.enter)="handleFormEnterKey($event)">
+            <div class="p-field p-fluid load-oa-title-field">
+              <label for="title">{{'newObject.form.titleLabel' | translate}}*</label>
+              <small id="title-counter" class="load-oa-title-counter">
+                {{ getControlValueLength('title') }} / {{ titleMaxLength }}
+              </small>
+              <input [ngClass]="{'ng-dirty': getErrorFormRequired('title') || getErrorFormMaxLength('title')}"
+                [attr.aria-describedby]="getControlDescribedBy('title', ['title-counter'], ['title-error'])" pInputText type="text" formControlName="title"
+                [attr.maxlength]="titleMaxLength" [placeholder]="'newObject.form.title' | translate" id="title" />
+                @if (getErrorFormRequired('title')) {
+                  <small id="title-error"
+                  class="p-error">{{'newObject.errors.title' | translate}}</small>
+                } @else if (getErrorFormMaxLength('title')) {
+                  <small id="title-error"
+                  class="p-error">{{'newObject.errors.titleMaxLength' | translate}}</small>
+                }
+              </div>
+              <div class="p-field p-fluid">
+                <label for="description">{{'newObject.form.descriptionLabel' | translate}}*</label>
+                <textarea rows="10" [ngClass]="{'ng-dirty': getErrorFormRequired('description')}"
+                  pInputTextarea formControlName="description" id="description"
+                  [attr.aria-describedby]="getControlDescribedBy('description', [], ['description-error'])"
+                [placeholder]="'newObject.form.description' | translate"></textarea>
+                @if (getErrorFormRequired('description')) {
+                  <small id="description-error"
+                  class="p-error">{{'newObject.errors.description' | translate}}</small>
+                }
+              </div>
+              <div class="p-field p-fluid">
+                <label for="keywords">{{'newObject.form.keywordsLabel' | translate}}*</label>
+                <input [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('keywords')}"
+                  [attr.aria-describedby]="getControlDescribedBy('keywords', ['keywords-help'], ['keywords-error'])" pInputText type="text"
+                  formControlName="keywords" id="keywords"
+                  [placeholder]="'newObject.form.keywords' | translate" />
+                  <small class="load-oa-field-helper" id="keywords-help">
+                    {{'newObject.form.keywordsHelp' | translate}}
+                  </small>
+                  @if (getErrorFormRequired('keywords')) {
+                    <small id="keywords-error"
+                    class="p-error">{{'newObject.errors.keywords' | translate}} </small>
+                  }
+                </div>
+                <div class="load-oa-form-grid">
+                  <div class="load-oa-form-grid__item">
+                    <div class="box sidebar">
+                      <div class="p-field p-fluid">
+                        <label for="educationLevels">{{'newObject.form.educationLevelLabel' |
+                        translate}}*</label>
+                        <select
+                          id="educationLevels"
+                          class="load-oa-native-select"
+                          formControlName="education_levels"
+                          [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('education_levels')}"
+                          [attr.aria-describedby]="getControlDescribedBy('education_levels', [], ['level-error'])">
+                          <option [ngValue]="null" disabled>{{'newObject.form.educationLevel' | translate}}</option>
+                          @for (item of educationLevels; track item.code) {
+                            <option [ngValue]="item.code">{{item.name}}</option>
+                          }
+                        </select>
+                      @if (getErrorFormRequired('education_levels')) {
+                        <small
+                          id="level-error"
+                          class="p-error">{{'newObject.errors.educationLevel' |
+                        translate}}</small>
+                      }
+                    </div>
+                  </div>
+                </div>
+                <div class="load-oa-form-grid__item">
+                  <div class="box sidebar">
+                    <div class="p-field p-fluid">
+                      <label for="languageSelect">{{'newObject.form.languageLabel' |
+                      translate}}*</label>
+                      <select
+                        id="languageSelect"
+                        class="load-oa-native-select"
+                        formControlName="language"
+                        [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('language')}"
+                        [attr.aria-describedby]="getControlDescribedBy('language', [], ['language-error'])">
+                        <option [ngValue]="null" disabled>{{'newObject.form.language' | translate}}</option>
+                        @for (item of language; track item.code) {
+                          <option [ngValue]="item.code">{{item.name}}</option>
+                        }
+                      </select>
+                      @if (getErrorFormRequired('language')) {
+                        <small
+                          id="language-error"
+                          class="p-error">{{'newObject.errors.language' |
+                        translate}}</small>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="load-oa-form-grid">
+                <div class="load-oa-form-grid__item">
+                  <div class="box sidebar">
+                    <div class="p-field p-fluid">
+                      <label for="knowledgeAreaSelect">{{'newObject.form.knowledgeAreaLabel'|
+                      translate}}*</label>
+                      <select
+                        id="knowledgeAreaSelect"
+                        class="load-oa-native-select"
+                        formControlName="knowledge_area"
+                        [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('knowledge_area')}"
+                        [attr.aria-describedby]="getControlDescribedBy('knowledge_area', [], ['knowledgeArea-error'])">
+                        <option [ngValue]="null" disabled>{{'newObject.form.knowledgeArea' | translate}}</option>
+                        @for (item of knowledgeArea; track item.code) {
+                          <option [ngValue]="item.code">{{item.name}}</option>
+                        }
+                      </select>
+                      @if (getErrorFormRequired('knowledge_area')) {
+                        <small
+                          id="knowledgeArea-error"
+                          class="p-error">{{'newObject.errors.knowledgeArea' |
+                        translate}}</small>
+                      }
+                    </div>
+                  </div>
+                </div>
+                <div class="load-oa-form-grid__item">
+                  <div class="box sidebar">
+                    <div class="p-field p-fluid">
+                      <label for="licenseSelect">{{'newObject.form.license' | translate}}*</label>
+                      <select
+                        id="licenseSelect"
+                        class="load-oa-native-select"
+                        formControlName="license"
+                        [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('license')}"
+                        [attr.aria-describedby]="getControlDescribedBy('license', [], ['license-error'])">
+                        <option [ngValue]="null" disabled>{{'newObject.form.licenseLabel' | translate}}</option>
+                        @for (item of licenses; track item.code) {
+                          <option [ngValue]="item.code">{{item.name}}</option>
+                        }
+                      </select>
+                      @if (getErrorFormRequired('license')) {
+                        <small id="license-error"
+                          class="p-error">{{'newObject.errors.license' |
+                        translate}}</small>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="load-oa-form-grid">
+                <div class="load-oa-form-grid__item">
+                  <div class="box content">
+                    <div class="p-field p-fluid slider">
+                      <p id="ageRangeLabel" class="load-oa-field-label">{{'newObject.form.ageLabel' | translate}}:
+                        {{ currentAgeRangeLabel }}</p>
+                      <small class="load-oa-field-helper" id="ageRangeHelp">
+                        {{'newObject.form.ageHelp' | translate}}
+                      </small>
+                      <p-slider [min]="5" [max]="150" formControlName="age"
+                        [range]="true"
+                        aria-labelledby="ageRangeLabel"
+                        aria-describedby="ageRangeHelp">
+                      </p-slider>
+                    </div>
+                  </div>
+                </div>
+                <div class="load-oa-form-grid__item">
+                  <div class="box sidebar">
+                    <fieldset class="p-field p-fluid load-oa-fieldset" aria-describedby="adaptations-help">
+                      <legend id="adaptations-label">{{'newObject.form.OaAdapted' |
+                      translate}}</legend>
+                      <small class="load-oa-field-helper" id="adaptations-help">
+                        {{'newObject.form.adaptationsHelp' | translate}}
+                      </small>
+                      <br />
+                      <div class="radio-buttons">
+                        <div class="p-field-radiobutton">
+                          <p-radioButton
+                            [ngClass]="{'ng-dirty': getErrorFormRequired('adaptations')}"
+                            name="adaptations" value="yes"
+                            formControlName="adaptations"
+                            inputId="yesadaptations">
+                          </p-radioButton>
+                          <label for="yesadaptations">{{'newObject.form.adaptationsYes'
+                          | translate}}</label>
                         </div>
-
-                        <div class="p-field p-fluid">
-                                <label for="keywords">{{'newObject.form.keywordsLabel' | translate}}*</label>
-                                <input [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('keywords')}"
-                                        aria-describedby="keywords-help" pInputText type="text"
-                                        formControlName="keywords" id="keywords"
-                                        [placeholder]="'newObject.form.keywords' | translate" />
-
-                                <small *ngIf="getErrorFormRequired('keywords')" id="keywords-help"
-                                        class="p-error">{{'newObject.errors.keywords' | translate}} </small>
+                        <div class="p-field-radiobutton">
+                          <p-radioButton
+                            [ngClass]="{'ng-dirty': getErrorFormRequired('adaptations')}"
+                            name="adaptations" value="no"
+                            formControlName="adaptations"
+                            inputId="noadaptations">
+                          </p-radioButton>
+                          <label for="noadaptations">{{'newObject.form.adaptationsNo'
+                          | translate}}</label>
                         </div>
-
-                        <div class="p-grid">
-                                <div class="p-col-12 p-md-6 p-lg-6">
-                                        <div class="box sidebar">
-                                                <div class="p-field p-fluid">
-                                                        <label for="level">{{'newObject.form.educationLevelLabel' |
-                                                                translate}}*</label>
-                                                        <p-dropdown
-                                                                [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('education_levels')}"
-                                                                id="language" [options]="educationLevels"
-                                                                fromControlName="education_levels"
-                                                                aria-describedby="level-help"
-                                                                (onChange)="selectLevel($event)"
-                                                                [placeholder]="'newObject.form.educationLevel' | translate"
-                                                                optionLabel="name" [showClear]="true">
-                                                        </p-dropdown>
-                                                        <small *ngIf="getErrorFormRequired('education_levels')"
-                                                                id="level-help"
-                                                                class="p-error">{{'newObject.errors.educationLevel' |
-                                                                translate}}</small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="p-col-12 p-md-6 p-lg-6">
-                                        <div class="box sidebar">
-                                                <div class="p-field p-fluid">
-                                                        <label for="language">{{'newObject.form.languageLabel' |
-                                                                translate}}*</label>
-                                                        <p-dropdown
-                                                                [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('language')}"
-                                                                id="language" [options]="language"
-                                                                fromControlName="language"
-                                                                aria-describedby="language-help"
-                                                                (onChange)="selectLanguage($event)"
-                                                                [placeholder]="'newObject.form.language' | translate"
-                                                                optionLabel="name" [showClear]="true">
-                                                        </p-dropdown>
-                                                        <small *ngIf="getErrorFormRequired('language')"
-                                                                id="language-help"
-                                                                class="p-error">{{'newObject.errors.language' |
-                                                                translate}}</small>
-                                                </div>
-                                        </div>
-                                </div>
+                      </div>
+                      @if (is_adapted_oer == true) {
+                        <p class="adaptations-copy" id="adaptations-detection-help"
+                          >{{'newObject.form.adaptationsIs.description1'
+                          | translate}} <a
+                          class="adaptations-link"
+                        href="https://oeradap.edutech-project.org/">OER-ADAP</a></p>
+                      }
+                      @if (is_adapted_oer == false) {
+                        <p class="adaptations-copy" id="adaptations-detection-help"
+                          >{{'newObject.form.adaptationsIs.description2'|
+                          translate}} <a
+                          class="adaptations-link"
+                        href="https://oeradap.edutech-project.org/">OER-ADAP</a>
+                        {{'newObject.form.adaptationsIs.description3'|
+                        translate}} <a
+                        class="adaptations-link"
+                      href="https://lompads.edutech-project.org/#/">LOMPAD-WEB</a>
+                      {{'newObject.form.adaptationsIs.description4'|
+                    translate}}</p>
+                  }
+                 </fieldset>
+              </div>
+            </div>
+          </div>
+          <div class="p-field p-fluid">
+            <p id="sourceFileUpload-label" class="load-oa-field-label">{{'newObject.form.fileExe'|translate}}</p>
+            <small class="load-oa-field-helper" id="sourceFileUpload-help">
+              {{'newObject.form.fileExeHelp' | translate}}
+            </small>
+            <p-fileUpload #sourceUpload id="sourceFileUpload" name="sourceFileUpload"
+              [chooseLabel]="'newObject.form.imgSelect' | translate"
+              [showUploadButton]="false"
+              [cancelLabel]="'newObject.form.imgCancel' | translate"
+              (onClear)="clearSelectedSourceFile()"
+              (onSelect)="onSelectFile($event)"
+              [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
+              [multiple]="false" accept=".elp"
+              aria-labelledby="sourceFileUpload-label"
+              aria-describedby="sourceFileUpload-help">
+              <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback"
+                let-clearCallback="clearCallback">
+                <p-button [label]="'newObject.form.imgSelect' | translate" icon="pi pi-plus"
+                  type="button"
+                  [ariaLabel]="'newObject.form.selectSourceFileAriaLabel' | translate"
+                  styleClass="p-fileupload-choose-button"
+                  (onClick)="chooseCallback()">
+                </p-button>
+                <p-button [label]="'newObject.form.imgCancel' | translate" icon="pi pi-times"
+                  type="button"
+                  styleClass="p-fileupload-cancel-button"
+                  [disabled]="!files?.length"
+                  (onClick)="clearCallback(); clearSelectedSourceFile()">
+                </p-button>
+              </ng-template>
+            </p-fileUpload>
+          </div>
+          @if (is_adapted_oer == false) {
+            <div class="content_questions">
+              <div class="load-oa-questions-heading">
+                <strong>{{'newObject.form.accessibilityQuestionsTitle' | translate}}</strong>
+                <p>{{'newObject.form.accessibilityQuestionsHelp' | translate}}</p>
+              </div>
+              <div class="containerQuestionsSchema">
+                @for (question of questionsEvaluationSchema; track question) {
+                  <div class="load-oa-question-grid__item">
+                    <div class="box content">
+                      <fieldset class="p-field p-fluid slider load-oa-question"
+                        [attr.aria-describedby]="getErrorFormRequired('item'+question.id) ? 'question-help-' + question.id : null">
+                        <legend class="preguntas-metadatos"
+                          [id]="'question-title-' + question.id">
+                          {{ getQuestionDescription(question) }}
+                        </legend>
+                        <div class="radio-buttons">
+                          <div class="p-field-radiobutton">
+                            <p-radioButton
+                              [ngClass]="{'ng-dirty': getErrorFormRequired('item'+question.id)}"
+                              [name]="'item'+question.id" value="yes"
+                              [formControlName]="'item'+question.id"
+                              [inputId]="'yesitem_v1_' + question.id"
+                              [ariaLabelledBy]="'question-title-' + question.id + ' question-option-yes-' + question.id">
+                            </p-radioButton>
+                            <label [attr.for]="'yesitem_v1_' + question.id"
+                              [id]="'question-option-yes-' + question.id">{{'newObject.form.adaptationsYes'
+                            | translate}}</label>
+                          </div>
+                          <div class="p-field-radiobutton">
+                            <p-radioButton
+                              [ngClass]="{'ng-dirty': getErrorFormRequired('item'+question.id)}"
+                              [name]="'item'+question.id"
+                              value="parcialmente"
+                              [formControlName]="'item'+question.id"
+                              [inputId]="'partialitem_v1_' + question.id"
+                              [ariaLabelledBy]="'question-title-' + question.id + ' question-option-partial-' + question.id">
+                            </p-radioButton>
+                            <label [attr.for]="'partialitem_v1_' + question.id"
+                              [id]="'question-option-partial-' + question.id">{{'register.partially'
+                            | translate}}</label>
+                          </div>
+                          <div class="p-field-radiobutton">
+                            <p-radioButton
+                              [ngClass]="{'ng-dirty': getErrorFormRequired('item'+question.id)}"
+                              [name]="'item'+question.id" value="no"
+                              [formControlName]="'item'+question.id"
+                              [inputId]="'noitem_v1_' + question.id"
+                              [ariaLabelledBy]="'question-title-' + question.id + ' question-option-no-' + question.id">
+                            </p-radioButton>
+                            <label [attr.for]="'noitem_v1_' + question.id"
+                              [id]="'question-option-no-' + question.id">{{'newObject.form.adaptationsNo'
+                            | translate}}</label>
+                          </div>
                         </div>
+                        @if (getErrorFormRequired('item'+question.id)) {
+                          <small [id]="'question-help-' + question.id"
+                            class="p-error">{{'validation.obligatoryCamp' |
+                          translate}}</small>
+                        }
+                      </fieldset>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          <section class="content_questions load-oa-cover-section">
+            <div class="load-oa-cover-section__header">
+              <h3>{{'newObject.form.coverSectionTitle' | translate}}</h3>
+              <p>{{'newObject.form.coverSectionDescription' | translate}}</p>
+            </div>
 
-                        <div class="p-grid">
-                                <div class="p-col-12 p-md-6 p-lg-6">
-                                        <div class="box sidebar">
-                                                <div class="p-field p-fluid">
-                                                        <label for="knowledgeArea">{{'newObject.form.knowledgeAreaLabel'
-                                                                | translate}}*</label>
-                                                        <p-dropdown
-                                                                [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('knowledge_area')}"
-                                                                id="knowledgeArea" [options]="knowledgeArea"
-                                                                fromControlName="knowledge_area"
-                                                                aria-describedby="knowledge_area"
-                                                                (onChange)="selectKnowledgeArea($event)"
-                                                                [placeholder]="'newObject.form.knowledgeArea' | translate"
-                                                                optionLabel="name" [showClear]="true">
-                                                        </p-dropdown>
-                                                        <small *ngIf="getErrorFormRequired('knowledge_area')"
-                                                                id="knowledgeArea-help"
-                                                                class="p-error">{{'newObject.errors.knowledgeArea' |
-                                                                translate}}</small>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="p-col-12 p-md-6 p-lg-6">
-                                        <div class="box sidebar">
-                                                <div class="p-field p-fluid">
-                                                        <label for="license">{{'newObject.form.licenseLabel' |
-                                                                translate}}*</label>
-                                                        <p-dropdown
-                                                                [ngClass]="{'ng-invalid ng-dirty': getErrorFormRequired('license')}"
-                                                                id="license" [options]="licenses"
-                                                                fromControlName="license"
-                                                                aria-describedby="license-help"
-                                                                (onChange)="selectLicense($event)"
-                                                                [placeholder]="'newObject.form.license' | translate"
-                                                                optionLabel="name" [showClear]="true">
-                                                        </p-dropdown>
-                                                        <small *ngIf="getErrorFormRequired('license')" id="license-help"
-                                                                class="p-error">{{'newObject.errors.license' |
-                                                                translate}}</small>
-                                                </div>
-                                        </div>
-                                </div>
-                        </div>
+            <div class="load-oa-cover-card">
+              <div class="load-oa-cover-card__body">
+                <div class="load-oa-cover-current">
+                  @if (selectedCoverPreviewUrl) {
+                    <img
+                      [src]="selectedCoverPreviewUrl"
+                      [alt]="'newObject.form.coverCurrentAlt' | translate"
+                      class="load-oa-cover-current__image">
+                  } @else {
+                    <div class="load-oa-cover-current__placeholder" aria-hidden="true">
+                      <i class="pi pi-image"></i>
+                    </div>
+                  }
+                </div>
 
-                        <div class="p-grid">
+                <div class="load-oa-cover-summary">
+                  @if (hasSelectedCoverImage) {
+                    @if (coverSelectionSource === 'auto') {
+                      <strong>{{'newObject.form.coverAutoCurrentTitle' | translate}}</strong>
+                    }
+                    @if (coverSelectionSource === 'suggested') {
+                      <strong>{{'newObject.form.coverSuggestedSelectedTitle' | translate}}</strong>
+                    }
+                    @if (coverSelectionSource === 'manual') {
+                      <strong>{{'newObject.form.coverManualSelectedTitle' | translate}}</strong>
+                    }
+                    <p>{{'newObject.form.coverSelectedDescription' | translate}}</p>
+                    @if (selectedCoverFileName) {
+                      <span>{{'newObject.form.coverFileName' | translate}}: {{ selectedCoverFileName }}</span>
+                    }
+                    <p-button
+                      icon="pi pi-times"
+                      type="button"
+                      [label]="'newObject.form.coverRemove' | translate"
+                      styleClass="load-oa-cover-remove-button"
+                      (onClick)="remove_image()">
+                    </p-button>
+                  } @else {
+                    <strong>{{'newObject.form.coverEmptyTitle' | translate}}</strong>
+                    <p>{{'newObject.form.coverEmptyDescription' | translate}}</p>
+                  }
+                </div>
+              </div>
 
-                                <div class="p-col-12 p-md-6 p-lg-6">
-                                        <div class="box content">
-                                                <div class="p-field p-fluid slider">
-                                                        <label for="Correo">{{'newObject.form.ageLabel' | translate}}:
-                                                                {{objectForm.controls.age?.value[0] +' - '+
-                                                                objectForm.controls.age?.value[1]}}</label>
-                                                        <p-slider [min]="5" [max]="150" formControlName="age"
-                                                                [range]="true">
-                                                        </p-slider>
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="p-col-12 p-md-6 p-lg-6">
-                                        <div class="box sidebar">
-                                                <div class="p-field p-fluid">
-                                                        <label for="adaptations">{{'newObject.form.adaptationsLabel' |
-                                                                translate}}*</label>
-                                                        <div class="radio-buttons">
-                                                                <div class="p-field-radiobutton">
-                                                                        <p-radioButton
-                                                                                [ngClass]="{'ng-dirty': getErrorFormRequired('adaptations')}"
-                                                                                aria-describedby="adaptations-help"
-                                                                                name="adaptations" value="yes"
-                                                                                formControlName="adaptations"
-                                                                                inputId="yes">
-                                                                        </p-radioButton>
-                                                                        <label for="yes">{{'newObject.form.adaptationsYes'
-                                                                                | translate}}</label>
-                                                                </div>
-                                                                <div class="p-field-radiobutton">
-                                                                        <p-radioButton
-                                                                                [ngClass]="{'ng-dirty': getErrorFormRequired('adaptations')}"
-                                                                                aria-describedby="adaptations-help"
-                                                                                name="adaptations" value="no"
-                                                                                formControlName="adaptations"
-                                                                                inputId="no">
-                                                                        </p-radioButton>
-                                                                        <label for="no">{{'newObject.form.adaptationsNo'
-                                                                                | translate}}</label>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                </div>
-                        </div>
+              @if (showSuggestedCoverGallery) {
+                <div class="load-oa-cover-options">
+                  <div class="load-oa-cover-options__header">
+                    <span class="preview-label">{{'newObject.form.coverSuggestedTitle' | translate}}</span>
+                    <p class="load-oa-cover-helper">{{'newObject.form.coverSuggestedDescription' | translate}}</p>
+                  </div>
+                  <div class="card load-oa-cover-gallery-card">
+                    <div class="image-gallery align-items-center gallery_item load-oa-image-gallery">
+                      <button type="button"
+                        class="gallery_item__button"
+                        (click)="img_preview_save(image.src)"
+                        [attr.aria-label]="image.alt === ''
+                          ? ('newObject.form.previewImageSelectDefault' | translate:{ index: first + 1 })
+                          : ('newObject.form.previewImageSelectNamed' | translate:{ name: image.alt })">
+                        <img src="{{image.src}}"
+                          class="load-oa-gallery-image"
+                          [alt]="image.alt === ''
+                            ? ('newObject.form.previewImageDefaultAlt' | translate:{ index: first + 1 })
+                            : image.alt" />
+                      </button>
+                    </div>
+                    <div class="header_paginator">
+                      <div class="header_paginator__action">
+                        <p-button icon="pi pi-refresh"
+                          type="button"
+                          [label]="'buttons.refresh' | translate"
+                          (onClick)="refresh()">
+                        </p-button>
+                      </div>
+                      <div class="paginator_item">
+                        <p-paginator [first]="first"
+                          [rows]="1"
+                          [totalRecords]="totalRecords"
+                          (onPageChange)="onPageChange($event)"
+                          [showJumpToPageDropdown]="true"
+                          [showPageLinks]="false">
+                        </p-paginator>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
 
-                        <div class="p-field p-fluid">
-                                <label for="fileImage">{{'newObject.form.imgLabel' | translate}}*</label>
-                                <p-fileUpload id="fileImage" name="fileImage"
-                                        [chooseLabel]="'newObject.form.imgSelect' | translate"
-                                        [showUploadButton]="false"
-                                        [cancelLabel]="'newObject.form.imgCancel' | translate"
-                                        (onSelect)="onSelectImage($event)"
-                                        [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
-                                        [multiple]="false" accept="image/*" aria-describedby="img-help">
-                                </p-fileUpload>
-                                <small *ngIf="getErrorFormRequired('img')" id="img-help"
-                                        class="p-error">{{'newObject.errors.imgHelp' |
-                                        translate}}</small>
-                        </div>
+              <div class="load-oa-cover-upload">
+                <p id="imageFileUpload-label" class="load-oa-upload-label">{{'newObject.form.coverUploadTitle' | translate}}</p>
+                <p id="image-upload-help" class="load-oa-cover-helper">{{'newObject.form.coverUploadDescription' | translate}}</p>
+                <p-fileUpload #imageUpload id="imageFileUpload" name="imageFileUpload"
+                  [chooseLabel]="'newObject.form.imgSelect' | translate"
+                  [showUploadButton]="false"
+                  (onClear)="clearSelectedImage()"
+                  (onSelect)="onSelectImage($event)"
+                  [invalidFileTypeMessageDetail]="'newObject.errors.img' | translate"
+                  [multiple]="false" accept="image/*"
+                  aria-labelledby="imageFileUpload-label"
+                  [attr.aria-describedby]="getImageUploadDescribedBy()"
+                  styleClass="load-oa-cover-fileupload">
+                  <ng-template pTemplate="header" let-chooseCallback="chooseCallback">
+                    <p-button [label]="'newObject.form.imgSelect' | translate" icon="pi pi-plus"
+                      type="button"
+                      [ariaLabel]="'newObject.form.selectCoverImageAriaLabel' | translate"
+                      styleClass="p-fileupload-choose-button"
+                      (onClick)="chooseCallback()">
+                    </p-button>
+                  </ng-template>
+                  <ng-template pTemplate="content"></ng-template>
+                </p-fileUpload>
+                @if (getErrorFormRequired('img')) {
+                  <small id="image-required-error"
+                  class="p-error">{{'newObject.errors.imgHelp' | translate}}</small>
+                }
+                @if (messagesError == true) {
+                  <small id="image-error"
+                  class="p-error">{{'newObject.infoErrorImage' | translate}}</small>
+                }
+              </div>
+            </div>
+          </section>
+              <div class="load-oa-form-actions">
+                <p-button type="submit" icon="pi pi-check"
+                  styleClass="load-oa-submit-button"
+                  [loading]="loading"
+                  [disabled]="loading"
+                  [label]="'newObject.form.btnSubmit' | translate">
+                </p-button>
+                <p-button type="button" icon="pi pi-times"
+                  [label]="'newObject.form.imgCancel' | translate"
+                  styleClass="p-button-secondary"
+                  [disabled]="loading"
+                  (onClick)="cancelLoadOa()">
+                </p-button>
+              </div>
+            </form>
+          }
+          } @else {
+            @if (spinner === false) {
+              <div class="message-create">
+                <p class="p-mt-2 message-create__title">{{'newObject.infoLoadFile' | translate}}</p>
+                <p class="message-create__description">{{'newObject.form.descriptionAlert' | translate}}</p>
+              </div>
+            }
+            @if (spinner === true) {
+              <div class="message-spinner">
+                <p-progressSpinner></p-progressSpinner>
+              </div>
+            }
+          }
+        }
 
-                        <p-button type="submit" [label]="'newObject.form.btnSubmit' | translate"></p-button>
-                </form>
+        <p-toast></p-toast>
 
 
-        </ng-container>
-        <ng-template #dataTemplate>
-                <h5>{{'newObject.infoLoadFile' | translate}}</h5>
-        </ng-template>
 
-</ng-template>
-
-<p-toast></p-toast>

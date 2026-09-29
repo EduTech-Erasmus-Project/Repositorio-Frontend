@@ -1,40 +1,155 @@
+.comments-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.comments-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(59, 91, 104, 0.08);
+}
+
 .comment-form {
-  text-align: right;
-  textarea {
-    width: 100%;
-    resize: vertical;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem;
+  border: 1px solid rgba(59, 91, 104, 0.14);
+  border-radius: 18px;
+  background: #f8fafc;
+}
+
+.comment-form-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.comment-form-user-text {
+  min-width: 0;
+
+  strong {
+    display: block;
+    color: #27485b;
+    font-size: 0.96rem;
   }
+}
+
+.comment-textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 7rem;
+}
+
+.comment-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.comment-messages {
+  margin-top: -0.25rem;
+}
+
+:host ::ng-deep .comment-message-spacer {
+  margin-top: 0.5rem;
 }
 
 .comments {
-  .comment-item {
-    display: flex;
-    margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 0.2rem;
+}
 
-    .cooment-detail {
-      h6 {
-        margin: 0;
-      }
-      span {
-        opacity: 0.4;
-        font-size: 0.8rem;
-      }
-      p {
-        margin-top: 5px;
-      }
-    }
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(59, 91, 104, 0.12);
+}
+
+.comment-detail {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+
+  h6 {
+    margin: 0;
+    font-size: 0.98rem;
+    color: #1f3342;
+  }
+
+  span {
+    flex-shrink: 0;
+    opacity: 0.65;
+    font-size: 0.78rem;
   }
 }
 
-:host ::ng-deep .p-avatar {
-  img {
-    border-radius: 50%;
-  }
+.comment-detail p {
+  margin: 0;
+  color: #314b5f;
+  line-height: 1.6;
+  word-break: break-word;
 }
 
-.comments-empty{
-  //background-color: red;
+:host ::ng-deep .p-avatar img {
+  border-radius: 50%;
+}
+
+.comments-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1.5rem 1rem;
+  border: 1px dashed rgba(59, 91, 104, 0.18);
+  border-radius: 18px;
   text-align: center;
-  margin: 20px 0;
-  opacity: 0.5;
+  color: rgba(39, 72, 91, 0.7);
+
+  i {
+    font-size: 1.5rem;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .comment-form {
+    padding: 0.9rem;
+  }
+
+  .comment-form-actions {
+    flex-direction: column;
+  }
+
+  .comment-form-actions > * {
+    width: 100%;
+  }
+
+  .comment-item {
+    gap: 0.75rem;
+  }
+
+  .comment-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
 }

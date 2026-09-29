@@ -1,274 +1,243 @@
-<div class="main-content">
-    <div class="p-grid">
-        <div *ngIf="!validtotal">
-            <h1>Informe de Evaluación Accesibilidad</h1>
-        </div>
-        <div *ngIf="validtotal">
-            <h1>Informe de Evaluación Adaptabilidad</h1>
-        </div>
-        <div class="p-col-12 p-md-12">
-            <div class="accordion-body">
-                <div class="card">
-                    <h3><b>Título:</b> {{objectData?.slug}}</h3>
-                    <div class="p-grid">
-                        <div class="p-col-12 p-md-1">
-                            <p-avatar severity="success" styleClass="p-mr-9" label="{{objectData?.rating | number:'1.1-2'}}" size="xlarge" [style]="{'background-color':'cadetblue', 'color': '#ffffff'}"></p-avatar>
-                        </div>
-                        <div class="p-col-12 p-md-7">
-                            <li><a><FONT SIZE=3><b>Áreas de Conocimiento:</b> {{objectData?.knowledge_area.name}}</FONT><i></i></a></li>
-                            <li><a><FONT SIZE=3><b>Desarrollado por:</b> {{objectData?.user_created.first_name}} {{objectData?.user_created.last_name}}</FONT><i></i></a></li>
-                            <li><a><FONT SIZE=3><b>Fecha de Publicación:</b> {{objectData?.created | date:'MM/dd/yyyy'}}</FONT><i></i></a></li>
-                            <li><a><FONT SIZE=3><b>Cobertura:</b> {{objectData?.general_coverage}}</FONT><i></i></a></li>
-                            <li><a><FONT SIZE=3><b>Requerimientos:</b> {{objectData?.technical_installationRremarks}}</FONT><i></i></a></li>
-                        </div>
-                        <div class="p-col-12 p-md-4">
-                            <img width="150" height="135" align="right" loading="lazy" [src]="objectData?.avatar">  
-                    </div> 
-                </div>
-            </div>
-            <div>
-                <p>
-                    <a><b>Descripcion:</b><a>{{objectData?.general_description}}</a></a><br>
-                    <a><b>Objetivo:</b> {{objectData?.educational_description}}</a><br>
-                    <a><b>Palabras Clave:</b> {{objectData?.general_keyword}}</a><br>
-                    <a><b>Ubicación técnica :</b> {{objectData?.technical_location}}</a><br>
-                    <a><b>Catálogo :</b> {{objectData?.relation_catalog}}</a><br>
-                    <a><b>Dificultad :</b> {{objectData?.educational_difficulty}}</a><br>
-                    <a><b>Idioma:</b> {{objectData?.general_language}}</a><br>
-                    <a *ngIf="!validtotal"><b>Observaciones del Experto:</b> {{observationexpert}}</a><br>
-                    <a *ngIf="validtotal"><b>Observaciones del Estudiante:</b> {{observationstudent}}</a><br>
-                    
-                </p> 
-            </div><br>
-            <div *ngIf="!validtotal">
-                <div class="card">
-                    <p-tabView>
-                        <p-tabPanel leftIcon="pi pi-comments" header="Bueno" tooltip="{{topyes}}">
-                            <h5><a>Aspectos Positivos de la Evaluacion</a></h5>
-                                <div *ngFor="let item of resultsEv">
-                                    <div *ngFor="let item2 of item.concept_evaluations">
-                                        <h5><a>{{item2.evaluation_concept}}</a></h5>
-                                        <div *ngFor="let item3 of item2.question_evaluations">
-                                            <ng-container *ngIf="item3.qualification=='Si'; else editTemplate">
-                                                <ul>
-                                                    <li>
-                                                        <a>{{item3.interpreter_yes}}.</a>
-                                                    </li>
-                                                </ul>
-                                            </ng-container>   
-                                            <ng-template #editTemplate>
-                                            </ng-template>
-                                        </div>
-                                        <br>
-                                    </div>
-                                </div>
-                        </p-tabPanel>
-                        <p-tabPanel leftIcon="pi pi-comments" header="Regular" tooltip="{{toppartially}}">
-                            <h5><a>Aspectos Regulares de la Evaluacion</a></h5>
-                            <div *ngFor="let item of resultsEv">
-                                <div *ngFor="let item2 of item.concept_evaluations">
-                                    <h5><a>{{item2.evaluation_concept}}</a></h5>
-                                    <div *ngFor="let item3 of item2.question_evaluations">
-                                        <ng-container *ngIf="item3.qualification=='Parcialmente'; else editTemplate">
-                                            <ul>
-                                                <li>
-                                                    <a>{{item3.interpreter_partially}}.</a>
-                                                </li>
-                                            </ul>
-                                        </ng-container>   
-                                        <ng-template #editTemplate>
-                                            
-                                        
-                                        </ng-template>
-                                    </div>
-                                    <br>
-                                </div>
-                            </div>
-                        </p-tabPanel>
-                        <p-tabPanel leftIcon="pi pi-comments" header="Malo" tooltip="{{topno}}">
-                            <h5><a>Aspectos de la Evaluacion mal implementados </a></h5>
-                            <div *ngFor="let item of resultsEv">
-                                <div *ngFor="let item2 of item.concept_evaluations">
-                                    <h5><a>{{item2.evaluation_concept}}</a></h5>
-                                    <div *ngFor="let item3 of item2.question_evaluations">
-                                        <ng-container *ngIf="item3.qualification=='No'; else editTemplate">
-                                            <ul>
-                                                <li>
-                                                    <a>{{item3.interpreter_no}}.</a>
-                                                </li>
-                                            </ul>
-                                        </ng-container>   
-                                        <ng-template #editTemplate>
-                                        </ng-template>
-                                    </div>
-                                    <br>
-                                </div>
-                            </div>
-                        </p-tabPanel>
-                        <p-tabPanel  leftIcon="pi pi-book" header="General">
-                            <p-panel header="Resumen de Metadatos">
-                                <div>
-                                    <a>A continuacion se muestran aquellos metadatos que estan incluidos dentro del objeto
-                                        de aprendizaje llamado {{objectData?.slug}}, y aquelos metadatos identificados por parte de 
-                                        la evaluacion realizada por el experto.</a>
-                                </div><br>
-
-                                <div class="accordion-body">
-                                    <div class="card">
-                                        <div class="p-grid">
-                                            <div class="p-col-12 p-md-6">
-                                                <h6><a>Resiltado Calificacion Areas de Evaluacion</a></h6>
-                                                <div *ngFor="let item of resultsEv " class="tableP">
-                                                    <div *ngFor="let item2 of item.concept_evaluations">
-                                                        <li><a><b>{{item2.evaluation_concept}}: </b>{{item2.average | number:'1.1-2'}}</a></li>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="p-col-12 p-md-6">
-                                                <b><a>Peligros de Accesibilidad Identificados</a></b>
-                                                <div *ngFor="let item of resultsEv">
-                                                    <div *ngFor="let item2 of item.concept_evaluations">
-                                                        <div *ngFor="let item3 of item2.question_evaluations">
-                                                            <ng-container *ngIf="item3.schema.includes('accessibilityHazard:') ; else editTemplate">
-                                                                <ul>
-                                                                    <li>
-                                                                        <a>{{item3.schema}}.</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </ng-container>
-                                                            <ng-template #editTemplate >
-                                                                
-                                                            </ng-template>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div align="center">
-                                    <p align="center">
-                                        <a>Tabla Comparativa de Metadatos de Accesibilidad</a>
-                                    </p>
-                                    <div class="p-col-12 p-md-12" align="center">
-                                        <div *ngIf="colsAnswer?.length>0">
-                                            <p-table class="table" [columns]="te" [value]="te" styleClass="p-datatable-gridlines">
-                                                <ng-template pTemplate="header" let-columns>
-                                                    <tr>
-                                                        <th>Metadatos</th>
-                                                        <th>Concuerda con el Experto</th>
-                                                        <th>Incluir/Quitar</th>
-                                                    </tr>
-                                                </ng-template>
-                                                <ng-template pTemplate="body" let-columns="columns">
-                                                        <tr *ngFor="let item of colsAnswer">
-                                                            <td class="tdid">
-                                                                {{item.id}}
-                                                            </td>
-                                                            <td class="tdid">
-                                                                {{item.concuerdan}}
-                                                            </td>
-                                                            <td class="tdid">
-                                                                {{item.faltan}}
-                                                            </td>
-                                                        </tr>
-                                                </ng-template>
-                                            </p-table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div><br>
-                                    <a>Para realizar la correccion de los metadatos te recomendamos usar la herramienta de  lompad Web para 
-                                        tus objetos de aprendizaje</a><br>
-                                    <A HREF="https://www.google.com" target="_blank"><a><b>Enlace-></b></a>https://www.google.com</A>
-                                </div>
-                            </p-panel>
-                            
-                            
-                        </p-tabPanel>
-                    </p-tabView>
-                    </div>
-                </div>
-            <div *ngIf="validtotal">
-                <h5>Estudiante</h5>
-                    <p-tabView>
-                        <p-tabPanel header="Bueno" leftIcon="pi pi-comments" tooltip="{{Stopyes}}">
-                            <h5><a>Aspectos Positivos de la Evaluacion del alumno</a></h5>
-                                <div *ngFor="let item of resultsEvStudent">
-                                    <div *ngFor="let item2 of item.evaluation_students">
-                                        <h5><a>{{item2.evaluation_principle.principle}}</a></h5>
-                                        <div *ngFor="let item3 of item2.principle_gl">
-                                            <div *ngFor="let item4 of item3.guideline_evaluations">
-                                                <ng-container *ngIf="item4.qualification=='Si'; else editTemplate">
-                                                    <a><b>Pauta de Evaluacion-></b>{{item3.guideline_pr}}:</a>
-                                                    <ul>
-                                                        <ol><a>{{item4.interpreter_st_yes}}</a></ol>
-                                                    </ul>
-                                                </ng-container>   
-                                                <ng-template #editTemplate>
-                                                </ng-template>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </div>
-                                </div>
-                        </p-tabPanel>
-                        <p-tabPanel header="Regular" leftIcon="pi pi-comments" tooltip="{{Stoppartially}}">
-                            <h5><a>Aspectos Regulares de la evaluacion identificados por el estudiante</a></h5>
-                                <div *ngFor="let item of resultsEvStudent">
-                                    <div *ngFor="let item2 of item.evaluation_students">
-                                        <h5><a>{{item2.evaluation_principle.principle}}</a></h5>
-                                        <div *ngFor="let item3 of item2.principle_gl">
-                                            
-                                            <div *ngFor="let item4 of item3.guideline_evaluations">
-                                                <ng-container *ngIf="item4.qualification=='Parcialmente'; else editTemplate">
-                                                    <li  type="square"><a><b>Pauta de Evaluacion-></b>{{item3.guideline_pr}}:</a></li>
-                                                    <ul>
-                                                        <ol><a>{{item4.interpreter_st_partially}}</a></ol>
-                                                    </ul>
-                                                </ng-container>   
-                                                <ng-template #editTemplate>
-                                                </ng-template>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </div>
-                                </div>
-                        </p-tabPanel>
-                        <p-tabPanel header="Malo" leftIcon="pi pi-comments" tooltip="{{Stopno}}">
-                            <h5><a>Aspectos negativos identificados por el estudiante</a></h5>
-                                <div *ngFor="let item of resultsEvStudent">
-                                    <div *ngFor="let item2 of item.evaluation_students">
-                                        <h5><a>{{item2.evaluation_principle.principle}}</a></h5>
-                                        <div *ngFor="let item3 of item2.principle_gl">
-                                            <div *ngFor="let item4 of item3.guideline_evaluations">
-                                                <ng-container *ngIf="item4.qualification=='No'; else editTemplate">
-                                                    <li type="square"><a><b>Pauta de Evaluacion-></b>{{item3.guideline_pr}}:</a></li>
-                                                    <ul>
-                                                        <ol><a>{{item4.interpreter_st_no}}</a></ol>
-                                                    </ul>
-                                                </ng-container>   
-                                                <ng-template #editTemplate>
-                                                </ng-template>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </div>
-                                </div>
-                        </p-tabPanel>
-                    </p-tabView>
-                    </div>
-                </div>
-
-
-
-
-
-
-
-        </div>
+<div class="reports-page">
+  @if (loading) {
+    <div class="reports-page__loading">
+      <p-skeleton width="12rem" height="1.25rem" borderRadius="999px"></p-skeleton>
+      <p-skeleton width="28rem" height="3rem" styleClass="mb-3"></p-skeleton>
+      <p-skeleton width="100%" height="18rem" borderRadius="24px"></p-skeleton>
     </div>
+  } @else {
+    <section class="reports-hero">
+      <div class="reports-hero__copy">
+        <span class="reports-hero__eyebrow">{{ reportModeLabel }}</span>
+        <h1 class="reports-hero__title">{{ reportHeading }}</h1>
+        <p class="reports-hero__subtitle">{{ reportModeDescription }}</p>
+      </div>
+      <div class="reports-hero__badge">
+        <p-avatar
+          [label]="ratingLabel"
+          size="xlarge"
+          [style]="{'background-color':'#375d78', 'color': '#ffffff'}">
+        </p-avatar>
+        <span class="reports-hero__badge-label">{{ objectTitle }}</span>
+      </div>
+    </section>
+    @if (objectData; as object) {
+      <section class="reports-overview">
+        <div class="reports-overview__top">
+          <div class="reports-overview__preview">
+            <img [src]="object.avatar" [alt]="objectTitle" loading="lazy">
+          </div>
+          <div class="reports-overview__content">
+            <div class="reports-overview__heading">
+              <h2>{{ objectTitle }}</h2>
+              <p-tag
+                [value]="isStudentReport ? 'Adaptabilidad' : 'Accesibilidad'"
+                [severity]="isStudentReport ? 'warning' : 'success'"
+                [rounded]="true">
+              </p-tag>
+            </div>
+            <div class="reports-meta-grid">
+              @for (item of objectInfoRows; track item) {
+                <article class="reports-meta-card">
+                  <span class="reports-meta-card__label">{{ item.label }}</span>
+                  <span class="reports-meta-card__value">
+                    @if (item.label === 'Fecha de publicacion') {
+                      {{ item.value | date:'MM/dd/yyyy' }}
+                    } @else {
+                      {{ item.value }}
+                    }
+                  </span>
+                </article>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="reports-summary-grid">
+          @for (item of objectSummaryRows; track item) {
+            <article class="reports-summary-card">
+              <span class="reports-summary-card__label">{{ item.label }}</span>
+              <p class="reports-summary-card__value">{{ item.value }}</p>
+            </article>
+          }
+        </div>
+        @if (currentObservation) {
+          <div class="reports-observation">
+            <span class="reports-observation__label">
+              {{ isStudentReport ? 'Observaciones del estudiante' : 'Observaciones del experto' }}
+            </span>
+            <p class="reports-observation__value">{{ currentObservation }}</p>
+          </div>
+        }
+      </section>
+    }
+    @if (activeReportLoadError) {
+      <section class="reports-feedback-card reports-feedback-card--error">
+        <i class="pi pi-exclamation-triangle reports-feedback-card__icon" aria-hidden="true"></i>
+        <div class="reports-feedback-card__content">
+          <h2>{{ 'reportsPage.errorTitle' | translate }}</h2>
+          <p>{{ 'reportsPage.errorDescription' | translate }}</p>
+        </div>
+        <p-button
+          icon="pi pi-refresh"
+          [label]="'buttons.refresh' | translate"
+          (onClick)="reloadCurrentReport()"
+        ></p-button>
+      </section>
+    } @else if (showEmptyReportState) {
+      <section class="reports-feedback-card">
+        <i class="pi pi-inbox reports-feedback-card__icon" aria-hidden="true"></i>
+        <div class="reports-feedback-card__content">
+          <h2>{{ 'reportsPage.emptyTitle' | translate }}</h2>
+          <p>{{ 'reportsPage.emptyDescription' | translate }}</p>
+        </div>
+      </section>
+    } @else if (!isStudentReport) {
+      <section class="reports-section">
+        <div class="reports-stats">
+          @for (item of expertStats; track item) {
+            <article class="reports-stat-card">
+              <span class="reports-stat-card__label">{{ item.label }}</span>
+              <span class="reports-stat-card__value">{{ item.value }}</span>
+            </article>
+          }
+        </div>
+        <p-tabs styleClass="reports-tabview" [scrollable]="true" [showNavigators]="true" [value]="0">
+          <p-tablist>
+            @for (tab of expertTabs; track tab; let i = $index) {
+              <p-tab [value]="i">{{ tab.label + ' (' + tab.count + ')' }}</p-tab>
+            }
+            <p-tab [value]="expertTabs.length">Metadatos</p-tab>
+          </p-tablist>
+          <p-tabpanels>
+            @for (tab of expertTabs; track tab; let i = $index) {
+              <p-tabpanel [value]="i">
+                <p class="reports-tab-description">{{ tab.description }}</p>
+                @if (tab.groups.length > 0) {
+                  @for (group of tab.groups; track group) {
+                    <section class="reports-group">
+                      <h3>{{ group.title }}</h3>
+                      <ul>
+                        @for (item of group.items; track item) {
+                          <li>{{ item }}</li>
+                        }
+                      </ul>
+                    </section>
+                  }
+                } @else {
+                  <p class="reports-empty">No hay hallazgos para esta categoria.</p>
+                }
+              </p-tabpanel>
+            }
+            <p-tabpanel [value]="expertTabs.length">
+              <div class="reports-metadata-grid">
+                <article class="reports-panel">
+                  <h3>Promedios por area</h3>
+                  @if (expertConceptAverages.length > 0) {
+                    <ul>
+                      @for (item of expertConceptAverages; track item) {
+                        <li>
+                          <span>{{ item.label }}</span>
+                          <strong>{{ item.value | number:'1.1-2' }}</strong>
+                        </li>
+                      }
+                    </ul>
+                  } @else {
+                    <p class="reports-empty">No hay promedios disponibles.</p>
+                  }
+                </article>
+                <article class="reports-panel">
+                  <h3>Peligros de accesibilidad identificados</h3>
+                  @if (metadataHazards.length > 0) {
+                    <ul>
+                      @for (hazard of metadataHazards; track hazard) {
+                        <li>{{ hazard }}</li>
+                      }
+                    </ul>
+                  } @else {
+                    <p class="reports-empty">No se identificaron peligros de accesibilidad.</p>
+                  }
+                </article>
+              </div>
+              @if (metadataRows.length > 0) {
+                <article class="reports-panel">
+                  <div class="reports-panel__header">
+                    <div>
+                      <h3>Comparacion de metadatos</h3>
+                      <p>Relacion entre los metadatos del OA y lo observado por el experto.</p>
+                    </div>
+                  </div>
+                  <p-table [value]="metadataRows" styleClass="p-datatable-gridlines reports-table">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th>Metadato</th>
+                        <th>Concuerda</th>
+                        <th>Accion sugerida</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-row>
+                      <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.matches }}</td>
+                        <td>{{ row.suggestedAction }}</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </article>
+              }
+              <article class="reports-panel reports-panel--tools">
+                <h3>Herramientas relacionadas</h3>
+                <p>
+                  Puedes complementar este analisis con
+                  <a href="https://oeradap.edutech-project.org/" target="_blank" rel="noopener noreferrer">OER-ADAP</a>
+                  para adaptar objetos de aprendizaje, y con
+                  <a href="https://lompads.edutech-project.org/#/" target="_blank" rel="noopener noreferrer">LOMPAD-WEB</a>
+                  para revisar y corregir metadatos.
+                </p>
+              </article>
+            </p-tabpanel>
+          </p-tabpanels>
+        </p-tabs>
+      </section>
+    } @else {
+      <section class="reports-section">
+        <div class="reports-stats">
+          @for (item of studentStats; track item) {
+            <article class="reports-stat-card">
+              <span class="reports-stat-card__label">{{ item.label }}</span>
+              <span class="reports-stat-card__value">{{ item.value }}</span>
+            </article>
+          }
+        </div>
+        <p-tabs styleClass="reports-tabview" [scrollable]="true" [showNavigators]="true" [value]="0">
+          <p-tablist>
+            @for (tab of studentTabs; track tab; let i = $index) {
+              <p-tab [value]="i">{{ tab.label + ' (' + tab.count + ')' }}</p-tab>
+            }
+          </p-tablist>
+          <p-tabpanels>
+            @for (tab of studentTabs; track tab; let i = $index) {
+              <p-tabpanel [value]="i">
+                <p class="reports-tab-description">{{ tab.description }}</p>
+                @if (tab.groups.length > 0) {
+                  @for (group of tab.groups; track group) {
+                    <section class="reports-group">
+                      <h3>{{ group.title }}</h3>
+                      <ul>
+                        @for (item of group.items; track item) {
+                          <li>{{ item }}</li>
+                        }
+                      </ul>
+                    </section>
+                  }
+                } @else {
+                  <p class="reports-empty">No hay observaciones registradas en esta categoria.</p>
+                }
+              </p-tabpanel>
+            }
+          </p-tabpanels>
+        </p-tabs>
+      </section>
+    }
+  }
+
 </div>
-
-
-

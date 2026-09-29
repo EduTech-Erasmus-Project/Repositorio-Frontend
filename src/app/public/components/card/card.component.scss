@@ -1,12 +1,75 @@
-  .imagen{
-    height: 15rem;
+/*
+button-expert modelo para el boton
+*/
+:host {
+  display: block;
+}
+
+:host.card-host--teacher {
+  height: auto !important;
+}
+
+.card-badges {
+  display: grid;
+  gap: 0.45rem;
+  left: 1rem;
+  position: absolute;
+  top: 1rem;
+  z-index: 2;
+}
+
+.card-badges .rating,
+.card-badges .rating-heart {
+  left: auto;
+  position: relative;
+  top: auto;
+}
+
+.rating-heart {
+  display: flex;
+  width: 3.5rem;
+  background-color: var(--primary-color);
+  padding: 5px 15px;
+  border-radius: 15px;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+
+  i {
+    font-size: 13px;
   }
 
-.button-read{
-  
+  span {
+    font-size: 10px;
+    margin-left:4px;
+  }
+}
+
+
+.button-expert {
+  padding-top: 1em;
+}
+
+.card-rating-trigger {
+  width: 100%;
+}
+
+.oa-status-badge {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0.35rem 0 0.85rem;
+}
+
+.imagen {
+  height: 15rem;
+}
+
+.button-read {
+
   position: relative;
-  padding: 0.6rem  3rem 0.6rem 1rem;
-  i{
+  padding: 0.6rem 3rem 0.6rem 1rem;
+
+  i {
     background-color: var(--primary-color);
     padding: 0.5rem;
     border-radius: 50%;
@@ -16,73 +79,515 @@
   }
 }
 
-:host ::ng-deep .p-card-content{
+:host ::ng-deep .p-card-content {
   padding: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
 }
 
-.card-content{
+.card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
   height: 100%;
- 
-  :host ::ng-deep .p-card-shadow{
-    height: 100%;
-    //position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  :host ::ng-deep .p-card-body{
-    //height: 100%;
-    //background-color: red;
-    padding: 15px;
-    
-
-  }
+  min-height: 0;
 }
 
-:host ::ng-deep .p-card-footer{
+.card-content--teacher {
+  height: auto;
+}
+
+.card-title-spacer {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+:host ::ng-deep .p-card-footer {
   text-align: center;
+  margin-top: 0.35rem;
+  padding-top: 0.35rem;
 }
 
-:host ::ng-deep .p-rating{
-  .p-rating-icon{
+:host ::ng-deep .p-card-shadow {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+}
+
+:host ::ng-deep .p-card-shadow .p-card-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: 15px;
+  min-height: 0;
+}
+
+:host ::ng-deep .p-divider.p-divider-horizontal {
+  margin: 0.75rem 0 0.9rem;
+}
+
+:host ::ng-deep .p-card-shadow--teacher {
+  height: auto !important;
+  display: block;
+}
+
+:host ::ng-deep .p-card-shadow--teacher .p-card-body {
+  height: auto !important;
+  min-height: 0;
+  display: block;
+  padding: 12px;
+}
+
+:host ::ng-deep .p-card-shadow--teacher .p-card-footer {
+  margin-top: 0.35rem;
+}
+
+:host ::ng-deep .p-rating {
+  .p-rating-icon {
     cursor: text;
   }
-  
-}
 
-:host ::ng-deep .p-card-shadow{
-  //background-color: red;
-  position: relative;
 }
 
 :host ::ng-deep .p-card-title {
   font-size: 1em;
 }
 
-.rating{
+.card-title-link {
+  color: #000;
+  display: -webkit-box;
+  overflow: hidden;
+  text-decoration: none;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.card-author,
+.card-knowledge-area,
+.card-observation {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.card-author {
+  -webkit-line-clamp: 2;
+  line-height: 1.45;
+  margin-bottom: 0.35rem;
+}
+
+.card-knowledge-area {
+  line-height: 1.45;
+  margin-bottom: 0;
+  -webkit-line-clamp: 2;
+}
+
+.card-observation-label {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.card-observation {
+  margin-bottom: 0;
+  -webkit-line-clamp: 3;
+}
+
+.card-observation-panel {
+  margin-top: 0.35rem;
+}
+
+.card-observation-scroll {
+  min-width: 0;
+}
+
+.rating {
   display: flex;
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  width: 5rem;
+  width: 4rem;
   background-color: var(--primary-color);
   padding: 5px 15px;
   border-radius: 15px;
   align-items: center;
   justify-content: space-between;
   color: #fff;
+
+  i {
+    font-size: 12px;
+  }
+  span {
+    font-size: 10px;
+    margin-left: 4px;
+  }
 }
 
-.classBut{
+.classBut {
   text-align: center;
 }
 
-.pi{
+.pi {
   text-align: center;
-    background-color: var(--primary-color) ;
-    color: white;
+  background-color: var(--primary-color);
+  color: white;
 }
 
-.buttons{
+.buttons {
   margin-bottom: 10px;
+}
+
+:host.card-host--teacher .buttons {
+  margin-bottom: 0;
+}
+
+:host.card-host--teacher .p-card-title {
+  margin-bottom: 0.15rem;
+}
+
+:host.card-host--teacher .card-title-link {
+  -webkit-line-clamp: 3;
+}
+
+:host.card-host--teacher .card-author {
+  min-height: 0;
+  margin-bottom: 0.25rem;
+}
+
+:host.card-host--teacher .oa-status-badge {
+  display: inline-flex;
+  align-items: center;
+  margin: 0.1rem 0 0.35rem;
+}
+
+:host.card-host--teacher .oa-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+:host.card-host--teacher .oa-status-help {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: help;
+}
+
+:host.card-host--teacher .oa-status-help .pi {
+  background: transparent;
+  color: inherit;
+  font-size: 0.85rem;
+}
+
+:host.card-host--teacher .oa-status-help:hover,
+:host.card-host--teacher .oa-status-help:focus-visible {
+  outline: none;
+}
+
+:host.card-host--teacher .card-observation-label {
+  margin: 0 0 0.35rem;
+}
+
+:host.card-host--teacher .card-observation {
+  margin: 0;
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+  white-space: pre-wrap;
+  line-height: 1.45;
+}
+
+:host.card-host--teacher ::ng-deep .p-divider.p-divider-horizontal {
+  margin: 0.25rem 0 0.4rem;
+}
+
+:host.card-host--teacher .button-expert {
+  padding-top: 0;
+}
+
+:host.card-host--teacher .button-adap {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+:host.card-host--teacher .card-observation-panel--teacher {
+  margin-top: 0.35rem;
+  margin-bottom: 0.25rem;
+  padding: 0.6rem 0.75rem;
+  background: #f7fafc;
+  border: 1px solid #e3ebf2;
+  border-radius: 14px;
+}
+
+:host.card-host--teacher .card-observation-scroll {
+  max-height: 5.75rem;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+
+:host.card-host--teacher .card-observation-scroll::-webkit-scrollbar {
+  width: 0.45rem;
+}
+
+:host.card-host--teacher .card-observation-scroll::-webkit-scrollbar-thumb {
+  background: rgba(55, 93, 120, 0.35);
+  border-radius: 999px;
+}
+
+:host.card-host--teacher .teacher-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+:host.card-host--teacher .teacher-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+:host.card-host--teacher .teacher-card-actions__row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+:host.card-host--teacher .teacher-card-action-block {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+}
+
+:host.card-host--teacher .teacher-card-note {
+  margin: 0;
+  color: #52697a;
+  line-height: 1.35;
+  text-align: center;
+}
+
+:host.card-host--teacher .teacher-card-note--surface {
+  background: #f7fafc;
+  border: 1px solid #e3ebf2;
+  border-radius: 14px;
+  padding: 0.65rem 0.75rem;
+}
+
+:host.card-host--teacher ::ng-deep .teacher-card-action-button {
+  width: 100%;
+}
+
+:host.card-host--teacher ::ng-deep .teacher-card-action-button .p-button {
+  justify-content: center;
+  width: 100%;
+}
+
+:host.card-host--teacher .card-evaluation-empty {
+  display: grid;
+  gap: 0.5rem;
+  min-height: 16rem;
+  align-content: center;
+  text-align: center;
+  padding: 1rem;
+
+  h4,
+  p {
+    margin: 0;
+  }
+
+  p {
+    color: #52697a;
+    line-height: 1.5;
+  }
+}
+
+:host.card-host--teacher .teacher-card-progress {
+  margin-top: 0.15rem;
+}
+
+:host.card-host--teacher .teacher-card-read {
+  margin-top: 0.15rem;
+}
+
+.expert-view-eavluation {
+  text-align: center;
+  margin-bottom: 0.8rem;
+}
+
+.student-view-evaluation {
+  text-align: center;
+  margin: 0 0 0.35rem;
+}
+
+:host ::ng-deep .button-read {
+  width: 100%;
+
+}
+
+:host ::ng-deep .button-danger {
+  color: red;
+  margin: 0px 5px;
+}
+
+:host ::ng-deep .button-edit {
+  color: #28a745;
+  margin: 0px 5px;
+}
+
+
+.class-img {
+  display: block;
+  height: clamp(11rem, 20vh, 15rem);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.adapted_oer {
+  display: flex;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  left: auto;
+  background-color: img();
+  padding: 5px 5px;
+  border-radius: 15px;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+
+  img {
+    width: clamp(1.8rem, 3.2vw, 2.4rem);
+  }
+}
+
+.button-adap {
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+
+:host ::ng-deep .p-popover {
+  max-width: min(42rem, calc(100vw - 2rem));
+}
+
+:host ::ng-deep .p-popover .p-popover-content {
+  padding: 0;
+}
+
+:host ::ng-deep .card-rating-popover {
+  border: 1px solid #d8e4ed;
+  border-radius: 18px;
+  box-shadow: 0 18px 34px rgba(26, 54, 73, 0.16);
+  overflow: hidden;
+}
+
+:host ::ng-deep .card-rating-popover .p-popover-content {
+  background: linear-gradient(180deg, #fbfdff, #f4f8fb);
+  padding: 0.55rem;
+}
+
+:host ::ng-deep .card-rating-popover:before,
+:host ::ng-deep .card-rating-popover:after {
+  border-bottom-color: #d8e4ed !important;
+}
+
+:host ::ng-deep .card-evaluation-dialog {
+  .p-dialog-header {
+    padding: 1rem 1.25rem 0.85rem;
+  }
+
+  .p-dialog-title {
+    color: #243847;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .p-dialog-content {
+    padding: 1rem 1.25rem 1.25rem;
+    max-height: min(78vh, 48rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .p-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 0.95rem 1.25rem 1.1rem;
+    border-top: 1px solid #eef2f6;
+
+    .p-button {
+      justify-content: center;
+    }
+  }
+}
+
+::ng-deep .evaluation-dialog-mask {
+  background: rgba(15, 23, 42, 0.58) !important;
+  backdrop-filter: blur(1px);
+}
+
+:host ::ng-deep .animate__fadeIn {
+  animation-name: none !important;
+}
+
+@media (max-width: 767px) {
+  .card-badges {
+    top: 0.7rem;
+    left: 0.7rem;
+    gap: 0.35rem;
+  }
+
+  .class-img {
+    height: clamp(10rem, 24vh, 13rem);
+  }
+
+  .button-read {
+    min-height: 2.9rem;
+    padding-left: 0.9rem;
+    padding-right: 3.1rem;
+  }
+
+  .card-author,
+  .card-knowledge-area {
+    min-height: 0;
+  }
+
+  :host ::ng-deep .card-evaluation-dialog {
+    .p-dialog-header,
+    .p-dialog-content,
+    .p-dialog-footer {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .p-dialog-content {
+      max-height: min(82vh, 48rem);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .rating,
+  .rating-heart {
+    width: auto;
+    min-width: 3rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .adapted_oer {
+    top: 0.45rem;
+    right: 0.45rem;
+    padding: 0.2rem;
+  }
 }

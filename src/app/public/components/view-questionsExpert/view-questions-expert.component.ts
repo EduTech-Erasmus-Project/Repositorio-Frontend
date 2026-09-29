@@ -1,248 +1,178 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
-
-import { Message, MessageService } from "primeng/api";
-import { Subscription } from "rxjs";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormControl, FormRecord, Validators } from "@angular/forms";
+import { firstValueFrom } from "rxjs";
+import { MessageService } from "primeng/api";
 import { ObjectLearning } from "src/app/core/interfaces/ObjectLearning";
+import {
+  ExpertConceptResponse,
+  ExpertEvaluationResultResponse,
+} from "src/app/core/interfaces/api-contracts";
+import { LanguageService } from "src/app/services/language.service";
 import { LearningObjectService } from "src/app/services/learning-object.service";
 import { LoginService } from "src/app/services/login.service";
 import { SearchService } from "src/app/services/search.service";
+
+interface AnswerOption {
+  labelKey: string;
+  value: string;
+}
+
+interface ExpertQuestion {
+  id: number;
+  question: string;
+  description?: string;
+  schema?: string;
+  qualification?: string;
+}
+
+interface ExpertConceptGroup {
+  id: number;
+  label: string;
+  questions: ExpertQuestion[];
+}
+
+type ExpertEvaluationForm = FormRecord<FormControl<string | null>>;
+
+/**
+ * Gestiona el formulario experto de evaluacion del OA en modo crear o actualizar.
+ *
+ * Responsabilidades:
+ * - Construir preguntas agrupadas por concepto desde el backend.
+ * - Persistir respuestas del experto con validacion obligatoria.
+ * - Notificar a la vista contenedora cuando la evaluacion cambia de estado.
+ */
 @Component({
   selector: "app-view-questions-expert",
   templateUrl: "./view-questions-expert.component.html",
   styleUrls: ["./view-questions-expert.component.scss"],
+  standalone: false
 })
 export class ViewQuestionsExpertComponent implements OnInit {
-  @Input() object: ObjectLearning;
+  @Input() object!: ObjectLearning;
   @Output() commentEmit = new EventEmitter<boolean>();
   @Output() commentEmit1 = new EventEmitter<boolean>();
-  @Input() flagQuestionsEx: boolean;
-  public groupedQuestionsEx: any[];
-  public resQuesionsEx: any[];
+  @Input() flagQuestionsEx = false;
 
-  public displayFormRatingExpert: boolean = false;
-  public subscribes: Subscription[] = [];
-  public angForm: FormGroup;
-  public answers: any;
-  public msgs1: Message[];
-  public flagConfirm: boolean;
+  public groupedQuestionsEx: ExpertConceptGroup[] = [];
+  public angForm: ExpertEvaluationForm = new FormRecord<FormControl<string | null>>({});
+  public flagConfirm = false;
+  public updateEvaluationId: number | null = null;
+  public isSaving = false;
+
+  public readonly answerOptions: AnswerOption[] = [
+    { labelKey: "register.yes", value: "Si" },
+    { labelKey: "register.no", value: "No" },
+    { labelKey: "register.partially", value: "Parcialmente" },
+    { labelKey: "register.notApply", value: "No aplica" },
+  ];
 
   constructor(
     private searchService: SearchService,
-    private fb: FormBuilder,
     private learningObject: LearningObjectService,
     private loginService: LoginService,
-    private messageServicee: MessageService
+    private messageServicee: MessageService,
+    private languageService: LanguageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnDestroy(): void {
-    this.subscribes.forEach((subscription) => {
-      subscription.unsubscribe();
-    });
+  ngOnInit(): void {
+    this.createForm();
+    void this.loadData();
   }
 
-  ngOnInit(): void {
-    this.loadData();
-    this.createForm();
+  get isUpdateMode(): boolean {
+    return !!this.flagQuestionsEx;
+  }
+
+  get observation(): FormControl<string | null> | null {
+    return this.angForm.get("observation") as FormControl<string | null> | null;
   }
 
   createForm() {
-    if (this.flagQuestionsEx == false) {
-      this.angForm = this.fb.group({
-        observation: [null, [Validators.required]],
-      });
-    } else if (this.flagQuestionsEx == true) {
-      this.angForm = this.fb.group({});
-    }
+    this.angForm = new FormRecord<FormControl<string | null>>({
+      observation: new FormControl<string | null>(null, { validators: [Validators.required] }),
+    });
   }
 
   async loadData() {
-    if (
-      this.loginService.validateRole("expert") &&
-      this.flagQuestionsEx == false
-    ) {
-      let groupedQex = await this.searchService
-        .geQuestionsExpert()
-        .subscribe((res) => {
-          this.groupedQuestionsEx = res.results.map((item: any) => {
-            return {
-              value: item.id,
-              label: item.concept,
-              items: item.questions.map((item: any) => {
-                return {
-                  value: item.id,
-                  label: item.question,
-                  description: item.description,
-                  schema: item.schema,
-                };
-              }),
-            };
-          });
-          this.groupedQuestionsEx = this.groupedQuestionsEx;
-          this.groupedQuestionsEx.forEach((element) => {
-            element.items.forEach((item) => {
-              this.angForm.addControl(
-                item.value,
-                new FormControl(null, Validators.required)
-              );
-            });
-          });
-        });
-
-      this.subscribes.push(groupedQex);
-    } else if (
-      this.loginService.validateRole("expert") &&
-      this.flagQuestionsEx == true
-    ) {
-      let resultsEval = await this.learningObject
-        .getObjectResultsEvaluation(this.object.id)
-        .subscribe((res) => {
-          //console.log("Ayuda",res)
-          this.groupedQuestionsEx = res.results.map((item: any) => {
-            return {
-              conceptEvaluations: item.concept_evaluations.map((item1: any) => {
-                return {
-                  evaluationConcept: item1.evaluation_concept.concept,
-                  average: item1.average,
-                  questionEvaluations: item1.question_evaluations.map(
-                    (item2: any) => {
-                      return {
-                        value: item2.id,
-                        questions: item2.question,
-                        qualification: item2.qualification,
-                        questionid: item2.question_id,
-                      };
-                    }
-                  ),
-                };
-              }),
-              observation: item.observation,
-              id: item.id,
-            };
-          });
-          //this.commentEmit.emit(true);
-          this.groupedQuestionsEx = this.groupedQuestionsEx;
-          this.groupedQuestionsEx.forEach((element) => {
-            element.conceptEvaluations.forEach((element1) => {
-              element1.questionEvaluations.forEach((element2) => {
-                this.angForm.addControl(
-                  element2.questionid,
-                  new FormControl(element2.qualification, [Validators.required])
-                );
-              });
-            });
-            this.angForm.addControl(
-              "observation",
-              new FormControl(element.observation, [Validators.required])
-            );
-          });
-        });
-      this.subscribes.push(resultsEval);
+    if (!this.loginService.validateRole("expert")) {
+      return;
     }
+
+    if (!this.isUpdateMode) {
+      const res = await firstValueFrom(this.searchService.geQuestionsExpert());
+      this.groupedQuestionsEx = res.map((item) => this.mapExpertConceptGroup(item));
+      this.addQuestionControls(this.groupedQuestionsEx);
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const res = await firstValueFrom(this.learningObject.getObjectResultsEvaluation(this.object.id));
+    this.updateEvaluationId = res[0]?.id ?? null;
+    this.groupedQuestionsEx = this.mapExpertEvaluationGroups(res);
+    this.groupedQuestionsEx.forEach((group) => {
+      group.questions.forEach((question) => {
+        this.addQuestionControl(question.id, question.qualification || null);
+      });
+    });
+    this.observation?.setValue(res[0]?.observation ?? null);
+    this.cdr.detectChanges();
   }
 
   async sendAnswersExcpert() {
-    if (this.angForm.valid) {
-      //let valuesAux = this.groupedQuestionsEx.map((item:any) =>  item.items.map((itemE:any) => itemE.value));
-      /*let vectAux = Object.keys(this.angForm.controls).forEach(key => {
-        let childControl = key;
-       return { id: key,value:this.angForm.get(childControl).value}
-      });*/
-
-      if (this.flagQuestionsEx == false) {
-        let vectAux = Object.entries(this.angForm.value);
-        let vectRe = [];
-        vectAux.forEach((item) => {
-          let regresar = {
-            id: Number(item[0]),
-            value: item[1],
-          };
-          vectRe.push(regresar);
-        });
-        //Eliminamos el ultimo elemento, por las observaciones.
-        vectRe.pop();
-
-        this.answers = {
-          learning_object: this.object.id,
-          results: vectRe,
-          observation: this.angForm.get("observation").value,
-        };
-
-        let sendEval = await this.learningObject
-          .sendQualificationExpert(this.answers)
-          .subscribe(
-            (res) => {
-              //console.log("por", res);
-              this.commentEmit1.emit(true);
-              this.flagConfirm = true;
-              this.ngOnInit();
-              this.showSuccess(
-                "Datos enviados con exito, gracias por realizar la evaluacion"
-              );
-            },
-            (error) => {
-              //console.log("err", error)
-              this.flagConfirm = false;
-            }
-          );
-        this.subscribes.push(sendEval);
-        this.angForm.reset();
-      } else if (this.flagQuestionsEx == true) {
-        let vectAux = Object.entries(this.angForm.value);
-        let vectRe = [];
-
-        vectAux.forEach((item) => {
-          let regresar = {
-            id: Number(item[0]),
-            value: item[1],
-          };
-          vectRe.push(regresar);
-        });
-        //Eliminamos el ultimo elemento, por las observaciones.
-        vectRe.pop();
-
-        this.answers = {
-          id: this.groupedQuestionsEx[0].id,
-          learning_object: this.object.id,
-          results: vectRe,
-          observation: this.angForm.get("observation").value,
-        };
-
-        //console.log("Respuestas", this.answers);
-        //console.log("RespuestasID", this.groupedQuestionsEx[0].id);
-
-        let sendEvalUpdate = await this.learningObject
-          .sendQualificationExpertUpdate(
-            this.answers,
-            this.groupedQuestionsEx[0].id
-          )
-          .subscribe(
-            (res) => {
-              //console.log("por", res);
-              this.showSuccess("Los datos se actualizaron con exito");
-              this.commentEmit.emit(false);
-            },
-            (error) => {
-              console.log("err", error);
-              this.showError(
-                "No se pudo actualizar la informacion correctamente"
-              );
-            }
-          );
-        this.subscribes.push(sendEvalUpdate);
-      }
-    } else {
+    if (this.angForm.invalid || this.isSaving) {
       this.markTouchForm();
-      this.showError("Llenar todos los campos requeridos");
+      if (!this.isSaving) {
+        this.showError(await firstValueFrom(this.languageService.translate.get("object.fillForm")));
+      }
+      return;
+    }
+
+    const payload = {
+      id: this.updateEvaluationId,
+      learning_object: this.object.id,
+      results: Object.entries(this.angForm.getRawValue())
+        .filter(([key]) => key !== "observation")
+        .map(([key, value]) => ({
+          id: Number(key),
+          value,
+        })),
+      observation: this.observation?.value,
+    };
+
+    this.isSaving = true;
+
+    try {
+      if (!this.isUpdateMode) {
+        await firstValueFrom(this.learningObject.sendQualificationExpert(payload));
+        this.commentEmit1.emit(true);
+        this.flagConfirm = true;
+        this.angForm.reset();
+        this.showSuccess(
+          await firstValueFrom(this.languageService.translate.get("object.evaluationMessage"))
+        );
+        return;
+      }
+
+      await firstValueFrom(
+        this.learningObject.sendQualificationExpertUpdate(payload, this.updateEvaluationId as number)
+      );
+      this.showSuccess(
+        await firstValueFrom(this.languageService.translate.get("object.successSendData"))
+      );
+      this.commentEmit.emit(false);
+    } catch {
+      this.flagConfirm = false;
+      this.showError(
+        await firstValueFrom(this.languageService.translate.get("object.messageErrorUpdate"))
+      );
+    } finally {
+      this.isSaving = false;
+      this.cdr.detectChanges();
     }
   }
 
-  showError(message) {
+  showError(message: string) {
     this.messageServicee.add({
       severity: "error",
       summary: "Error",
@@ -250,7 +180,7 @@ export class ViewQuestionsExpertComponent implements OnInit {
     });
   }
 
-  showSuccess(message) {
+  showSuccess(message: string) {
     this.messageServicee.add({
       severity: "success",
       summary: "Success",
@@ -259,24 +189,84 @@ export class ViewQuestionsExpertComponent implements OnInit {
   }
 
   markTouchForm() {
-    (<any>Object).values(this.angForm.controls).forEach((control) => {
+    Object.values(this.angForm.controls).forEach((control) => {
       control.markAsTouched();
     });
   }
 
-  get observation() {
-    return this.angForm.get("observation");
-  }
-
-  get roleExpert() {
-    return this.loginService.validateRole("expert");
-  }
-
   closeView() {
-    if (this.flagQuestionsEx == false) {
+    if (!this.isUpdateMode) {
       this.angForm.reset();
     }
 
     this.commentEmit.emit(false);
+  }
+
+  setValueReturnForm(value: number) {
+    return this.angForm.get(String(value));
+  }
+
+  trackByGroup(index: number, item: ExpertConceptGroup) {
+    return item.id;
+  }
+
+  trackByQuestion(index: number, item: ExpertQuestion) {
+    return item.id;
+  }
+
+  trackByAnswerOption(index: number, item: AnswerOption) {
+    return item.value;
+  }
+
+  private addQuestionControls(groups: ExpertConceptGroup[]) {
+    groups.forEach((group) => {
+      group.questions.forEach((question) => {
+        this.addQuestionControl(question.id);
+      });
+    });
+  }
+
+  private addQuestionControl(controlName: number, initialValue: string | null = null) {
+    const name = String(controlName);
+
+    if (this.angForm.contains(name)) {
+      return;
+    }
+
+    this.angForm.addControl(
+      name,
+      new FormControl<string | null>(initialValue, { validators: [Validators.required] })
+    );
+  }
+
+  private mapExpertConceptGroup(item: ExpertConceptResponse): ExpertConceptGroup {
+    return {
+      id: item.id,
+      label: item.concept,
+      questions: (item.questions || []).map((question) => ({
+        id: question.id,
+        question: question.question,
+        description: question.description,
+        schema: question.schema,
+      })),
+    };
+  }
+
+  private mapExpertEvaluationGroups(
+    results: ExpertEvaluationResultResponse[]
+  ): ExpertConceptGroup[] {
+    return results.reduce<ExpertConceptGroup[]>((groups, evaluation) => {
+      const mappedGroups = (evaluation.concept_evaluations || []).map((conceptEvaluation) => ({
+        id: conceptEvaluation.evaluation_concept?.id || conceptEvaluation.id || 0,
+        label: conceptEvaluation.evaluation_concept?.concept || "",
+        questions: (conceptEvaluation.question_evaluations || []).map((questionEvaluation) => ({
+          id: questionEvaluation.question_id || questionEvaluation.id || 0,
+          question: questionEvaluation.question || "",
+          qualification: questionEvaluation.qualification || "",
+        })),
+      }));
+
+      return groups.concat(mappedGroups);
+    }, []);
   }
 }

@@ -1,10 +1,132 @@
-.buttons {
+:host {
+  display: block;
+}
+
+.metadata-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.metadata-editor {
+  display: grid;
+  gap: 1rem;
+}
+
+.metadata-section {
+  padding: 1rem 1.05rem;
+  border: 1px solid #dde7ee;
+  border-radius: 1rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+}
+
+.metadata-section__header {
+  margin-bottom: 0.9rem;
+}
+
+.metadata-section__header h3 {
+  margin: 0;
+  color: #17384f;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.metadata-section__header p {
+  margin: 0.3rem 0 0;
+  color: #647789;
+  line-height: 1.45;
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1rem;
+}
+
+.metadata-field {
+  min-width: 0;
+}
+
+.metadata-field--full {
+  grid-column: 1 / -1;
+}
+
+.metadata-field label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #3b5b68;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.metadata-field input {
+  width: 100%;
+}
+
+.metadata-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.95rem;
+}
+
+.metadata-fact {
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.85rem;
+  background: #eef5f9;
+  border: 1px solid #dbe8f0;
+}
+
+.metadata-fact__label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #607285;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metadata-fact__value {
+  color: #17384f;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.metadata-actions {
   display: flex;
   justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
 }
 
-input {
-  margin-bottom: 5px;
+:host ::ng-deep .metadata-actions .p-button {
+  min-width: 8.5rem;
+  justify-content: center;
 }
 
+@media (max-width: 700px) {
+  .metadata-section {
+    padding: 0.9rem;
+    border-radius: 0.85rem;
+  }
 
+  .metadata-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metadata-field--full {
+    grid-column: auto;
+  }
+
+  .metadata-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metadata-actions :is(.p-button, p-button) {
+    width: 100%;
+    min-width: 0;
+  }
+}

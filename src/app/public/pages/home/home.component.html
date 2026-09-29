@@ -1,30 +1,110 @@
-<div class="content-search">
-    <div class="bg-search-item">
-        <app-search></app-search>
-    </div>
-</div>
-<div class="main-content">
-    <app-information></app-information>
-    <app-baner-register></app-baner-register>
-<p-toast></p-toast>
-    <div class="labelPopular">
-        <h2>Populares</h2>
-        <ng-container *ngIf="userRole; else isStudentTemplate">
-            <button (click)="onNavegateTo('recommended')" pButton pRipple type="button" label="Ver todos los populares"
-                class="p-button-outlined"></button>
-        </ng-container>
-        <ng-template #isStudentTemplate>
-            <button (click)="onNavegateTo('search')" pButton pRipple type="button" label="Ver todos"
-                class="p-button-outlined"></button>
-        </ng-template>
-    </div>
-    <ng-container *ngIf="populars?.length > 0">
-        <div class="p-grid card-content">
-            <div class="p-col-12 p-md-6 p-lg-3" *ngFor="let popular of populars">
-                <app-card [object]='popular'></app-card>
-            </div>
-        </div>
-    </ng-container>
+<section class="content-search">
+  <div class="bg-search-item">
+    <app-search></app-search>
+  </div>
+</section>
 
+<div class="main-content home-content">
+  <app-information></app-information>
+  <app-baner-register></app-baner-register>
+  <p-toast></p-toast>
+
+  <section class="home-list-section">
+    <div class="section-header">
+      <h2>{{ "object.labelPopulars" | translate }}</h2>
+      @if (student) {
+        <button
+          (click)="onNavegateTo('recommended')"
+          pButton
+          pRipple
+          type="button"
+          [label]="'object.viewAllPopulars' | translate"
+          class="p-button-outlined section-action-button"
+        ></button>
+      } @else {
+        <button
+          (click)="sendParameters('scored')"
+          pButton
+          pRipple
+          type="button"
+          [label]="'object.viewAll' | translate"
+          class="p-button-outlined section-action-button"
+        ></button>
+      }
+    </div>
+
+    @if (populars.length > 0) {
+      <div class="card-content">
+        @for (popular of populars; track popular) {
+          <div class="card-column">
+            <app-card [object]="popular"></app-card>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="home-empty-state">
+        <i class="pi pi-star"></i>
+        <p>{{ "object.emptyPopulars" | translate }}</p>
+      </div>
+    }
+  </section>
+
+  <section class="home-list-section">
+    <div class="section-header">
+      <h2>{{ "object.labelLikes" | translate }}</h2>
+      <button
+        (click)="sendParameters('liked')"
+        pButton
+        pRipple
+        type="button"
+        [label]="'object.buttonMostLiked' | translate"
+        class="p-button-outlined section-action-button"
+      ></button>
+    </div>
+
+    @if (mostLiked.length > 0) {
+      <div class="card-content">
+        @for (liked of mostLiked; track liked) {
+          <div class="card-column">
+            <app-card [object]="liked"></app-card>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="home-empty-state">
+        <i class="pi pi-heart"></i>
+        <p>{{ "object.emptyMostLiked" | translate }}</p>
+      </div>
+    }
+  </section>
+
+  <section class="home-list-section">
+    <div class="section-header">
+      <h2>{{ "object.labelMostRecent" | translate }}</h2>
+      <button
+        (click)="sendParameters('recent')"
+        pButton
+        pRipple
+        type="button"
+        [label]="'object.buttonMostRecent' | translate"
+        class="p-button-outlined section-action-button"
+      ></button>
+    </div>
+
+    @if (mostRecent.length > 0) {
+      <div class="card-content">
+        @for (recent of mostRecent; track recent) {
+          <div class="card-column">
+            <app-card [object]="recent"></app-card>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="home-empty-state">
+        <i class="pi pi-clock"></i>
+        <p>{{ "object.emptyMostRecent" | translate }}</p>
+      </div>
+    }
+  </section>
 
 </div>

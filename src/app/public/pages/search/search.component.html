@@ -1,56 +1,114 @@
+<app-header [header_title]="'menu.searchUp' | translate"></app-header>
 <div class="main-content">
-    <div class="p-grid">
-        <div class="p-col-12 p-md-4 p-lg-3 ">
-            <div class="box sidebar">
-                <div class="input-search">
-                    <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
-                        <input [(ngModel)]="querySearchService.queryParams.general_title" type="text" pInputText
-                            [placeholder]="'input.search' | translate" />
-                    </span>
-                    <p-button (click)="onSearch()" [label]="'input.search' | translate"></p-button>
-                </div>
-                <app-sidebar-search></app-sidebar-search>
-                <!-- [queryParams]="queryParams" -->
-            </div>
+  <div class="search-layout">
+    <aside class="search-sidebar-column">
+      <div class="box sidebar">
+        <div class="input-search">
+          <div class="search-sidebar-input-wrap">
+            <i class="pi pi-search"></i>
+            <input
+              (keyup.enter)="onSearch()"
+              [(ngModel)]="querySearchService.queryParams.general_title"
+              type="text"
+              pInputText
+              [placeholder]="'input.search' | translate"
+              />
+          </div>
+          <p-button (click)="onSearch()" [label]="'input.search' | translate"></p-button>
         </div>
+        <app-sidebar-search></app-sidebar-search>
+      </div>
+    </aside>
 
-        <div class="p-col-12 p-md-8 p-lg-9 ">
-
-            <div class="box content">
-
-                <div class="header-search">
-                    <div class="p-d-flex p-ai-center">
-                        <p-chip label="Todo" styleClass="p-mr-2 custom-chip"></p-chip>
-                        <!--  <ng-container *ngIf="chipsSearch.length > 0">
-                            <p-chip *ngFor="let chip of chipsSearch; let i = index" [label]="chip.value"
-                                (onRemove)="removeChip(i)" [removable]="true"
-                                styleClass="p-mr-2 custom-chip animate__animated animate__fadeIn"></p-chip>
-                        </ng-container> -->
-                        <p-button *ngIf="idQueryEmpty" (click)="onClearFilters()" label="Limpiar filtros"
-                            icon="pi pi-sliders-v" iconPos="right"></p-button>
-                    </div>
-                </div>
-
-                <ng-container *ngIf="loading; else loadingTemplate">
-                    <div class="spinner">
-                        <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner"
-                            strokeWidth="4" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
-                    </div>
-                </ng-container>
-                <ng-template #loadingTemplate>
-                    <div class="p-grid card-content">
-                        <ng-container *ngIf="objects?.length > 0">
-                            <div class="p-col-12 p-md-6 p-lg-3" *ngFor="let object of objects">
-                                <app-card [object]="object"></app-card>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="objects?.length === 0">
-                            <h5>{{'search.noResults' | translate}}</h5>
-                        </ng-container>
-                    </div>
-                </ng-template>
+    <section class="search-results-column">
+      <div class="box content">
+        <div class="header-search">
+          <div class="search-chip-row">
+            @if (chipsSearch.length > 0 && idQueryEmpty) {
+              @for (chip of chipsSearch; track chip; let i = $index) {
+                <div class="chip">
+                  {{chip.value}}
+                  <button
+                    type="button"
+                    class="closebtn"
+                    aria-label="Eliminar filtro"
+                    (click)="removeChip(chip)"
+                    ><i class="pi pi-times"></i></button>
+                  </div>
+                }
+              }
+              @if (idQueryEmpty) {
+                <p-button (click)="onClearFilters()"
+                  [label]="'search.filterClean'| translate" icon="pi pi-sliders-v"
+                iconPos="right"></p-button>
+              }
             </div>
+          </div>
+
+          @if (loading) {
+            <div class="search-results-grid search-results-grid-skeleton">
+              @for (objectS of objectsSkeleton; track objectS) {
+                <div class="card-skeleton">
+                  <div class="animate__animated animate__fadeIn card-content">
+                    <p-card styleClass="p-card-shadow search-skeleton-card">
+                      <ng-template pTemplate="header">
+                        <p-skeleton width="100%" height="150px"></p-skeleton>
+                      </ng-template>
+                      <div class="search-skeleton-block">
+                        <p-skeleton width="100%" styleClass="mb-2"></p-skeleton>
+                        <p-skeleton width="75%"></p-skeleton>
+                      </div>
+                      <p-divider></p-divider>
+                      <div class="search-skeleton-block">
+                        <p-skeleton width="100%" styleClass="mb-2"></p-skeleton>
+                      </div>
+                      <ng-template pTemplate="footer">
+                        <p-skeleton width="100%" height="50px"></p-skeleton>
+                      </ng-template>
+                    </p-card>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="search-results-grid">
+              @if (showEmptyResults) {
+                <div class="search-empty-column">
+                  <div class="search-empty-state">
+                    <i class="pi pi-search"></i>
+                    <h3>{{'search.noResults' | translate}}</h3>
+                    <p class="search-empty-text">{{'search.filterErrorSearchNone'|translate}}</p>
+                  </div>
+                </div>
+              }
+              @if (hasResults) {
+                @for (object of objects; track object) {
+                  <div class="search-result-card">
+                    @if (roleExpert) {
+                      <div class="rol-expert">
+                        <app-card [object]="object" [expertOptions]="true"></app-card>
+                      </div>
+                    }
+                    @if (roleStudent) {
+                      <div class="rol-student">
+                        <app-card [object]="object" [studentOptions]="true"></app-card>
+                      </div>
+                    }
+                    @if (!roleExpert && !roleStudent) {
+                      <div class="rol-others">
+                        <app-card [object]="object"></app-card>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          }
+          @if (showPaginator) {
+            <p-paginator [rows]="rows" [first]="first" [totalRecords]="totalRecords"
+            (onPageChange)="paginate($event)"></p-paginator>
+          }
         </div>
+      </section>
     </div>
-</div>
+  </div>

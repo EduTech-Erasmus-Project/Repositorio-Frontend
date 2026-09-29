@@ -1,135 +1,96 @@
-<form autocomplete="off" [formGroup]="angForm" id="loginForm" (ngSubmit)="sendAnswersExcpert()">
-    <div *ngIf="flagQuestionsEx == false">
-        <div *ngFor="let item of groupedQuestionsEx">
-            <div class="forms">
-                <h6>{{item.label}}</h6>
-                <ul>
-                    <li *ngFor="let itemQ of item.items">
-                        <div class="labelQu">
-                            <label>{{itemQ.label}} &nbsp;</label>
-                            <div class="buttonIncog">
-                                <p-button icon="pi pi-question-circle" (click)="op.toggle($event)"></p-button>
-                                <p-overlayPanel #op [showCloseIcon]="true" style="width: 550px;">
-                                    <ng-template pTemplate>
-                                        <h6>{{'object.description'|translate}}:</h6>
-                                        <label>{{itemQ.description}}</label>
-                                    </ng-template>
-                                </p-overlayPanel>
-                            </div>
-                        </div>
+<form
+  autocomplete="off"
+  [formGroup]="angForm"
+  class="expert-questions"
+  (ngSubmit)="sendAnswersExcpert()"
+  >
+  @for (group of groupedQuestionsEx; track trackByGroup($index, group)) {
+    <section
+      class="expert-questions__group"
+      >
+      <header class="expert-questions__group-header">
+        <h3>{{ group.label }}</h3>
+      </header>
+      @for (question of group.questions; track trackByQuestion($index, question)) {
+        <article
+          class="expert-questions__question"
+          >
+          <div class="expert-questions__question-header">
+            <h4>{{ question.question }}</h4>
+            @if (question.description) {
+              <p-button
+                type="button"
+                icon="pi pi-question-circle"
+                [text]="true"
+                severity="secondary"
+                (onClick)="questionInfo.toggle($event)"
+              ></p-button>
+            }
+            <p-popover #questionInfo [showCloseIcon]="true" appendTo="body">
+              <div class="expert-questions__popover">
+                <h5>{{ 'object.description' | translate }}</h5>
+                <p>{{ question.description }}</p>
+              </div>
+            </p-popover>
+          </div>
+          <div class="expert-questions__options">
+            @for (option of answerOptions; track trackByAnswerOption($index, option)) {
+              <label
+                class="expert-questions__option"
+                >
+                <p-radioButton
+                  [formControlName]="question.id.toString()"
+                  [name]="question.id.toString()"
+                  [inputId]="'expert-question-' + question.id + '-' + option.value"
+                  [value]="option.value"
+                ></p-radioButton>
+                <span>{{ option.labelKey | translate }}</span>
+              </label>
+            }
+          </div>
+          @if (setValueReturnForm(question.id)?.invalid && (setValueReturnForm(question.id)?.dirty || setValueReturnForm(question.id)?.touched)) {
+            <small
+              class="p-error"
+              >
+              *{{ 'validation.obligatoryCamp' | translate }}*
+            </small>
+          }
+        </article>
+      }
+    </section>
+  }
 
-                        <div class="forms">
-                            <div class="p-field-radiobutton">
-                                <div class="p-field-radiobutton">
-                                    <p-radioButton formControlName="{{itemQ.value}}" group="button" value="Si">
-                                    </p-radioButton>
-                                    <label for="group1">{{'register.yes' |translate}}</label>
-                                </div>
+  <section class="expert-questions__observation">
+    <h4>{{ 'object.observation' | translate }}</h4>
+    <textarea
+      rows="5"
+      formControlName="observation"
+      pInputTextarea
+      [placeholder]="('object.observation' | translate) + '...'"
+      [ngClass]="{'ng-dirty': observation?.invalid && (observation?.dirty || observation?.touched)}"
+    ></textarea>
+    @if (observation?.invalid && (observation?.dirty || observation?.touched)) {
+      <small class="p-error">
+        *{{ 'validation.obligatoryCamp' | translate }}*
+      </small>
+    }
+  </section>
 
-                                <div class="p-field-radiobutton" style="padding: 0px 15px;">
-                                    <p-radioButton formControlName="{{itemQ.value}}" group="button" value="No">
-                                    </p-radioButton>
-                                    <label for="group1">{{'register.no' |translate}}</label>
-                                </div>
-
-                                <div class="p-field-radiobutton" style="padding: 0px 10px;">
-                                    <p-radioButton formControlName="{{itemQ.value}}" group="button"
-                                        value="Parcialmente">
-                                    </p-radioButton>
-                                    <label for="group1">{{'register.partially' |translate}}</label>
-                                </div>
-                                
-                            </div>
-
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="forms">
-            <h6>{{'object.observation' | translate}}</h6>
-            <textarea rows="5" cols="30" style="width: 100%;" placeholder="{{'object.observation' | translate}}.."
-                formControlName="observation"
-                [ngClass]="{'ng-dirty':observation.invalid && (observation.dirty || observation.touched)}"
-                pInputTextarea></textarea>
-            <div *ngIf="observation.invalid && (observation.dirty || observation.touched)">
-                <small id="observation " class="p-error"
-                    *ngIf="observation.errors.required">*{{'validation.obligatoryCamp'|
-                    translate}}*</small>
-            </div>
-        </div>
-
-        <div style="text-align: right;">
-            <p-button icon="pi pi-times" type="button" (click)="closeView()" label="{{'object.exit'|translate}}"
-                styleClass="p-button-text">
-            </p-button>
-            &nbsp;
-            <p-button icon="pi pi-check" type="submit" label="{{'object.sendEval' | translate}}"
-                styleClass="p-button-text">
-            </p-button>
-        </div>
-    </div>
-    <!-- Para poder actualizar sus pregunatas -->
-    <div *ngIf="flagQuestionsEx == true">
-        <div *ngFor="let aux of groupedQuestionsEx">
-            <div *ngFor="let item of aux.conceptEvaluations">
-                <div class="forms">
-                    <h6>{{item.evaluationConcept}}</h6>
-                    <ul>
-                        <li *ngFor="let itemQ of item.questionEvaluations">
-                            <div class="labelQu">
-                                <label class="labelQT">{{itemQ.questions}}</label>
-                            </div>
-                            <div class="forms">
-                                <div class="p-field-radiobutton">
-                                    <div class="p-field-radiobutton">
-                                        <p-radioButton formControlName="{{itemQ.questionid}}" group="button" value="Si">
-                                        </p-radioButton>
-                                        <label for="group1">{{'register.yes' |translate}}</label>
-                                    </div>
-
-                                    <div class="p-field-radiobutton" style="padding: 0px 15px;">
-                                        <p-radioButton formControlName="{{itemQ.questionid}}" group="button" value="No">
-                                        </p-radioButton>
-                                        <label for="group1">{{'register.no' |translate}}</label>
-                                    </div>
-
-                                    <div class="p-field-radiobutton" style="padding: 0px 10px;">
-                                        <p-radioButton formControlName="{{itemQ.questionid}}" group="button"
-                                            value="Parcialmente">
-                                        </p-radioButton>
-                                        <label for="group1">{{'register.partially' |translate}}</label>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="forms">
-                <h6>{{'object.observation' | translate}}</h6>
-                <textarea rows="5" cols="30" style="width: 100%;" placeholder="{{'object.observation' | translate}}.."
-                    formControlName="observation"
-                    [ngClass]="{'ng-dirty':observation.invalid && (observation.dirty || observation.touched)}"
-                    pInputTextarea></textarea>
-                <div *ngIf="observation.invalid && (observation.dirty || observation.touched)">
-                    <small id="observation " class="p-error"
-                        *ngIf="observation.errors.required">*{{'validation.obligatoryCamp'|
-                        translate}}*</small>
-                </div>
-            </div>
-
-            <div style="text-align: right;">
-                <p-button icon="pi pi-times" type="button" (click)="closeView()" label="{{'object.exit'|translate}}"
-                    styleClass="p-button-text">
-                </p-button>
-                &nbsp;
-                <p-button icon="pi pi-check" type="submit" label="{{'profile.btnUpdate' | translate}}"
-                    styleClass="p-button-text">
-                </p-button>
-            </div>
-        </div>
-    </div>
+  <div class="expert-questions__actions">
+    <p-button
+      type="button"
+      icon="pi pi-times"
+      [label]="'object.exit' | translate"
+      [text]="true"
+      severity="secondary"
+      (onClick)="closeView()"
+    ></p-button>
+    <p-button
+      icon="pi pi-check"
+      type="submit"
+      [loading]="isSaving"
+      [disabled]="isSaving"
+      [label]="(isUpdateMode ? 'profile.btnUpdate' : 'object.sendEval') | translate"
+    ></p-button>
+  </div>
 </form>

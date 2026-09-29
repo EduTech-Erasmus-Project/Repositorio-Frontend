@@ -1,37 +1,67 @@
-<div class="input-search">
-    <span class="p-input-icon-left"> 
-        <i class="pi pi-search"></i>
-        <input  aria-labelledby="searchbutton" name="search" id="search" [(ngModel)]="title" type="text" pInputText [placeholder]="'input.search' | translate" />
-    </span>
-    <p-button id="searchbutton" (click)="onSearch()" [label]="'input.search' | translate"></p-button>
-</div>
+<section class="side-object">
+  @if (objects?.length > 0) {
+    <h2 class="side-object__title">
+      {{ sectionTitleKey | translate }}
+    </h2>
+  }
 
-<ng-container *ngIf="objects && objects?.length > 0">
-    <ng-container *ngIf="studentRole || expertRole; else sideTemplate">
-        <h5 *ngIf="studentRole">{{'object.labelRecommended' | translate}}</h5>
-        <h5 *ngIf="expertRole">{{'object.labelNoRated' | translate}}</h5>
-    </ng-container>
-    <ng-template #sideTemplate>
-        <h5>{{'object.labelPopulars' | translate}}</h5>
-    </ng-template>
+  <div class="side-object__search">
+    <p-iconfield iconPosition="left" class="side-object__search-field">
+      <p-inputicon styleClass="pi pi-search"></p-inputicon>
+      <input
+        id="search"
+        name="search"
+        [(ngModel)]="title"
+        type="text"
+        pInputText
+        [placeholder]="'input.search' | translate"
+        aria-labelledby="searchbutton"
+        (keyup.enter)="onSearch()"
+        />
+    </p-iconfield>
 
-    <p-scrollPanel styleClass="side-bar">
-        <div  (click)="onClick(object.slug)" class="card-container p-d-flex"
-            *ngFor="let object of objects">
-            <p-card tabindex="0" (keyup.enter)="onClick(object.slug)" pRipple [header]="object.general_title" styleClass="item-object card primary-box">
-                <ng-template pTemplate="header">
-                    <img loading="lazy" [src]="object.avatar" [alt]="object.general_title">
-                </ng-template>
-                <div class="detail">
-                    <h6 class="user">{{object.user_created.first_name}}
-                        {{object.user_created.last_name}}</h6>
-                    <span class="categorie">{{object.knowledge_area.name}}</span>
-                    <div class="rating">
-                        <p-rating [ngModel]="object.rating" readonly="true" [cancel]="false" stars="5"></p-rating>
-                        <!-- <span>{{object.rating | number: '1.1-0'}}</span> -->
-                    </div>
-                </div>
-            </p-card>
-        </div>
+    <p-button
+      id="searchbutton"
+      (click)="onSearch()"
+      [label]="'input.search' | translate"
+      styleClass="side-object__search-button"
+    ></p-button>
+  </div>
+
+  @if (objects?.length > 0) {
+    <p-scrollPanel styleClass="side-object-scroll">
+      <div class="side-object__list">
+        @for (object of objects; track trackByObject($index, object)) {
+          <button
+            type="button"
+            pRipple
+            class="side-object-card"
+            (click)="onClick(object.slug)"
+            >
+            <img
+              loading="lazy"
+              class="side-object-card__image"
+              [src]="object.avatar"
+              [alt]="object.general_title"
+              />
+            <div class="side-object-card__content">
+              <h3 class="side-object-card__heading">{{ object.general_title }}</h3>
+              <p class="side-object-card__author">
+                {{ object.user_created.first_name }} {{ object.user_created.last_name }}
+              </p>
+              <span class="side-object-card__category">{{ object.knowledge_area?.name }}</span>
+              <div class="side-object-card__rating">
+                <p-rating
+                  [ngModel]="object.rating || 0"
+                  [readonly]="true"
+                  [cancel]="false"
+                  [stars]="5"
+                ></p-rating>
+              </div>
+            </div>
+          </button>
+        }
+      </div>
     </p-scrollPanel>
-</ng-container>
+  }
+</section>

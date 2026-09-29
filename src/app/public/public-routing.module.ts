@@ -1,19 +1,21 @@
-import { NgModule } from "@angular/core";
+﻿import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { PublicComponent } from "./public.component";
 import { AuthGuard } from "../guards/auth.guard";
 import { CheckLoginGuard } from "../guards/check-login.guard";
 import { StudentGuard } from "../guards/student.guard";
-import { PasswordResedComponent } from "../auth/password-resed/password-resed.component";
-import { TeacherGuard } from "../guards/teacher.guard";
+import { ExpertAndStudentGuardAndTeacher } from "../guards/expert-student-teacher.guard";
 
+/**
+ * Routing principal del shell publico.
+ *
+ * Concentra autenticacion publica, vistas de descubrimiento y el area privada
+ * de configuracion del usuario final.
+ */
 const routes: Routes = [
   {
     path: "",
     component: PublicComponent,
-    data: {
-      breadcrumb: "Inicio",
-    },
     children: [
       {
         path: "",
@@ -23,28 +25,17 @@ const routes: Routes = [
           breadcrumb: null,
         },
       },
-      // {
-      //   path: "/home",
-      //   loadChildren: () =>
-      //     import("./pages/home/home.module").then((m) => m.HomeModule),
-      // },
       {
         path: "login",
         loadChildren: () =>
           import("../auth/login/login.module").then((m) => m.LoginModule),
         canActivate: [CheckLoginGuard],
-        data: {
-          breadcrumb: "Inicio de sesión",
-        },
       },
       {
         path: "register",
         loadChildren: () =>
           import("../auth/sign-up/sign-up.module").then((m) => m.SignUpModule),
         canActivate: [CheckLoginGuard],
-        data: {
-          breadcrumb: "Registro",
-        },
       },
       {
         path: "restart-password",
@@ -52,25 +43,16 @@ const routes: Routes = [
           import("../auth/recover-password/recover-password.module").then(
             (m) => m.RecoverPasswordModule
           ),
-        data: {
-          breadcrumb: "Reestablecer contraseña",
-        },
       },
       {
         path: "search",
         loadChildren: () =>
           import("./pages/search/search.module").then((m) => m.SearchModule),
-        data: {
-          breadcrumb: "Buscar",
-        },
       },
       {
         path: "terms-and-conditions",
         loadChildren: () =>
           import("./pages/terms/terms.module").then((m) => m.TermsModule),
-        data: {
-          breadcrumb: "Términos y condiciones",
-        },
       },
       {
         path: "settings",
@@ -92,22 +74,9 @@ const routes: Routes = [
         },
       },
       {
-        path: "services",
-        loadChildren: () =>
-          import("./pages/services/services.module").then(
-            (m) => m.ServicesModule
-          ),
-        data: {
-          breadcrumb: "Servicios",
-        },
-      },
-      {
         path: "contact",
         loadChildren: () =>
           import("./pages/contact/contact.module").then((m) => m.ContactModule),
-        data: {
-          breadcrumb: "Contacto",
-        },
       },
       {
         path: "recommended",
@@ -116,68 +85,72 @@ const routes: Routes = [
             (m) => m.RecommendedModule
           ),
         canActivate: [StudentGuard],
-        data: {
-          breadcrumb: "Recomendados",
-        },
       },
       {
         path: "about-us",
         loadChildren: () =>
           import("./pages/aboutus/aboutus.module").then((m) => m.AboutusModule),
-        data: {
-          breadcrumb: "Acerca de nosotros",
-        },
       },
-      { 
-        path: 'report', 
-        loadChildren: () => 
-        import('./pages/reports/reports.module').then(m => m.ReportsModule), 
-        canActivate: [TeacherGuard],
+      {
+        path: "report",
+        loadChildren: () =>
+          import("./pages/reports/reports.module").then(m => m.ReportsModule),
+        canActivate: [ExpertAndStudentGuardAndTeacher],
         data: {
           breadcrumb: "Reporte Objeto de Aprendizaje",
         },
       },
-      { 
-        path: 'developers', 
-        loadChildren: () => 
-        import('./pages/developers/developers.module').then((m) => m.DevelopersModule) ,
-        data: {
-          breadcrumb: "Acerca de los desarrolladores",
-        },
+      {
+        path: "developers",
+        loadChildren: () =>
+          import("./pages/developers/developers.module").then((m) => m.DevelopersModule),
       },
-      { 
-        path: 'password-resed/:uidb64/:token', 
-        loadChildren: () => 
-        import('../auth/password-resed/password-resed.module').then((m) => m.PasswordResedModule),
-        data: {
-          breadcrumb: "Reestablecer contraseña",
-        },
-        component: PasswordResedComponent
+      {
+        path: "password-resed/:uidb64/:token",
+        loadChildren: () =>
+          import("../auth/password-resed/password-resed.module").then((m) => m.PasswordResedModule)
       },
-      { 
-        path: 'reset/:?',
-         loadChildren: () => 
-         import('../auth/reset/reset.module').then((m) => m.ResetModule),
-         data: {
-          breadcrumb: "Contraseña reestablecida",
-        },
-        },
-        { path: 'emailMessage', 
+      {
+        path: "reset/:?",
+        loadChildren: () =>
+          import("../auth/reset/reset.module").then((m) => m.ResetModule),
+      },
+      {
+        path: "emailMessage",
         loadChildren: () => import
-        ('../auth/emailMessage/email-message.module').then(m => m.EmailMessageModule),
-        data: {
-          breadcrumb: "Enlace enviado",
-        }, 
+          ("../auth/emailMessage/email-message.module").then(m => m.EmailMessageModule),
       },
+      {
+        path: "emailVerify/:token/:email",
+        loadChildren: () => import("./pages/verify-email/verify-email.module").then(m => m.VerifyEmailModule),
+      },
+      {
+        path: "guide",
+        loadChildren: () => import("./pages/guide/guide.module").then(m => m.GuideModule),
+      },
+      {
+        path: "guideTeacher",
+        loadChildren: () => import("./pages/guideTeacher/guide-teacher.module").then(m => m.GuideTeacherModule),
+      },
+      {
+        path: "guideStudent",
+        loadChildren: () => import("./pages/guideStudent/guide-student.module").then(m => m.GuideStudentModule)
+      },
+      {
+        path: "guideExpert",
+        loadChildren: () => import("./pages/guideExpert/guide-expert.module").then(m => m.GuideExpertModule)
+      },
+      {
+        path: "preview-learning-object/:slug",
+        loadComponent: () => import("./pages/previewing-learning-object/previewing-learning-object.component").then(m => m.PreviewingLearningObjectComponent)
+      }
     ],
   },
-  
-  
-  
+
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PublicRoutingModule {}
+export class PublicRoutingModule { }

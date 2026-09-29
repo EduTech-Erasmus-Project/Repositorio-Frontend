@@ -1,20 +1,34 @@
+.container-message {
+  background: #fff;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.search-sidebar-column,
+.search-results-column {
+  min-width: 0;
+}
+
+.search-sidebar-column {
+  align-self: start;
+}
+
 .sidebar {
-  //background-color: royalblue;
-  padding: 25px 0;
+  padding: 1.25rem;
 }
 
 .content {
-  //background-color: saddlebrown;
-  padding: 25px 0;
-  min-height: 125vh;
-  //margin-bottom: 25px;
-  //background-color: red;
-}
-
-:host ::ng-deep .p-chip.custom-chip {
-  background: var(--primary-color);
-  color: var(--primary-color-text);
-  //background-color: royalblue;
+  padding: 1.25rem;
+  min-height: 70vh;
 }
 
 .card-content {
@@ -23,18 +37,50 @@
 
 .input-search {
   display: flex;
-  margin-bottom: 10px;
-  input {
-    //background-color: red;
-    width: 100%;
-  }
-  p-button {
-    margin-left: 5px;
-  }
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  min-width: 0;
+}
+
+.search-sidebar-input-wrap {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.search-sidebar-input-wrap > i {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  z-index: 1;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.search-sidebar-input-wrap input {
+  width: 100%;
+  min-height: 42px;
+  padding-left: 40px;
+}
+
+.input-search p-button {
+  flex: 0 0 auto;
+}
+
+.header-search {
+  margin-bottom: 1rem;
+}
+
+.search-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .spinner{
-    //background-color: royalblue;
     height: 55vh;
     width: 100%;
     position: relative;
@@ -45,3 +91,172 @@
     justify-content: center;
     align-items: center;
 }
+
+.rol-others{
+  height: 100%;
+}
+
+.search-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: stretch;
+}
+
+.search-empty-column,
+.search-no-results {
+  grid-column: 1 / -1;
+}
+
+.search-empty-state {
+  align-items: center;
+  background: #fff;
+  border: 1px dashed rgba(22, 58, 92, 0.18);
+  border-radius: 18px;
+  color: #3b5166;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  justify-content: center;
+  min-height: 150px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.search-empty-state i {
+  color: #2f5968;
+  font-size: 1.8rem;
+}
+
+.search-empty-state h3 {
+  color: #243b53;
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0 10px;
+  height: 35px;
+  line-height: 35px;
+  border-radius: 10px;
+  background-color: #3B5B68;
+  color: white;
+}
+
+.closebtn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.closebtn:hover {
+ color: #b60000;
+}
+
+.search-empty-text {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.search-skeleton-block {
+  flex: 1;
+}
+
+:host ::ng-deep .p-card-content {
+  padding: 0;
+}
+
+.search-result-card,
+.rol-expert,
+.rol-student,
+.rol-others {
+  display: flex;
+  height: 100%;
+  min-width: 0;
+}
+
+.search-result-card > div,
+.search-result-card app-card {
+  width: 100%;
+}
+
+.search-result-card app-card {
+  height: 100%;
+}
+
+.search-result-card:only-child {
+  justify-self: start;
+  max-width: 20rem;
+  width: 100%;
+}
+
+:host ::ng-deep .p-paginator {
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 992px) {
+  .search-sidebar-column .box.sidebar {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .search-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .sidebar,
+  .content {
+    padding: 1.1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .sidebar,
+  .content {
+    padding: 1rem;
+  }
+
+  .content {
+    min-height: auto;
+  }
+
+  .input-search p-button {
+    align-self: stretch;
+  }
+
+  .search-chip-row {
+    gap: 0.6rem;
+  }
+
+  :host ::ng-deep .p-paginator {
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .input-search {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .input-search p-button {
+    width: 100%;
+  }
+}
+

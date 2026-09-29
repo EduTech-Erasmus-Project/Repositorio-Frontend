@@ -1,9 +1,17 @@
+<div class="public-shell" (click)="onLayoutClick()">
+    <header class="public-shell__header">
+        <app-menu-public></app-menu-public>
+        <!-- <app-breadcrumb-public></app-breadcrumb-public> -->
+        <app-breadcrumb></app-breadcrumb>
+    </header>
 
-<div class="main-content" (click)="onLayoutClick()">
-    <app-menu-public></app-menu-public>
-    <app-breadcrumb-public></app-breadcrumb-public>
+    <main class="public-shell__main">
+        <div class="public-shell__content">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+
+    <footer class="public-shell__footer">
+        <app-footer></app-footer>
+    </footer>
 </div>
-<div class="content" (click)="onLayoutClick()">
-    <router-outlet></router-outlet>
-</div>
-<app-footer></app-footer>

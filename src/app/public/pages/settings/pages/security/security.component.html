@@ -1,117 +1,176 @@
-<div class="card">
-    <div class="p-grid">
-        <div class="p-col-6">
-            <h2 class="title">{{'security.titlePass' | translate}}</h2>
-        </div>
-        <div class="p-col-6">
-            <div class="box animate__animated animate__fadeIn">
-                <figure>
-                    <img loading="lazy" class="imgLoad" loading="lazy"
-                        src="./../../../../../../assets/img/key-Security.png"
-                        [alt]="'home.teacher.altImage' | translate">
-                </figure>
-            </div>
-        </div>
-        <div class="p-col-6">
-            <label class="title">
-                <h5>{{'login.labelPassword' | translate}}</h5>
-            </label>
-        </div>
-        <div class="p-col-6">
-            <button label="{{'security.changePass' | translate}}" (click)="show=!show" pButton>
-                <i [ngClass]="{'pi-chevron-right':!show,'pi-chevron-down':show}" class="pi"> &nbsp;</i>
-            </button>
-        </div>
+﻿<p-toast></p-toast>
+
+<section class="security-page">
+  <header class="security-page__header">
+    <div class="security-page__copy">
+      <h2>{{ 'security.titlePass' | translate }}</h2>
     </div>
 
-    <p-toast></p-toast>
+    <figure class="security-page__illustration">
+      <img
+        loading="lazy"
+        class="imgLoad"
+        src="./../../../../../../assets/img/key-Security.png"
+        [alt]="'security.imageAlt' | translate"
+      />
+    </figure>
+  </header>
 
-    <div class="p-grid" *ngIf="show">
-        <div class="p-col-6">
-            <div class="forms">
-                <label class="labelPass">{{'security.oldPass' | translate }}</label>
-            </div>
-            <br>
-            <div class="forms">
-                <label class="labelPass">{{'security.newPass' | translate }}</label>
-            </div>
-            <br>
-            <div class="forms">
-                <label class="labelPass">{{'security.againNewPass' | translate }}</label>
-            </div>
-            <br>
+  <div class="security-page__password-row">
+    <span class="security-page__password-label">{{ 'login.labelPassword' | translate }}</span>
+    <button
+      type="button"
+      pButton
+      pRipple
+      class="security-page__toggle"
+      [label]="'security.changePass' | translate"
+      [icon]="show ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+      (click)="togglePasswordForm()"
+    ></button>
+  </div>
 
+  @if (show) {
+    <form
+      autocomplete="off"
+      [formGroup]="angForm"
+      (ngSubmit)="sendPasswordRest()"
+      id="loginForm"
+      class="security-form"
+    >
+      <div class="security-form__field">
+        <label class="labelPass" for="passwordOldInput">{{ 'security.oldPass' | translate }}</label>
+        <div class="security-form__control">
+          <div class="viewPass">
+            <input
+              class="passPass"
+              id="passwordOldInput"
+              formControlName="passwordOld"
+              [type]="show2 ? 'text' : 'password'"
+              [attr.aria-describedby]="getPasswordOldDescribedBy()"
+              [ngClass]="{'ng-dirty ng-invalid': isControlInvalid('passwordOld') || passError}"
+              [placeholder]="'security.oldPass' | translate"
+              pInputText
+            />
+            <i
+              tabindex="0"
+              [ngClass]="{'pi-eye': !show2, 'pi-eye-slash': show2}"
+              class="pi"
+              [attr.aria-label]="(show2 ? 'a11y.hidePassword' : 'a11y.showPassword') | translate"
+              (click)="toggleCurrentPasswordVisibility()"
+              (keyup.enter)="toggleCurrentPasswordVisibility()"
+            ></i>
+          </div>
+          @if (isControlInvalid('passwordOld')) {
+            @if (controlHasError('passwordOld', 'required')) {
+              <small id="passwordOld_required" class="p-error">*{{ 'validation.obligatoryCamp' | translate }}*</small>
+            }
+          }
+          @if (passError) {
+            <small id="passwordOld_backend" class="p-error">*{{ 'security.passError' | translate }}*</small>
+          }
         </div>
-        <div class="p-col-6">
-            <form autocomplete="off" [formGroup]="angForm" (ngSubmit)="sendPasswordRest()" id="loginForm">
+      </div>
 
-                <div class="forms">
-                    <div class="viewPass">
-
-                        <input class="passPass" id="passwordOld" formControlName="passwordOld"
-                            [type]="show2?'text':'password'"
-                            [ngClass]="{'ng-dirty ng-invalid':(passwordOld.invalid && (passwordOld.dirty || passwordOld.touched)) || passError}"
-                            placeholder="{{'security.oldPass'|translate}}" type="password" pInputText>
-                        <i tabindex="0" [ngClass]="{'pi-eye':!show2,'pi-eye-slash':show2}" class="pi"
-                            (click)="show2=!show2" (keyup.enter)="show2=!show2"></i>
-                    </div>
-                    <div *ngIf="passwordOld.invalid && (passwordOld.dirty || passwordOld.touched)">
-                        <small id="passwordOld " class="p-error"
-                            *ngIf="passwordOld.errors.required">*{{'validation.obligatoryCamp'|
-                            translate}}*</small>
-                    </div>
-                    <small id="passwordOld " class="p-error"
-                            *ngIf="passError">*{{'security.passError'|translate}}*</small>
-
-                </div>
-                <br>
-                <div class="forms">
-                    <input class="passPass" id="passwordNew" formControlName="passwordNew"
-                        [ngClass]="{'ng-dirty':passwordNew.invalid && (passwordNew.dirty || passwordNew.touched)}" key
-                        placeholder="{{'security.newPass'|translate}}" type="password" pInputText>
-                    <div *ngIf="passwordNew.invalid && (passwordNew.dirty || passwordNew.touched)">
-                        <small id="passwordNew " class="p-error"
-                            *ngIf="passwordNew.errors.required">*{{'validation.obligatoryCamp'|
-                            translate}}*</small>
-                        <small id="password" class="p-error"
-                            *ngIf="passwordNew.errors.pattern">*{{'validation.passwordEnter'|translate}}*
-                            <ul class="p-pl-2 p-ml-2 p-mt-0" style="line-height: 1.5">
-                                <li>{{'validation.passDigit'|translate}}</li>
-                                <li>{{'validation.passMinu'|translate}}</li>
-                                <li>{{'validation.passMayu'|translate}}</li>
-                                <li>{{'validation.passChar'|translate}}</li>
-                            </ul>
-                        </small>
-                    </div>
-                </div>
-                <br>
-                <div class="forms">
-                    <input class="passPass" id="passwordNewAgain" formControlName="passwordAgain"
-                        [ngClass]="{'ng-dirty':passwordAgain.invalid && (passwordAgain.dirty || passwordAgain.touched)}"
-                        (keyup)="validatorPassword()" placeholder="{{'security.againNewPass'|translate}}"
-                        type="password" pInputText>
-
-                    <div *ngIf="passwordAgain.invalid && (passwordAgain.dirty || passwordAgain.touched)">
-                        <small id="passwordAgain " class="p-error"
-                            *ngIf="passwordAgain.errors.required">*{{'validation.obligatoryCamp'|
-                            translate}}*</small>
-
-
-                    </div>
-                    <small id="passwordOld " class="p-error"
-                        *ngIf="!flagConfirm && passwordAgain.dirty ">{{'security.confirmPassError' | translate}}</small>
-                </div>
-                <br>
-                <div class="forms">
-                    <div class="butonC">
-                        <button pButton pRipple (click)="resetForm()" label="Cancel" icon="pi pi-times"></button>
-                        &nbsp;
-                        <button pButton pRipple type="submit" label="{{'newObject.form.btnSubmit'|translate}}" icon="pi pi-check"></button>
-                    </div>
-                </div>
-
-            </form>
+      <div class="security-form__field">
+        <label class="labelPass" for="passwordNew">{{ 'security.newPass' | translate }}</label>
+        <div class="security-form__control">
+          <div class="viewPass">
+            <input
+              class="passPass"
+              id="passwordNew"
+              formControlName="passwordNew"
+              [attr.aria-describedby]="getPasswordNewDescribedBy()"
+              [type]="show3 ? 'text' : 'password'"
+              [ngClass]="{'ng-dirty ng-invalid': isControlInvalid('passwordNew') || passsword_invalid}"
+              [placeholder]="'security.newPass' | translate"
+              pInputText
+            />
+            <i
+              tabindex="0"
+              [ngClass]="{'pi-eye': !show3, 'pi-eye-slash': show3}"
+              class="pi"
+              [attr.aria-label]="(show3 ? 'a11y.hidePassword' : 'a11y.showPassword') | translate"
+              (click)="toggleNewPasswordVisibility()"
+              (keyup.enter)="toggleNewPasswordVisibility()"
+            ></i>
+          </div>
+          @if (isControlInvalid('passwordNew')) {
+            @if (controlHasError('passwordNew', 'required')) {
+              <small id="passwordNew_required" class="p-error">*{{ 'validation.obligatoryCamp' | translate }}*</small>
+            }
+            @if (controlHasError('passwordNew', 'pattern')) {
+              <small id="passwordNew_pattern" class="p-error">
+                *{{ 'validation.passwordEnter' | translate }}*
+                <ul class="security-form__rules">
+                  <li>{{ 'validation.passDigit' | translate }}</li>
+                  <li>{{ 'validation.passMinu' | translate }}</li>
+                  <li>{{ 'validation.passMayu' | translate }}</li>
+                  <li>{{ 'validation.passChar' | translate }}</li>
+                </ul>
+              </small>
+            }
+          }
+          @if (passsword_invalid) {
+            <small id="passwordNew_same" class="p-error">*{{ 'security.samePasswordError' | translate }}*</small>
+          }
         </div>
-    </div>
-    <div class="hr1"></div>
-</div>
+      </div>
+
+      <div class="security-form__field">
+        <label class="labelPass" for="passwordNewAgain">{{ 'security.againNewPass' | translate }}</label>
+        <div class="security-form__control">
+          <div class="viewPass">
+            <input
+              class="passPass"
+              id="passwordNewAgain"
+              formControlName="passwordAgain"
+              [attr.aria-describedby]="getPasswordAgainDescribedBy()"
+              [type]="show4 ? 'text' : 'password'"
+              [ngClass]="{'ng-dirty ng-invalid': isControlInvalid('passwordAgain') || passsword_invalid}"
+              [placeholder]="'security.againNewPass' | translate"
+              pInputText
+            />
+            <i
+              tabindex="0"
+              [ngClass]="{'pi-eye': !show4, 'pi-eye-slash': show4}"
+              class="pi"
+              [attr.aria-label]="(show4 ? 'a11y.hidePasswordConfirmation' : 'a11y.showPasswordConfirmation') | translate"
+              (click)="togglePasswordConfirmationVisibility()"
+              (keyup.enter)="togglePasswordConfirmationVisibility()"
+            ></i>
+          </div>
+          @if (isControlInvalid('passwordAgain')) {
+            @if (controlHasError('passwordAgain', 'required')) {
+              <small id="passwordAgain_required" class="p-error">*{{ 'validation.obligatoryCamp' | translate }}*</small>
+            }
+          }
+          @if (!flagConfirm && passwordAgain.dirty) {
+            <small id="passwordAgain_mismatch" class="p-error">{{ 'security.confirmPassError' | translate }}</small>
+          }
+          @if (passsword_invalid) {
+            <small id="passwordAgain_same" class="p-error">*{{ 'security.samePasswordError' | translate }}*</small>
+          }
+        </div>
+      </div>
+
+      <div class="security-form__actions">
+        <button
+          pButton
+          pRipple
+          type="button"
+          (click)="resetForm()"
+          [label]="'register.cancel' | translate"
+          icon="pi pi-times"
+          class="p-button-outlined"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="submit"
+          [label]="'newObject.form.btnSubmit' | translate"
+          icon="pi pi-check"
+        ></button>
+      </div>
+    </form>
+  }
+</section>

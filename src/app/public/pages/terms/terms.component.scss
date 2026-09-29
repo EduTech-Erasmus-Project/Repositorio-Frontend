@@ -1,13 +1,24 @@
-.terms-content{
-    background-color: #FFF;
-    padding: 100px 50px;
-    min-height: 79vh;
-    h2{
-        text-transform: uppercase;
-    }
-    .term{
-        p{
-            text-align: justify;
-        }
-    }
+.login-content {
+  position: relative;
+  min-height: calc(100vh - 180px);
+  padding: 16px;
+}
+
+.terms-panel {
+  width: min(1180px, 100%) !important;
+  height: auto !important;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: left;
+}
+
+@media screen and (max-width: 768px) {
+  .login-content {
+    min-height: auto;
+    padding: 24px 12px;
+  }
+
+  .terms-panel {
+    padding: 18px 14px;
+  }
 }

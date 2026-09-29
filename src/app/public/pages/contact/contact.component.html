@@ -1,56 +1,152 @@
+﻿<app-header [header_title]="'menu.contactUp' | translate"></app-header>
 
 <div class="login-body layout-light">
-    <div class="login-content animate__animated animate__fadeIn">
-        <div class="login-panel" style="width: 80%;">
-            <div class="login-panel-content" style="width: 100%">
-                <div class="forms">                    
-                    <form autocomplete="off"  [formGroup]="angForm" (ngSubmit)="validateUser()" id="loginForm">
-                        <div class="p-grid">
-                            <div class="p-col-12 p-md-6 p-lg-6">
-                                <div class="p-field p-fluid">
-                                    <label for="firstnamelabel">{{'register.name' | translate}}*</label>
-                                    <input type="text"  formControlName="name" pInputText>
-
-                                    <div *ngIf="name.invalid && (name.dirty || name.touched)">
-                                        <small id="name " class="p-error"
-                                            *ngIf="name.errors.required">*{{'validation.obligatoryCamp'|
-                                            translate}}*</small>
-                                    </div>
-                                </div>
-                                <div class="p-field p-fluid">
-                                    <label for="firstnamelabel">{{'register.email' | translate}}*</label>
-                                    <input type="text" formControlName="email" pInputText>
-                                    <div *ngIf="email.invalid && (name.dirty || email.touched)">
-                                        <small id="name " class="p-error"
-                                            *ngIf="email.errors.required">*{{'validation.obligatoryCamp'|
-                                            translate}}*</small>
-                                    </div>
-                                </div>
-                                <div class="p-field p-fluid">
-                                    <label for="firstnamelabel">{{'search.message'|translate}}*</label>
-                                    <div>
-                                        <textarea name="" id="" rows="5" cols="30" style="width: 100%;" formControlName="message"
-                                            pInputTextarea></textarea>
-                                    </div>
-                                    <div *ngIf="message.invalid && (message.dirty || message.touched)">
-                                        <small id="name " class="p-error"
-                                            *ngIf="message.errors.required">*{{'validation.obligatoryCamp'|
-                                            translate}}*</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Estruct 2-->
-                            <div class="p-col-12 p-md-6 p-lg-6">
-                                <img src="assets/img/contacts.svg" alt="mirage-layout" style="width: 100%;height: 100%;"/>
-                            </div>
-                        </div>
-                        <span class="p-buttonset">
-                            <button pButton pRipple type="submit" label="Enviar" icon="pi pi-check"></button>
-                        </span>
-                    </form>
-                </div>
-            </div>
-            <p-toast></p-toast>
+  <div class="login-content animate__animated animate__fadeIn">
+    <div class="login-panel contact-panel">
+      <div class="login-panel-content contact-panel-content">
+        <p-toast></p-toast>
+        <div class="contact-sr-only" role="alert" aria-live="assertive" aria-atomic="true">
+          {{ contactStatusMessage }}
         </div>
+        <section class="forms contact-form-section">
+          <form
+            autocomplete="off"
+            [formGroup]="angForm"
+            (ngSubmit)="validateUser()"
+            id="loginForm"
+            >
+            <div class="p-grid contact-grid">
+              <div class="p-col-12 p-md-6 contact-form-column">
+                <div class="p-field p-fluid">
+                  <label for="contact-name">{{ "register.name" | translate }}*</label>
+                  <input
+                    id="contact-name"
+                    type="text"
+                    formControlName="name"
+                    [attr.aria-describedby]="getNameDescribedBy()"
+                    pInputText />
+
+                  @if (name.invalid && (name.dirty || name.touched)) {
+                    <div>
+                      @if (name.errors.required) {
+                        <small id="contact-name-error" class="p-error">
+                          *{{ "validation.obligatoryCamp" | translate }}*
+                        </small>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="p-field p-fluid">
+                  <label for="contact-email">{{ "register.email" | translate }}*</label>
+                  <input
+                    id="contact-email"
+                    type="text"
+                    formControlName="email"
+                    [attr.aria-describedby]="getEmailDescribedBy()"
+                    pInputText />
+
+                  @if (email.invalid && (email.dirty || email.touched)) {
+                    <div>
+                      @if (email.errors.required) {
+                        <small id="contact-email-required" class="p-error">
+                          *{{ "validation.obligatoryCamp" | translate }}*
+                        </small>
+                      }
+                      @if (email.errors.email) {
+                        <small id="contact-email-format" class="p-error">
+                          *{{ "validation.errorEmail" | translate }}*
+                        </small>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="p-field p-fluid">
+                  <label for="contact-message">{{ "search.message" | translate }}*</label>
+                  <textarea
+                    id="contact-message"
+                    rows="5"
+                    formControlName="message"
+                    [attr.aria-describedby]="getMessageDescribedBy()"
+                    pInputTextarea
+                  ></textarea>
+
+                  @if (message.invalid && (message.dirty || message.touched)) {
+                    <div>
+                      @if (message.errors.required) {
+                        <small id="contact-message-error" class="p-error">
+                          *{{ "validation.obligatoryCamp" | translate }}*
+                        </small>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="contact-actions">
+                  <button
+                    pButton
+                    pRipple
+                    type="submit"
+                    [loading]="isSubmitting"
+                    [disabled]="isSubmitting"
+                    label="{{ 'login.send' | translate }}"
+                    icon="pi pi-check"
+                  ></button>
+                </div>
+              </div>
+
+              <div class="p-col-12 p-md-6 contact-illustration-column">
+                <img
+                  class="contact-illustration"
+                  src="assets/img/contacts.svg"
+                  alt="{{ 'login.sendImage' | translate }}"
+                  />
+                </div>
+              </div>
+            </form>
+          </section>
+
+          <section class="contact-direct-section">
+            <div class="contact-direct-card">
+              <div class="contact-direct-copy">
+                <h2>{{ "contact.directTitle" | translate }}</h2>
+                <p>{{ "contact.directDescription" | translate }}</p>
+              </div>
+
+              <div class="contact-direct-actions">
+                <a class="contact-direct-mail" [href]="'mailto:' + directContactEmail">
+                  <span class="contact-direct-mail__label">{{ "contact.directEmailLabel" | translate }}</span>
+                  <strong>{{ directContactEmail }}</strong>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <section class="developers">
+            <div class="developers-heading">
+              <h2>{{ "developers.title" | translate }}</h2>
+              <p>{{ "developers.description" | translate }}</p>
+            </div>
+
+            <div class="developers-grid">
+              @for (developer of developers; track developer) {
+                <article class="developer-card">
+                  <div class="developer-card__header">
+                    <div class="developer-card__avatar">
+                      <img [src]="developer.image" alt="" aria-hidden="true" />
+                    </div>
+                    <div class="developer-card__identity">
+                      <span class="developer-card__role-badge">{{ developer.roleKey | translate }}</span>
+                      <h3>{{ developer.name }}</h3>
+                    </div>
+                  </div>
+                </article>
+              }
+            </div>
+          </section>
+
+      </div>
     </div>
+  </div>
 </div>

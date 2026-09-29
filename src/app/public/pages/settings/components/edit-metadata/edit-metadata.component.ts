@@ -1,141 +1,201 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { firstValueFrom } from "rxjs";
+import { MessageService } from "primeng/api";
 import { ObjectLearning } from "../../../../../core/interfaces/ObjectLearning";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { LearningObjectService } from '../../../../../services/learning-object.service';
-import { MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { LearningObjectService } from "../../../../../services/learning-object.service";
+import { LanguageService } from "src/app/services/language.service";
+
+type MetadataFieldKey =
+  | "general_catalog"
+  | "general_coverage"
+  | "general_entry"
+  | "general_keyword"
+  | "general_language"
+  | "general_structure"
+  | "life_cycle_role"
+  | "life_cycle_version"
+  | "meta_metadata_catalog"
+  | "meta_metadata_description"
+  | "meta_metadata_dateTime"
+  | "technical_description"
+  | "technical_format"
+  | "technical_installationRremarks"
+  | "technical_location"
+  | "educational_description"
+  | "educational_difficulty"
+  | "educational_language"
+  | "educational_learningResourceType"
+  | "educational_procces_cognitve"
+  | "educational_typicalLearningTime_description"
+  | "rights_copyrightAndOtherRestrictions"
+  | "annotation_date_description"
+  | "annotation_date_dateTime"
+  | "annotation_description"
+  | "annotation_entity"
+  | "annotation_modeaccess"
+  | "annotation_modeaccesssufficient"
+  | "relation_catalog"
+  | "relation_description"
+  | "relation_kind"
+  | "relation_entry"
+  | "classification_description"
+  | "classification_keyword"
+  | "classification_purpose"
+  | "classification_taxonPath_source"
+  | "classification_taxonPath_taxon"
+  | "accesibility_summary"
+  | "accesibility_features"
+  | "accesibility_hazard"
+  | "accesibility_control"
+  | "accesibility_api"
+  | "rights_cost"
+  | "annotation_rol";
+
+type MetadataFormControls = {
+  [K in MetadataFieldKey]: FormControl<unknown>;
+};
+
+const METADATA_FIELD_KEYS: MetadataFieldKey[] = [
+  "general_catalog",
+  "general_coverage",
+  "general_entry",
+  "general_keyword",
+  "general_language",
+  "general_structure",
+  "life_cycle_role",
+  "life_cycle_version",
+  "meta_metadata_catalog",
+  "meta_metadata_description",
+  "meta_metadata_dateTime",
+  "technical_description",
+  "technical_format",
+  "technical_installationRremarks",
+  "technical_location",
+  "educational_description",
+  "educational_difficulty",
+  "educational_language",
+  "educational_learningResourceType",
+  "educational_procces_cognitve",
+  "educational_typicalLearningTime_description",
+  "rights_copyrightAndOtherRestrictions",
+  "annotation_date_description",
+  "annotation_date_dateTime",
+  "annotation_description",
+  "annotation_entity",
+  "annotation_modeaccess",
+  "annotation_modeaccesssufficient",
+  "relation_catalog",
+  "relation_description",
+  "relation_kind",
+  "relation_entry",
+  "classification_description",
+  "classification_keyword",
+  "classification_purpose",
+  "classification_taxonPath_source",
+  "classification_taxonPath_taxon",
+  "accesibility_summary",
+  "accesibility_features",
+  "accesibility_hazard",
+  "accesibility_control",
+  "accesibility_api",
+  "rights_cost",
+  "annotation_rol",
+];
+
+type MetadataEditPayload = Partial<Record<MetadataFieldKey, unknown>> & {
+  id: number;
+};
 
 @Component({
-  selector: "app-edit-metadata",
-  templateUrl: "./edit-metadata.component.html",
-  styleUrls: ["./edit-metadata.component.scss"],
+    selector: "app-edit-metadata",
+    templateUrl: "./edit-metadata.component.html",
+    styleUrls: ["./edit-metadata.component.scss"],
+    standalone: false
 })
-export class EditMetadataComponent implements OnInit, OnDestroy {
-  @Input() object: ObjectLearning;
-  @Output() clouceEvent = new EventEmitter<boolean>();
-  @Output() updateEvent = new EventEmitter<boolean>();
+/**
+ * Edita el bloque extendido de metadatos de un OA ya existente.
+ *
+ * Este componente se usa dentro del dialogo de `editObject` y trabaja sobre una
+ * copia reactiva de los campos editables para evitar mutar el objeto original
+ * hasta que el backend confirme la actualizacion.
+ */
+export class EditMetadataComponent implements OnInit {
+  @Input({ required: true }) object!: ObjectLearning;
+  @Output("clouceEvent") closeEvent = new EventEmitter<boolean>();
+  @Output("updateEvent") metadataUpdated = new EventEmitter<boolean>();
 
-  public metadataForm: FormGroup;
-  private subscribes: Subscription[] = [];
+  public metadataForm!: FormGroup<MetadataFormControls>;
+  public saving = false;
 
-  constructor(private fb: FormBuilder,  private objectService: LearningObjectService, private messageService: MessageService) {}
+  constructor(
+    private fb: FormBuilder,
+    private objectService: LearningObjectService,
+    private messageService: MessageService,
+    private languageService: LanguageService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    //console.log(this.object);
-    this.loadForm();
+    this.buildForm();
   }
 
-  ngOnDestroy(): void {
-    this.subscribes.forEach((item) => {
-      item.unsubscribe();
-    });
+  /**
+   * Construye el formulario tomando como base el snapshot actual del OA.
+   */
+  buildForm(): void {
+    const controls = METADATA_FIELD_KEYS.reduce((acc, key) => {
+      acc[key] = this.fb.control(this.object?.[key] ?? null);
+      return acc;
+    }, {} as MetadataFormControls);
+
+    this.metadataForm = this.fb.group(controls);
+    this.cdr.detectChanges();
   }
 
-  loadForm() {
-    this.metadataForm = this.fb.group({
-      general_catalog: [this.object.general_catalog || null],
-      general_coverage: [this.object.general_coverage || null],
-      general_entry: [this.object.general_entry || null],
-      general_keyword: [this.object.general_keyword || null],
-      general_language: [this.object.general_language || null],
-      general_structure: [this.object.general_structure || null],
-      life_cycle_role: [this.object.life_cycle_role || null],
-      life_cycle_version: [this.object.life_cycle_version || null],
-      meta_metadata_catalog: [this.object.meta_metadata_catalog || null],
-      meta_metadata_description: [
-        this.object.meta_metadata_description || null,
-      ],
-      meta_metadata_dateTime: [this.object.meta_metadata_dateTime || null],
-      technical_description: [this.object.technical_description || null],
-      technical_format: [this.object.technical_format || null],
-      technical_installationRremarks: [
-        this.object.technical_installationRremarks || null,
-      ],
-      technical_location: [this.object.technical_location || null],
-      educational_description: [this.object.educational_description || null],
-      educational_difficulty: [this.object.educational_difficulty || null],
-      educational_language: [this.object.educational_language || null],
-      educational_learningResourceType: [
-        this.object.educational_learningResourceType || null,
-      ],
-      educational_procces_cognitve: [
-        this.object.educational_procces_cognitve || null,
-      ],
-      educational_typicalLearningTime_description: [
-        this.object.educational_typicalLearningTime_description || null,
-      ],
-      rights_copyrightAndOtherRestrictions: [
-        this.object.rights_copyrightAndOtherRestrictions || null,
-      ],
-      annotation_date_description: [
-        this.object.annotation_date_description || null,
-      ],
-      annotation_date_dateTime: [this.object.annotation_date_dateTime || null],
-      annotation_description: [this.object.annotation_description || null],
-      annotation_entity: [this.object.annotation_entity || null],
-      annotation_modeaccess: [this.object.annotation_modeaccess || null],
-      annotation_modeaccesssufficient: [
-        this.object.annotation_modeaccesssufficient || null,
-      ],
-      relation_catalog: [this.object.relation_catalog || null],
-      relation_description: [this.object.relation_description || null],
-      relation_kind: [this.object.relation_kind || null],
-      relation_entry: [this.object.relation_entry || null],
-      classification_description: [
-        this.object.classification_description || null,
-      ],
-      classification_keyword: [this.object.classification_keyword || null],
-      classification_purpose: [this.object.classification_purpose || null],
-      classification_taxonPath_source: [
-        this.object.classification_taxonPath_source || null,
-      ],
-      classification_taxonPath_taxon: [
-        this.object.classification_taxonPath_taxon || null,
-      ],
-      accesibility_summary: [this.object.accesibility_summary || null],
-      accesibility_features: [this.object.accesibility_features || null],
-      accesibility_hazard: [this.object.accesibility_hazard || null],
-      accesibility_control: [this.object.accesibility_control || null],
-      accesibility_api: [this.object.accesibility_api || null],
-      rights_cost: [this.object.rights_cost || null],
-      annotation_rol: [this.object.annotation_rol || null],
-    });
+  /**
+   * Persiste los metadatos editados y notifica al padre para que recargue el OA.
+   */
+  async submitMetadataUpdate(): Promise<void> {
+    if (this.saving) {
+      return;
+    }
+
+    this.saving = true;
+    this.cdr.detectChanges();
+    const data: MetadataEditPayload = {
+      ...this.metadataForm.getRawValue(),
+      id: this.object.id,
+    };
+
+    try {
+      await firstValueFrom(this.objectService.editMetadata(data));
+      this.metadataUpdated.emit(true);
+
+      this.messageService.add({
+        severity: "success",
+        summary: await firstValueFrom(this.languageService.translate.get("newObject.form.success")),
+        detail: await firstValueFrom(this.languageService.translate.get("object.messageSuccess")),
+      });
+      this.closeWindow();
+      this.cdr.detectChanges();
+    } catch (err) {
+      this.messageService.add({
+        severity: "error",
+        summary: await firstValueFrom(this.languageService.translate.get("newObject.form.alert")),
+        detail: await firstValueFrom(this.languageService.translate.get("object.messageError")),
+      });
+      this.cdr.detectChanges();
+    } finally {
+      this.saving = false;
+      this.cdr.detectChanges();
+    }
   }
 
-  async onEditmetadata() {
-    //console.log(this.metadataForm.value)
-    let data =  this.metadataForm.value;
-    data.id = this.object.id;
-    let addMetadataSub = await this.objectService
-        .editMetadata(data)
-        .subscribe(
-          (res: any) => {
-
-            //console.log(res)
-            this.updateEvent.emit(true);
-
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Se han actualizado los datos.",
-            });
-            //return this.router.navigateByUrl("/settings/my-objects");
-          },
-          (err) => {
-            console.log("err", err);
-            this.messageService.add({
-              severity: "error",
-              summary: "Error",
-              detail:
-                "Se ah producido un error al guardar los datos, intente de nuevo",
-            });
-
-          }
-        );
-      this.subscribes.push(addMetadataSub);
-  }
-
-  onClouceWindow() {
-    this.clouceEvent.emit(false);
+  /**
+   * Solicita al componente padre cerrar el dialogo actual.
+   */
+  closeWindow(): void {
+    this.closeEvent.emit(false);
   }
 }

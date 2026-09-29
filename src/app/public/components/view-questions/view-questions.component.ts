@@ -1,83 +1,98 @@
-import { Component, OnInit } from "@angular/core";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
-import { Subscription } from "rxjs";
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { FormControl, FormRecord } from "@angular/forms";
+import { firstValueFrom } from "rxjs";
+import { StudentPrincipleResponse } from "src/app/core/interfaces/api-contracts";
 import { LoginService } from "src/app/services/login.service";
 import { SearchService } from "src/app/services/search.service";
 
+interface ViewQuestionItem {
+  value: number;
+  label: string;
+}
+
+interface ViewQuestionGroup {
+  value: number;
+  label: string;
+  items: ViewQuestionItem[];
+}
+
+type ViewQuestionsForm = FormRecord<FormControl<number | null>>;
+
+/**
+ * Muestra en modo lectura la estructura de principios y pautas usada por la evaluacion estudiantil.
+ *
+ * Responsabilidades:
+ * - Consultar el catalogo de preguntas disponible para estudiantes.
+ * - Agrupar pautas dentro de su principio para presentacion jerarquica.
+ * - Exponer un cierre simple del dialog contenedor.
+ */
 @Component({
-  selector: "app-view-questions",
-  templateUrl: "./view-questions.component.html",
-  styleUrls: ["./view-questions.component.css"],
+    selector: "app-view-questions",
+    templateUrl: "./view-questions.component.html",
+    styleUrls: ["./view-questions.component.css"],
+    standalone: false
 })
 export class ViewQuestionsComponent implements OnInit {
-  public groupedQuestions: any[];
-  public selectedQuesions: any[];
+  @Output() closeRequested = new EventEmitter<void>();
 
-  public subscribes: Subscription[] = [];
-
-  public angForm: FormGroup;
+  public groupedQuestions: ViewQuestionGroup[] = [];
+  public angForm: ViewQuestionsForm = new FormRecord<FormControl<number | null>>({});
 
   constructor(
     private searchService: SearchService,
     private loginService: LoginService,
-    private fb: FormBuilder
-  ) {
-    this.createForm();
-  }
-
-  ngOnDestroy(): void {
-    this.subscribes.forEach((subscription) => {
-      subscription.unsubscribe();
-    });
-  }
-
-  createForm() {
-    this.angForm = this.fb.group({});
-  }
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.loadData();
+    void this.loadData();
   }
 
   async loadData() {
-    if (
-      this.loginService.validateRole("student") ||
-      this.loginService.validateRole("teacher")
-    ) {
-      let groupedQes = await this.searchService
-        .geQuestionsStudent()
-        .subscribe((res) => {
-          this.groupedQuestions = res.results.map((item: any) => {
-            return {
-              value: item.id,
-              label: item.principle,
-              items: item.guidelines.map((item: any) => {
-                return { value: item.id, label: item.guideline };
-              }),
-            };
-          });
-          this.groupedQuestions = this.groupedQuestions;
-          this.groupedQuestions.forEach((element) => {
-            element.items.forEach((item) => {
-              this.angForm.addControl(
-                item.value,
-                new FormControl(null, Validators.required)
-              );
-            });
-          });
-        });
-
-      this.subscribes.push(groupedQes);
+    if (!this.loginService.validateRole("student")) {
+      return;
     }
+
+    const res = await firstValueFrom(this.searchService.geQuestionsStudent());
+    this.groupedQuestions = res.map((item) => this.mapQuestionGroup(item));
+    this.buildForm(this.groupedQuestions);
+    this.cdr.detectChanges();
   }
 
-  getNumber(event) {
-    //console.log('Numb', event)
-    return this.angForm.get(String(event)).value;
+  getNumber(event: number) {
+    return this.angForm.get(String(event))?.value;
+  }
+
+  closeView() {
+    this.closeRequested.emit();
+  }
+
+  trackByGroup(index: number, item: ViewQuestionGroup) {
+    return item.value;
+  }
+
+  trackByQuestion(index: number, item: ViewQuestionItem) {
+    return item.value;
+  }
+
+  private buildForm(groups: ViewQuestionGroup[]) {
+    this.angForm = new FormRecord<FormControl<number | null>>({});
+
+    groups.forEach((group) => {
+      group.items.forEach((item) => {
+        this.angForm.addControl(String(item.value), new FormControl<number | null>(null));
+      });
+    });
+  }
+
+  private mapQuestionGroup(item: StudentPrincipleResponse): ViewQuestionGroup {
+    return {
+      value: item.id,
+      label: item.principle,
+      items: (item.guidelines || []).map((guideline) => ({
+        value: guideline.id,
+        label: guideline.guideline,
+      })),
+    };
   }
 }

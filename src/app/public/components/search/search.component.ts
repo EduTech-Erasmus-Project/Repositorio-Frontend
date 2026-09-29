@@ -1,118 +1,81 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
-import { LanguageService } from "../../../services/language.service";
-import { Subscription } from "rxjs";
-import { MessageService } from "primeng/api";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { SearchService } from "../../../services/search.service";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { NavigationExtras, Router } from "@angular/router";
+import { LangChangeEvent, TranslateService } from "@ngx-translate/core";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
+import { Subject, forkJoin, takeUntil } from "rxjs";
+import { LanguageService } from "../../../services/language.service";
+import { SearchService } from "../../../services/search.service";
+import { KnowledgeArea } from "src/app/core/interfaces/KnowledgeArea";
+
+interface InterestAreaOption {
+  label: string;
+  value: {
+    id?: number;
+    name: string;
+  };
+}
 
 @Component({
-  selector: "app-search",
-  templateUrl: "./search.component.html",
-  styleUrls: ["./search.component.scss"],
+    selector: "app-search",
+    templateUrl: "./search.component.html",
+    styleUrls: ["./search.component.scss"],
+    standalone: false
 })
 export class SearchComponent implements OnInit, OnDestroy {
-  public interestAreas: any[] = [];
-  private subscribes: Subscription[] = [];
-  public translate: TranslateService;
-  public msjError;
-  public formSearch: FormGroup;
-  public countStudents: number;
-  public countTeachers: number;
-  public countObjectLearning: number;
+  public interestAreas: InterestAreaOption[] = [];
+  public msjError: {
+    severity: string;
+    summary: string;
+    detail: string;
+  };
+  public formSearch: UntypedFormGroup;
+  public countStudents = 0;
+  public countTeachers = 0;
+  public countObjectLearning = 0;
+  public showValidationError = false;
+
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private languageService: LanguageService,
     private searchService: SearchService,
-    private messageService: MessageService,
-    private formBuilder: FormBuilder,
-    private router: Router
+    private formBuilder: UntypedFormBuilder,
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.translate = this.languageService.translate;
-    this.loadData();
-    this.translate.onLangChange.subscribe((translate: LangChangeEvent) => {
-      this.msjError = {
-        severity: "error",
-        summary: translate.translations.message.titleError,
-        detail: translate.translations.home.msjMessage,
-      };
-    });
-
     this.formSearch = this.formBuilder.group({
       searchValue: [null, [Validators.required]],
       dropdownValue: [null],
     });
+
+    this.buildErrorMessage();
+    this.loadData();
+
+    this.languageService.translate.onLangChange
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((translate: LangChangeEvent) => {
+        this.msjError = {
+          severity: "error",
+          summary: translate.translations.message.titleError,
+          detail: translate.translations.home.msjMessage,
+        };
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscribes.forEach((item) => {
-      item.unsubscribe();
-    });
-  }
-
-  async loadData() {
-    let subscribeAreas = await this.searchService
-      .getInterestAreas()
-      .subscribe((res) => {
-        res.forEach((item) => {
-          this.interestAreas.push({
-            label: item.name,
-            value: { id: item.id, name: item.name },
-          });
-        });
-      });
-
-    let subsUser = await this.searchService.countUsers().subscribe((res) => {
-      //console.log("count users", res)
-      this.countStudents = res.total_student;
-      this.countTeachers = res.total_teacher;
-    });
-
-    let subsObjects = await this.searchService
-      .countObjectLearning()
-      .subscribe((res) => {
-        //console.log("count objects", res)
-        this.countObjectLearning = res.total_oa_aproved;
-      });
-    this.subscribes.push(subscribeAreas, subsUser, subsObjects);
-  }
-
-  loadTextTranslation() {
-    let currentLng = this.translate.currentLang;
-    if (currentLng === "es") {
-      this.msjError = {
-        severity: "error",
-        summary: this.translate.translations.es.message.titleError,
-        detail: this.translate.translations.es.home.msjMessage,
-      };
-    } else if (currentLng == "en") {
-      this.msjError = {
-        severity: "error",
-        summary: this.translate.translations.en.message.titleError,
-        detail: this.translate.translations.en.home.msjMessage,
-      };
-    }
-  }
-
-  showMessageError() {
-    //optimize code
-    this.messageService.add(this.msjError);
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onSearch() {
-    //optimize on translate implementation
-    this.loadTextTranslation();
+    this.showValidationError = false;
 
-    this.messageService.clear();
     if (this.formSearch.valid) {
-      let { searchValue, dropdownValue } = this.formSearch.value;
+      const { searchValue, dropdownValue } = this.formSearch.value;
 
-      //console.log(searchValue, dropdownValue);
-
-      let extras: NavigationExtras = {
+      const extras: NavigationExtras = {
         queryParams: {
           general_title: searchValue,
           knowledge_area__name: dropdownValue?.name,
@@ -123,5 +86,39 @@ export class SearchComponent implements OnInit, OnDestroy {
     } else {
       this.showMessageError();
     }
+  }
+
+  private loadData() {
+    forkJoin({
+      areas: this.searchService.getInterestAreas(),
+      users: this.searchService.countUsers(),
+      objects: this.searchService.countObjectLearning(),
+    })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ areas, users, objects }) => {
+        this.interestAreas = (areas.values || []).map((item: KnowledgeArea) => ({
+          label: item.name || "",
+          value: { id: item.id, name: item.name || "" },
+        }));
+
+        this.countStudents = users.total_student;
+        this.countTeachers = users.total_teacher;
+        this.countObjectLearning = objects.total_oa_aproved;
+        this.cdr.detectChanges();
+      });
+  }
+
+  private buildErrorMessage() {
+    const translate: TranslateService = this.languageService.translate;
+
+    this.msjError = {
+      severity: "error",
+      summary: translate.instant("message.titleError"),
+      detail: translate.instant("home.msjMessage"),
+    };
+  }
+
+  private showMessageError() {
+    this.showValidationError = true;
   }
 }
