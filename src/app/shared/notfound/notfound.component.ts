@@ -1,12 +1,19 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
-  selector: "app-notfound",
-  templateUrl: "./notfound.component.html",
-  styles: [],
+    selector: "app-notfound",
+    templateUrl: "./notfound.component.html",
+    styleUrls: ["./notfound.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
-export class NotfoundComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
+/**
+ * Pantalla compartida para rutas inexistentes o enlaces rotos.
+ *
+ * Se usa como cierre del router principal cuando ninguna ruta valida coincide
+ * con la URL solicitada.
+ */
+export class NotfoundComponent {
+  readonly homeRoute = ["/"];
+  readonly searchRoute = ["/search"];
 }

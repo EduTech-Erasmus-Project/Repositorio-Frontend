@@ -1,21 +1,100 @@
-<div class="layout-sidebar" [ngClass]="{'layout-sidebar-active': appMain.sidebarActive}" (click)="appMain.onSidebarClick($event)"
-     (mouseover)="appMain.sidebarActive=true" (mouseleave)="appMain.sidebarActive=false">
-    <div class="sidebar-logo">
-        <a href="#" class="sidebar-pin" title="Toggle Menu" (click)="appMain.onToggleMenuClick($event)">
-            <i class="pi pi-lock" *ngIf="appMain.staticMenuActive"></i>
-            <i class="pi pi-lock-open" *ngIf="!appMain.staticMenuActive"></i>
-        </a>
-        <a routerLink="/admin">
-                <img [src]="loginService.user.image || 'assets/img/noimage.png'"
-                [alt]="loginService.user.first_name"  />
-                <span class="app-name">{{loginService.user.first_name}}</span>
-        </a>
-    </div>
+﻿<div
+  class="layout-sidebar"
+    [ngClass]="{
+        'layout-sidebar-active': appMain.sidebarActive,
+        'sidebar-expanded': appMain.staticMenuActive || appMain.sidebarActive
+    }"
+  (click)="appMain.onSidebarClick($event)"
+  (mouseover)="appMain.sidebarActive = true"
+  (mouseleave)="appMain.sidebarActive = false"
+  >
+  <div class="sidebar-logo">
+    <button
+      pRipple
+      type="button"
+      class="sidebar-pin"
+      title="Fijar o soltar menú lateral"
+      (click)="appMain.onToggleMenuClick($event)"
+      >
+      @if (appMain.staticMenuActive) {
+        <i class="pi pi-lock"></i>
+      }
+      @if (!appMain.staticMenuActive) {
+        <i class="pi pi-lock-open"></i>
+      }
+    </button>
+    <a routerLink="/admin/home" class="sidebar-brand">
+      <img [src]="loginService.user.image || 'assets/img/noimage.png'" [alt]="loginService.user.first_name" />
+      <span class="app-name">{{ loginService.user.first_name }}</span>
+    </a>
+  </div>
 
-    <div class="layout-menu-container" (click)="onMenuClick()">
-        <ul class="layout-menu">
-            <li app-menuitem *ngFor="let item of model; let i = index;" [item]="item" [index]="i" [root]="true"></li>
-        </ul>
-    </div>
+  <div class="layout-menu-container" (click)="onMenuClick()">
+    <nav class="admin-nav" aria-label="Menú de administración">
+      <ul class="admin-nav-list">
+        @for (item of model; track item.label) {
+          <li
+            class="admin-nav-item"
+            [ngClass]="{
+              'admin-nav-item--group': hasChildren(item),
+              'admin-nav-item--expanded': isItemExpanded(item)
+            }"
+          >
+            @if (hasChildren(item)) {
+              <button
+                pRipple
+                type="button"
+                class="admin-nav-link admin-nav-link--group"
+                [ngClass]="{
+                  'admin-nav-link--current': isItemCurrent(item),
+                  'admin-nav-link--expanded': isItemExpanded(item)
+                }"
+                [attr.title]="getCollapsedTitle(item)"
+                [attr.aria-expanded]="isItemExpanded(item)"
+                (click)="toggleGroup(item, $event)"
+              >
+                <i class="admin-nav-icon" [ngClass]="item.icon"></i>
+                <span class="admin-nav-label">{{ item.label }}</span>
+                <i
+                  class="pi admin-nav-chevron"
+                  [ngClass]="isItemExpanded(item) ? 'pi-angle-down' : 'pi-angle-right'"
+                ></i>
+              </button>
+
+              @if (isItemExpanded(item) && isSidebarExpanded()) {
+                <div class="admin-nav-submenu-wrapper">
+                  <ul class="admin-nav-submenu">
+                    @for (child of item.items; track child.label) {
+                      <li class="admin-nav-subitem">
+                        <a
+                          class="admin-nav-sublink"
+                          [ngClass]="{ 'admin-nav-sublink--active': isItemCurrent(child) }"
+                          [routerLink]="child.routerLink"
+                          [attr.title]="child.label"
+                          (click)="onItemNavigate()"
+                        >
+                          <span class="admin-nav-sublabel">{{ child.label }}</span>
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+            } @else {
+              <a
+                class="admin-nav-link"
+                [ngClass]="{ 'admin-nav-link--active': isItemCurrent(item) }"
+                [routerLink]="item.routerLink"
+                [attr.title]="getCollapsedTitle(item)"
+                (click)="onItemNavigate()"
+              >
+                <i class="admin-nav-icon" [ngClass]="item.icon"></i>
+                <span class="admin-nav-label">{{ item.label }}</span>
+              </a>
+            }
+          </li>
+        }
+      </ul>
+    </nav>
+  </div>
 </div>
-

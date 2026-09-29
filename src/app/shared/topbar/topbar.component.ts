@@ -1,39 +1,59 @@
 import { Component } from "@angular/core";
-import { Router } from "@angular/router";
 import { AdminComponent } from "src/app/admin/admin.component";
 import { LoginService } from "src/app/services/login.service";
-// import { AppMainComponent } from '../../app.main.component';
 
 @Component({
-  selector: "app-topbar",
-  templateUrl: "./topbar.component.html",
-  styleUrls: ["./topbar.component.css"],
+    selector: "app-topbar",
+    templateUrl: "./topbar.component.html",
+    styleUrls: ["./topbar.component.css"],
+    standalone: false
 })
-export class TopbarComponen {
-  activeItem: number;
-  public imageUrl = "../assets/demo/images/avatar/annafali.png";
+/**
+ * Shell superior compartido del area administrativa.
+ *
+ * Expone la identidad del usuario autenticado y delega en `AdminComponent`
+ * la apertura del menu lateral y del panel de perfil.
+ */
+export class TopbarComponent {
+  readonly profileRoute = ["/admin/profile"];
 
   constructor(
     public appMain: AdminComponent,
-    public loginService: LoginService,
-    private router: Router
+    public loginService: LoginService
   ) {}
-  //   ngOnInit() {
-  //     console.log('Imagen');
-  //     console.log(this.auth.user.first_name);
-  // }
-  mobileMegaMenuItemClick(index) {
-    this.appMain.megaMenuMobileClick = true;
-    this.activeItem = this.activeItem === index ? null : index;
+
+  /**
+   * Devuelve el nombre visible del usuario con un fallback seguro para sesiones parciales.
+   */
+  get userFullName(): string {
+    const firstName = this.loginService.user?.first_name ?? "";
+    const lastName = this.loginService.user?.last_name ?? "";
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    return fullName || "Usuario";
   }
-  logOut() {
-    //console.log('Logout')
+
+  get userPrimaryRole(): string {
+    return (this.loginService.user?.roles?.[0] ?? "").toUpperCase();
+  }
+
+  get userEmail(): string {
+    return this.loginService.user?.email ?? "";
+  }
+
+  get userImage(): string {
+    return this.loginService.user?.image || "assets/img/noimage.png";
+  }
+
+  /**
+   * Cierra la sesion delegando el flujo al servicio de autenticacion.
+   */
+  logOut(): void {
     this.loginService.signOut();
   }
-  navigateUserProfile() {
-    this.router.navigateByUrl("/admin/learning-object");
-  }
-  navigate(route: string) {
-    this.router.navigate([route]);
+
+  onTopbarRegionClick(event: Event): void {
+    this.appMain.topbarItemClick = true;
+    event.stopPropagation();
   }
 }

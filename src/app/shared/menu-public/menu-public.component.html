@@ -1,135 +1,163 @@
 <div class="menu">
-    <p-menubar [model]="tieredItems">
-        <ng-template pTemplate="start">
-            <a [routerLink]="['/']" routerLinkActive="router-link-active"> <img loading="lazy"
-                    src="/assets/img/image2vector.svg" height="60" class="p-mr-2" [alt]="'menu.altLogo' | translate">
-            </a>
-        </ng-template>
-        <ng-template pTemplate="end">
+  <div class="menu-shell" [class.menu-mobile-open]="mobileMenuOpen">
+    <a class="menu-brand" [routerLink]="['/']" routerLinkActive="router-link-active" (click)="closeMobileMenu()">
+      <img
+        loading="lazy"
+        src="/assets/img/ROA-Edu.png"
+        height="45"
+        class="p-mr-2"
+        alt="Repositorio de objetos de aprendizaje"
+        title="Repositorio de objetos de aprendizaje"
+        >
+    </a>
 
-            <ng-container *ngIf="loginService.user; else loginTemplate">
-                <div class="layout-topbar">
-                    <div class="layout-topbar-wrapper">
-                        <div class="layout-topbar-right fadeInDown">
-                            <ul class="layout-topbar-actions">
-                                <li #profile class="topbar-item profile-item"
-                                    [ngClass]="{'active-topmenuitem': appMain.activeTopbarItem === profile}">
-                                    <a href="#" (click)="appMain.onTopbarItemClick($event,profile)">
-                                        <span class="profile-image-wrapper">
-                                            <img loading="lazy"
-                                                [src]="loginService.user.image || 'assets/img/noimage.png'"
-                                                [alt]="loginService.user.first_name" />
-                                        </span>
-                                        <span class="profile-info-wrapper">
-                                            <h3 class="name-user">{{loginService.user.first_name+'
-                                                '+loginService.user.last_name}}</h3>
-                                            <span>{{loginService.user.email}}</span>
-                                        </span>
-                                    </a>
-                                    <ul class="profile-item-submenu fadeInDown">
-                                        <li class="profile-submenu-header">
-                                            <div class="performance">
+    <button
+      type="button"
+      class="menu-mobile-toggle"
+      [attr.aria-expanded]="mobileMenuOpen"
+      aria-controls="public-mobile-panel"
+      [attr.aria-label]="mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'"
+      (click)="toggleMobileMenu($event)"
+      >
+      <i class="pi" [ngClass]="mobileMenuOpen ? 'pi-times' : 'pi-bars'"></i>
+    </button>
 
-                                            </div>
-                                            <div class="profile">
-                                                <img loading="lazy"
-                                                    [src]="loginService.user.image || 'assets/img/noimage.png'"
-                                                    [alt]="loginService.user.first_name" width="40" />
-                                                <h1 class="name-user">{{loginService.user.first_name+'
-                                                    '+loginService.user.last_name}}</h1>
-                                                <span>{{loginService.user.email}}</span>
-                                            </div>
-                                        </li>
+    <nav id="public-mobile-panel" class="menu-nav" [attr.aria-label]="'menu.altLogo' | translate">
+      @for (item of tieredItems; track item) {
+        <a
+          class="menu-link"
+          [routerLink]="item.routerLink"
+          [queryParams]="item.queryParams || null"
+          routerLinkActive="menu-link-active"
+          [routerLinkActiveOptions]="item.routerLinkActiveOptions"
+          (click)="closeMobileMenu()"
+          >
+          {{ item.label }}
+        </a>
+      }
+    </nav>
 
-                                        <li tabindex="0" (keyup.enter)="navigate('admin')"
-                                            *ngIf="loginService.user.administrator; else dashboardTemplate"
-                                            class="layout-submenu-item" (click)="navigate('admin')">
-                                            <i class="pi pi-sliders-v icon icon-1"></i>
-                                            <div class="menu-text">
-                                                <p>Dasboard</p>
-                                            </div>
-                                            <i class="pi pi-angle-right"></i>
-                                        </li>
-
-
-                                        <li tabindex="0" (keyup.enter)="navigateStudent()" (click)="navigateStudent()"
-                                            *ngIf="loginService.user?.roles.includes('student')"
-                                            class="layout-submenu-item">
-                                            <i class="pi pi-star-o icon icon-1"></i>
-                                            <div class="menu-text">
-                                                <p>Recomendados para ti</p>
-                                            </div>
-                                            <i class="pi pi-angle-right"></i>
-                                        </li>
-
-                                        <li tabindex="0" (keyup.enter)="navigate('settings/my-views')"
-                                            (click)="navigate('settings/my-views')"
-                                            *ngIf="loginService.user?.roles.includes('student')"
-                                            class="layout-submenu-item">
-                                            <i class="pi pi-eye icon icon-2"></i>
-                                            <div class="menu-text">
-                                                <p>Vistos por mi </p>
-                                            </div>
-                                            <i class="pi pi-angle-right"></i>
-                                        </li>
-
-                                        <li tabindex="0" (keyup.enter)="navigateExpert('search')"
-                                            (click)="navigateExpert('search')"
-                                            *ngIf="loginService.user?.roles.includes('expert')"
-                                            class="layout-submenu-item">
-                                            <i class="pi pi-pencil icon icon-2"></i>
-                                            <div class="menu-text">
-                                                <p>Calificar OA</p>
-                                            </div>
-                                            <i class="pi pi-angle-right"></i>
-                                        </li>
-
-                                        <li tabindex="0" (keyup.enter)="navigate('settings/new-object')"
-                                            (click)="navigate('settings/new-object')"
-                                            *ngIf="loginService.user?.roles.includes('teacher')"
-                                            class="layout-submenu-item">
-                                            <i class="pi pi-upload icon icon-3"></i>
-                                            <div class="menu-text">
-                                                <p>Cargar OA</p>
-                                            </div>
-                                            <i class="pi pi-angle-right"></i>
-                                        </li>
-
-                                        <li tabindex="0" (keyup.enter)="navigate('settings')"
-                                            (click)="navigate('settings')" class="layout-submenu-item">
-                                            <i class="pi pi-cog icon icon-4"></i>
-                                            <div class="menu-text">
-                                                <p>Mi Cuenta</p>
-                                            </div>
-                                            <i class="pi pi-angle-right"></i>
-                                        </li>
-
-                                        <li class="layout-submenu-footer">
-                                            <button (click)="logOut()" class="signout-button">Salir</button>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+    @if (loginService.user) {
+      <div class="menu-end">
+        <div
+          #profile
+          class="public-profile"
+          [ngClass]="{ 'public-profile-active': appMain.activeTopbarItem === profile }"
+          >
+          <button
+            type="button"
+            class="public-profile-toggle"
+            [attr.aria-expanded]="appMain.activeTopbarItem === profile"
+            aria-haspopup="menu"
+            (click)="appMain.onTopbarItemClick($event, profile)"
+            >
+            <span class="profile-image-wrapper">
+              <img
+                loading="lazy"
+                [src]="loginService.user.image || 'assets/img/noimage.png'"
+                [alt]="loginService.user.first_name"
+                />
+            </span>
+            <span class="public-profile-info">
+              <span class="public-profile-name">
+                {{ role_name }}{{ loginService.user.first_name + ' ' + loginService.user.last_name }}
+              </span>
+            </span>
+            <i class="pi pi-angle-down public-profile-chevron"></i>
+          </button>
+          <ul class="public-profile-menu">
+            <li class="public-profile-menu-header">
+              <div class="public-profile-menu-summary">
+                <span class="profile-image-wrapper">
+                  <img
+                    loading="lazy"
+                    [src]="loginService.user.image || 'assets/img/noimage.png'"
+                    [alt]="loginService.user.first_name"
+                    />
+                </span>
+                <div class="public-profile-menu-user">
+                  <strong>
+                    {{ loginService.user.first_name + ' ' + loginService.user.last_name }}
+                  </strong>
+                  <span>{{ loginService.user.email }}</span>
                 </div>
-            </ng-container>
-            <ng-template #loginTemplate>
-                <div class="items-login p-grid">
-                    <div class="p-col-12 p-lg-6">
-                        <div class="box animate__animated animate__fadeIn">
-                            <a pButton pRipple type="button" [label]="'menu.login' | translate" class="p-button-text"
-                                [routerLink]="[ '/login' ]" routerLinkActive="p-menuitem-link-active"></a>
-                        </div>
-                    </div>
-                    <div class="p-col-12 p-lg-6">
-                        <div class="box animate__animated animate__fadeIn">
-                            <a pButton pRipple type="button" [label]="'menu.register' | translate" class="p-button-text"
-                                [routerLink]="[ '/register' ]" routerLinkActive="p-menuitem-link-active"></a>
-                        </div>
-                    </div>
-                </div>
-            </ng-template>
-        </ng-template>
-    </p-menubar>
+              </div>
+            </li>
+            @if (loginService.user?.roles.includes('student')) {
+              <li>
+                <button type="button" (click)="navigateStudent()">
+                  <i class="pi pi-star"></i>
+                  <span>{{ 'recommended.recommended' | translate }}</span>
+                </button>
+              </li>
+            }
+            @if (loginService.user?.roles.includes('student')) {
+              <li>
+                <button type="button" (click)="navigate('settings/my-views')">
+                  <i class="pi pi-eye"></i>
+                  <span>{{ 'recommended.viewed' | translate }}</span>
+                </button>
+              </li>
+            }
+            @if (loginService.user?.roles.includes('expert')) {
+              <li>
+                <button type="button" (click)="navigateExpert('search')">
+                  <i class="pi pi-pencil"></i>
+                  <span>{{ 'menu.sideMenu.qualificateOa' | translate }}</span>
+                </button>
+              </li>
+            }
+            @if (loginService.user?.roles.includes('teacher')) {
+              <li>
+                <button type="button" (click)="navigate('settings/new-object')">
+                  <i class="pi pi-upload"></i>
+                  <span>{{ 'menu.sideMenu.uploadOa' | translate }}</span>
+                </button>
+              </li>
+            }
+            <li>
+              <button type="button" (click)="navigate('settings')">
+                <i class="pi pi-cog"></i>
+                <span>{{ 'recommended.myAccount' | translate }}</span>
+              </button>
+            </li>
+            <li class="public-profile-menu-footer">
+              <button type="button" (click)="logOut()">
+                <i class="pi pi-sign-out"></i>
+                <span>{{ 'menu.sideMenu.exit' | translate }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    } @else {
+      <div class="menu-end auth-actions">
+        <a
+          pButton
+          pRipple
+          type="button"
+          class="auth-link"
+          [routerLink]="['/login']"
+          routerLinkActive="auth-link-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMobileMenu()"
+          >
+          <span class="p-button-label">{{ 'menu.login' | translate }}</span>
+        </a>
+        <a
+          pButton
+          pRipple
+          type="button"
+          class="auth-link auth-link-register"
+          [routerLink]="['/register']"
+          routerLinkActive="auth-link-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMobileMenu()"
+          >
+          <span class="p-button-label">{{ 'menu.register' | translate }}</span>
+        </a>
+      </div>
+    }
+
+  </div>
 </div>

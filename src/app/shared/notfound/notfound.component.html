@@ -1,17 +1,60 @@
-<div class="exception-body notfound">
-    <div class="exception-content">
-        <div class="moon">
-            <img loading="lazy" src="../../assets/layout/images/pages/asset-moon.svg" alt="mirage-layout" />
+<div class="notfound-page">
+  <div class="notfound-shell">
+    <section class="notfound-card" tabindex="0" aria-labelledby="notfound-title">
+      <div class="notfound-card__visual" aria-hidden="true">
+        <div class="notfound-illustration">
+          <div class="notfound-illustration__halo"></div>
+          <img
+            class="notfound-illustration__image"
+            loading="lazy"
+            src="assets/layout/images/pages/asset-moon.svg"
+            alt=""
+          />
         </div>
-        <div class="exception-panel">
-            <div class="exception-panel-content">
-                <span class="tag">404</span>
-                <h1>Página no encontrado</h1>
-                <div class="seperator"></div>
-                <p>El recurso solicitado no está disponible en este momento. Por favor, inténtelo de nuevo más tarde.</p>
-                <button pButton type="button" [routerLink]="['/']" label="Regresar a la pagina principal"></button>
-            </div>
+        <div class="notfound-code-wrap">
+          <span class="notfound-code">404</span>
         </div>
-        <div class="desert"></div>
-    </div>
+      </div>
+
+      <div class="notfound-card__content">
+        <p-tag [value]="'notfound.eyebrow' | translate"></p-tag>
+
+        <h1 id="notfound-title">{{ "notfound.title" | translate }}</h1>
+        <p class="notfound-description">{{ "notfound.description" | translate }}</p>
+
+        <div class="notfound-hints">
+          <div class="notfound-hint" tabindex="0">
+            <i class="pi pi-link"></i>
+            <span>{{ "notfound.hintLink" | translate }}</span>
+          </div>
+
+          <div class="notfound-hint" tabindex="0">
+            <i class="pi pi-search"></i>
+            <span>{{ "notfound.hintSearch" | translate }}</span>
+          </div>
+        </div>
+
+        <div class="notfound-actions">
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-home"
+            [routerLink]="homeRoute"
+            label="{{ 'notfound.home' | translate }}"
+          ></button>
+
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="pi pi-search"
+            class="p-button-outlined"
+            [routerLink]="searchRoute"
+            label="{{ 'notfound.search' | translate }}"
+          ></button>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>

@@ -1,0 +1,334 @@
+:host {
+  display: block;
+}
+
+.topbar-button-reset {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-left {
+  flex: 1 1 auto;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .admin-profile {
+  position: relative;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .admin-profile > .profile-toggle-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  max-width: 240px;
+  padding: 0.35rem 0.65rem;
+  margin: 0 0.35rem;
+  color: #344f5b;
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid #dce8ec;
+  border-radius: 999px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .admin-profile > .profile-toggle-button:hover,
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .admin-profile > .profile-toggle-button:focus {
+  background: #f3f7f8;
+  border-color: #d2e0e6;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .admin-profile > .profile-toggle-button .profile-image-wrapper img,
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .admin-profile-menu-summary .profile-image-wrapper img {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.admin-profile-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  text-align: left;
+}
+
+.admin-profile-name {
+  overflow: hidden;
+  max-width: 150px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #344f5b;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-profile-role {
+  overflow: hidden;
+  max-width: 150px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #9199a9;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-profile-chevron {
+  flex: 0 0 auto;
+  font-size: 0.85rem;
+  color: #6b7a90;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-item.admin-profile > .admin-profile-menu {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  z-index: 20;
+  display: none;
+  min-width: 260px;
+  margin: 0;
+  padding: 0.5rem 0;
+  list-style: none;
+  background: #ffffff;
+  border: 1px solid #e3ebef;
+  border-radius: 1rem;
+  box-shadow: 0 18px 45px rgba(59, 91, 104, 0.16);
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-item.admin-profile > .admin-profile-menu::before {
+  display: none;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-item.admin-profile.admin-profile-active > .admin-profile-menu {
+  display: block;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-item.admin-profile > .admin-profile-menu > li {
+  display: block;
+  width: 100%;
+  padding: 0 0.5rem;
+  border: 0;
+  cursor: default;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-item.admin-profile > .admin-profile-menu > li i {
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-grow: 0;
+  justify-content: center;
+  margin: 0;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-item.admin-profile > .admin-profile-menu > li + li {
+  margin-top: 0;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-item.admin-profile > .admin-profile-menu > li:not(.admin-profile-menu-header):not(.admin-profile-menu-footer) {
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  border-top: 1px solid #edf2f4;
+  border-bottom: 1px solid #edf2f4;
+}
+
+.admin-profile-menu-header {
+  padding: 0.25rem 0.75rem 0.6rem !important;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid #edf2f4;
+}
+
+.admin-profile-menu-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-profile-menu-user {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.admin-profile-menu-user strong,
+.admin-profile-menu-user span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-profile-menu-user strong {
+  font-size: 0.92rem;
+  color: #344f5b;
+}
+
+.admin-profile-menu-user span {
+  font-size: 0.78rem;
+  color: #6b7a90;
+}
+
+.admin-profile-menu-link,
+.admin-profile-menu-footer button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  color: #344f5b;
+  text-align: left;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0.75rem;
+}
+
+.admin-profile-menu-link span,
+.admin-profile-menu-footer button span {
+  flex: 0 1 auto;
+}
+
+.admin-profile-menu-link:hover,
+.admin-profile-menu-footer button:hover {
+  background: #f3f7f8;
+}
+
+.admin-profile-menu-link i,
+.admin-profile-menu-footer button i {
+  color: #516479;
+}
+
+.admin-profile-menu-footer {
+  margin-top: 0;
+  padding-top: 0 !important;
+  border-top: 0;
+}
+
+.admin-profile-menu-footer button {
+  justify-content: flex-start !important;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-mobile-wrapper > li > .profile-toggle-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  margin: 0;
+  background: #ffffff;
+  border: 1px solid #dce8ec;
+  border-radius: 1rem;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-mobile-wrapper > li > .profile-toggle-button .profile-image-wrapper img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-mobile-wrapper > li > .profile-toggle-button .admin-profile-info {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 991px) {
+  .layout-topbar .layout-topbar-wrapper {
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+    height: 75px;
+    padding: 0 0.75rem;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-left {
+    flex: 0 0 auto;
+    height: auto;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-left .topbar-menu-mobile-button {
+    display: none;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-left .sidebar-menu-button {
+    margin-left: 0;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+    height: auto !important;
+    margin-left: auto;
+    padding-right: 0;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right .layout-topbar-actions {
+    display: none !important;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-mobile-wrapper {
+    display: flex !important;
+    align-items: center;
+    height: auto !important;
+    margin: 0;
+    padding: 0 !important;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-mobile-wrapper > li {
+    position: relative;
+    width: auto;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right .admin-profile > .profile-toggle-button {
+    max-width: none;
+    margin-top: 0;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-mobile-wrapper > li > .profile-toggle-button {
+    justify-content: flex-start;
+    min-width: 0;
+    max-width: calc(100vw - 6rem);
+    padding: 0.4rem 0.65rem;
+    border-radius: 999px;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-mobile-wrapper > li > .profile-toggle-button .profile-image-wrapper img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-mobile-wrapper > li.active-topmenuitem > .admin-profile-menu {
+    display: block;
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    left: auto;
+    width: min(18rem, calc(100vw - 1rem));
+    min-width: 0;
+    margin-top: 0;
+    box-shadow: 0 18px 45px rgba(59, 91, 104, 0.16);
+  }
+
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right .profile-mobile-wrapper > li.active-topmenuitem > .admin-profile-menu::before {
+    display: none;
+  }
+
+  .admin-profile-menu {
+    min-width: 0;
+  }
+}
+
+@media (min-width: 992px) {
+  .layout-topbar .layout-topbar-wrapper .layout-topbar-right .admin-profile > .profile-toggle-button {
+    margin-top: 1rem;
+  }
+}

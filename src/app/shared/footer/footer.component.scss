@@ -1,69 +1,90 @@
 .layout-footer {
   width: 100%;
+  height: auto;
+  min-height: 145px;
+  margin: 0 auto;
+  padding: 1rem 0 0.75rem;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.box.content {
   height: 100%;
-  margin: 0;
-
-  .box {
-    .image{
-      margin: 0 5px;
-    }
-    .text {
-      text-align: left;
-     //margin: 0 5px;  
-    }
-    .copy {
-      p {
-        text-align: center;
-        &:nth-child(1){
-          margin-bottom: 0;
-        }
-        span {
-          color: var(--primary-color);
-        }
-      }
-    }
-  }
-}
-.logo-text{
-  .p-grid{
-    background-color: royalblue;
-  }
-  
-}
-.text-title {
-  .box {
-    height: 100%;
-    .text{
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-  }
-}
-
-.logo{
-  width: 100%;
-}
-.copy-content{
   display: flex;
+  align-items: center;
+}
+
+.logo-text {
+  display: flex;
+  align-items: center;
+}
+
+.layout-footer .logo-text img.ImageUps {
+  width: min(100%, 320px) !important;
+  max-width: 100%;
+  height: auto !important;
+  object-fit: contain;
+}
+
+.copy-content {
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  .footer-img{
-    //background-color: red;
-    text-align: center;
-    img{
-      width: 70%;
-    }
-  }
+  gap: 0.35rem;
+  text-align: center;
 }
 
+.edutech {
+  width: 78px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
 
-@media (max-width: 765px) {
-  .box {
-    display: flex;
+.copy p {
+  margin: 0;
+  text-align: center;
+}
+
+.copy p + p {
+  margin-top: 0.3rem;
+}
+
+.copy span {
+  color: var(--primary-color);
+}
+
+.footer-right {
+  text-align: right;
+}
+
+.footer-right .box.content {
+  justify-content: flex-end;
+}
+
+.footer-imgUE img {
+  width: min(100%, 290px);
+  height: auto;
+  object-fit: contain;
+}
+
+.wcag-badge {
+  width: 70px;
+  height: auto;
+  margin-top: 1px;
+}
+
+@media (max-width: 960px) {
+  .layout-footer {
+    padding: 1rem;
+  }
+
+  .box.content,
+  .logo-text,
+  .copy-content {
     justify-content: center;
-    align-items: center;
+  }
+
+  .footer-right {
+    text-align: center;
   }
 }

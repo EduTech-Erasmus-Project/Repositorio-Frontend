@@ -1,12 +1,26 @@
-import { Component, OnInit } from "@angular/core";
+import { Location } from "@angular/common";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
-  selector: "app-error",
-  templateUrl: "./error.component.html",
-  styles: [],
+    selector: "app-error",
+    templateUrl: "./error.component.html",
+    styleUrls: ["./error.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
-export class ErrorComponent implements OnInit {
-  constructor() {}
+/**
+ * Pantalla compartida para fallos no recuperables del frontend.
+ *
+ * Su responsabilidad es ofrecer una salida segura cuando una ruta o flujo
+ * termina en un estado de error general.
+ */
+export class ErrorComponent {
+  constructor(private readonly location: Location) {}
 
-  ngOnInit(): void {}
+  /**
+   * Devuelve al usuario a la pantalla previa del historial del navegador.
+   */
+  goBack(): void {
+    this.location.back();
+  }
 }
