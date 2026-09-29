@@ -1,25 +1,18 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { LoginService } from '../services/login.service';
+import { Injectable } from "@angular/core";
+import { CanActivate, Router } from "@angular/router";
+import { LoginService } from "../services/login.service";
+import { canActivateWithRoles } from "./role-guard.utils";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
+/**
+ * Permite el acceso solo a usuarios con rol `teacher`.
+ */
 export class TeacherGuard implements CanActivate {
+  constructor(private loginService: LoginService, private router: Router) {}
 
-  constructor(private loginService:LoginService, private router:Router){}
-
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot) {
-      if(this.loginService.validateRole('teacher')){
-        return true;
-      }else{
-        this.router.navigate(['home'])
-        //console.log("teacher guard")
-        return false
-      }
+  canActivate(): Promise<boolean> {
+    return canActivateWithRoles(this.loginService, this.router, ["teacher"]);
   }
-  
 }

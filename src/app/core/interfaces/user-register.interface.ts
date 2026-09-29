@@ -1,3 +1,7 @@
+/**
+ * Payload base del formulario de registro antes de transformarlo al contrato
+ * específico que exige cada rol en backend.
+ */
 export interface RegisterForm{
     first_name: string;
     last_name: string;

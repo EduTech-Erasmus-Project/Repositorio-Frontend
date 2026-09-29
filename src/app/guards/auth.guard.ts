@@ -5,18 +5,19 @@ import { LoginService } from "../services/login.service";
 @Injectable({
   providedIn: "root",
 })
+/**
+ * Protege rutas privadas que requieren una sesión persistida válida.
+ */
 export class AuthGuard implements CanActivate {
 
   constructor(private loginService: LoginService, private router: Router) {}
 
-  async canActivate(){
-    let promiseLoged = await this.loginService
-      .isLoged()
-      .then(res => res)
-      .catch(err => {
-        this.router.navigateByUrl('/login');
-        return err;
-      });
-    return promiseLoged as boolean;
+  async canActivate(): Promise<boolean> {
+    try {
+      return await this.loginService.isLoged();
+    } catch {
+      await this.router.navigateByUrl("/login");
+      return false;
+    }
   }
 }

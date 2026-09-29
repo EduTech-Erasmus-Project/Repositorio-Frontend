@@ -1,29 +1,34 @@
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
-import { StorageService } from "../services/storage.service";
 import { LoginService } from "../services/login.service";
 
 @Injectable({
   providedIn: "root",
 })
+/**
+ * Restringe el shell administrativo a administradores y superusuarios.
+ */
 export class AdminGuard implements CanActivate {
   constructor(private loginService: LoginService, private router: Router) {}
-  canActivate(): boolean {
-    //console.log("admin guard")
-    if (this.loginService.user) {
-      if (
-        (this.loginService.user.administrator &&
-          this.loginService.user.administrator !== null) ||
-        this.loginService.validateRole("superuser")
-      ) {
-        return true;
-      } else {
-        this.router.navigate(["/"]);
-        return false;
-      }
-    } else {
+
+  async canActivate(): Promise<boolean> {
+    try {
+      await this.loginService.isLoged();
+    } catch {
       this.router.navigate(["/"]);
       return false;
     }
+
+    const user = this.loginService.user;
+    if (
+      user &&
+      ((user.administrator && user.administrator !== null) ||
+        this.loginService.validateRole("superuser"))
+    ) {
+      return true;
+    }
+
+    this.router.navigate(["/"]);
+    return false;
   }
 }

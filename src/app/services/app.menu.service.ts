@@ -2,19 +2,31 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable()
+/**
+ * Canal de eventos liviano para coordinar el estado del menu administrativo.
+ *
+ * Se usa como bus local entre componentes del shell para abrir ramas activas
+ * o forzar un reset del arbol cuando cambia el contexto de navegacion.
+ */
 export class MenuService {
 
-    private menuSource = new Subject<string>();
-    private resetSource = new Subject();
+    private readonly menuSource = new Subject<string>();
+    private readonly resetSource = new Subject<void>();
 
-    menuSource$ = this.menuSource.asObservable();
-    resetSource$ = this.resetSource.asObservable();
+    readonly menuState$ = this.menuSource.asObservable();
+    readonly reset$ = this.resetSource.asObservable();
 
-    onMenuStateChange(key: string) {
+    /**
+     * Emite la clave de menu que debe marcarse como activa.
+     */
+    onMenuStateChange(key: string): void {
         this.menuSource.next(key);
     }
 
-    reset() {
+    /**
+     * Solicita a los consumidores limpiar el estado expandido del menu.
+     */
+    reset(): void {
         this.resetSource.next();
     }
 }

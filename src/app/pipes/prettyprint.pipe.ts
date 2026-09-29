@@ -1,14 +1,15 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-  name: 'prettyprint'
+  name: "prettyprint",
+  standalone: false,
 })
 export class PrettyprintPipe implements PipeTransform {
-
-  transform(val) {
-    return JSON.stringify(val, undefined, 4)
-      .replace(/ /g, '&nbsp;')
-      .replace(/\n/g, '<br/>');
+  /**
+   * Serializa la metadata tecnica como texto JSON legible para renderizarla
+   * dentro de un `<pre>` sin depender de `innerHTML`.
+   */
+  transform(val: unknown): string {
+    return JSON.stringify(val, undefined, 4) ?? "";
   }
-
 }

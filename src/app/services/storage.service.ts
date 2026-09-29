@@ -1,44 +1,43 @@
-import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
-import * as CryptoJS from "crypto-js";
-import { environment } from '../../environments/environment.prod';
-
-const secretKey = environment.cryptoSecretKey;
+import { Injectable } from "@angular/core";
+import { safeJsonParse } from "../core/utils/json.utils";
 
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Abstraccion minima de almacenamiento local para datos no sensibles.
+ *
+ * Se usa para persistir preferencias de UI y referencias locales de
+ * interaccion. No debe usarse para tokens, secretos ni estado autentico de
+ * sesion.
+ */
 export class StorageService {
+  constructor() {}
 
-  constructor() { }
-
-  saveCookieItem(key: string, value: string) {
-    let data = CryptoJS.AES.encrypt(
-      JSON.stringify(value),
-      secretKey
-    ).toString();
-    //console.log("Value",data)
-    //this.cookieService.set(key, data);
-    localStorage.setItem(key, data);
+  /**
+   * Serializa un valor en JSON antes de guardarlo en `localStorage`.
+   */
+  saveLocalItem<T>(key: string, value: T): void {
+    localStorage.setItem(key, JSON.stringify(value));
   }
 
-  getCookieItem(key: string): string {
-    //let cookieValue = this.cookieService.get(key);
-    let storageValue = localStorage.getItem(key);
+  /**
+   * Recupera y parsea un valor previamente persistido.
+   */
+  getLocalItem<T>(key: string): T | null {
+    const storageValue = localStorage.getItem(key);
 
-    if(storageValue){
-      let bytes = CryptoJS.AES.decrypt(storageValue, secretKey);
-      let originalText = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-      return originalText;
-    }else{
-      return null;
+    if (storageValue) {
+      return safeJsonParse<T | null>(storageValue, null) as T;
     }
+
+    return null;
   }
 
-  removeCookieItem(key: string): void {
-    //this.cookieService.delete(key);
+  /**
+   * Elimina un valor persistido del almacenamiento local.
+   */
+  removeLocalItem(key: string): void {
     localStorage.removeItem(key);
   }
-
-  
 }

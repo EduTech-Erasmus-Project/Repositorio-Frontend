@@ -1,18 +1,19 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'noimage'
+    name: 'noimage',
+    standalone: false
 })
 export class NoimagePipe implements PipeTransform {
 
-  transform(images:any): string {
+  transform(images: { length?: number; image?: string } | null | undefined): string {
     if(!images){
-      return 'assets/images/noimage.png';
+      return 'assets/img/noimage.png';
     }
     if (images.length>0){
       return images.image;
     }else{
-      return 'assets/images/noimage.png';
+      return 'assets/img/noimage.png';
     }
   }
 
