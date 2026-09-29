@@ -7,64 +7,139 @@
     <base href="/">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-    <link id="theme-css" rel="stylesheet" type="text/css" href="assets/theme/blue/theme-light.css">
-    <link id="layout-css" rel="stylesheet" type="text/css" href="assets/layout/css/blue/layout-light.css">
-
     <!-- uiPreferences -->
-    <!-- css -->
-    <link rel="stylesheet" type="text/css" href="assets/uiOptions/framework/core/css/fluid.css">
-    <link rel="stylesheet" type="text/css" href="assets/uiOptions/framework/preferences/css/Enactors.css">
-    <link rel="stylesheet" type="text/css" href="assets/uiOptions/framework/preferences/css/PrefsEditor.css">
-    <link rel="stylesheet" type="text/css"
-        href="assets/uiOptions/framework/preferences/css/SeparatedPanelPrefsEditor.css">
-    <link rel="stylesheet" type="text/css" href="assets/uiOptions/components/overviewPanel/css/OverviewPanel.css">
-    
-    <!-- js -->
-    <script type="text/javascript" src="assets/uiOptions/lib/jquery/core/js/jquery.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/lib/jquery/ui/js/jquery-ui.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidDocument.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/jquery.keyboard-a11y.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/Fluid.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidRequests.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidDOMUtilities.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidIoC.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/DataBinding.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/ModelTransformation.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/ModelTransformationTransforms.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidView.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/core/js/ResourceLoader.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/lib/fastXmlPull/js/fastXmlPull.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/fluidParser.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/fluidRenderer.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/RendererUtilities.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/enhancement/js/ContextAwareness.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/enhancement/js/ProgressiveEnhancement.js"></script>
-    
-    <!-- For the IoC Inspector UI -->
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/URLUtilities.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Store.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/components/textfieldSlider/js/TextfieldSlider.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/UIEnhancer.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/PrefsEditor.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Panels.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Enactors.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/SeparatedPanelPrefsEditor.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/components/slidingPanel/js/SlidingPanel.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/components/tableOfContents/js/TableOfContents.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/PrimaryBuilder.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/AuxBuilder.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/StarterSchemas.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Builder.js"></script>
-    <script type="text/javascript" src="assets/uiOptions/components/uiOptions/js/UIOptions.js"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@duetds/date-picker@1.4.0/dist/duet/themes/default.css" />
 
-    <script type="text/javascript" src="assets/uiOptions/components/overviewPanel/js/OverviewPanel.js"></script>
+        <!-- js -->
+        <script type="text/javascript" src="assets/uiOptions/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/lib/jquery/ui/js/jquery-ui.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidDocument.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/jquery.keyboard-a11y.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidRequests.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidIoC.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/ModelTransformation.js"></script>
+        <script type="text/javascript"
+            src="assets/uiOptions/framework/core/js/ModelTransformationTransforms.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidView.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/core/js/ResourceLoader.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/lib/fastXmlPull/js/fastXmlPull.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/RendererUtilities.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/enhancement/js/ContextAwareness.js"></script>
+        <script type="text/javascript"
+            src="assets/uiOptions/framework/enhancement/js/ProgressiveEnhancement.js"></script>
+
+        <!-- For the IoC Inspector UI -->
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/URLUtilities.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Store.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/components/textfieldSlider/js/TextfieldSlider.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/UIEnhancer.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/PrefsEditor.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Panels.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Enactors.js"></script>
+        <script type="text/javascript"
+            src="assets/uiOptions/framework/preferences/js/SeparatedPanelPrefsEditor.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/components/slidingPanel/js/SlidingPanel.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/components/tableOfContents/js/TableOfContents.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/PrimaryBuilder.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/AuxBuilder.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/StarterSchemas.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Builder.js"></script>
+        <script type="text/javascript" src="assets/uiOptions/components/uiOptions/js/UIOptions.js"></script>
+
+        <script type="text/javascript" src="assets/uiOptions/components/overviewPanel/js/OverviewPanel.js"></script>
+        <script type="text/javascript" src="assets/lightbox/lightbox.js"></script>
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XDZTP6QXN"></script>
 
 </head>
 
 <body>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-7WLDM22NHX');
+    </script>
     <script type="text/javascript">
+        function syncPrefsEditorOffset() {
+            var root = document.documentElement;
+            var prefsEditor = document.querySelector(".flc-prefsEditor-separatedPanel");
+
+            if (!prefsEditor) {
+                root.style.setProperty("--prefs-editor-offset", "0px");
+                return;
+            }
+
+            var panel = prefsEditor.querySelector(".flc-slidingPanel-panel");
+            var panelBar = prefsEditor.querySelector(".fl-panelBar");
+            var editorRect = prefsEditor.getBoundingClientRect();
+            var visibleBottom = editorRect.bottom;
+
+            if (panel) {
+                visibleBottom = Math.max(visibleBottom, panel.getBoundingClientRect().bottom);
+            }
+
+            if (panelBar) {
+                visibleBottom = Math.max(visibleBottom, panelBar.getBoundingClientRect().bottom);
+            }
+
+            var nextOffset = Math.max(0, Math.ceil(visibleBottom));
+            root.style.setProperty("--prefs-editor-offset", nextOffset + "px");
+        }
+
+        function bindPrefsEditorOffsetSync() {
+            var prefsEditor = document.querySelector(".flc-prefsEditor-separatedPanel");
+
+            if (!prefsEditor || prefsEditor.dataset.offsetSyncBound === "true") {
+                syncPrefsEditorOffset();
+                return;
+            }
+
+            prefsEditor.dataset.offsetSyncBound = "true";
+            syncPrefsEditorOffset();
+
+            var rafSync = function () {
+                window.requestAnimationFrame(syncPrefsEditorOffset);
+            };
+
+            var resizeTarget = prefsEditor.querySelector(".flc-slidingPanel-panel");
+            var panelBar = prefsEditor.querySelector(".fl-panelBar");
+            var toggleButton = prefsEditor.querySelector(".flc-slidingPanel-toggleButton");
+
+            if ("ResizeObserver" in window) {
+                window.__prefsEditorResizeObserver = new ResizeObserver(rafSync);
+                window.__prefsEditorResizeObserver.observe(prefsEditor);
+
+                if (resizeTarget) {
+                    window.__prefsEditorResizeObserver.observe(resizeTarget);
+                }
+
+                if (panelBar) {
+                    window.__prefsEditorResizeObserver.observe(panelBar);
+                }
+            }
+
+            if (toggleButton) {
+                toggleButton.addEventListener("click", function () {
+                    rafSync();
+                    window.setTimeout(syncPrefsEditorOffset, 425);
+                });
+            }
+
+            window.addEventListener("resize", rafSync, { passive: true });
+            window.addEventListener("scroll", rafSync, { passive: true });
+        }
+
         $(document).ready(function () {
             fluid.uiOptions.prefsEditor(".flc-prefsEditor-separatedPanel", {
                 lazyLoad: true,
@@ -77,6 +152,9 @@
                     "overviewPanel": ".flc-overviewPanel"
                 }
             });
+
+            bindPrefsEditorOffsetSync();
+            window.setTimeout(bindPrefsEditorOffsetSync, 450);
         });
     </script>
 
@@ -87,13 +165,20 @@
 
         <!-- This div is for the sliding panel that shows and hides the Preference Editor controls -->
         <div class="fl-panelBar">
+
+            <!-------------------------------Botones de Accesibilidad-------------------------------->
             <span class="fl-prefsEditor-buttons">
-                <button id="reset" class="flc-prefsEditor-reset fl-prefsEditor-reset"><span class="fl-icon-undo"></span> Reset</button>
-                <button id="show-hide" class="flc-slidingPanel-toggleButton fl-prefsEditor-showHide"> Show/Hide</button>
+                <button id="reset" class="flc-prefsEditor-reset fl-prefsEditor-reset"><span class="fl-icon-undo"></span>
+                    Reset</button>
+                <button id="show-hide" class="flc-slidingPanel-toggleButton fl-prefsEditor-showHide">
+                    Show/Hide</button>
             </span>
         </div>
     </div>
     <!-- END markup for Preference Editor -->
+
+
+
 
     <app-root>
         <div class="splash-screen">
@@ -109,6 +194,7 @@
             </div>
         </div>
     </app-root>
+    <script type="text/javascript" src="assets/W3C_Components/W3C.js"></script>
 </body>
 
 </html>

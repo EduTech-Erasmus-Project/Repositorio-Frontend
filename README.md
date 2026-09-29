@@ -26,7 +26,7 @@ npm install -g @angular/cli
 
 ### Instalación 🔧
 
-_Este proyecto esta generado con <a href="https://angular.io/cli">Angular CLI</a> versión 11.0.0_
+_Este proyecto esta generado con <a href="https://angular.io/cli">Angular CLI</a> versión 16.2.12_
 
 - Descargar las dependencias del proyecto
 

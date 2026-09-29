@@ -101,7 +101,7 @@
   border: 1px solid #b3b3b3;
   border-radius: 2em;
   box-shadow: 4px 2px 3px rgba(0,0,0,0.3);
-  background-image: linear-gradient(right top, #fff 46%, #e9eaea 73%);
+  background-image: linear-gradient(to left bottom, #fff 46%, #e9eaea 73%);
 }
 .fl-prefsEditor .fl-slider a:active,
 .fl-prefsEditor .fl-slider .fl-slider-handle:active {
@@ -122,7 +122,7 @@
   border: 1px solid #b3b3b3;
   border-radius: 2em;
   box-shadow: 4px 2px 3px rgba(0,0,0,0.3);
-  background-image: linear-gradient(right top, #fff 46%, #e9eaea 73%);
+  background-image: linear-gradient(to left bottom, #fff 46%, #e9eaea 73%);
 }
 .fl-prefsEditor input[type=range].fl-slider::-moz-range-thumb {
   background-image: -webkit-linear-gradient(right top, #fff 46%, #e9eaea 73%);
@@ -135,7 +135,7 @@
   border: 1px solid #b3b3b3;
   border-radius: 2em;
   box-shadow: 4px 2px 3px rgba(0,0,0,0.3);
-  background-image: linear-gradient(right top, #fff 46%, #e9eaea 73%);
+  background-image: linear-gradient(to left bottom, #fff 46%, #e9eaea 73%);
 }
 .fl-prefsEditor input[type=range].fl-slider::-ms-thumb {
   background-image: -webkit-linear-gradient(right top, #fff 46%, #e9eaea 73%);
@@ -148,7 +148,7 @@
   border: 1px solid #b3b3b3;
   border-radius: 2em;
   box-shadow: 4px 2px 3px rgba(0,0,0,0.3);
-  background-image: linear-gradient(right top, #fff 46%, #e9eaea 73%);
+  background-image: linear-gradient(to left bottom, #fff 46%, #e9eaea 73%);
 }
 .fl-prefsEditor input[type=range].fl-slider::-webkit-slider-runnable-track {
   background: transparent;
@@ -275,7 +275,7 @@
   background-image: -moz-linear-gradient(bottom, #cdccca 0%, #f4f4f4 100%);
   background-image: -o-linear-gradient(bottom, #cdccca 0%, #f4f4f4 100%);
   background-image: -ms-linear-gradient(bottom, #cdccca 0%, #f4f4f4 100%);
-  background-image: linear-gradient(bottom, #cdccca 0%, #f4f4f4 100%);
+  background-image: linear-gradient(to top, #cdccca 0%, #f4f4f4 100%);
 }
 .fl-prefsEditor .fl-prefsEditor-onoff input + label .fl-prefsEditor-switch:after {
   float: left;
