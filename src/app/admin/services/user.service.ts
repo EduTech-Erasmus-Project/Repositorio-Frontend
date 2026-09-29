@@ -1,34 +1,31 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, tap } from 'rxjs/operators';
+import {
+  ApiPaginatedResponse,
+  ManagedUserSummary,
+  ReportFilterParams,
+} from 'src/app/core/interfaces/api-contracts';
 import { environment } from 'src/environments/environment';
-import { RegisterForm } from '../../core/interfaces/user-register.interface';
-import { AuthService } from './auth.service';
 
 const baseUrl = environment.baseUrl;
+
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Consultas administrativas vigentes para listados y reportes de superadmin.
+ *
+ * Los metodos legacy basados en `/api/usuario-administrador/` se retiraron
+ * porque no tenian consumo real y apuntaban a endpoints inexistentes.
+ */
 export class UserService {
+  constructor(private readonly http: HttpClient) {}
 
-  userToken: string;
-
-  constructor(private http: HttpClient, private auth: AuthService) { 
+  listAdministratorUser() {
+    return this.http.get<ManagedUserSummary[]>(`${baseUrl}/management-superuser/`);
   }
 
-  register(formData: RegisterForm,){
-    const headers = new HttpHeaders({
-      "Authorization": "Token " + localStorage.getItem("token")
-    });
-    return this.http.post(`${ baseUrl }/api/usuario-administrador/`, formData, { headers })
-  }
-  getUserAdminList(){
-    const headers = new HttpHeaders({
-      "Authorization": "Token " +localStorage.getItem("token")
-    });
-    return this.http.get(`${ baseUrl }/api/usuario-administrador/`,{ headers }).pipe(map((data: any) => data));
-  }
-  listAdministratorUser(){
-    return this.http.get(`${ baseUrl }/management-superuser/`).pipe(map((data: any) => data));
+  getReportUsers(params: ReportFilterParams) {
+    return this.http.get<ApiPaginatedResponse<ManagedUserSummary> | ManagedUserSummary[]>(`${baseUrl}/report`, { params });
   }
 }

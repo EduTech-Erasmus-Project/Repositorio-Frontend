@@ -1,71 +1,91 @@
 
 <div class="p-grid table-demo">
-	<div class="p-col-12">
-		<div class="card">
-			<app-loading *ngIf="!isLoading"></app-loading>
-			<p-table *ngIf="isLoading" #dt [value]="listStudent" [(selection)]="userList"  dataKey="id"
-					 styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [paginator]="true"
-					 [filterDelay]="0" [globalFilterFields]="['first_name','last_name']">
-				<ng-template pTemplate="caption">
-					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-						{{'admin.students' | translate }}
-						<span class="p-input-icon-left">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-						   placeholder="Buscar"/>
+  <div class="p-col-12">
+    <div class="card">
+      @if (!hasLoaded && isLoading) {
+        <app-loading></app-loading>
+      }
+      @if (hasLoaded) {
+        <p-table #dt [value]="listStudent" dataKey="id"
+          [loading]="isLoading"
+          styleClass="p-datatable-customers" [rowHover]="true" [rows]="pageSize"
+          [filterDelay]="0" [globalFilterFields]="['first_name','last_name','email']">
+          <ng-template pTemplate="caption">
+            <div class="table-header">
+              <span class="table-title">{{'admin.students' | translate }}</span>
+              <span class="p-input-icon-left table-search">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="onSearchInput($any($event.target).value)"
+                  placeholder="Buscar"/>
                 </span>
-					</div>
-				</ng-template>
-				<ng-template pTemplate="header">
-					<tr>
-                        <th style="width: 4rem">
-							<div class="p-d-flex p-jc-between p-ai-center">
-								{{'admin.image' | translate }}
-							</div>
-						</th>
-						<th style="width: 18%" >
-							<div class="p-d-flex p-jc-between p-ai-center">
-								{{'admin.first_name' | translate}}
-							</div>
-						</th>
-						<th style="width: 13%">
-							<div class="p-d-flex p-jc-between p-ai-center">
-								{{'admin.email' | translate }}
-							</div>
-						</th>
-						<th style="width: 18rem">{{'admin.disability' | translate }}</th>
-						<th style="width: 18%">{{'admin.preferences' | translate }}</th>
-					</tr>
-				</ng-template>
-				<ng-template pTemplate="body" let-student>
-					<tr class="p-selectable-row">
-                        <td>
-							<img src="{{student.image_url}}" alt="student.first_name" width="40">
-						</td>
-						<td>
-							<span class="p-column-title">{{'admin.first_name' | translate}}</span>
-							<p>{{student.first_name || ""}} {{student.last_name || ""}}</p>
-						</td>
-						<td>
-							<span class="p-column-title">{{'admin.email' | translate}}</span>
-							<p>{{student.email || ""}}</p>
-						</td>
-						<td>
-                            <p>{{student.student.disability_description || ""}}</p>
-						</td>
-						<td>
-                            <div *ngFor="let preferences of student.student.preferences">
-                                <p-tag styleClass="p-mr-2 p-mt-2" severity="success" value="{{preferences.description || ''}}" [rounded]="true"></p-tag>
-                            </div>
-						</td>
-						
-					</tr>
-				</ng-template>
-				<ng-template pTemplate="emptymessage">
-					<tr>
-						<td colspan="8">{{'admin.emptyStudent' | translate }}</td>
-					</tr>
-				</ng-template>
-			</p-table>
-	</div>
-</div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th class="admin-col-10pct">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    {{'admin.image' | translate }}
+                  </div>
+                </th>
+                <th class="admin-col-24pct" >
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    {{'admin.first_name' | translate}}
+                  </div>
+                </th>
+                <th class="admin-col-20pct">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    {{'admin.email' | translate }}
+                  </div>
+                </th>
+                <th class="admin-col-20pct">{{'admin.disability' | translate }}</th>
+                <th class="admin-col-28pct">{{'admin.preferences' | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-student>
+              <tr class="p-selectable-row">
+                <td>
+                  <span class="p-column-title">{{'admin.image' | translate}}</span>
+                  <img class="student-avatar" [src]="getAvatar(student)" [alt]="student.first_name || 'student'" width="40">
+                </td>
+                <td class="table-cell-copy">
+                  <span class="p-column-title">{{'admin.first_name' | translate}}</span>
+                  <p>{{student.first_name || ""}} {{student.last_name || ""}}</p>
+                </td>
+                <td class="table-cell-copy">
+                  <span class="p-column-title">{{'admin.email' | translate}}</span>
+                  <p>{{student.email || ""}}</p>
+                </td>
+                <td class="table-cell-copy">
+                  <span class="p-column-title">{{'admin.disability' | translate}}</span>
+                  <p>{{student.student.disability_description || ""}}</p>
+                </td>
+                <td class="table-preferences">
+                  <span class="p-column-title">{{'admin.preferences' | translate}}</span>
+                  @for (preferenceLabel of getPreferenceLabels(student); track preferenceLabel) {
+                    <div>
+                      <p-tag styleClass="p-mr-2 p-mt-2" severity="success" [value]="preferenceLabel" [rounded]="true"></p-tag>
+                    </div>
+                  }
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="8">{{'admin.emptyStudent' | translate }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+        @if (hasLoaded) {
+          <p-paginator
+            #paginator
+            [rows]="pageSize"
+            [first]="first"
+            [totalRecords]="totalRecords"
+            (onPageChange)="paginate($event)"
+          ></p-paginator>
+        }
+      </div>
+    </div>
+  </div>
+

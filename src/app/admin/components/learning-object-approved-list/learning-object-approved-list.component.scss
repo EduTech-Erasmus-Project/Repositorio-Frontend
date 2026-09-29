@@ -1,158 +1,313 @@
 :host ::ng-deep {
-	.p-paginator {
-		.p-paginator-current {
-			margin-left: auto;
-		}
+	.filter-grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: 1rem;
+		align-items: end;
+		margin: 0 0 1.25rem;
 	}
 
-	.p-progressbar {
-		height: .5rem;
-		background-color: #D8DADC;
-
-		.p-progressbar-value {
-			background-color: #607D8B;
-		}
+	.filter-grid > .filter-field {
+		grid-column: span 3;
+		min-width: 0;
 	}
 
-	.table-header {
+	.filter-grid > .filter-field--search {
+		grid-column: span 4;
+	}
+
+	.filter-field {
 		display: flex;
-		justify-content: space-between;
+		flex-direction: column;
+		gap: 6px;
+
+		label {
+			color: #4c566a;
+			font-weight: 500;
+			line-height: 1.2;
+		}
 	}
 
-	.p-calendar .p-datepicker {
-		min-width: 25rem;
+	.filter-field p-datepicker,
+	.filter-field .p-datepicker,
+	.filter-field .p-datepicker .p-inputtext,
+	.title-filter-field .p-input-icon-left,
+	.title-filter-field .p-inputtext {
+		width: 100%;
+	}
 
-		td {
-			font-weight: 400;
+	.filter-field .p-datepicker {
+		display: flex;
+		align-items: stretch;
+		overflow: hidden;
+		background: #ffffff;
+		border: 1px solid var(--p-form-field-border-color, #cbd5e1);
+		border-radius: 6px;
+		box-shadow: none;
+	}
+
+	.filter-field .p-datepicker-input,
+	.filter-field .p-datepicker .p-inputtext,
+	.title-filter-field .p-inputtext {
+		min-height: 42px;
+	}
+
+	.filter-field .p-datepicker-input {
+		flex: 1 1 auto;
+		min-width: 0;
+		width: 100% !important;
+		border: 0 !important;
+		border-radius: 0 !important;
+		box-shadow: none !important;
+	}
+
+	.filter-field .p-datepicker-dropdown {
+		flex: 0 0 42px;
+		width: 42px;
+		min-width: 42px;
+		height: 42px;
+		color: #4c566a;
+		background: #ffffff;
+		border: 0 !important;
+		border-left: 1px solid var(--p-form-field-border-color, #cbd5e1) !important;
+		border-radius: 0 !important;
+		box-shadow: none !important;
+	}
+
+	.filter-field .p-datepicker-dropdown:hover {
+		background: #f8fafc;
+	}
+
+	.title-filter-field .p-input-icon-left {
+		position: relative;
+		display: block;
+	}
+
+	.title-filter-field .p-input-icon-left > i {
+		position: absolute;
+		top: 50%;
+		left: 12px;
+		z-index: 1;
+		pointer-events: none;
+		transform: translateY(-50%);
+	}
+
+	.title-filter-field .p-inputtext {
+		padding-left: 40px;
+	}
+
+	.filter-actions {
+		display: flex;
+		align-items: flex-end;
+		grid-column: span 2;
+		min-width: 0;
+	}
+
+	.filter-actions .p-button,
+	.filter-actions .filter-submit-button {
+		width: 100%;
+		min-height: 42px;
+	}
+
+	.p-paginator {
+		gap: 0.5rem;
+		flex-wrap: wrap;
+		margin-top: 1rem;
+		padding: 1rem 0 0;
+		border-top: 1px solid #eef2f6;
+		background: transparent;
+
+		.p-paginator-current {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 2.75rem;
+			margin-left: auto;
+			padding: 0 0.9rem;
+			border: 1px solid #dbe5ec;
+			border-radius: 12px;
+			background: #ffffff;
+			color: #4c566a;
+			line-height: 1.2;
+			text-align: center;
+			box-sizing: border-box;
 		}
 	}
 
 	.p-datatable.p-datatable-customers {
-		.p-datatable-header {
-			padding: 1rem;
-			text-align: left;
-			font-size: 1.5rem;
+		border-top: 0 !important;
+		box-shadow: none;
+
+		.p-datatable-wrapper,
+		.p-datatable-table,
+		.p-datatable-thead > tr:first-child > th,
+		.p-datatable-tbody > tr:first-child > td {
+			border-top: 0 !important;
 		}
 
-		.p-paginator {
-			padding: 1rem;
-		}
-
-		.p-datatable-thead > tr > th {
-			text-align: left;
-		}
-
-		.p-dropdown-label:not(.p-placeholder) {
-			text-transform: uppercase;
-		}
-	}
-
-	.p-datatable.p-datatable-customers:not(.p-datatable-gridlines) {
 		.p-datatable-tbody > tr > td {
-			cursor: auto;
+			padding-top: 1rem;
+			padding-bottom: 1rem;
+			vertical-align: top;
 		}
 	}
 
-	/* Responsive */
 	.p-datatable-customers .p-datatable-tbody > tr > td .p-column-title {
 		display: none;
+	}
+
+	.learning-object-copy-cell h4,
+	.learning-object-copy-cell p,
+	.learning-object-copy-cell label,
+	.learning-object-evaluation-cell p {
+		margin-top: 0;
+	}
+
+	.learning-object-copy-cell h4 {
+		margin-bottom: 0.5rem;
+		line-height: 1.35;
+	}
+
+	.learning-object-copy-cell p,
+	.learning-object-status-cell,
+	.p-datatable-tbody > tr > td > label,
+	.learning-object-evaluation-cell {
+		line-height: 1.5;
+	}
+
+	.learning-object-actions-cell {
+		text-align: center;
+	}
+
+	.learning-object-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+	}
+
+	.learning-object-actions .p-button,
+	.learning-object-evaluation-cell .p-button {
+		min-width: 8.75rem;
+		justify-content: center;
+	}
+
+	.learning-object-evaluation-cell .button-student-ref,
+	.learning-object-evaluation-cell .button-expert-ref {
+		display: block;
+	}
+
+	.learning-object-evaluation-cell .button-student-ref + .button-expert-ref,
+	.learning-object-evaluation-cell .button-expert-ref + .button-student-ref {
+		margin-top: 0.55rem;
 	}
 }
 
 .customer-badge {
 	border-radius: 2px;
-	padding: .25em .5rem;
+	padding: 0.25em 0.5rem;
 	text-transform: uppercase;
 	font-weight: 700;
 	font-size: 12px;
-	letter-spacing: .3px;
+	letter-spacing: 0.3px;
 
 	&.status-qualified {
-		background: #C8E6C9;
+		background: #c8e6c9;
 		color: #256029;
 	}
 
 	&.status-unqualified {
-		background: #FFCDD2;
-		color: #C63737;
+		background: #ffcdd2;
+		color: #c63737;
 	}
 
 	&.status-negotiation {
-		background: #FEEDAF;
-		color: #8A5340;
+		background: #feedaf;
+		color: #8a5340;
 	}
 
 	&.status-new {
-		background: #B3E5FC;
-		color: #23547B;
+		background: #b3e5fc;
+		color: #23547b;
 	}
 
 	&.status-renewal {
-		background: #ECCFFF;
+		background: #eccfff;
 		color: #694382;
 	}
 
 	&.status-proposal {
-		background: #FFD8B2;
-		color: #805B36;
+		background: #ffd8b2;
+		color: #805b36;
 	}
 }
 
 .product-badge {
 	border-radius: 2px;
-	padding: .25em .5rem;
+	padding: 0.25em 0.5rem;
 	text-transform: uppercase;
 	font-weight: 700;
 	font-size: 12px;
-	letter-spacing: .3px;
+	letter-spacing: 0.3px;
 
 	&.status-instock {
-		background: #C8E6C9;
+		background: #c8e6c9;
 		color: #256029;
 	}
 
 	&.status-outofstock {
-		background: #FFCDD2;
-		color: #C63737;
+		background: #ffcdd2;
+		color: #c63737;
 	}
 
 	&.status-lowstock {
-		background: #FEEDAF;
-		color: #8A5340;
+		background: #feedaf;
+		color: #8a5340;
 	}
 }
 
 .order-badge {
 	border-radius: 2px;
-	padding: .25em .5rem;
+	padding: 0.25em 0.5rem;
 	text-transform: uppercase;
 	font-weight: 700;
 	font-size: 12px;
-	letter-spacing: .3px;
+	letter-spacing: 0.3px;
 
 	&.order-delivered {
-		background: #C8E6C9;
+		background: #c8e6c9;
 		color: #256029;
 	}
 
 	&.order-cancelled {
-		background: #FFCDD2;
-		color: #C63737;
+		background: #ffcdd2;
+		color: #c63737;
 	}
 
 	&.order-pending {
-		background: #FEEDAF;
-		color: #8A5340;
+		background: #feedaf;
+		color: #8a5340;
 	}
 
 	&.order-returned {
-		background: #ECCFFF;
+		background: #eccfff;
 		color: #694382;
 	}
 }
 
 @media screen and (max-width: 960px) {
 	:host ::ng-deep {
+		.filter-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.filter-grid > .filter-field,
+		.filter-grid > .filter-field--search,
+		.filter-actions {
+			grid-column: auto;
+		}
+
 		.p-datatable {
 			&.p-datatable-customers {
 				.p-datatable-thead > tr > th,
@@ -160,33 +315,55 @@
 					display: none !important;
 				}
 
+				.p-datatable-tbody {
+					display: block;
+				}
+
 				.p-datatable-tbody > tr {
-					border-bottom: 1px solid var(--surface-d);
+					display: block;
+					margin-bottom: 1rem;
+					border: 1px solid #dbe5ec;
+					border-radius: 16px;
+					background: #ffffff;
+					box-shadow: 0 10px 24px rgba(47, 69, 81, 0.06);
+					overflow: hidden;
 
 					> td {
 						text-align: left;
 						display: block;
 						border: 0 none !important;
 						width: 100% !important;
-						float: left;
-						clear: left;
-						border: 0 none;
+						float: none;
+						clear: both;
+						padding: 0.9rem 1rem !important;
+						border-top: 1px solid #eef2f6 !important;
+
+						&:first-child {
+							border-top: 0 !important;
+						}
 
 						.p-column-title {
-							padding: .4rem;
-							min-width: 30%;
-							display: inline-block;
-							margin: -.4rem 1rem -.4rem -.4rem;
-							font-weight: bold;
+							display: block;
+							margin: 0 0 0.4rem;
+							padding: 0;
+							min-width: 0;
+							color: #4c566a;
+							font-size: 0.76rem;
+							font-weight: 700;
+							letter-spacing: 0.04em;
+							text-transform: uppercase;
 						}
 
 						.p-progressbar {
-							margin-top: .5rem;
+							margin-top: 0.5rem;
 						}
 					}
+				}
+
+				.learning-object-actions {
+					justify-content: flex-start;
 				}
 			}
 		}
 	}
-
 }

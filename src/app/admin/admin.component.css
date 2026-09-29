@@ -1,0 +1,76 @@
+:host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-main {
+  margin-left: 84px;
+  transition: margin-left 0.2s ease;
+}
+
+:host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-topbar {
+  top: var(--prefs-editor-offset, 0px);
+  width: calc(100% - 84px);
+  transition: width 0.2s ease;
+}
+
+:host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-sidebar,
+:host ::ng-deep .layout-wrapper:not(.layout-horizontal).layout-wrapper-static .layout-sidebar {
+  top: var(--prefs-editor-offset, 0px);
+  height: calc(100vh - var(--prefs-editor-offset, 0px));
+}
+
+:host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-breadcrumb {
+  padding: 0.9rem 2rem 0.35rem;
+}
+
+:host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-content {
+  padding: 1rem 2rem 2rem;
+}
+
+:host ::ng-deep .layout-wrapper:not(.layout-horizontal).layout-wrapper-static .layout-main {
+  margin-left: 272px;
+}
+
+:host ::ng-deep .layout-wrapper:not(.layout-horizontal).layout-wrapper-static .layout-topbar {
+  width: calc(100% - 272px);
+}
+
+@media (max-width: 991px) {
+  :host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-main {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  :host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-topbar {
+    top: var(--prefs-editor-offset, 0px);
+    width: 100% !important;
+    z-index: 1001;
+  }
+
+  :host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-sidebar,
+  :host ::ng-deep .layout-wrapper:not(.layout-horizontal).layout-wrapper-static .layout-sidebar {
+    top: calc(var(--prefs-editor-offset, 0px) + 75px);
+    height: calc(100vh - 75px - var(--prefs-editor-offset, 0px));
+    width: min(17.5rem, calc(100vw - 2.5rem));
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate3d(-100%, 0, 0) !important;
+  }
+
+  :host ::ng-deep .layout-wrapper:not(.layout-horizontal).layout-sidebar-mobile-active .layout-sidebar,
+  :host ::ng-deep .layout-wrapper:not(.layout-horizontal).layout-wrapper-static.layout-sidebar-mobile-active .layout-sidebar {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  :host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-main-mask {
+    top: calc(var(--prefs-editor-offset, 0px) + 75px);
+    height: calc(100% - 75px - var(--prefs-editor-offset, 0px));
+    z-index: 998;
+  }
+
+  :host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-breadcrumb {
+    padding: 0.75rem 1rem 0.2rem;
+  }
+
+  :host ::ng-deep .layout-wrapper:not(.layout-horizontal) .layout-content {
+    padding: 0.85rem 1rem 1.5rem;
+  }
+}

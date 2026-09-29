@@ -1,7 +1,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-    name:'upperCapilal'
+    name: 'upperCapilal',
+    standalone: false
 })
 export class UpperCapilPipeComponent implements PipeTransform {
     transform(word: string): string{

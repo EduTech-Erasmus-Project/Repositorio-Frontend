@@ -1,102 +1,335 @@
-<div class="p-grid">
-    <div class="p-col-12 p-md-12">
-        <app-loading *ngIf="!isLoading"></app-loading>
-        <div class="card">
-            <div class="p-col-3 overview-box-icon">
-            </div>
-            <p-divider layout="horizontal" align="left"></p-divider>
-            <strong>{{ 'admin.first_name' | translate }}</strong>
-            <p>{{user.first_name}}</p>
-            <p-divider layout="horizontal" align="left"></p-divider>
-            <strong>{{ 'admin.last_name' | translate }}</strong>
-            <p>{{user.last_name}}</p>
-            <p-divider layout="horizontal" align="left"></p-divider>
-            <strong>{{ 'admin.email' | translate }}</strong>
-            <p>{{user.email}}</p>
-            <p-divider layout="horizontal" align="left"></p-divider>
-            <strong *ngIf="isEmpty">{{ 'admin.phone' | translate }}</strong>
-            <p>{{administrator.phone || ""}}</p>
-            <p-divider *ngIf="isEmpty" layout="horizontal" align="left"></p-divider>
-            <strong *ngIf="isEmpty">{{ 'admin.city' | translate }}</strong>
-            <p>{{administrator.country || ""}}</p>
-            <p-divider *ngIf="isEmpty" layout="horizontal" align="left"></p-divider>
-        </div>
-    </div>
-    <div class="p-field p-col-12 p-md-6">
-        <button *ngIf="!activeUpdate" (click)="openChangeData(user)" pButton pRipple type="button" label="{{ 'admin.btnUpdate' | translate }}"
-            class="p-button-primary p-mr-2 p-mb-0"></button>
-        <button *ngIf="!activeUpdate" (click)="openChangePassword()" pButton pRipple type="button" label="{{ 'admin.btnChangePassword' | translate }}"
-            class="p-button-primary p-mr-2 p-mb-0"></button>
-    </div>
-    <form autocomplete="off" [formGroup]="passwordUpdateForm" (ngSubmit)="udpatePassword()" id="udpatePassword">
+<div class="admin-profile-page">
+  @if (!isReady) {
+    <app-loading></app-loading>
+  }
 
-        <p-dialog [(visible)]="changePasswordDialog" [style]="{width: '450px'}" header="{{ 'admin.btnChangePassword' | translate }}" [modal]="true"
-        styleClass="p-fluid">
+  @if (isReady) {
+    <div class="card admin-profile-card">
+      <div class="profile-hero">
+        <div class="profile-avatar">
+          {{ getUserInitials() }}
+        </div>
+        <div class="profile-hero-copy">
+          <p class="profile-kicker">Perfil de administrador</p>
+          <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+          <p class="profile-email">{{ user.email }}</p>
+        </div>
+        @if (!activeUpdate) {
+          <div class="profile-actions">
+            <button
+              (click)="openChangeData(user)"
+              pButton
+              pRipple
+              type="button"
+              [label]="'admin.btnUpdate' | translate"
+              icon="pi pi-user-edit"
+              class="p-button-primary"
+            ></button>
+            <button
+              (click)="openChangePassword()"
+              pButton
+              pRipple
+              type="button"
+              [label]="'admin.btnChangePassword' | translate"
+              icon="pi pi-lock"
+              class="p-button-outlined p-button-primary"
+            ></button>
+          </div>
+        }
+      </div>
+      <div class="profile-data-grid">
+        <div class="profile-data-card">
+          <span>{{ "admin.first_name" | translate }}</span>
+          <strong>{{ user.first_name || "No disponible" }}</strong>
+        </div>
+        <div class="profile-data-card">
+          <span>{{ "admin.last_name" | translate }}</span>
+          <strong>{{ user.last_name || "No disponible" }}</strong>
+        </div>
+        <div class="profile-data-card">
+          <span>{{ "admin.email" | translate }}</span>
+          <strong>{{ user.email || "No disponible" }}</strong>
+        </div>
+        @if (isEmpty) {
+          <div class="profile-data-card">
+            <span>{{ "admin.phone" | translate }}</span>
+            <strong>{{ administrator.phone || "No disponible" }}</strong>
+          </div>
+        }
+        @if (isEmpty) {
+          <div class="profile-data-card">
+            <span>{{ "admin.country" | translate }}</span>
+            <strong>{{ administrator.country || "No disponible" }}</strong>
+          </div>
+        }
+        @if (isEmpty) {
+          <div class="profile-data-card">
+            <span>{{ "admin.city" | translate }}</span>
+            <strong>{{ administrator.city || "No disponible" }}</strong>
+          </div>
+        }
+      </div>
+    </div>
+    <form
+      autocomplete="off"
+      [formGroup]="passwordUpdateForm"
+      (ngSubmit)="updatePassword()"
+      id="udpatePassword"
+      >
+      <p-dialog
+        [(visible)]="changePasswordDialog"
+        [modal]="true"
+        [draggable]="false"
+        [resizable]="false"
+        [closable]="true"
+        [dismissableMask]="true"
+        [closeOnEscape]="true"
+        [header]="'admin.btnChangePassword' | translate"
+        styleClass="p-fluid profile-dialog admin-dialog-md"
+        >
         <ng-template pTemplate="content">
-            <div class="p-field">
-                <label for="password1">{{ 'admin.passwprd1' | translate }} *</label>
-                <input formControlName="password" type="password" pInputText id="password1" required autofocus />
-                <p-message severity="error" text="Campo obligatorio" *ngIf="campoNoValido('password')">
-                </p-message>
+          <div class="dialog-shell">
+            <div class="dialog-intro dialog-intro-accent">
+              <span class="dialog-eyebrow">Seguridad</span>
+              <p>
+                Actualiza tu contrasena. Despues del cambio se cerrara la sesion
+                para volver a ingresar con la nueva credencial.
+              </p>
             </div>
-            <div class="p-field">
-                <label for="password2">{{ 'admin.passwprd2' | translate }} *</label>
-                <input formControlName="password2" type="password" pInputText id="password2" required autofocus />
-                <p-message severity="error" text="La contraseña no coinciden" *ngIf="campoNoValido('password2')">
-                </p-message>
+            <div class="dialog-field-stack">
+              <div class="p-field">
+                <label for="old_password">{{ "admin.oldPassword" | translate }} *</label>
+                <div class="profile-password-input">
+                  <input
+                    formControlName="old_password"
+                    [type]="showOldPassword ? 'text' : 'password'"
+                    pInputText
+                    id="old_password"
+                    required
+                    />
+                  <button
+                    type="button"
+                    class="profile-password-toggle"
+                    [attr.aria-label]="showOldPassword ? 'Ocultar contrasena actual' : 'Ver contrasena actual'"
+                    (click)="showOldPassword = !showOldPassword"
+                    >
+                    <i class="pi" [ngClass]="{ 'pi-eye': !showOldPassword, 'pi-eye-slash': showOldPassword }"></i>
+                  </button>
+                </div>
+                @if (campoNoValido('old_password')) {
+                  <p-message
+                    severity="error"
+                    text="Campo obligatorio"
+                  ></p-message>
+                }
+                @if (message !== null) {
+                  <p-message severity="error" [text]="message"></p-message>
+                }
+              </div>
+              <div class="p-field">
+                <label for="password1">{{ "admin.passwprd1" | translate }} *</label>
+                <div class="profile-password-input">
+                  <input
+                    formControlName="password"
+                    [type]="showPassword ? 'text' : 'password'"
+                    pInputText
+                    id="password1"
+                    required
+                    autofocus
+                    />
+                  <button
+                    type="button"
+                    class="profile-password-toggle"
+                    [attr.aria-label]="showPassword ? 'Ocultar nueva contrasena' : 'Ver nueva contrasena'"
+                    (click)="showPassword = !showPassword"
+                    >
+                    <i class="pi" [ngClass]="{ 'pi-eye': !showPassword, 'pi-eye-slash': showPassword }"></i>
+                  </button>
+                </div>
+                @if (passwordRequiredInvalid()) {
+                  <p-message
+                    severity="error"
+                    text="La contrasena es obligatoria"
+                  ></p-message>
+                }
+                @if (shouldShowPasswordRules()) {
+                  <div class="profile-password-rules">
+                    <small class="p-error">La contrasena debe cumplir estas condiciones:</small>
+                    <ul>
+                      @if (!passwordHasValidLength()) {
+                        <li>Debe tener entre 8 y 30 caracteres.</li>
+                      }
+                      @if (!passwordHasUppercase()) {
+                        <li>Debe incluir al menos una letra mayuscula.</li>
+                      }
+                      @if (!passwordHasLowercase()) {
+                        <li>Debe incluir al menos una letra minuscula.</li>
+                      }
+                      @if (!passwordHasNumber()) {
+                        <li>Debe incluir al menos un numero.</li>
+                      }
+                    </ul>
+                  </div>
+                }
+              </div>
+              <div class="p-field">
+                <label for="password2">{{ "admin.passwprd2" | translate }} *</label>
+                <div class="profile-password-input">
+                  <input
+                    formControlName="password2"
+                    [type]="showPassword2 ? 'text' : 'password'"
+                    pInputText
+                    id="password2"
+                    required
+                    />
+                  <button
+                    type="button"
+                    class="profile-password-toggle"
+                    [attr.aria-label]="showPassword2 ? 'Ocultar confirmacion de contrasena' : 'Ver confirmacion de contrasena'"
+                    (click)="showPassword2 = !showPassword2"
+                    >
+                    <i class="pi" [ngClass]="{ 'pi-eye': !showPassword2, 'pi-eye-slash': showPassword2 }"></i>
+                  </button>
+                </div>
+                @if (password2RequiredInvalid()) {
+                  <p-message
+                    severity="error"
+                    text="Campo obligatorio"
+                  ></p-message>
+                }
+                @if (passwordMismatchInvalid() && !password2RequiredInvalid()) {
+                  <p-message
+                    severity="error"
+                    text="Las contrasenas deben ser iguales"
+                  ></p-message>
+                }
+              </div>
             </div>
-            <div class="p-field">
-                <label for="oldPassword">{{ 'admin.oldPassword' | translate }} *</label>
-                <input formControlName="old_password" type="password" pInputText id="old_password" required autofocus />
-                <p-message severity="error" text="Campo obligatorio" *ngIf="campoNoValido('old_password')">
-                </p-message>
-                <p-message severity="error" text="{{message}}" *ngIf="message !==null">
-                </p-message>
-            </div>
+          </div>
         </ng-template>
-        
         <ng-template pTemplate="footer">
-            <button (click)="resetValue()" pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"></button>
-            <button  pButton pRipple label="{{ 'admin.save' | translate }}" type="submit" icon="pi pi-check" class="p-button-text"></button>
+          <button
+            (click)="resetValue()"
+            pButton
+            pRipple
+            [label]="'admin.cancel' | translate"
+            icon="pi pi-times"
+            class="p-button-text"
+            type="button"
+            [disabled]="isSavingPassword"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="'admin.save' | translate"
+            type="submit"
+            icon="pi pi-check"
+            class="p-button-text"
+            [loading]="isSavingPassword"
+            [disabled]="isSavingPassword"
+          ></button>
         </ng-template>
+      </p-dialog>
+    </form>
+    <p-dialog
+      [(visible)]="changeDataDialog"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      [closable]="true"
+      [dismissableMask]="true"
+      [closeOnEscape]="true"
+      header="Actualizar mis datos"
+      styleClass="p-fluid profile-dialog admin-dialog-md"
+      >
+      <ng-template pTemplate="content">
+        <div class="dialog-shell">
+          <div class="dialog-intro dialog-intro-accent">
+            <span class="dialog-eyebrow">Datos del perfil</span>
+            <p>
+              Revisa y actualiza la informacion base de tu perfil administrativo.
+            </p>
+          </div>
+          <div class="profile-form-grid">
+            <div class="p-field">
+              <label for="first_name">{{ "admin.first_name" | translate }}</label>
+              <input [(ngModel)]="userData.first_name" type="text" pInputText id="first_name" name="first_name" required autofocus />
+              @if (profileFieldInvalid('first_name')) {
+                <small class="field-error">No puede estar vacio</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="last_name">{{ "admin.last_name" | translate }}</label>
+              <input [(ngModel)]="userData.last_name" type="text" pInputText id="last_name" name="last_name" required />
+              @if (profileFieldInvalid('last_name')) {
+                <small class="field-error">No puede estar vacio</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="phone">{{ "admin.phone" | translate }}</label>
+              <input
+                [(ngModel)]="userData.administrator.phone"
+                type="text"
+                inputmode="numeric"
+                maxlength="10"
+                pInputText
+                id="phone"
+                name="phone"
+                required
+                (input)="normalizeProfilePhoneInput()"
+                />
+              @if (profilePhoneRequiredInvalid()) {
+                <small class="field-error">El telefono es obligatorio</small>
+              }
+              @if (profilePhoneFormatInvalid() && !profilePhoneRequiredInvalid()) {
+                <small class="field-error">El telefono debe tener 10 numeros</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="country">{{ "admin.country" | translate }}</label>
+              <input [(ngModel)]="userData.administrator.country" type="text" pInputText id="country" name="country" required />
+              @if (profileFieldInvalid('country')) {
+                <small class="field-error">No puede estar vacio</small>
+              }
+            </div>
+            <div class="p-field p-field-full">
+              <label for="city">{{ "admin.city" | translate }}</label>
+              <input [(ngModel)]="userData.administrator.city" type="text" pInputText id="city" name="city" required />
+              @if (profileFieldInvalid('city')) {
+                <small class="field-error">No puede estar vacio</small>
+              }
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <button
+          (click)="hideDialogUpdateData()"
+          pButton
+          pRipple
+          [label]="'admin.cancel' | translate"
+          icon="pi pi-times"
+          class="p-button-text"
+          type="button"
+          [disabled]="isSavingData"
+        ></button>
+        <button
+          (click)="saveData()"
+          pButton
+          pRipple
+          [label]="'admin.save' | translate"
+          icon="pi pi-check"
+          class="p-button-text"
+          type="button"
+          [loading]="isSavingData"
+          [disabled]="isSavingData"
+        ></button>
+      </ng-template>
     </p-dialog>
-    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
     <p-toast></p-toast>
-</form>
-    <p-dialog [(visible)]="changeDataDialog" [style]="{width: '450px'}" header="Actualizar mis datos" [modal]="true"
-    styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="p-field">
-            <label for="first_name">{{ 'admin.first_name' | translate }}</label>
-                <input [(ngModel)]="userData.first_name" type="text" pInputText id="first_name" required autofocus />
-                <small *ngIf="userData.first_name.length === 0" style="color:red;">No puede estar vacio</small>
-            </div>
-            <div class="p-field">
-                <label for="last_name">{{ 'admin.last_name' | translate }}</label>
-                <input [(ngModel)]="userData.last_name" type="text" pInputText id="last_name" required autofocus />
-                <small *ngIf="userData.last_name.length === 0" style="color:red;">No puede estar vacio</small>
-            </div>
-            <div class="p-field">
-                <label for="phone">{{ 'admin.phone' | translate }}</label>
-                <input [(ngModel)]="userData.administrator.phone" type="text" pInputText id="phone" required autofocus />
-                <small *ngIf="userData.administrator.phone.length === 0" style="color:red;">No puede estar vacio</small>
-            </div>
-            <div class="p-field">
-                <label for="country">{{ 'admin.country' | translate }}</label>
-                <input [(ngModel)]="userData.administrator.country" type="text" pInputText id="country" required autofocus />
-                <small *ngIf="userData.administrator.country.length === 0" style="color:red;">No puede estar vacio</small>
-            </div>
-            <div class="p-field">
-                <label for="city">{{ 'admin.city' | translate }}</label>
-                <input [(ngModel)]="userData.administrator.city" type="text" pInputText id="city" required autofocus />
-                <small *ngIf="userData.administrator.city.length === 0" style="color:red;">No puede estar vacio</small>
-            </div>
-        </ng-template>
-        <ng-template pTemplate="footer">
-            <button (click)="hideDialogUpdateData()" pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"></button>
-            <button (click)="saveData()" pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"></button>
-        </ng-template>
-    </p-dialog>
-    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
-    <p-toast></p-toast>
+  }
 </div>
+
+
+
+

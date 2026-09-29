@@ -1,16 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
+/**
+ * Placeholder visual reutilizable para esperas de primer render dentro del
+ * modulo administrativo.
+ */
 @Component({
-  selector: 'app-loading',
-  templateUrl: './loading.component.html',
-  styles: [
-  ]
+    selector: 'app-loading',
+    templateUrl: './loading.component.html',
+    styles: [],
+    standalone: false
 })
-export class LoadingComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-}
+export class LoadingComponent {}

@@ -1,0 +1,211 @@
+.teacher-expert-profile-page {
+  margin-top: 1.5rem;
+}
+
+.teacher-expert-profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.teacher-expert-profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.teacher-expert-profile-avatar-shell {
+  flex: 0 0 auto;
+}
+
+.teacher-expert-profile-avatar-image,
+.teacher-expert-profile-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #dbe5ec;
+  background: #f8fbfc;
+  box-shadow: 0 14px 28px rgba(47, 69, 81, 0.08);
+}
+
+.teacher-expert-profile-avatar-image {
+  object-fit: cover;
+}
+
+.teacher-expert-profile-avatar-fallback {
+  color: #ffffff;
+  background: linear-gradient(135deg, #3b5b68 0%, #507785 100%);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.teacher-expert-profile-hero-copy {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.teacher-expert-profile-kicker {
+  margin: 0 0 0.45rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.teacher-expert-profile-hero-copy h2 {
+  margin: 0;
+  color: #344f5b;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.teacher-expert-profile-email {
+  margin: 0.55rem 0 0;
+  color: #64748b;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.teacher-expert-profile-section {
+  padding-top: 1.25rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.teacher-expert-profile-section:first-of-type {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.teacher-expert-profile-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.teacher-expert-profile-section-header h3 {
+  margin: 0;
+  color: #344f5b;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.teacher-expert-profile-section-header span {
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+.teacher-expert-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.teacher-expert-profile-data-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 16px;
+  background: #ffffff;
+  min-width: 0;
+}
+
+.teacher-expert-profile-data-card span {
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.teacher-expert-profile-data-card strong {
+  color: #344f5b;
+  line-height: 1.55;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.teacher-expert-profile-data-card--stacked {
+  grid-column: 1 / -1;
+}
+
+.teacher-expert-profile-role-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.teacher-expert-profile-role-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 999px;
+  background: #f8fbfc;
+  color: #344f5b;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.teacher-expert-profile-list,
+.teacher-expert-profile-link-list {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.teacher-expert-profile-list li,
+.teacher-expert-profile-link-list li {
+  color: #344f5b;
+  line-height: 1.55;
+}
+
+.teacher-expert-profile-list li + li,
+.teacher-expert-profile-link-list li + li {
+  margin-top: 0.45rem;
+}
+
+.teacher-expert-profile-link {
+  color: #3b5b68;
+  text-decoration: underline;
+  word-break: break-word;
+}
+
+.teacher-expert-profile-link:hover {
+  color: #2f4954;
+}
+
+@media screen and (max-width: 640px) {
+  .teacher-expert-profile-hero {
+    align-items: flex-start;
+  }
+
+  .teacher-expert-profile-avatar-image,
+  .teacher-expert-profile-avatar-fallback {
+    width: 96px;
+    height: 96px;
+    border-radius: 20px;
+  }
+
+  .teacher-expert-profile-hero-copy h2 {
+    font-size: 1.55rem;
+  }
+
+  .teacher-expert-profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

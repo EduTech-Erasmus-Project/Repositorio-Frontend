@@ -14,15 +14,13 @@
         
         <app-topbar></app-topbar>
 
-        <app-breadcrumb></app-breadcrumb>
+        <app-breadcrumb [interactive]="true"></app-breadcrumb>
 
         <div class="layout-content">
             <router-outlet></router-outlet>
         </div>
 
         <app-footer></app-footer>
-
-        <!-- <app-config></app-config> -->
 
         <div class="layout-main-mask"></div>
     </div>

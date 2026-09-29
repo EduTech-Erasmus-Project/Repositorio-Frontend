@@ -1,388 +1,558 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewRef } from "@angular/core";
+import { firstValueFrom } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
-import {
-  FormBuilder,
-  Validators,
-} from "@angular/forms";
-import { Router } from "@angular/router";
-import { Table } from "primeng/table";
 import { AdministratorService } from "src/app/services/administrator.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { AdminComponent } from "../../admin.component";
 import {
-  Principle,
   Guideline,
+  GuidelineUpdate,
+  Principle,
   QuestionStudent,
   QuestionStudentUpdate,
-  GuidelineUpdate,
 } from "../../models/evaluation.models";
+import {
+  getRequestErrorMessage,
+  hasTextValue,
+  normalizeTrimmedText,
+} from "../../shared/admin-form.utils";
 
+interface StudentPrincipleDetailResponse {
+  guidelines?: Guideline[];
+}
+
+interface StudentGuidelineDetailResponse {
+  questions?: QuestionStudent[];
+}
+
+interface RequestStatusResponse {
+  message?: string;
+  code?: number;
+  status?: number;
+}
+
+/**
+ * Administra principios, pautas y preguntas del esquema de evaluacion para
+ * estudiantes dentro del modulo administrativo.
+ */
 @Component({
-  selector: 'app-student-question-create-list',
-  templateUrl: './student-question-create-list.component.html',
-  styleUrls: ['./student-question-create-list.component.scss'],
-  styles: [
-    `
-      :host ::ng-deep .p-dialog .product-image {
-        width: 150px;
-        margin: 0 auto 2rem auto;
-        display: block;
-      }
-
-      @media screen and (max-width: 960px) {
-        :host
-          ::ng-deep
-          .p-datatable.p-datatable-customers
-          .p-datatable-tbody
-          > tr
-          > td:last-child {
-          text-align: center;
-        }
-
-        :host
-          ::ng-deep
-          .p-datatable.p-datatable-customers
-          .p-datatable-tbody
-          > tr
-          > td:nth-child(6) {
-          display: flex;
-        }
-      }
-    `,
-  ],
+  selector: "app-student-question-create-list",
+  templateUrl: "./student-question-create-list.component.html",
+  styleUrls: ["./student-question-create-list.component.scss"],
   providers: [MessageService, ConfirmationService],
+  standalone: false,
 })
 export class StudentQuestionCreateListComponent implements OnInit {
-  principleList: Principle[];
+  principleList: Principle[] = [];
+  guidelineList: Guideline[] = [];
+  questionList: QuestionStudent[] = [];
+
   principle: Principle = new Principle();
   principleSelect: Principle = new Principle();
-  idSelectedPrinciple: number; 
-
-  //guidelineList: Guideline[];
-  //guideline: Guideline = new Guideline();
-  //guidelineSelect: GuidelineUpdate = new GuidelineUpdate();
-  //idSelectedGuideline: number;
-
-  guidelineList: Guideline[];
-  guidelineSelect: GuidelineUpdate = new GuidelineUpdate();
   guideline: Guideline = new Guideline();
-
-  //principleSelect: Principle = new Principle();
-  idGuidelinePrinciple: number; 
-  
-  questionList: QuestionStudent[];
-  questionSelect: QuestionStudentUpdate = new QuestionStudentUpdate();
+  guidelineSelect: GuidelineUpdate = new GuidelineUpdate();
   question: QuestionStudent = new QuestionStudent();
- 
+  questionSelect: QuestionStudentUpdate = new QuestionStudentUpdate();
 
-  public formSubmit = false;
-  @ViewChild("dt") table: Table;
+  idSelectedPrinciple: number | null = null;
+  idSelectedGuideline: number | null = null;
 
-  public registerForm = this.fb.group({
-    concept: [null, Validators.required],
-  });
-
-  guidelineDialog: boolean;
-  updateGuidelineDialog: boolean;
-  editPrincipleDialog: boolean;
-  createPrincipleDialog: boolean;
-
-  questionDialog: boolean;
-  updateQuestionDialog: boolean;
-  
-  submitted: boolean;
+  guidelineDialog = false;
+  updateGuidelineDialog = false;
+  editPrincipleDialog = false;
+  createPrincipleDialog = false;
+  questionDialog = false;
+  updateQuestionDialog = false;
+  submitted = false;
+  actionLoading: string | null = null;
 
   constructor(
     private breadcrumbService: BreadcrumbService,
-    private fb: FormBuilder,
     public appMain: AdminComponent,
-    private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private administratorServices: AdministratorService
+    private administratorServices: AdministratorService,
+    private cdr: ChangeDetectorRef
   ) {
     this.breadcrumbService.setItems([
       {
-        label: "Preguntas de evaluación para el estudiante",
+        label: "Preguntas de evaluacion para el estudiante",
         routerLink: ["/admin/expert/student"],
       },
     ]);
   }
 
   ngOnInit(): void {
-    this.getEvaluationStudent()
+    void this.getEvaluationStudent();
   }
-  getEvaluationStudent() {
-    this.administratorServices
-      .getEvaluationStudent()
-      .subscribe((result: any) => {
-        this.principleList = result.results;
-      });
+
+  public get busy(): boolean {
+    return this.actionLoading !== null;
   }
+
+  public isActionLoading(action: string): boolean {
+    return this.actionLoading === action;
+  }
+
+  async getEvaluationStudent() {
+    try {
+      this.principleList =
+        (await firstValueFrom(this.administratorServices.getEvaluationStudent())) || [];
+      this.refreshView();
+    } catch (err: unknown) {
+      this.showRequestError(err, "No se pudo cargar la lista de principios.");
+    }
+  }
+
   openNew() {
-    this.principle = {};
+    this.resetPrincipleForm();
     this.submitted = false;
     this.createPrincipleDialog = true;
   }
-  deleteEvaluationStudent(event: Event, id: number) {
-    this.confirmationService.confirm({
-      key: "confirmDelete",
-      target: event.target,
-      message: "Esta seguro que desea eliminar?",
-      icon: "pi pi-exclamation-triangle",
-      accept: () => {
-        this.administratorServices
-          .deleteEvaluationStudent(id)
-          .subscribe((result: any) => {
-            this.messageService.add({
-              severity: "info",
-              summary: "Confirmed",
-              detail: "Eliminado correctamente",
-            });
-            setTimeout(() => {
-              this.getEvaluationStudent()
-            }, 900);
-          });
-      },
-    });
+
+  openEditPrincipleDialog(principle: Principle) {
+    this.principleSelect = {
+      id: principle.id,
+      principle: principle.principle,
+    };
+    this.submitted = false;
+    this.editPrincipleDialog = true;
   }
 
-  confirm2(event: Event) {
-    this.confirmationService.confirm({
-      key: "confirm2",
-      target: event.target,
-      message: "Are you sure that you want to proceed?",
-      icon: "pi pi-exclamation-triangle",
-      accept: () => {
-        this.messageService.add({
-          severity: "info",
-          summary: "Confirmed",
-          detail: "You have accepted",
-        });
-      },
-      reject: () => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Rejected",
-          detail: "You have rejected",
-        });
-      },
-    });
+  openGuideline(principle: Principle) {
+    this.principleSelect = {
+      id: principle.id,
+      principle: principle.principle,
+    };
+    this.resetGuidelineForm();
+    this.submitted = false;
+    this.guidelineDialog = true;
+  }
+
+  openEditGuidelineDialog(guideline: Guideline) {
+    this.guidelineSelect = {
+      id: guideline.id,
+      guideline: guideline.guideline,
+    };
+    this.submitted = false;
+    this.updateGuidelineDialog = true;
+  }
+
+  openQuestion(guideline: Guideline) {
+    this.guidelineSelect = {
+      id: guideline.id,
+      guideline: guideline.guideline,
+    };
+    this.resetQuestionForm();
+    this.submitted = false;
+    this.questionDialog = true;
+  }
+
+  openEditquestionGuidelineDialog(question: QuestionStudent) {
+    this.questionSelect = {
+      id: question.id,
+      question: question.question,
+      code: question.code,
+      description: question.description,
+      metadata: question.metadata,
+      interpreter_st_yes: question.interpreter_st_yes,
+      interpreter_st_no: question.interpreter_st_no,
+      interpreter_st_partially: question.interpreter_st_partially,
+      value_st_importance: question.value_st_importance,
+      weight: question.weight,
+      relevance: question.relevance,
+    };
+    this.submitted = false;
+    this.updateQuestionDialog = true;
+  }
+
+  hideDialogPrinciple() {
+    this.createPrincipleDialog = false;
+    this.submitted = false;
+    this.resetPrincipleForm();
   }
 
   hideDialogUpdate() {
     this.editPrincipleDialog = false;
     this.submitted = false;
+    this.principleSelect = new Principle();
   }
-  hideDialogUpdateGuideline() {
-    this.updateGuidelineDialog = false;
-    this.updateQuestionDialog = false;
-    this.submitted = false;
-  }
-  /////del acutalizar pregunta
-  hideDialogUpdateQuestion() {
-    this.updateQuestionDialog = false;
-    this.submitted = false;
-  }
-  //////////////////
+
   hideDialog() {
     this.guidelineDialog = false;
-    this.questionDialog = false;
     this.submitted = false;
+    this.resetGuidelineForm();
   }
-  //////////de la question
+
+  hideDialogUpdateGuideline() {
+    this.updateGuidelineDialog = false;
+    this.submitted = false;
+    this.guidelineSelect = new GuidelineUpdate();
+  }
+
   hideDialogquestion() {
     this.questionDialog = false;
     this.submitted = false;
+    this.resetQuestionForm();
   }
-  /////////
-  hideDialogPrinciple() {
-    this.createPrincipleDialog = false;
+
+  hideDialogUpdateQuestion() {
+    this.updateQuestionDialog = false;
     this.submitted = false;
+    this.questionSelect = new QuestionStudentUpdate();
   }
-  openEditPrincipleDialog(principle: Principle) {
-    this.principleSelect = principle;
-    this.submitted = false;
-    this.editPrincipleDialog = true;
+
+  registerEvaluationData() {
+    this.submitted = true;
+    const principleName = normalizeTrimmedText(this.principle.principle);
+
+    if (!principleName) {
+      this.showValidation("Ingrese el principio de evaluacion.");
+      return;
+    }
+
+    void this.runAction("create-principle", async () => {
+      const payload = { ...this.principle, principle: principleName } as Principle;
+      await firstValueFrom(this.administratorServices.postEvaluationStudent(payload));
+      await this.getEvaluationStudent();
+      this.hideDialogPrinciple();
+      this.showSuccess("Principio creado correctamente.");
+    });
   }
-  openEditGuidelineDialog(guideline: Guideline) {
-    this.guidelineSelect = guideline;
-    this.submitted = false;
-    this.updateGuidelineDialog = true;
-  }
-  ////////////////////////////editar pregunta
-  openEditquestionGuidelineDialog(question: QuestionStudent) {
-    this.questionSelect = question;
-    this.submitted = false;
-    this.updateQuestionDialog = true;
-  }
-  ///////////////////////////
+
   updatePrinciple() {
     this.submitted = true;
-    this.administratorServices
-      .putEvaluationStudent(this.principleSelect)
-      .subscribe((data) => {
-        this.editPrincipleDialog = false;
-        //console.log(data);
-      });
+    const principleName = normalizeTrimmedText(this.principleSelect.principle);
+
+    if (!principleName) {
+      this.showValidation("Ingrese el principio de evaluacion.");
+      return;
+    }
+
+    void this.runAction("update-principle", async () => {
+      const payload = { ...this.principleSelect, principle: principleName } as Principle;
+      await firstValueFrom(this.administratorServices.putEvaluationStudent(payload));
+      await this.getEvaluationStudent();
+      this.hideDialogUpdate();
+      this.showSuccess("Principio actualizado correctamente.");
+    });
   }
-  openGuideline(principle: Principle) {
-    this.principleSelect =principle;
-    this.submitted = false;
-    this.guidelineDialog = true;
+
+  saveGuideline() {
+    this.submitted = true;
+    const guidelineName = normalizeTrimmedText(this.guideline.guideline);
+    const principleId = this.principleSelect.id;
+
+    if (!guidelineName) {
+      this.showValidation("Ingrese la pauta de evaluacion.");
+      return;
+    }
+
+    if (!principleId) {
+      this.showRequestError(null, "Seleccione un principio antes de crear la pauta.");
+      return;
+    }
+
+    void this.runAction("create-guideline", async () => {
+      const payload = {
+        ...this.guideline,
+        guideline: guidelineName,
+        principle: principleId,
+      } as Guideline;
+
+      await firstValueFrom(this.administratorServices.postGuidelineStudent(payload));
+      this.hideDialog();
+      await this.retrieveEvaluationData(principleId);
+      this.showSuccess("Pauta creada correctamente.");
+    });
   }
-  /////////////////nueva pregunta para un guideline
-  openQuestion(guideline: Guideline) {
-    this.guidelineSelect =guideline;
-    this.submitted = false;
-    this.questionDialog = true;
+
+  saveUpdateGuideline() {
+    this.submitted = true;
+    const guidelineName = normalizeTrimmedText(this.guidelineSelect.guideline);
+
+    if (!guidelineName) {
+      this.showValidation("Ingrese la pauta de evaluacion.");
+      return;
+    }
+
+    void this.runAction("update-guideline", async () => {
+      const payload = {
+        ...this.guidelineSelect,
+        guideline: guidelineName,
+      } as GuidelineUpdate;
+
+      await firstValueFrom(this.administratorServices.updateGuidelineStudent(payload));
+      this.guidelineSelect = payload;
+      this.hideDialogUpdateGuideline();
+      if (this.idSelectedPrinciple) {
+        await this.retrieveEvaluationData(this.idSelectedPrinciple);
+      }
+      this.showSuccess("Pauta actualizada correctamente.");
+    });
   }
 
   saveQuestion() {
-    this.question.guideline = this.guidelineSelect.id;
-    console.log("----pregunta student",this.question.guideline)
-    this.administratorServices.postQuestionStudent(this.question).subscribe(
-      (result) => {
-        this.question = new QuestionStudent();
-        //console.log("----pregunta student2",this.question)
-        //console.log("----pregunta student3",result)
-        this.retrieveEvaluationData2(this.guidelineSelect.id);
-      },
-      (err: any) => {
-        //console.log(err.error)
-      }
-    );
+    this.submitted = true;
+
+    if (!this.isStudentQuestionValid(this.question)) {
+      this.showValidation("Complete los campos obligatorios de la pregunta.");
+      return;
+    }
+
+    if (!this.guidelineSelect.id) {
+      this.showRequestError(null, "Seleccione una pauta antes de crear la pregunta.");
+      return;
+    }
+
+    void this.runAction("create-question", async () => {
+      const payload = this.normalizeStudentQuestion(this.question) as unknown as QuestionStudent;
+      payload.guideline = this.guidelineSelect.id as number;
+
+      await firstValueFrom(this.administratorServices.postQuestionStudent(payload));
+      this.hideDialogquestion();
+      await this.retrieveEvaluationData2(this.guidelineSelect.id as number);
+      this.showSuccess("Pregunta creada correctamente.");
+    });
   }
 
-  /////////////////
-  saveGuideline() {
-    this.guideline.principle = this.principleSelect.id;
-    this.administratorServices.postGuidelineStudent(this.guideline).subscribe(
-      (result) => {
-        this.guideline = new Guideline();
-        this.retrieveEvaluationData(this.principleSelect.id);
-      },
-      (err: any) => {
-        //console.log(err.error)
-      }
-    );
-  }
-  getRetrieveGuideline(id: number) {
-    this.administratorServices
-      .retrieveEvaluationStudent(id)
-      .subscribe((data: any) => {
-        this.guidelineList = data.guidelines;
-        this.idSelectedPrinciple = id;
-      });
-  }
-  retrieveEvaluationData(id: number) {
-    this.getRetrieveGuideline(id);
-  }
-  //////////////////
-  getRetrieveQuestion(id: number) {
-    this.administratorServices
-      .retrieveEvaluationStudentquestions(id)
-      .subscribe((data: any) => {
-        this.questionList = data.questions;
-        this.idGuidelinePrinciple = id;
-      });
-  }
-  retrieveEvaluationData2(id: number) {
-    this.getRetrieveQuestion(id);
-  }
-  /////////////////
-
-  registerEvaluationData() {
-    this.administratorServices.postEvaluationStudent(this.principle).subscribe(
-      (data) => {
-        this.getEvaluationStudent();
-        this.principle = new Principle();
-      },
-      (err: any) => {
-        console.log(err);
-      }
-    );
-  }
-
-  updateEvaluationData() {
-    this.administratorServices.putEvaluationStudent(this.principle).subscribe(
-      (data) => {
-        this.getEvaluationStudent();
-      },
-      (err: any) => {
-        // console.log(err);
-      }
-    );
-  }
-  saveUpdateGuideline() {
-    // console.log(this.questionSelect);
-    this.administratorServices
-      .updateGuidelineStudent(this.guidelineSelect)
-      .subscribe((data) => {
-        //console.log(data);
-      });
-  }
-  ////////// guardar del actualizar pdialog
   saveUpdateQuestion() {
-    // console.log(this.questionSelect);
-    this.administratorServices
-      .updateQuestionStudent(this.questionSelect)
-      .subscribe((data) => {
-        //console.log(data);
-      });
+    this.submitted = true;
+
+    if (!this.isStudentQuestionValid(this.questionSelect)) {
+      this.showValidation("Complete los campos obligatorios de la pregunta.");
+      return;
+    }
+
+    void this.runAction("update-question", async () => {
+      const payload = this.normalizeStudentQuestion(
+        this.questionSelect
+      ) as unknown as QuestionStudentUpdate;
+
+      const data = await firstValueFrom(
+        this.administratorServices.updateQuestionStudent(payload)
+      ) as unknown as RequestStatusResponse;
+      const success = data?.message === undefined || data?.message === "success";
+      if (!success) {
+        this.showRequestError(null, "Error al actualizar el registro.");
+        return;
+      }
+
+      this.questionSelect = payload;
+      this.hideDialogUpdateQuestion();
+      if (this.idSelectedGuideline) {
+        await this.retrieveEvaluationData2(this.idSelectedGuideline);
+      }
+      this.showSuccess("Pregunta actualizada correctamente.");
+    });
   }
-  /////////
+
+  async getRetrieveGuideline(id: number) {
+    try {
+      const data = await firstValueFrom(
+        this.administratorServices.retrieveEvaluationStudent(id)
+      ) as StudentPrincipleDetailResponse;
+      this.guidelineList = data?.guidelines || [];
+      this.idSelectedPrinciple = id;
+      this.refreshView();
+    } catch (err: unknown) {
+      this.showRequestError(err, "No se pudieron cargar las pautas.");
+    }
+  }
+
+  async retrieveEvaluationData(id: number) {
+    await this.getRetrieveGuideline(id);
+  }
+
+  async getRetrieveQuestion(id: number) {
+    try {
+      const data = await firstValueFrom(
+        this.administratorServices.retrieveEvaluationStudentquestions(id)
+      ) as StudentGuidelineDetailResponse;
+      this.questionList = data?.questions || [];
+      this.idSelectedGuideline = id;
+      this.refreshView();
+    } catch (err: unknown) {
+      this.showRequestError(err, "No se pudieron cargar las preguntas.");
+    }
+  }
+
+  async retrieveEvaluationData2(id: number) {
+    await this.getRetrieveQuestion(id);
+  }
+
+  deleteEvaluationStudent(event: Event, id: number) {
+    this.confirmationService.confirm({
+      key: "confirmDelete",
+      target: event.target as EventTarget,
+      message: "Esta seguro que desea eliminar?",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => {
+        void this.runAction("delete-principle", async () => {
+          await firstValueFrom(this.administratorServices.deleteEvaluationStudent(id));
+          await this.getEvaluationStudent();
+          if (this.idSelectedPrinciple === id) {
+            this.idSelectedPrinciple = null;
+            this.idSelectedGuideline = null;
+            this.guidelineList = [];
+            this.questionList = [];
+          }
+          this.showSuccess("Eliminado correctamente.");
+        });
+      },
+    });
+  }
 
   deleteGuideline(event: Event, id: number) {
     this.confirmationService.confirm({
       key: "confirmDelete",
-      target: event.target,
+      target: event.target as EventTarget,
       message: "Esta seguro que desea eliminar?",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
-        this.administratorServices
-          .deleteGuidelineStudent(id)
-          .subscribe((data) => {
-            this.messageService.add({
-              severity: "info",
-              summary: "Confirmed",
-              detail: "Eliminado correctamente",
-            });
-            setTimeout(() => {
-              this.retrieveEvaluationData(this.idSelectedPrinciple);
-            }, 600);
-          });
+        void this.runAction("delete-guideline", async () => {
+          await firstValueFrom(this.administratorServices.deleteGuidelineStudent(id));
+          if (this.idSelectedPrinciple) {
+            await this.retrieveEvaluationData(this.idSelectedPrinciple);
+          }
+          if (this.idSelectedGuideline === id) {
+            this.idSelectedGuideline = null;
+            this.questionList = [];
+          }
+          this.showSuccess("Eliminado correctamente.");
+        });
       },
     });
   }
 
-  ////eliminar pregunta
   deleteQuestion(event: Event, id: number) {
     this.confirmationService.confirm({
       key: "confirmDelete",
-      target: event.target,
+      target: event.target as EventTarget,
       message: "Esta seguro que desea eliminar?",
       icon: "pi pi-exclamation-triangle",
       accept: () => {
-        this.administratorServices
-          .deleteQuestionStudent(id)
-          .subscribe((data) => {
-            this.messageService.add({
-              severity: "info",
-              summary: "Confirmed",
-              detail: "Eliminado correctamente",
-            });
-            setTimeout(() => {
-              this.retrieveEvaluationData2(this.idGuidelinePrinciple);
-            }, 600);
-          });
+        void this.runAction("delete-question", async () => {
+          await firstValueFrom(this.administratorServices.deleteQuestionStudent(id));
+          if (this.idSelectedGuideline) {
+            await this.retrieveEvaluationData2(this.idSelectedGuideline);
+          }
+          this.showSuccess("Eliminado correctamente.");
+        });
       },
     });
   }
-  
 
+  isRequiredInvalid(value: unknown): boolean {
+    return this.submitted && !hasTextValue(value);
+  }
 
+  private isStudentQuestionValid(
+    question: Partial<QuestionStudent | QuestionStudentUpdate>
+  ): boolean {
+    return (
+      hasTextValue(question.question) &&
+      hasTextValue(question.metadata) &&
+      hasTextValue(question.interpreter_st_yes) &&
+      hasTextValue(question.interpreter_st_no) &&
+      hasTextValue(question.interpreter_st_partially) &&
+      hasTextValue(question.relevance) &&
+      hasTextValue(question.weight) &&
+      hasTextValue(question.description)
+    );
+  }
 
-  ////
+  private normalizeStudentQuestion(
+    question: Partial<QuestionStudent | QuestionStudentUpdate>
+  ) {
+    return {
+      ...question,
+      question: normalizeTrimmedText(question.question),
+      code: normalizeTrimmedText(question.code),
+      metadata: normalizeTrimmedText(question.metadata),
+      interpreter_st_yes: normalizeTrimmedText(question.interpreter_st_yes),
+      interpreter_st_no: normalizeTrimmedText(question.interpreter_st_no),
+      interpreter_st_partially: normalizeTrimmedText(question.interpreter_st_partially),
+      relevance: normalizeTrimmedText(question.relevance),
+      description: normalizeTrimmedText(question.description),
+      weight: Number(question.weight ?? 0),
+    };
+  }
 
+  private resetPrincipleForm() {
+    this.principle = new Principle();
+  }
+
+  private resetGuidelineForm() {
+    this.guideline = new Guideline();
+  }
+
+  private resetQuestionForm() {
+    this.question = new QuestionStudent();
+  }
+
+  private async runAction(action: string, callback: () => Promise<void>) {
+    if (this.busy) {
+      return;
+    }
+
+    this.actionLoading = action;
+    try {
+      await callback();
+    } catch (err: unknown) {
+      const fallback =
+        action === "create-principle"
+          ? "No se pudo crear el principio."
+          : action === "update-principle"
+            ? "No se pudo actualizar el principio."
+            : action === "create-guideline"
+              ? "No se pudo crear la pauta."
+              : action === "update-guideline"
+                ? "No se pudo actualizar la pauta."
+                : action === "create-question"
+                  ? "No se pudo crear la pregunta."
+                  : action === "delete-principle"
+                    ? "No se pudo eliminar el principio."
+                    : action === "delete-guideline"
+                      ? "No se pudo eliminar la pauta."
+                      : action === "delete-question"
+                        ? "No se pudo eliminar la pregunta."
+                        : "No se pudo actualizar la pregunta.";
+      this.showRequestError(err, fallback);
+    } finally {
+      this.actionLoading = null;
+      this.refreshView();
+    }
+  }
+
+  private showValidation(detail: string) {
+    this.messageService.add({
+      severity: "warn",
+      summary: "Validacion",
+      detail,
+    });
+  }
+
+  private showSuccess(detail: string) {
+    this.messageService.add({
+      severity: "success",
+      summary: "Exito",
+      detail,
+    });
+  }
+
+  private showRequestError(err: unknown, fallback: string) {
+    this.messageService.add({
+      severity: "error",
+      summary: "Error",
+      detail: getRequestErrorMessage(err, fallback),
+    });
+  }
+
+  private refreshView(): void {
+    const view = this.cdr as ViewRef;
+    if (!view.destroyed) {
+      this.cdr.detectChanges();
+    }
+  }
 }

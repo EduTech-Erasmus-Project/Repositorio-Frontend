@@ -1,278 +1,371 @@
-<div class="p-grid">
-	<div class="p-col-12">
-		<div class="card">
-			<h5>{{'admin.test'| translate }}</h5>
-			<button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"
-				(click)="openNew()"></button>
-			<p-dialog [(visible)]="createConceptDialog" [style]="{width: '450px'}" header="{{ 'admin.conceptEvaluation' | translate }}"
-				[modal]="true" styleClass="p-fluid">
-				<ng-template pTemplate="content">
-					<div class="p-field">
-						<label for="name">{{ 'admin.concept' | translate }}</label>
-						<input type="text" pInputText id="name" [(ngModel)]="concept.concept" required autofocus />
-						<small class="p-invalid" *ngIf="submitted && !product.name">{{ 'admin.conceptRequired' | translate }}</small>
-					</div>
-				</ng-template>
-				<ng-template pTemplate="footer">
-					<button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
-						(click)="hideDialogConcept()"></button>
-					<button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
-						(click)="registerEvaluationData()"></button>
-				</ng-template>
-			</p-dialog>
+<div class="p-grid expert-question-page">
+  <div class="p-col-12">
+    <div class="card expert-question-toolbar">
+      <div class="expert-question-heading">
+        <div>
+          <h5>{{ 'admin.test' | translate }}</h5>
+          <p>Administra los conceptos y preguntas de evaluacion para expertos.</p>
+        </div>
+        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success" (click)="openNew()"></button>
+      </div>
 
-			<p-dialog [(visible)]="questionDialog" [style]="{width: '450px'}" header="Agregar pregunta" [modal]="true"
-				styleClass="p-fluid">
-				<ng-template pTemplate="content">
-					<div class="p-field">
-						<strong>{{ 'admin.conceptEvaluation' | translate }}</strong>
-						<p-divider layout="horizontal" align="left"></p-divider>
-						<p>{{conceptSelect.concept}}</p>
-						<p-divider layout="horizontal" align="left"></p-divider>
-					</div>
-					<div class="p-field">
-						<label for="name">{{ 'admin.question' | translate }}</label>
-						<input [(ngModel)]="question.question" type="text" pInputText id="name" required autofocus />
-					</div>
-					<div class="p-field">
-						<label for="code">{{ 'admin.code' | translate }}</label>
-						<input [(ngModel)]="question.code" type="text" pInputText id="code" required autofocus />
-					</div>
-					<div class="p-field">
-						<label for="squema">{{ 'admin.schema' | translate }}</label>
-						<input [(ngModel)]="question.schema" type="text" pInputText id="squema" required autofocus />
-					</div>
-					<!--Nuevos campos de la pregunta-->
-					<div class="p-field">
-						<label for="interpreter_yes">Especificación->"Bueno"</label>
-						<input [(ngModel)]="question.interpreter_yes" type="text" pInputText id="interpreter_yes" required autofocus />
-					</div>
-					<div class="p-field">
-						<label for="interpreter_partially">Especificación->"Regular"</label>
-						<input [(ngModel)]="question.interpreter_partially" type="text" pInputText id="interpreter_partially" required autofocus />
-					</div>
-					<div class="p-field">
-						<label for="interpreter_no">Especificación->"Malo"</label>
-						<input [(ngModel)]="question.interpreter_no" type="text" pInputText id="interpreter_no" required autofocus />
-					</div>
-					<div class="p-field">
-						<label for="value_importance">Peso</label>
-						<input [(ngModel)]="question.value_importance" type="text" pInputText id="value_importance" required autofocus />
-					</div>
-				
-					<div class="p-field">
-						<label for="description">{{ 'admin.description' | translate }}</label>
-						<textarea [(ngModel)]="question.description" id="description" pInputTextarea required rows="3"
-							cols="20"></textarea>
-					</div>
-					
-				</ng-template>
+      <p-toast></p-toast>
+      <p-confirmDialog styleClass="admin-confirm-dialog"></p-confirmDialog>
+      <p-confirmpopup key="confirmDelete"></p-confirmpopup>
 
-				<ng-template pTemplate="footer">
-					<button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
-						(click)="hideDialog()"></button>
-					<button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"
-						(click)="saveQuestion()"></button>
-				</ng-template>
-			</p-dialog>
+      <p-dialog [(visible)]="createConceptDialog"
+        header="{{ 'admin.conceptEvaluation' | translate }}" [modal]="true" styleClass="p-fluid expert-question-dialog admin-dialog-sm">
+        <ng-template pTemplate="content">
+          <div class="p-field">
+            <label for="conceptName">{{ 'admin.concept' | translate }}</label>
+            <input type="text" pInputText id="conceptName" [(ngModel)]="concept.concept" required autofocus
+              [class.p-invalid]="submitted && !concept.concept?.trim()" />
+            @if (submitted && !concept.concept?.trim()) {
+              <small class="field-error">
+                {{ 'admin.conceptRequired' | translate }}
+              </small>
+            }
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialogConcept()"></button>
+          <button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check"
+          [loading]="isActionLoading('create-concept')" [disabled]="busy"
+          (click)="registerEvaluationData()"></button>
+        </ng-template>
+      </p-dialog>
 
-			<p-dialog [(visible)]="updateQuestionDialog" [style]="{width: '450px'}" header="Actualizar pregunta"
-				[modal]="true" styleClass="p-fluid">
-				<ng-template pTemplate="content">
-					<div class="p-field">
-						<label for="conceptU">{{ 'admin.concept' | translate }}</label>
-						<input [(ngModel)]="questionSelect.question" type="text" pInputText id="conceptU" required
-							autofocus />
-					</div>
-					<div class="p-field">
-						<label for="conceptU">{{ 'admin.concept' | translate }}</label>
-						<input [(ngModel)]="questionSelect.code" type="text" pInputText id="conceptU" required autofocus />
-					</div>
-					<div class="p-field">
-						<label for="squemaU">{{ 'admin.schema' | translate }}</label>
-						<input [(ngModel)]="questionSelect.schema" type="text" pInputText id="squemaU" required
-							autofocus />
-					</div>
-					<!--Nuevos campos de las preguntas-->
-					<div class="p-field">
-						<label for="interpreter_yesU">Especificación->"Bueno"</label>
-						<input [(ngModel)]="questionSelect.interpreter_yes" type="text" pInputText id="interpreter_yesU" required
-							autofocus />
-					</div>
-					<div class="p-field">
-						<label for="interpreter_partiallyU">Especificación->"Regular"</label>
-						<input [(ngModel)]="questionSelect.interpreter_partially" type="text" pInputText id="interpreter_partiallyU" required
-							autofocus />
-					</div>
-					<div class="p-field">
-						<label for="interpreter_noU">Especificación->"Malo"</label>
-						<input [(ngModel)]="questionSelect.interpreter_no" type="text" pInputText id="interpreter_noU" required
-							autofocus />
-					</div>
-					<div class="p-field">
-						<label for="value_importanceU">Peso</label>
-						<input [(ngModel)]="questionSelect.value_importance" type="text" pInputText id="value_importanceU" required
-							autofocus />
-					</div>
+      <p-dialog [(visible)]="questionDialog" header="Agregar pregunta"
+        [modal]="true" styleClass="p-fluid expert-question-dialog admin-dialog-md">
+        <ng-template pTemplate="content">
+          <div class="selected-concept-box">
+            <span>{{ 'admin.conceptEvaluation' | translate }}</span>
+            <strong>{{ conceptSelect.concept }}</strong>
+          </div>
 
+          <div class="dialog-form-grid">
+            <div class="p-field field-full">
+              <label for="questionName">{{ 'admin.question' | translate }}</label>
+              <input [(ngModel)]="question.question" type="text" pInputText id="questionName" required autofocus
+                [class.p-invalid]="isRequiredInvalid(question.question)" />
+              @if (isRequiredInvalid(question.question)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="questionCode">{{ 'admin.code' | translate }}</label>
+              <input [(ngModel)]="question.code" type="text" pInputText id="questionCode" required
+                [class.p-invalid]="isRequiredInvalid(question.code)" />
+              @if (isRequiredInvalid(question.code)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="questionSchema">{{ 'admin.schema' | translate }}</label>
+              <input [(ngModel)]="question.schema" type="text" pInputText id="questionSchema" required
+                [class.p-invalid]="isRequiredInvalid(question.schema)" />
+              @if (isRequiredInvalid(question.schema)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="interpreterYes">Especificacion - Bueno</label>
+              <textarea [(ngModel)]="question.interpreter_yes" id="interpreterYes" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(question.interpreter_yes)"></textarea>
+              @if (isRequiredInvalid(question.interpreter_yes)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="interpreterPartially">Especificacion - Regular</label>
+              <textarea [(ngModel)]="question.interpreter_partially" id="interpreterPartially" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(question.interpreter_partially)"></textarea>
+              @if (isRequiredInvalid(question.interpreter_partially)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="interpreterNo">Especificacion - Malo</label>
+              <textarea [(ngModel)]="question.interpreter_no" id="interpreterNo" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(question.interpreter_no)"></textarea>
+              @if (isRequiredInvalid(question.interpreter_no)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="questionWeight">Peso</label>
+              <input [(ngModel)]="question.weight" type="text" pInputText id="questionWeight" required
+                [class.p-invalid]="isRequiredInvalid(question.weight)" />
+              @if (isRequiredInvalid(question.weight)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="questionRelevance">Relevancia</label>
+              <input [(ngModel)]="question.relevance" type="text" pInputText id="questionRelevance" required
+                [class.p-invalid]="isRequiredInvalid(question.relevance)" />
+              @if (isRequiredInvalid(question.relevance)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field field-full">
+              <label for="questionDescription">{{ 'admin.description' | translate }}</label>
+              <textarea [(ngModel)]="question.description" id="questionDescription" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(question.description)"></textarea>
+              @if (isRequiredInvalid(question.description)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+          </div>
+        </ng-template>
 
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialog()"></button>
+          <button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check"
+          [loading]="isActionLoading('create-question')" [disabled]="busy"
+          (click)="saveQuestion()"></button>
+        </ng-template>
+      </p-dialog>
 
-					<div class="p-field">
-						<label for="descriptionU">{{ 'admin.description' | translate }}</label>
-						<textarea [(ngModel)]="questionSelect.description" id="descriptionU" pInputTextarea required
-							rows="3" cols="20"></textarea>
-					</div>
-				</ng-template>
+      <p-dialog [(visible)]="updateQuestionDialog"
+        header="Actualizar pregunta" [modal]="true" styleClass="p-fluid expert-question-dialog admin-dialog-md">
+        <ng-template pTemplate="content">
+          <div class="dialog-form-grid">
+            <div class="p-field field-full">
+              <label for="questionUpdateName">{{ 'admin.question' | translate }}</label>
+              <input [(ngModel)]="questionSelect.question" type="text" pInputText id="questionUpdateName" required autofocus
+                [class.p-invalid]="isRequiredInvalid(questionSelect.question)" />
+              @if (isRequiredInvalid(questionSelect.question)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="questionUpdateCode">{{ 'admin.code' | translate }}</label>
+              <input [(ngModel)]="questionSelect.code" type="text" pInputText id="questionUpdateCode" required
+                [class.p-invalid]="isRequiredInvalid(questionSelect.code)" />
+              @if (isRequiredInvalid(questionSelect.code)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="questionUpdateSchema">{{ 'admin.schema' | translate }}</label>
+              <input [(ngModel)]="questionSelect.schema" type="text" pInputText id="questionUpdateSchema" required
+                [class.p-invalid]="isRequiredInvalid(questionSelect.schema)" />
+              @if (isRequiredInvalid(questionSelect.schema)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="interpreterYesUpdate">Especificacion - Bueno</label>
+              <textarea [(ngModel)]="questionSelect.interpreter_yes" id="interpreterYesUpdate" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(questionSelect.interpreter_yes)"></textarea>
+              @if (isRequiredInvalid(questionSelect.interpreter_yes)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="interpreterPartiallyUpdate">Especificacion - Regular</label>
+              <textarea [(ngModel)]="questionSelect.interpreter_partially" id="interpreterPartiallyUpdate" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(questionSelect.interpreter_partially)"></textarea>
+              @if (isRequiredInvalid(questionSelect.interpreter_partially)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="interpreterNoUpdate">Especificacion - Malo</label>
+              <textarea [(ngModel)]="questionSelect.interpreter_no" id="interpreterNoUpdate" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(questionSelect.interpreter_no)"></textarea>
+              @if (isRequiredInvalid(questionSelect.interpreter_no)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="relevanceUpdate">Relevancia</label>
+              <input [(ngModel)]="questionSelect.relevance" type="text" pInputText id="relevanceUpdate" required
+                [class.p-invalid]="isRequiredInvalid(questionSelect.relevance)" />
+              @if (isRequiredInvalid(questionSelect.relevance)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field">
+              <label for="weightUpdate">Peso</label>
+              <input [(ngModel)]="questionSelect.weight" type="number" pInputText id="weightUpdate" required
+                [class.p-invalid]="isRequiredInvalid(questionSelect.weight)" />
+              @if (isRequiredInvalid(questionSelect.weight)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+            <div class="p-field field-full">
+              <label for="descriptionUpdate">{{ 'admin.description' | translate }}</label>
+              <textarea [(ngModel)]="questionSelect.description" id="descriptionUpdate" pInputTextarea required rows="3"
+              [class.p-invalid]="isRequiredInvalid(questionSelect.description)"></textarea>
+              @if (isRequiredInvalid(questionSelect.description)) {
+                <small class="field-error">Campo obligatorio.</small>
+              }
+            </div>
+          </div>
+        </ng-template>
 
-				<ng-template pTemplate="footer">
-					<button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
-						(click)="hideDialogUpdateQuestion()"></button>
-					<button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"
-						(click)="saveUpdateQuestion()"></button>
-				</ng-template>
-			</p-dialog>
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialogUpdateQuestion()"></button>
+          <button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check"
+          [loading]="isActionLoading('update-question')" [disabled]="busy"
+          (click)="saveUpdateQuestion()"></button>
+        </ng-template>
+      </p-dialog>
 
-			<p-dialog [(visible)]="editConceptDialog" [style]="{width: '450px'}" header="Editar concepto" [modal]="true"
-				styleClass="p-fluid">
-				<ng-template pTemplate="content">
-					<div class="p-field">
-						<label for="conceptE">{{ 'admin.conceptEvaluation' | translate }}</label>
-						<input [(ngModel)]="conceptSelect.concept" type="text" pInputText id="conceptE" required
-							autofocus />
-						<small class="p-invalid">{{ 'admin.required' | translate }}</small>
-					</div>
-				</ng-template>
-				<ng-template pTemplate="footer">
-					<button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
-						(click)="hideDialogUpdate()"></button>
-					<button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check" class="p-button-text"
-						(click)="updateConcept()"></button>
-				</ng-template>
-			</p-dialog>
-			<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
-		</div>
-	</div>
+      <p-dialog [(visible)]="editConceptDialog" header="Editar concepto"
+        [modal]="true" styleClass="p-fluid expert-question-dialog admin-dialog-sm">
+        <ng-template pTemplate="content">
+          <div class="p-field">
+            <label for="conceptEditName">{{ 'admin.conceptEvaluation' | translate }}</label>
+            <input [(ngModel)]="conceptSelect.concept" type="text" pInputText id="conceptEditName" required autofocus />
+            @if (submitted && !conceptSelect.concept) {
+              <small class="p-invalid">{{ 'admin.required' | translate }}</small>
+            }
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="{{ 'admin.cancel' | translate }}" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialogUpdate()"></button>
+          <button pButton pRipple label="{{ 'admin.save' | translate }}" icon="pi pi-check"
+          [loading]="isActionLoading('update-concept')" [disabled]="busy"
+          (click)="updateConcept()"></button>
+        </ng-template>
+      </p-dialog>
+    </div>
+  </div>
 </div>
 
-<div class="p-grid">
-	<div class="p-col-12 p-md-6">
-		<div class="card">
-			<div class="p-grid table-demo">
-				<p-table #dt [value]="conceptList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true">
-					<ng-template pTemplate="caption">
-						<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-							{{ 'admin.conceptEvaluation'| translate }}
-						</div>
-					</ng-template>
-					<ng-template pTemplate="header">
-						<tr>
-							<th style="width: 4%">
-								<div class="p-d-flex p-jc-between p-ai-center">#</div>
-							</th>
-							<th style="width: 60%">
-								<div class="p-d-flex p-jc-between p-ai-center">
-									{{'admin.question'| translate }}
-								</div>
-							</th>
-							<th style="text-align: center">{{ 'admin.actions'| translate }}</th>
-						</tr>
-					</ng-template>
-					<ng-template pTemplate="body" let-concept let-rowIndex="rowIndex">
-						<tr class="p-selectable-row">
-							<td>
-								<strong>{{rowIndex+1}}</strong>
-							</td>
-							<td>
-								<h6>{{concept.concept}}</h6>
-							</td>
-							<td style="text-align: center">
-								<button (click)="openQuestion(concept)" pButton pRipple icon="pi pi-plus"
-									class="p-button-success p-mr-1 p-mb-1"></button>
-								<button (click)="retrieveEvaluationData(concept.id)" pButton type="button"
-									class="p-mr-1 p-mb-1 p-button-success" icon="pi pi-list"></button>
-								<button (click)="openEditConceptDialog(concept)" pButton type="button"
-									class="p-mr-1 p-mb-1 p-button-success" icon="pi pi-pencil"></button>
-								<p-toast></p-toast>
-								<button (click)="deleteEvaluationExpert($event,concept.id)" pTooltip="Eliminar" pButton
-									type="button" class="p-mr-1 p-mb-1 p-button-danger" icon="pi pi-trash"></button>
-								<p-confirmPopup key="confirmDelete"></p-confirmPopup>
-							</td>
-						</tr>
-					</ng-template>
-					<ng-template pTemplate="emptymessage">
-						<tr>
-							<td colspan="8">No existe concepto de avaluación.</td>
-						</tr>
-					</ng-template>
-				</p-table>
-			</div>
-		</div>
-	</div>
+<div class="p-grid expert-question-tables">
+  <div class="p-col-12 p-md-6">
+    <div class="card">
+      <p-table #dt [value]="conceptList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true">
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="table-title">{{ 'admin.conceptEvaluation' | translate }}</span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="index-column">#</th>
+            <th>{{ 'admin.question' | translate }}</th>
+            <th class="actions-column">{{ 'admin.actions' | translate }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-concept let-rowIndex="rowIndex">
+          <tr class="p-selectable-row">
+            <td class="index-cell">
+              <span class="p-column-title">#</span>
+              <strong>{{ rowIndex + 1 }}</strong>
+            </td>
+            <td>
+              <span class="p-column-title">{{ 'admin.question' | translate }}</span>
+              <h6 class="concept-title">{{ concept.concept }}</h6>
+            </td>
+            <td class="table-actions">
+              <span class="p-column-title">{{ 'admin.actions' | translate }}</span>
+              <div class="table-inline-actions table-inline-actions--buttons table-inline-actions--concepts">
+                <button (click)="openQuestion(concept)" pButton pRipple icon="pi pi-plus" class="p-button-success"></button>
+                <button (click)="retrieveEvaluationData(concept.id)" pButton type="button" class="p-button-success" icon="pi pi-list"></button>
+                <button (click)="openEditConceptDialog(concept)" pButton type="button" class="p-button-success" icon="pi pi-pencil"></button>
+                <button (click)="deleteEvaluationExpert($event, concept.id)" pTooltip="Eliminar" pButton type="button"
+                class="p-button-danger" icon="pi pi-trash"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3">No existe concepto de evaluacion.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
 
-	<div class="p-col-12 p-md-6">
-		<div class="card">
-			<div class="p-grid table-demo">
-				<p-table #dt [value]="questionList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true"
-					[rows]="5" [paginator]="true">
-					<ng-template pTemplate="caption">
-						<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-							{{ 'admin.questionEvaluation'| translate }}
-						</div>
-					</ng-template>
-					<ng-template pTemplate="header">
-						<tr>
-							<th style="width: 4%">
-								<div class="p-d-flex p-jc-between p-ai-center">#</div>
-							</th>
-							<th style="width: 70%">
-								<div class="p-d-flex p-jc-between p-ai-center">
-									{{'admin.question' | translate }}
-								</div>
-							</th>
-							<th style="text-align: center">{{'admin.actions' | translate}}</th>
-						</tr>
-					</ng-template>
-					<ng-template pTemplate="body" let-question let-rowIndex="rowIndex">
-						<tr class="p-selectable-row">
-							<td>
-								<strong>{{rowIndex+1}}</strong>
-							</td>
-							<!-- Inclusion de los nuevos campos -->
-							<td>
-								<strong>Pregunta</strong>
-								<p>{{question.question}}</p>
-								<strong>Descripción</strong>
-								<p>{{question.description}}</p>
-								<strong>Esquema</strong>
-								<p>{{question.schema}}</p>
-								<strong>Especificación->"Bueno"</strong>
-								<p>{{question.interpreter_yes}}</p>
-								<strong>Especificación->"Regular"</strong>
-								<p>{{question.interpreter_partially}}</p>
-								<strong>Especificación->"Malo"</strong>
-								<p>{{question.interpreter_no}}</p>
-								<strong>Peso</strong>
-								<p>{{question.value_importance}}</p>
-							</td>
-							<td style="text-align: center">
-								<button (click)="openEditQuestionDialog(question)" pButton type="button"
-									class="p-mr-1 p-mb-1 p-button-success" icon="pi pi-pencil"></button>
-								<p-toast></p-toast>
-								<button (click)="deleteQuestion($event,question.id,concept.evaluation_concept)"
-									pTooltip="Eliminar" pButton type="button" class="p-mr-1 p-mb-1 p-button-danger"
-									icon="pi pi-trash"></button>
-								<p-confirmPopup key="confirmDelete"></p-confirmPopup>
-							</td>
-
-						</tr>
-					</ng-template>
-					<ng-template pTemplate="emptymessage">
-						<tr>
-							<td colspan="8">{{'admin.questionEmpty'| translate }}</td>
-						</tr>
-					</ng-template>
-				</p-table>
-			</div>
-		</div>
-	</div>
+  <div class="p-col-12 p-md-6">
+    <div class="card">
+      <p-table #dt [value]="questionList" dataKey="id" styleClass="p-datatable-customers" [rowHover]="true" [rows]="5"
+        [paginator]="true">
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="table-title">{{ 'admin.questionEvaluation' | translate }}</span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="index-column">#</th>
+            <th>{{ 'admin.question' | translate }}</th>
+            <th class="actions-column">{{ 'admin.actions' | translate }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-question let-rowIndex="rowIndex">
+          <tr class="p-selectable-row">
+            <td class="index-cell">
+              <span class="p-column-title">#</span>
+              <strong>{{ rowIndex + 1 }}</strong>
+            </td>
+            <td>
+              <span class="p-column-title">{{ 'admin.question' | translate }}</span>
+              <div class="question-detail-list">
+                <div>
+                  <strong>Pregunta</strong>
+                  <p>{{ question.question }}</p>
+                </div>
+                <div>
+                  <strong>Descripcion</strong>
+                  <p>{{ question.description }}</p>
+                </div>
+                <div>
+                  <strong>Esquema</strong>
+                  <p>{{ question.schema }}</p>
+                </div>
+                <div>
+                  <strong>Especificacion - Bueno</strong>
+                  <p>{{ question.interpreter_yes }}</p>
+                </div>
+                <div>
+                  <strong>Especificacion - Regular</strong>
+                  <p>{{ question.interpreter_partially }}</p>
+                </div>
+                <div>
+                  <strong>Especificacion - Malo</strong>
+                  <p>{{ question.interpreter_no }}</p>
+                </div>
+                <div>
+                  <strong>Relevancia</strong>
+                  <p>{{ question.relevance }}</p>
+                </div>
+                <div>
+                  <strong>Peso</strong>
+                  <p>{{ question.weight }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="table-actions">
+              <span class="p-column-title">{{ 'admin.actions' | translate }}</span>
+              <div class="table-inline-actions table-inline-actions--buttons">
+                <button (click)="openEditQuestionDialog(question)" pButton type="button" class="p-button-success"
+                icon="pi pi-pencil"></button>
+                <button (click)="deleteQuestion($event, question.id)" pTooltip="Eliminar" pButton type="button"
+                class="p-button-danger" icon="pi pi-trash"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3">{{ 'admin.questionEmpty' | translate }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
 </div>
+
+
+

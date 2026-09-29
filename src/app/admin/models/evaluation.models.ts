@@ -2,6 +2,14 @@ export class Concept{
     id?: number;
     concept?:string;
 }
+
+export class SelfQuestion{
+    id?: number;
+    description?:string;
+    descriptionEnglish?:string;
+    evaluation_concept?: number;
+}
+
 ////////////////estudiante/////////////
 export class Principle{
     id?: number;
@@ -20,7 +28,7 @@ export class GuidelineUpdate{
 export class QuestionStudent{
     id?:number;
     question:string;
-    code:string;
+    code?:string;
     description:string;
     metadata: string;
     interpreter_st_yes:string;
@@ -28,6 +36,8 @@ export class QuestionStudent{
     interpreter_st_partially:string;
     value_st_importance:number;
     guideline:number;
+    weight: number;
+    relevance:string;
 }
 export class QuestionStudentUpdate{
     id?:number;
@@ -39,6 +49,8 @@ export class QuestionStudentUpdate{
     interpreter_st_no:string;
     interpreter_st_partially:string;
     value_st_importance:number;
+    weight: number;
+    relevance:string;
 }
 //////////////////////////////////////
 ///nuevos datos
@@ -53,6 +65,8 @@ export class Question{
     interpreter_partially:string;
     value_importance:number;
     evaluation_concept:number;
+    weight: number;
+    relevance:string;
 }
 export class QuestionUpdate{
     id?:number;
@@ -64,6 +78,8 @@ export class QuestionUpdate{
     interpreter_no:string;
     interpreter_partially:string;
     value_importance:number;
+    weight: number;
+    relevance:string;
 }
 //////////////Nuevo modelo metadata
 export class Metadata{
@@ -73,6 +89,7 @@ export class Metadata{
     description:string;
     value_importance_schema:number;
     evaluation_concept:number;
+    self_evaluation_questions:number;
 }
 export class MetadataUpdate{
     id?:number;
