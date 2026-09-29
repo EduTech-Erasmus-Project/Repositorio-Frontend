@@ -1,211 +1,344 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { HttpErrorResponse } from "@angular/common/http";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import Swal from "sweetalert2";
-import { AuthService } from "../../admin/services/auth.service";
 import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
-import { Subscription } from "rxjs";
+import { firstValueFrom, Subscription } from "rxjs";
 import { LanguageService } from "../../services/language.service";
 import { MessageService } from "primeng/api";
 import { LoginService } from "../../services/login.service";
 import { StorageService } from "../../services/storage.service";
+import { BreadcrumbService } from "src/app/services/breadcrumb.service";
+import { UserService } from "src/app/services/user.service";
+import { focusFirstInvalidControl } from "src/app/core/utils/accessibility-focus";
+import { ApiMessageResponse, AuthTokenResponse } from "src/app/core/interfaces/api-contracts";
 
+/**
+ * Contrato tipado del formulario de autenticacion principal.
+ */
+interface LoginFormControls {
+  email: FormControl<string>;
+  password: FormControl<string>;
+  rememberMe: FormControl<boolean>;
+}
+
+/**
+ * Configuracion base del toast de error reutilizado por el flujo de login.
+ */
+interface ToastMessageConfig {
+  severity: "error";
+  summary: string;
+  detail: string;
+}
+
+/**
+ * Gestiona el inicio de sesion publico del repositorio.
+ *
+ * Responsabilidades:
+ * - validar credenciales y enviar el login al backend
+ * - conservar el correo cuando el usuario activa "recordarme"
+ * - reemitir el flujo de activacion cuando la cuenta sigue inactiva
+ * - publicar el breadcrumb de la pantalla
+ */
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
+  standalone: false,
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  //dark: boolean=false;
-  public checked: boolean;
-  public translate: TranslateService;
-  public msjError;
-  private subscribes: Subscription[] = [];
-  private msjModal: string;
-  public show: boolean= false;
+  public checked = false;
+  public translate!: TranslateService;
+  public msjError: ToastMessageConfig = {
+    severity: "error",
+    summary: "Error",
+    detail: "",
+  };
+  public show = false;
+  public isNotaccountaActive = false;
+  public isSubmitting = false;
+  public isResendingActivation = false;
+  public loginErrorMessage = "";
 
-  //public formSubmit: false;
+  private readonly emailPattern =
+    "^([a-zA-Z0-9_'-'.]+)@([a-zA-Z0-9_'-'.]+).([a-zA-Z]{2,5})$";
+  private readonly subscribes: Subscription[] = [];
+  private msjModal = "";
 
-  public loginForm = this.fb.group({
-    email: [
-      this.storageService.getCookieItem("userEmail") || null,
-      [
-        Validators.required,
-        Validators.pattern(
-          "^([a-zA-Z0-9_'-'.]+)@([a-zA-Z0-9_'-'.]+).([a-zA-Z]{2,5})$"
-        ),
-      ],
-    ],
-    password: [null, [Validators.required]],
-    rememberMe: [!!this.storageService.getCookieItem("userEmail")],
-  });
-
-  // dartActive(dart_active: boolean):boolean{
-  //   this.dark = dart_active;
-  //   localStorage.setItem('dart_active',dart_active.toString());
-  //   return this.dark;
-  // }
+  public loginForm: FormGroup<LoginFormControls> =
+    new FormGroup<LoginFormControls>({
+      email: new FormControl(this.storageService.getLocalItem("userEmail") || "", {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          Validators.pattern(this.emailPattern),
+        ],
+      }),
+      password: new FormControl("", {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      rememberMe: new FormControl(
+        !!this.storageService.getLocalItem("userEmail"),
+        {
+          nonNullable: true,
+        }
+      ),
+    });
 
   constructor(
-    private auth: AuthService,
-    private router: Router,
-    private fb: FormBuilder,
+    private _router: Router,
     private languageService: LanguageService,
     private messageService: MessageService,
     private loginService: LoginService,
-    private storageService: StorageService
-  ) {
-    //this.dark = localStorage.getItem('dart_active')==='true'?true:false;
-  }
-  ngOnDestroy(): void {
-    //console.log("unsuscribe")
-
-    this.subscribes.forEach((sub) => {
-      sub.unsubscribe;
-    });
-  }
+    private storageService: StorageService,
+    private breadcrumbService: BreadcrumbService,
+    private _userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
+    void this.addBreadcrumb();
     this.translate = this.languageService.translate;
+    this.loadTranslateText();
 
-    this.translate.onLangChange.subscribe((translate: LangChangeEvent) => {
-      this.msjModal = translate.translations.login.modalMsj;
-      this.msjError = {
-        severity: "error",
-        summary: translate.translations.message.titleError,
-        detail: translate.translations.login.errorMesage,
-      };
+    const langChangeSub = this.translate.onLangChange.subscribe(
+      (translate: LangChangeEvent) => {
+        this.msjModal = translate.translations?.login?.modalMsj || this.msjModal;
+        this.msjError = {
+          severity: "error",
+          summary: translate.translations?.message?.titleError || "Error",
+          detail: translate.translations?.login?.errorMesage || this.msjError.detail,
+        };
+        this.cdr.detectChanges();
+      }
+    );
+
+    this.subscribes.push(langChangeSub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscribes.forEach((sub) => {
+      sub.unsubscribe();
     });
+  }
+
+  /**
+   * Publica el breadcrumb traducido del flujo de autenticacion.
+   */
+  private async addBreadcrumb() {
+    const loginLabel = await firstValueFrom(
+      this.languageService.translate.get("menu.login")
+    );
+
+    this.breadcrumbService.setItems([
+      { label: "ROA" },
+      { label: loginLabel, routerLink: ["/login"] },
+    ]);
   }
 
   get errorEmailRequired(): boolean {
-    //console.log(this.loginForm.get('email'))
-    return (
-      this.loginForm.get("email").errors?.required &&
-      this.loginForm.get("email").touched
+    return !!(
+      this.loginForm.controls.email.errors?.required &&
+      this.loginForm.controls.email.touched
     );
   }
+
   get errorEmailFormat(): boolean {
-    return (
-      this.loginForm.get("email").errors?.pattern &&
-      this.loginForm.get("email").touched
+    return !!(
+      this.loginForm.controls.email.errors?.pattern &&
+      this.loginForm.controls.email.touched
     );
   }
+
   get errorPasswordRequired(): boolean {
-    return (
-      this.loginForm.get("password").errors?.required &&
-      this.loginForm.get("password").touched
+    return !!(
+      this.loginForm.controls.password.errors?.required &&
+      this.loginForm.controls.password.touched
     );
   }
 
+  /**
+   * Ejecuta la autenticacion principal y sincroniza los efectos secundarios
+   * de sesion, menu y persistencia de correo.
+   */
   async onLogin() {
-    //optimize on translate implementation
     this.loadTranslateText();
-
     this.messageService.clear();
+    this.loginErrorMessage = "";
+    this.isNotaccountaActive = false;
 
-    if (this.loginForm.valid) {
-      Swal.fire({
-        allowOutsideClick: false,
-        icon: "info",
-        text: this.msjModal,
-      });
-      Swal.showLoading();
-
-      let formData = {
-        email: this.loginForm.get("email").value,
-        password: this.loginForm.get("password").value,
-      };
-
-      let loginSub = await this.loginService.signIn(formData).subscribe(
-        async (res: any) => {
-          if (res.detail) {
-            this.showMessageError();
-            Swal.close();
-            return;
-          }
-          this.storageService.saveCookieItem("data_acc", res.access);
-          this.storageService.saveCookieItem("data_ref", res.refresh);
-          await this.loginService
-            .validateUser(res.access)
-            .then(() => {
-              this.saveEmail();
-              Swal.close();
-            })
-            .catch((err) => {
-              let msjErrorServer = {
-                severity: "error",
-                summary: "Server Error",
-                detail: err,
-              };
-              this.messageService.add(msjErrorServer);
-
-              this.showMessageError();
-              Swal.close();
-            });
-        },
-        (error) => {
-          this.showMessageError();
-          Swal.close();
-        }
-      );
-
-      this.subscribes.push(loginSub);
-    } else {
+    if (this.loginForm.invalid) {
       this.markTouchForm();
+      this.focusInvalidControl();
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.cdr.detectChanges();
+    Swal.fire({
+      allowOutsideClick: false,
+      icon: "info",
+      text: this.msjModal,
+    });
+    Swal.showLoading(null);
+
+    const formData = {
+      email: this.loginForm.controls.email.value,
+      password: this.loginForm.controls.password.value,
+    };
+
+    try {
+      await firstValueFrom(this.loginService.initializeCsrfSession());
+
+      const res = await firstValueFrom(this.loginService.signIn(formData)) as AuthTokenResponse & ApiMessageResponse;
+
+      if (res?.detail) {
+        this.showMessageError();
+        return;
+      }
+
+      await this.loginService.validateUser();
+
+      if (
+        this.loginService.user?.roles.includes("teacher") ||
+        this.loginService.user?.roles.includes("expert")
+      ) {
+        this.loginService.setCharacterMenuState(true);
+      }
+
+      this.saveEmail();
+    } catch (error: unknown) {
+      const httpError = error as HttpErrorResponse & {
+        error?: {
+          detail?: string;
+        };
+      };
+      if (httpError?.error?.detail === "Account inactive user") {
+        this.isNotaccountaActive = true;
+      }
+
+      this.showMessageError();
+      this.cdr.detectChanges();
+    } finally {
+      this.isSubmitting = false;
+      Swal.close();
+      this.cdr.detectChanges();
     }
   }
 
   markTouchForm() {
-    (<any>Object).values(this.loginForm.controls).forEach((control) => {
+    Object.values(this.loginForm.controls).forEach((control) => {
       control.markAsTouched();
     });
   }
 
+  togglePasswordVisibility() {
+    this.show = !this.show;
+  }
+
   loadTranslateText() {
-    let currentLng = this.translate.currentLang;
-    if (currentLng === "es") {
-      this.msjModal = this.translate.translations.es.login.modalMsj;
-      this.msjError = {
-        severity: "error",
-        summary: this.translate.translations.es.message.titleError,
-        detail: this.translate.translations.es.login.errorMesage,
-      };
-    } else if (currentLng == "en") {
-      this.msjModal = this.translate.translations.en.login.modalMsj;
-      this.msjError = {
-        severity: "error",
-        summary: this.translate.translations.en.message.titleError,
-        detail: this.translate.translations.en.login.errorMesage,
-      };
-    }
+    const currentLang = this.translate?.currentLang || "es";
+    const translations =
+      this.translate?.translations?.[currentLang] ||
+      this.translate?.translations?.es ||
+      {};
+
+    this.msjModal = translations?.login?.modalMsj || "Por favor espere...";
+    this.msjError = {
+      severity: "error",
+      summary: translations?.message?.titleError || "Error",
+      detail:
+        translations?.login?.errorMesage ||
+        "El correo o la contraseña que ingresó no coinciden con ningun registro",
+    };
   }
 
   showMessageError() {
+    this.loginErrorMessage = this.msjError.detail;
     this.messageService.add(this.msjError);
   }
 
-  onSaveEmail(event) {
-    //console.log(event);
+  onSaveEmail(event: { checked?: boolean }) {
     if (event.checked) {
       this.saveEmail();
-    } else {
-      this.storageService.removeCookieItem("userEmail");
+      return;
+    }
+
+    this.storageService.removeLocalItem("userEmail");
+  }
+
+  saveEmail() {
+    if (!this.loginForm.controls.rememberMe.value) {
+      this.storageService.removeLocalItem("userEmail");
+      return;
+    }
+
+    if (this.loginForm.controls.email.value) {
+      this.storageService.saveLocalItem(
+        "userEmail",
+        this.loginForm.controls.email.value
+      );
+      return;
+    }
+
+    this.markTouchForm();
+    this.loginForm.controls.rememberMe.setValue(false);
+  }
+
+  /**
+   * Reenvia el correo de activacion cuando el backend rechaza el login por cuenta inactiva.
+   */
+  public async resendActivationEmail() {
+    if (this.loginForm.controls.email.invalid) {
+      this.loginForm.controls.email.markAsTouched();
+      return;
+    }
+
+    this.isResendingActivation = true;
+    this.cdr.detectChanges();
+
+    try {
+      const email = this.loginForm.controls.email.value;
+      const responseEmail = await firstValueFrom(
+        this._userService.set_email_verify_new_token(email)
+      ) as ApiMessageResponse;
+
+      if (responseEmail?.status === 200) {
+        const currentLang = this.translate?.currentLang || "es";
+        const translations =
+          this.translate?.translations?.[currentLang] ||
+          this.translate?.translations?.es ||
+          {};
+
+        this.messageService.add({
+          severity: "success",
+          summary:
+            translations?.login?.isNotActiveAccountMessageSummary || "Exitoso",
+          detail:
+            translations?.login?.isNotActiveAccountMessage ||
+            "Correo enviado exitosamente",
+        });
+        this.isNotaccountaActive = false;
+        this.cdr.detectChanges();
+        return;
+      }
+
+      this.isNotaccountaActive = false;
+      await this._router.navigate(["/"]);
+    } catch {
+      this.isNotaccountaActive = false;
+      await this._router.navigate(["/"]);
+    } finally {
+      this.isResendingActivation = false;
+      this.cdr.detectChanges();
     }
   }
 
-  saveEmail(){
-    if (
-      this.loginForm.get("email").value !== null &&
-      this.loginForm.get("email").value !== ""
-    ) {
-      this.storageService.saveCookieItem(
-        "userEmail",
-        this.loginForm.get("email").value
-      );
-    } else {
-      this.markTouchForm(); //rememberMe
-      this.loginForm.controls["rememberMe"].setValue(false);
-    }
+  private focusInvalidControl() {
+    setTimeout(() => {
+      focusFirstInvalidControl(document.getElementById("loginForm"));
+    }, 0);
   }
 }

@@ -1,5 +1,37 @@
-.p-button-text {
-    color: white; //Declarar en variable
-    background-color: #3B5B68;
-    
-  }
+:host {
+  display: block;
+}
+
+.email-message-panel {
+  width: 100%;
+}
+
+.email-message-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.email-message-content h2 {
+  margin: 0;
+}
+
+.email-message-actions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+:host ::ng-deep .email-message-login-button {
+  min-width: 180px;
+  color: #ffffff;
+  background: #3b5b68;
+  border-color: #3b5b68;
+}
+
+:host ::ng-deep .email-message-login-button:hover {
+  background: #344f5b;
+  border-color: #344f5b;
+}

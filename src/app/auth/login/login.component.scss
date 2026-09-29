@@ -1,22 +1,178 @@
-.login-content{
-    position: relative;
-    height: 100vh;
-    .desert{
-        position: absolute;
-        bottom: 0;
-    }
-    .login-panel{
-        height: 100%;
-    }
+.login-content {
+  position: relative;
+  min-height: calc(100vh - 180px);
+  height: auto;
+  padding: 32px 16px;
+
+  .desert {
+    position: absolute;
+    bottom: 0;
+  }
+
+  .login-panel {
+    width: min(645px, 100%);
+    min-height: auto;
+    height: auto;
+    padding: 28px 18px;
+    border-radius: 14px;
+  }
+
+  .login-panel-content {
+    width: min(420px, 100%);
+    padding: 0;
+  }
+
+  .logo {
+    margin-bottom: 8px;
+  }
+
+  .auth-logo {
+    width: 100px;
+    height: auto;
+  }
+
+  h2 {
+    margin: 8px 0 18px;
+    color: #2e3440;
+    font-weight: 600;
+  }
 }
 
-.viewPass{
-    position: relative;
-    i{
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      padding: 5px;
-      cursor: pointer;
+.forms {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+  text-align: left;
+
+  .p-field {
+    margin: 0;
+  }
+
+  label {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: #4c566a;
+    font-weight: 500;
+  }
+}
+
+.login-status-message {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+  white-space: nowrap;
+}
+
+:host ::ng-deep {
+  .forms .p-inputtext,
+  .forms .p-password {
+    width: 100%;
+  }
+
+  .forms .p-inputtext {
+    min-height: 42px;
+  }
+
+}
+
+.viewPass {
+  position: relative;
+
+  input {
+    width: 100%;
+    padding-right: 42px;
+  }
+
+  i {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    z-index: 1;
+    padding: 5px;
+    color: #4c566a;
+    cursor: pointer;
+    transform: translateY(-50%);
+  }
+}
+
+.inactive-account {
+  button {
+    width: 100%;
+    margin-top: 6px;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 6px;
+
+  button {
+    min-width: 120px;
+    background-color: var(--p-primary-500, #3B5B68);
+    border-color: var(--p-primary-500, #3B5B68);
+  }
+
+  button:hover {
+    background-color: var(--p-primary-600, #344f5b);
+    border-color: var(--p-primary-600, #344f5b);
+  }
+}
+
+.links {
+  display: grid;
+  gap: 4px;
+  text-align: right;
+
+  .secondary-button {
+    color: #4c566a;
+    text-decoration: underline;
+  }
+}
+
+.login-register-link {
+  margin: 6px 0 0;
+  color: #9199a9;
+  font-size: 14px;
+  line-height: normal;
+  text-align: center;
+
+  .secondary-button {
+    color: #9199a9;
+    font-size: 14px;
+    line-height: normal;
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 740px) {
+  .login-content {
+    min-height: auto;
+    padding: 24px 12px;
+
+    .login-panel {
+      padding: 24px 14px;
     }
   }
+
+  .buttons {
+    align-items: stretch;
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .links {
+    text-align: center;
+  }
+}

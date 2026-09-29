@@ -1,64 +1,139 @@
-<!-- <div class="login-body" [ngClass]="{'layout-dark': dark, 'layout-light': !dark}"> -->
+﻿<!-- <div class="login-body" [ngClass]="{'layout-dark': dark, 'layout-light': !dark}"> -->
 <div class="login-body layout-light">
-    <div class="login-content animate__animated animate__fadeIn">
-        <!-- <div class="night-switch">
-            <p-button styleClass="dark-switch"  icon="pi pi-circle-on" (click)="dartActive(true)"></p-button>
-            <p-button styleClass="light-switch"  icon="pi pi-circle-off" (click)="dartActive(false)"></p-button>
-        </div> -->
-        <div class="login-panel">
-            <div class="login-panel-content">
-                <div class="logo">
-                    <img loading="lazy" src="assets/img/image2vector.svg" [alt]="'menu.altLogo' | translate" />
-                </div>
-                <h2>{{'login.loginTitle' | translate}}</h2>
+  <div class="login-content animate__animated animate__fadeIn">
+    <!-- <div class="night-switch">
+    <p-button styleClass="dark-switch"  icon="pi pi-circle-on" (click)="dartActive(true)"></p-button>
+    <p-button styleClass="light-switch"  icon="pi pi-circle-off" (click)="dartActive(false)"></p-button>
+  </div> -->
+    <div class="login-panel">
+      <div class="login-panel-content">
+        <div class="logo">
+          <img
+            loading="lazy"
+            src="/assets/img/ROA-Edu.png"
+            class="auth-logo"
+            alt=""
+            aria-hidden="true"
+          />
+        </div>
+        <h2>{{ "login.loginTitle" | translate }}</h2>
 
-                <p-messages></p-messages>
-                <p-toast></p-toast>
-                <form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="onLogin()" id="loginForm">
-                    <div class="forms">
-
-                        <div class="p-field p-fluid">
-
-                            <label for="email">{{'login.labeEmail' | translate}}</label>
-                            <input [ngClass]="{'ng-dirty': errorEmailRequired || errorEmailFormat}"
-                                aria-describedby="email-help" id="email" pInputText type="email" name="email"
-                                formControlName="email" [placeholder]="'login.placeholderEmail' | translate" />
-
-                            <small *ngIf="errorEmailRequired || errorEmailFormat" id="email-help"
-                                class="p-error">{{'login.errorMsjEmail' | translate}}</small>
-                            <!-- <i class="pi pi-user"></i> -->
-                        </div>
-
-                        <div class="p-field p-fluid">
-                            <label for="password">{{'login.labelPassword' | translate}}</label>
-                            <div class="viewPass">
-                                <input [ngClass]="{'ng-dirty': errorPasswordRequired}" aria-describedby="pass-help"
-                                [type]="show?'text':'password'" id="password" name="password" formControlName="password"
-                                    [placeholder]="'login.placeholderPass' | translate" pPassword [feedback]="false" />
-                                <i tabindex="0" [ngClass]="{'pi-eye':!show,'pi-eye-slash':show}" class="pi" (click)="show=!show" (keyup.enter)="show=!show"></i>
-                            </div>
-                            <!-- <i class="pi pi-lock"></i> -->
-                            <small *ngIf="errorPasswordRequired" id="pass-help"
-                                class="p-error">{{'login.errorMsjPassword' | translate}}</small>
-                        </div>
-
-                        <div class="p-col-12">
-                            <p-checkbox (onChange)="onSaveEmail($event)" name="checked" id="check"
-                                formControlName="rememberMe" [label]="'login.check' | translate" value="SaveInfo"
-                                binary="true"></p-checkbox>
-                        </div>
-
-
-                        <div class="buttons">
-                            <!-- <button pButton type="button" [routerLink]="['/']" label="Login"></button> -->
-                            <button pButton type="submit" [label]="'login.btnLogin' | translate"></button>
-                            <a href="#/restart-password" class="secondary-button">{{'login.recoverPassword' | translate}} </a>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        <p-toast></p-toast>
+        <div class="login-status-message" role="alert" aria-live="assertive" aria-atomic="true">
+          {{ loginErrorMessage }}
         </div>
 
-        <!-- <div class="desert"></div> -->
+        <form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="onLogin()" id="loginForm">
+          <div class="forms">
+            <div class="p-field p-fluid">
+              <label for="email">{{ "login.labeEmail" | translate }}</label>
+              <input
+                [ngClass]="{ 'ng-dirty': errorEmailRequired || errorEmailFormat }"
+                [attr.aria-describedby]="errorEmailRequired || errorEmailFormat ? 'email-help' : null"
+                id="email"
+                pInputText
+                type="email"
+                name="email"
+                formControlName="email"
+                [placeholder]="'login.placeholderEmail' | translate"
+              />
+
+              @if (errorEmailRequired || errorEmailFormat) {
+                <div id="email-help">
+                  @if (errorEmailRequired) {
+                    <small class="p-error">{{ "validation.obligatoryCamp" | translate }}</small>
+                  }
+                  @if (errorEmailFormat) {
+                    <small class="p-error">{{ "validation.errorEmail" | translate }}</small>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="p-field p-fluid">
+              <label for="password">{{ "login.labelPassword" | translate }}</label>
+              <div class="viewPass">
+                <input
+                  [ngClass]="{ 'ng-dirty': errorPasswordRequired }"
+                  [attr.aria-describedby]="errorPasswordRequired ? 'pass-help' : null"
+                  [type]="show ? 'text' : 'password'"
+                  id="password"
+                  name="password"
+                  formControlName="password"
+                  [placeholder]="'login.placeholderPass' | translate"
+                  pPassword
+                  [feedback]="false"
+                />
+                <i
+                  tabindex="0"
+                  role="button"
+                  [ngClass]="{ 'pi-eye': !show, 'pi-eye-slash': show }"
+                  [attr.aria-label]="(show ? 'a11y.hidePassword' : 'a11y.showPassword') | translate"
+                  [attr.aria-pressed]="show"
+                  class="pi"
+                  (click)="togglePasswordVisibility()"
+                  (keyup.enter)="togglePasswordVisibility()"
+                  (keyup.space)="togglePasswordVisibility()"
+                ></i>
+              </div>
+              @if (errorPasswordRequired) {
+                <small id="pass-help" class="p-error">{{ "login.errorMsjPassword" | translate }}</small>
+              }
+            </div>
+
+            @if (isNotaccountaActive == true) {
+              <div class="p-field p-fluid inactive-account">
+                <label for="messageActive">{{ "login.isNotActiveAccount" | translate }}</label>
+                <button
+                  pButton
+                  type="button"
+                  (click)="resendActivationEmail()"
+                  [label]="'login.isNotActiveAccountButton' | translate"
+                  [disabled]="isResendingActivation || loginForm.controls.email.invalid"
+                  [loading]="isResendingActivation"
+                ></button>
+              </div>
+            }
+
+            <div class="p-col-12">
+              <p-checkbox
+                (onChange)="onSaveEmail($event)"
+                name="checked"
+                id="check"
+                inputId="recordar_contr"
+                formControlName="rememberMe"
+                binary="true"
+              ></p-checkbox>
+              <label for="recordar_contr">&nbsp; {{ "login.check" | translate }}</label>
+            </div>
+
+            <div class="buttons">
+              <!-- <button pButton type="button" [routerLink]="['/']" label="Login"></button> -->
+              <button
+                pButton
+                type="submit"
+                [label]="'login.btnLogin' | translate"
+                [disabled]="loginForm.invalid || isSubmitting"
+                [loading]="isSubmitting"
+              ></button>
+              <div class="links">
+                <a href="#/restart-password" class="secondary-button first">
+                  {{ "login.recoverPassword" | translate }}
+                </a>
+                <a href="#/contact" class="secondary-button second">
+                  {{ "login.messageProblemLogin" | translate }}
+                </a>
+              </div>
+            </div>
+            <p class="login-register-link">
+              <a href="#/register" class="secondary-button">
+                {{ "login.registerLink" | translate }}
+              </a>
+            </p>
+          </div>
+        </form>
+      </div>
+      <!-- <div class="desert"></div> -->
     </div>
+  </div>
 </div>

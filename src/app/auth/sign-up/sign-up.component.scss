@@ -1,64 +1,467 @@
+.error {
+  border-color: red;
+}
+
 .login-content {
   position: relative;
+  min-height: calc(100vh - 180px);
+  padding: 32px 16px;
 }
-.login-panel {
-  padding: 15px;
+
+.login-body .login-content .login-panel {
+  width: min(645px, 100%) !important;
+  height: auto !important;
+  min-height: auto;
+  padding: 28px 24px;
+  position: relative !important;
+  border-radius: 14px;
 }
 
 .role {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 16px;
+  width: 100%;
+
+  .p-field-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    justify-content: flex-start;
+  }
+
+  label {
+    margin-bottom: 0;
+    margin-left: 0;
+    font-weight: 400;
+  }
 }
 
 .separador {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+
   .p-field-radiobutton {
-    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 0;
+  }
+}
+
+.p-field:has(#levelE1) .separador {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 8px;
+
+  .p-field-radiobutton {
+    flex: 0 0 auto;
+    gap: 4px;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  label {
+    margin-left: 0;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: left;
   }
 }
 
 .terms {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
   p-checkbox {
-    margin-right: 5px;
+    margin-right: 0;
   }
 }
-.login-panel-content {
+
+.terms-link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #4c566a;
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.terms-link-button:hover {
+  color: var(--p-primary-600, #344f5b);
+}
+
+.terms-link-button:focus-visible {
+  outline: 2px solid var(--p-primary-500, #3B5B68);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.terms-popup-icon {
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.terms-dialog-content {
+  max-height: min(68vh, 44rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.25rem;
+}
+
+.login-body .login-content .login-panel .login-panel-content {
+  width: min(440px, 100%) !important;
   padding: 0 !important;
 }
 
+.auth-logo {
+  width: 100px;
+  height: auto;
+}
+
 .button-submit {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
   width: 100%;
 }
 
-.login-panel {
-  height: 100% !important;
-  position: relative !important;
-  //cambios
-}
-.viewPass {
-  position: relative;
-  i {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    padding: 5px;
-    cursor: pointer;
+.forms {
+  margin-top: 24px;
+  text-align: left;
+
+  .p-grid {
+    margin-top: 0;
+  }
+
+  .p-field {
+    margin-bottom: 14px;
+  }
+
+  label {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: #4c566a;
+    font-weight: 500;
+  }
+
+  .signup-field-label {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: #4c566a;
+    font-weight: 500;
+  }
+
+  .signup-help-text {
+    display: block;
+    margin: -2px 0 0.6rem;
+    color: #5b6b7c;
+    font-size: 0.86rem;
+    line-height: 1.35;
+  }
+
+  .role label {
+    font-weight: 400;
   }
 }
 
-.p-field.p-fluid{
+.signup-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+  white-space: nowrap;
+}
+
+.viewPass {
+  position: relative;
+
+  input {
+    width: 100%;
+    padding-right: 42px;
+  }
+
+  i {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    z-index: 1;
+    padding: 5px;
+    color: #4c566a;
+    cursor: pointer;
+    transform: translateY(-50%);
+  }
+}
+
+.p-field.p-fluid {
   margin: 0;
 }
 
-.register{
+.register {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 50px 0;
-  height: 65vh;
+  min-height: 260px;
+  text-align: center;
 }
 
-.position-relative{
+.position-relative {
   z-index: 1;
   position: relative;
+}
+
+/*
+*Css para dropdown accesible
+*/
+.class-dropdown-i {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  color: #495057;
+  background: #ffffff;
+  padding: 0.625rem 2.5rem 0.625rem 0.75rem;
+  border: 1px solid #ced4da;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  border-radius: 6px;
+  width: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M3.25 5.25L7 9l3.75-3.75' fill='none' stroke='%23586979' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.6'/%3E%3C/svg%3E");
+  background-position: right 0.85rem center;
+  background-repeat: no-repeat;
+  background-size: 0.85rem;
+
+  &:hover {
+    box-shadow: 0 0 0 0.2rem #bfcdde;
+    outline: none;
+    outline-offset: 0;
+    border-color: #3B5B68;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem #bfcdde;
+    outline: none;
+    outline-offset: 0;
+    border-color: #3B5B68;
+  }
+
+  &:disabled {
+    color: #8a97a3;
+    background-color: #f5f7f9;
+    cursor: not-allowed;
+  }
+}
+
+
+.signup-choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.signup-choice-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.1rem 0;
+}
+
+.signup-preferences-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.signup-preferences-group {
+  padding-bottom: 0.35rem;
+  border-bottom: 0;
+}
+
+.signup-preferences-group:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.signup-group-label {
+  margin: 0 0 0.2rem;
+  color: #27485b;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.signup-warning {
+  display: block;
+  margin-top: 0.35rem;
+  color: #c77700;
+  line-height: 1.35;
+}
+
+.signup-error-left {
+  text-align: left;
+}
+
+.signup-password-requirements {
+  margin-top: 0.35rem;
+  color: #5b6b7c;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.signup-password-requirements-title {
+  color: #5b6b7c;
+}
+
+.signup-password-rules {
+  margin: 0.2rem 0 0;
+  padding-left: 1.1rem;
+  line-height: 1.45;
+}
+
+.forms .label_areas,
+.forms .labelQT {
+  margin: 0;
+  color: #304a5d;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+:host ::ng-deep .signup-accordion .p-accordion-tab {
+  border: 1px solid #e4edf2;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fbfcfd;
+  box-shadow: none;
+}
+
+:host ::ng-deep .signup-accordion .p-accordion-header {
+  border: 0;
+}
+
+:host ::ng-deep .signup-accordion .p-accordion-header .p-accordion-header-link {
+  color: #36505e !important;
+  font-weight: 700;
+  background: transparent;
+  border: 0;
+  padding: 0.8rem 1rem;
+}
+
+:host ::ng-deep .signup-accordion .p-accordion-content {
+  padding: 0.7rem 0.9rem 0.8rem;
+  background: #ffffff;
+  border: 0;
+}
+
+//css para el calendario
+:host ::ng-deep .duet-date__input {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  color: #495057;
+  background: #ffffff;
+  padding: 0.50rem 0.50rem;
+  border: 1px solid #ced4da;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  /* appearance: none; */
+  border-radius: 6px;
+  width: 100%;
+
+  &:hover {
+    box-shadow: 0 0 0 0.2rem #bfcdde;
+    outline: none;
+    outline-offset: 0;
+    border-color: #3B5B68;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem #bfcdde;
+    outline: none;
+    outline-offset: 0;
+    border-color: #3B5B68;
+  }
+}
+
+:host ::ng-deep .duet-date__toggle-icon {
+  color: #495057;
+}
+
+:host ::ng-deep {
+  .forms .p-inputtext,
+  .forms .p-password,
+  .forms .class-dropdown-i,
+  .forms duet-date-picker {
+    width: 100%;
+  }
+
+  .forms .p-inputtext,
+  .forms .class-dropdown-i {
+    min-height: 42px;
+  }
+
+  .terms .p-checkbox,
+  .role .p-checkbox,
+  .separador .p-radiobutton {
+    flex: 0 0 auto;
+  }
+
+  .button-submit .p-button {
+    min-width: 150px;
+    background-color: var(--p-primary-500, #3B5B68);
+    border-color: var(--p-primary-500, #3B5B68);
+  }
+
+  .button-submit .p-button:hover {
+    background-color: var(--p-primary-600, #344f5b);
+    border-color: var(--p-primary-600, #344f5b);
+  }
+}
+
+@media (max-width: 740px) {
+  .login-content {
+    min-height: auto;
+    padding: 24px 12px;
+  }
+
+  .login-body .login-content .login-panel {
+    padding: 24px 14px;
+  }
+
+  .role,
+  .separador {
+    align-items: flex-start;
+  }
+
+  .role {
+    grid-template-columns: 1fr;
+  }
+
+  .signup-choice-row {
+    align-items: flex-start;
+  }
+
+  .p-field:has(#levelE1) .separador {
+    flex-wrap: wrap;
+
+    .p-field-radiobutton {
+      justify-content: flex-start;
+    }
+  }
+
+  .button-submit {
+    justify-content: stretch;
+  }
+
+  :host ::ng-deep .button-submit .p-button {
+    width: 100%;
+  }
 }

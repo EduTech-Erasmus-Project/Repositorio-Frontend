@@ -1,420 +1,648 @@
-<div class="login-body layout-light">
-    <div class="login-content animate__animated animate__fadeIn">
-        <div class="login-panel">
-            <div class="login-panel-content">
-                <div class="logo">
-                    <img src="assets/img/image2vector.svg" alt="mirage-layout" />
-                </div>
-                <h2>{{'register.becomeMember'|translate}}</h2>
-                <div class="p-fluid">
-                    <p-toast></p-toast>
-                    <ng-container *ngIf="!registred; else registredTemplate">
-                        <form autocomplete="off" [formGroup]="angForm" (ngSubmit)="validateUser()" id="loginForm">
-                            <div class="forms">
-                                <div class="p-grid">
-                                    <div class="p-col-12 p-md-12 p-lg-6">
-                                        <div class="p-field p-fluid">
-                                            <label for="firstnamelabel">{{'register.name'|translate}}*</label>
-
-                                            <input id="firstname4" type="text"
-                                                placeholder="{{'register.name'|translate}}"
-                                                maxlength="{{getErrorNumber('name')}}" formControlName="name"
-                                                onkeypress="return getErrorNumber('name')"
-                                                [ngClass]="{'ng-dirty':name.invalid && (name.dirty || name.touched)}"
-                                                pInputText>
-
-                                            <div *ngIf="name.invalid && (name.dirty || name.touched)">
-                                                <small id="name " class="p-error"
-                                                    *ngIf="name.errors.required">*{{'validation.obligatoryCamp'|
-                                                    translate}}*</small>
-                                                <small id="name " class="p-error"
-                                                    *ngIf="name.errors.pattern">*{{'validation.letters'|
-                                                    translate}}*</small>
-                                                <small id="name " class="p-error"
-                                                    *ngIf="name.hasError('minlength')">*{{'validation.charactersMin'|
-                                                    translate}}*</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-col-12 p-md-12 p-lg-6">
-                                        <div class="p-field p-fluid">
-                                            <label for="lastname4">{{'register.lastName'|translate}}*</label>
-
-                                            <input id="lastname4" type="text" formControlName="lastname"
-                                                maxlength="{{getErrorNumber('lastname')}}"
-                                                placeholder="{{'register.lastName'|translate}}"
-                                                onkeypress="return getErrorNumber('lastname')"
-                                                [ngClass]="{'ng-dirty':lastname.invalid && (lastname.dirty || lastname.touched)}"
-                                                pInputText>
-
-                                            <div *ngIf="lastname.invalid && (lastname.dirty || lastname.touched)">
-                                                <small id="name " class="p-error"
-                                                    *ngIf="lastname.errors.required">*{{'validation.obligatoryCamp'|
-                                                    translate}}*</small>
-                                                <small id="name " class="p-error"
-                                                    *ngIf="lastname.errors.pattern">*{{'validation.letters'|
-                                                    translate}}*</small>
-                                                <small id="name " class="p-error"
-                                                    *ngIf="lastname.hasError('minlength')">*{{'validation.charactersMin'|
-                                                    translate}}*</small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-col-12 p-md-12 p-lg-12">
-                                        <div class="p-field p-fluid">
-                                            <label for="lastname4">{{'register.memberType'|translate}}*</label>
-                                            <div class="role">
-                                                <div class="p-field-checkbox">
-
-                                                    <p-checkbox type="checkbox"
-                                                        [ngClass]="{'ng-dirty ng-invalid': validateRole}"
-                                                        (onChange)="onChangeTypeStudentEnter($event) "
-                                                        formControlName="check" binary="true" id="st">
-                                                    </p-checkbox>
-                                                    <label for="st">{{'register.studen'|translate}}</label>
-                                                </div>
-                                                <div class="p-field-checkbox">
-                                                    <p-checkbox (onChange)="onChangeTypeTeacher($event)" type="checkbox"
-                                                        [ngClass]="{'ng-dirty ng-invalid': validateRole}" binary="true"
-                                                        formControlName="checkTe" id="te">
-                                                    </p-checkbox>
-                                                    <label for="te">{{'register.teacher'|translate}}</label>
-                                                </div>
-                                                <div class="p-field-checkbox">
-                                                    <p-checkbox (onChange)="onChangeTypeExpert($event)" type="checkbox"
-                                                        [ngClass]="{'ng-dirty ng-invalid': validateRole}" binary="true"
-                                                        formControlName="checkEx" id="ex">
-                                                    </p-checkbox>
-                                                    <label for="ex">{{'register.collaboraingExpert'|translate}}</label>
-                                                </div>
-                                            </div>
-                                            <div *ngIf="validateRole">
-                                                <small class="p-error">*Selecione al menos un rol</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Solo estudiante-->
-                                <div *ngIf="checkEs" class="p-grid animate__animated animate__fadeIn position-relative">
-                                    <div class="p-col-12 p-md-12 p-lg-6">
-                                        <div class="p-field p-fluid">
-                                            <label for="Name">{{'register.date'|translate}}*</label>
-                                            <p-calendar [monthNavigator]="true" [yearNavigator]="true"
-                                                yearRange="{{getYearRange()}}" [showIcon]="true"
-                                                placeholder="{{'register.modalSelect'|translate}}"
-                                                formControlName="calendar" inputId="icon"
-                                                [ngClass]="{'ng-dirty':calendar.invalid && (calendar.dirty || calendar.touched)}">
-                                            </p-calendar>
-                                            <div *ngIf="calendar.invalid && (calendar.dirty || calendar.touched)">
-                                                <small id="name " class="p-error"
-                                                    *ngIf="calendar.errors.required">*{{'validation.obligatoryCamp'|
-                                                    translate}}*</small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-col-12 p-md-12 p-lg-6">
-                                        <div class="p-field p-fluid">
-                                            <label for="firstname4">{{'register.levelEducation'|translate}}*</label>
-
-                                            <p-multiSelect *ngIf="levelsEdications" (onChange)="selectLevels($event)"
-                                                [options]="levelsEdications"
-                                                [formControl]="angForm.controls['educacionL']"
-                                                placeholder="{{'register.modalSelect'|translate}}" optionLabel="name"
-                                                selectedItemsLabel="{0} items selected" display="chip"
-                                                scrollHeight="250px"
-                                                [ngClass]="{'ng-dirty':educacionL.invalid && (educacionL.dirty || educacionL.touched)}">
-                                            </p-multiSelect>
-
-
-                                            <div *ngIf="educacionL.invalid && (educacionL.dirty || educacionL.touched)">
-                                                <small id="educacionL " class="p-error"
-                                                    *ngIf="educacionL.errors.required">*{{'validation.obligatoryCamp'|
-                                                    translate}}*</small>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-col-12 p-md-12 p-lg-6">
-                                        <div class="p-field p-fluid">
-                                            <label for="firstname4">{{'register.areasInterest'|translate}}*</label>
-
-                                            <p-multiSelect *ngIf="areasInterestings" (onChange)="selectAreas($event)"
-                                                [options]="areasInterestings" optionLabel="name"
-                                                [formControl]="angForm.controls['areasInteres']"
-                                                selectedItemsLabel="{0} items selected" display="chip"
-                                                placeholder="{{'register.modalSelect'|translate}}" scrollHeight="250px"
-                                                [ngClass]="{'ng-dirty':areasInteres.invalid && (areasInteres.dirty || areasInteres.touched)}">
-                                            </p-multiSelect>
-
-                                            <div
-                                                *ngIf="areasInteres.invalid && (areasInteres.dirty || areasInteres.touched)">
-                                                <small id="educacionL " class="p-error"
-                                                    *ngIf="areasInteres.errors.required">*{{'validation.obligatoryCamp'|
-                                                    translate}}*</small>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-col-12 p-md-12 p-lg-6">
-                                        <div class="p-field p-fluid">
-                                            <label for="Name">{{'register.disability'|translate}}</label>
-                                            <div class="separador">
-                                                <div class="p-field-radiobutton">
-                                                    <p-radioButton (click)="onChangeDisability()" group="button"
-                                                        value="yes" formControlName="disability" id="disability1">
-                                                    </p-radioButton>
-
-                                                    <label for="city1">{{'register.yes'|translate}}</label>
-                                                </div>
-                                                <div class="p-field-radiobutton">
-                                                    <p-radioButton (click)="onChangeDisability()" group="button"
-                                                        value="no" formControlName="disability" id="disability2">
-                                                    </p-radioButton>
-                                                    <label for="city1">{{'register.no'|translate}}</label>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="p-col-12 p-md-12 p-lg-12 animate__animated animate__fadeIn position-relative"
-                                        *ngIf="typeDisability">
-                                        <div class="p-field p-fluid">
-                                            <input id="discapacidad" type="text"
-                                                placeholder="{{'register.descriptionDis'| translate}}"
-                                                formControlName="typeDisability"
-                                                [ngClass]="{'ng-dirty':typeDisability?.invalid && (typeDisability.dirty || typeDisability.touched)}"
-                                                pInputText>
-                                        </div>
-                                        <div
-                                            *ngIf="typeDisability?.invalid && (typeDisability.dirty || typeDisability.touched)">
-                                            <small id="disability" class="p-error" style="text-align: left;"
-                                                *ngIf="typeDisability.errors.required">*{{'validation.obligatoryCamp'|translate}}*</small>
-                                            <small id="disability " class="p-error"
-                                                *ngIf="typeDisability?.errors.pattern">*{{'validation.letters'|
-                                                translate}}*</small>
-
-                                        </div>
-                                    </div>
-                                    <!--<div class="p-col-12 p-md-12 p-lg-6">
-                                        <div class="p-field p-fluid">
-                                            <label for="firstname4">{{'register.preferences'|translate}}</label>
-                                            <p-multiSelect [options]="preferenceAreas" [group]="true"
-                                                (onChange)="selectPreferences($event)" formControlName="areasPrefer"
-                                                placeholder="{{'register.modalSelect'|translate}}" scrollHeight="250px"
-                                                display="chip"
-                                                [ngClass]="{'ng-dirty':areasPrefer.invalid && (areasPrefer.dirty || areasPrefer.touched)}">
-                                                <ng-template let-group pTemplate="group">
-                                                    <div class="p-d-flex p-ai-center">
-                                                        <span>{{group.label}}</span>
-                                                    </div>
-                                                </ng-template>
-                                            </p-multiSelect>
-                                            <div
-                                                *ngIf="areasPrefer.invalid && (areasPrefer.dirty || areasPrefer.touched)">
-                                                <small id="educacionL " class="p-error"
-                                                    *ngIf="areasPrefer.errors.required">*{{'validation.obligatoryCamp'|translate}}*</small>
-                                            </div>
-                                        </div>
-                                    </div>-->
-
-                                    <div
-                                        class="p-col-12 p-md-12 p-lg-12 animate__animated animate__fadeIn position-relative">
-                                        <div *ngIf="preferenceAreas" class="card">
-                                            <label for="firstname4">{{'register.preferences'|translate}}</label>
-
-                                            <div *ngFor="let item of preferenceAreas">
-                                                <div class="forms">
-                                                    <h6>{{item.label}}</h6>
-
-                                                    <div class="labelQu" *ngFor="let itemQ of item.items">
-
-                                                        <p-checkbox group="button" [value]="itemQ.value"
-                                                            formControlName="areasPrefer"
-                                                            (onChange)="selectPreferences(itemQ.value)">
-                                                        </p-checkbox>
-                                                        <label class="labelQT"> {{itemQ.label}}</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Teacher form -->
-                                <div class="p-grid animate__animated animate__fadeIn position-relative"
-                                    *ngIf=" checkTe">
-                                    <div class="p-col-12 p-md-12 p-lg-12">
-                                        <div class="p-field p-fluid">
-                                            <label for="firstname4">{{'register.profession'|translate}}*</label>
-
-                                            <p-multiSelect *ngIf="profesions" #dropDowProfession
-                                                (onChange)="selectProfesion($event)" [options]="profesions"
-                                                [formControl]="angForm.controls['profession']"
-                                                placeholder="{{'register.modalSelect'|translate}}" optionLabel="name"
-                                                selectedItemsLabel="{0} items selected" display="chip"
-                                                scrollHeight="250px"
-                                                [ngClass]="{'ng-dirty':profession?.invalid && (profession.dirty || profession.touched)}">
-                                            </p-multiSelect>
-
-
-                                            <!-- <div
-                                                *ngIf="profession?.invalid && (profession.dirty || profession.touched)">
-                                                <small id="profession " class="p-error"
-                                                    *ngIf="profession.errors.required">*{{'validation.obligatoryCamp'|
-                                                    translate}}*</small>
-                                            </div>-->
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Expert form -->
-                                <div class="p-grid animate__animated animate__fadeIn" *ngIf="checkEx">
-                                    <div class="p-col-12 p-md-12 p-lg-12">
-                                        <div class="p-field p-fluid">
-                                            <label for="firstname4">{{'register.expertLevel'|translate}}</label>
-
-                                            <div class="separador">
-                                                <div class="p-field-radiobutton">
-                                                    <p-radioButton group="button" value="Bajo"
-                                                        formControlName="levelExpertF"></p-radioButton>
-                                                    <label for="levelE1">{{'register.low'|translate}}</label>
-                                                </div>
-
-                                                <div class="p-field-radiobutton">
-                                                    <p-radioButton group="button" value="Medio"
-                                                        formControlName="levelExpertF"></p-radioButton>
-                                                    <label for="levelE1">{{'register.medium'|translate}}</label>
-                                                </div>
-
-                                                <div class="p-field-radiobutton">
-                                                    <p-radioButton group="button" value="Alto"
-                                                        formControlName="levelExpertF"></p-radioButton>
-                                                    <label for="levelE1">{{'register.high'|translate}}</label>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-col-12 p-md-12 p-lg-6">
-                                        <div class="p-field p-fluid">
-                                            <label for="url">{{'register.webPage'|translate}}</label>
-
-                                            <input id="url" type="text" formControlName="url"
-                                                [ngClass]="{'ng-dirty':url.invalid && (url.dirty || url.touched)}"
-                                                placeholder="{{'register.url'|translate}}" pInputText>
-                                            <div *ngIf="url.invalid && (url.dirty || url.touched)">
-                                                <small id="url" class="p-error"
-                                                    *ngIf="url.errors.required">*{{'validation.obligatoryCamp'|translate}}*</small>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-col-12 p-md-12 p-lg-6">
-                                        <div class="p-field p-fluid">
-                                            <label for="academic">{{'register.academicProfile'|translate}}</label>
-
-                                            <input id="academic" type="text" formControlName="academic"
-                                                [ngClass]="{'ng-dirty':academic.invalid && (academic.dirty || academic.touched)}"
-                                                placeholder="{{'register.profileORCID'|translate}}" pInputText>
-                                            <div *ngIf="academic.invalid && (academic.dirty || academic.touched)">
-                                                <small id="academic" class="p-error"
-                                                    *ngIf="academic.errors.required">*{{'validation.obligatoryCamp'|translate}}*</small>
-                                                <small id="academic" class="p-error"
-                                                    *ngIf="academic.errors.pattern">*{{'validation.letters'|translate}}*</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="p-grid">
-                                    <div class="p-col-12 p-md-12 p-lg-12">
-                                        <div class="p-field p-fluid">
-                                            <label for="email">{{'register.email'|translate}}*</label>
-                                            <input id="email" type="text" formControlName="email"
-                                                [ngClass]="{'ng-dirty ng-invalid':(email.invalid && (email.dirty || email.touched) )|| validateEmail}"
-                                                placeholder="{{'register.email'|translate}}" pInputText>
-                                            <div *ngIf="email.invalid && (email.dirty || email.touched)">
-                                                <small id="email" class="p-error"
-                                                    *ngIf="email.errors.required">{{'validation.obligatoryCamp'|translate}}</small>
-                                                <small id="email" class="p-error"
-                                                    *ngIf="email.errors.pattern && !checkEx && !checkTe ">{{'validation.errorEmail'|translate}}</small>
-                                                <small id="email" class="p-error"
-                                                    *ngIf="email.errors.pattern && (checkEx || checkTe) ">{{'validation.invalidEmail'|translate}}</small>
-                                                <!-- hasError -->
-                                            </div>
-                                            <small id="email" class="p-error"
-                                                *ngIf="validateEmail && !flagAlert">{{'validation.invalidEmail'|translate}}</small>
-                                            <small id="email" class="p-error"
-                                                *ngIf="flagAlert">{{'validation.emailRepit'|translate}}</small>
-                                        </div>
-                                    </div>
-                                    <div class="p-col-12 p-md-12 p-lg-12">
-                                        <div class="p-field p-fluid">
-                                            <label for="name">{{'register.password'|translate}}*</label>
-                                            <div class="viewPass">
-                                                <input id="password" [type]="show?'text':'password'"
-                                                    formControlName="password"
-                                                    placeholder="{{'register.password'|translate}}"
-                                                    [ngClass]="{'ng-dirty':password.invalid && (password.dirty || password.touched)}"
-                                                    pInputText>
-                                                <i tabindex="0" (keyup.enter)="show=!show"
-                                                    [ngClass]="{'pi-eye':!show,'pi-eye-slash':show}" class="pi"
-                                                    (click)="show=!show"></i>
-                                            </div>
-
-                                            <div *ngIf="password.invalid && (password.dirty || password.touched)">
-                                                <small id="password" class="p-error"
-                                                    *ngIf="password.errors.required">{{'validation.obligatoryCamp'|translate}}</small>
-                                                <small id="password" class="p-error"
-                                                    *ngIf="password.errors.pattern">*{{'validation.passwordEnter'|translate}}*
-                                                    <ul class="p-pl-2 p-ml-2 p-mt-0" style="line-height: 1.5">
-                                                        <li>{{'validation.passDigit'|translate}}</li>
-                                                        <li>{{'validation.passMinu'|translate}}</li>
-                                                        <li>{{'validation.passMayu'|translate}}</li>
-                                                        <li>{{'validation.passChar'|translate}}</li>
-                                                    </ul>
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-col-12 p-md-12 p-lg-12 ">
-                                        <div class="p-field p-fluid terms">
-                                            <p-checkbox binary="true"
-                                                [ngClass]="{'ng-invalid ng-dirty': !terms.value && (terms.dirty || terms.touched)}"
-                                                name="groupname" formControlName="terms">
-                                            </p-checkbox>
-                                            <a target="_blank"
-                                                [routerLink]="[ '/terms-and-conditions']">{{'register.terms'|translate}}</a>
-                                        </div>
-                                        <div *ngIf="!terms.value && (terms.dirty || terms.touched)">
-                                            <small id="educacionL " class="p-error"
-                                                *ngIf="!terms.value">*{{'register.termsCond' | translate}}*</small>
-                                        </div>
-                                    </div>
-                                    <div class="p-col-12 p-md-12 p-lg-6 button-submit">
-                                        <p-button type="submit" label="{{'register.register' | translate}}"></p-button>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </form>
-                    </ng-container>
-                    <ng-template #registredTemplate>
-                        <div class="register animate__animated animate__fadeIn">
-                            <p>{{'register.registerSuccessful' | translate }}</p>
-                            <a [routerLink]="['/login']">{{'menu.login' | translate}}</a>
-                        </div>
-                    </ng-template>
-                </div>
+﻿<div class="login-body layout-light">
+  <div class="login-content animate__animated animate__fadeIn">
+    <div class="login-panel">
+      <div class="login-panel-content">
+        <div class="logo">
+          <img src="/assets/img/ROA-Edu.png" class="auth-logo"
+            alt=""
+            aria-hidden="true" />
+          </div>
+          <div class="p-fluid">
+            <p-toast></p-toast>
+            <div class="signup-sr-only" role="alert" aria-live="assertive" aria-atomic="true">
+              {{ registerErrorMessage }}
             </div>
+            @if (!registered) {
+              <h2>{{'register.becomeMember'|translate}}</h2>
+              @if (angForm) {
+                <form autocomplete="off" [formGroup]="angForm" (ngSubmit)="validateUser()" id="loginForm">
+                  <div class="forms">
+                    <div class="p-grid">
+                    <div class="p-col-12 p-md-12 p-lg-6">
+                      <div class="p-field p-fluid">
+                        <label for="firstname4">{{'register.name'|translate}}*</label>
+                        <input id="firstname4" type="text"
+                          [attr.aria-describedby]="getNameDescribedBy()"
+                          placeholder="{{'register.name'|translate}}"
+                          maxlength="{{getErrorNumber('name')}}" formControlName="name"
+                          (keypress)="getErrorNumber('name')"
+                          [ngClass]="{'ng-dirty':name.invalid && (name.dirty || name.touched)}"
+                          pInputText>
+                          @if (name.invalid && (name.dirty || name.touched)) {
+                            <div>
+                              @if (name.errors.required) {
+                                <small id="nameLabel" class="p-error"
+                                  >*{{'validation.obligatoryCamp'|
+                                translate}}*</small>
+                              }
+                              @if (name.errors.pattern) {
+                                <small id="nameLabel2" class="p-error"
+                                  >*{{'validation.letters'|
+                                translate}}*</small>
+                              }
+                              @if (name.hasError('minlength')) {
+                                <small id="nameLabel3" class="p-error"
+                                  >*{{'validation.charactersMin'|
+                                translate}}*</small>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                      <div class="p-col-12 p-md-12 p-lg-6">
+                        <div class="p-field p-fluid">
+                          <label for="lastname4">{{'register.lastName'|translate}}*</label>
+                          <input id="lastname4" type="text" formControlName="lastname"
+                            [attr.aria-describedby]="getLastnameDescribedBy()"
+                            maxlength="{{getErrorNumber('lastname')}}"
+                            placeholder="{{'register.lastName'|translate}}"
+                            (keypress)="getErrorNumber('lastname')"
+                            [ngClass]="{'ng-dirty':lastname.invalid && (lastname.dirty || lastname.touched)}"
+                            pInputText>
+                            @if (lastname.invalid && (lastname.dirty || lastname.touched)) {
+                              <div>
+                                @if (lastname.errors.required) {
+                                  <small id="lastName1" class="p-error"
+                                    >*{{'validation.obligatoryCamp'|
+                                  translate}}*</small>
+                                }
+                                @if (lastname.errors.pattern) {
+                                  <small id="lastName2" class="p-error"
+                                    >*{{'validation.letters'|
+                                  translate}}*</small>
+                                }
+                                @if (lastname.hasError('minlength')) {
+                                  <small id="lastName3" class="p-error"
+                                    >*{{'validation.charactersMin'|
+                                  translate}}*</small>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                        <div class="p-col-12 p-md-12 p-lg-12">
+                          <div class="p-field p-fluid">
+                            <span id="member-type-label" class="signup-field-label">{{'register.memberType'|translate}}*</span>
+                            <small id="member-type-help" class="signup-help-text">{{'register.memberTypeHelp'|translate}}</small>
+                            <div class="role" role="group" aria-labelledby="member-type-label" aria-describedby="member-type-help">
+                              <div class="p-field-checkbox">
+                                <p-checkbox type="checkbox" inputId="student"
+                                  [ngClass]="{'ng-dirty ng-invalid': validateRole}"
+                                  (onChange)="onChangeTypeStudentEnter($event)"
+                                  formControlName="check" binary="true" id="st">
+                                </p-checkbox>
+                                <label for="student">{{'register.studen'|translate}}</label>
+                              </div>
+                              <div class="p-field-checkbox">
+                                <p-checkbox (onChange)="onChangeTypeTeacher($event)" type="checkbox"
+                                  inputId="teacher"
+                                  [ngClass]="{'ng-dirty ng-invalid': validateRole}" binary="true"
+                                  formControlName="checkTe" id="te">
+                                </p-checkbox>
+                                <label for="teacher">{{'register.teacher'|translate}}</label>
+                              </div>
+                              <div class="p-field-checkbox">
+                                <p-checkbox (onChange)="onChangeTypeExpert($event)" type="checkbox"
+                                  inputId="expert"
+                                  [ngClass]="{'ng-dirty ng-invalid': validateRole}" binary="true"
+                                  formControlName="checkEx" id="ex">
+                                </p-checkbox>
+                                <label
+                                for="expert">{{'register.collaboraingExpert'|translate}}</label>
+                              </div>
+                            </div>
+                            @if (validateRole) {
+                              <div>
+                                <small class="p-error">*{{'register.formInvalid'|translate}}*</small>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Solo estudiante-->
+                      @if (checkEs) {
+                        <div class="p-grid animate__animated animate__fadeIn position-relative">
+                          <div class="p-col-12 p-md-12 p-lg-6">
+                            <div class="p-field p-fluid">
+                              <label for="date">{{'register.date'|translate}}*</label>
+                              <!--<p-calendar [monthNavigator]="true" [yearNavigator]="true"
+                              placeholder="{{'register.modalSelect'|translate}}"
+                              formControlName="calendar" inputId="icon"
+                              [ngClass]="{'ng-dirty':calendar.invalid && (calendar.dirty || calendar.touched)}">
+                            </p-calendar>-->
+                            <duet-date-picker identifier="date"
+                              (duetClose)="restoreDatePickerFocus($event)"
+                              (duetChange)="onDateSelected($event)" min="1970-01-01"
+                              value="{{angForm.get('calendar')?.value}}"
+                            [localization]="localization"></duet-date-picker>
+                            @if (calendar.invalid && (calendar.dirty || calendar.touched)) {
+                              <div>
+                                @if (calendar.errors.required) {
+                                  <small id="name " class="p-error"
+                                    >*{{'validation.obligatoryCamp'|
+                                  translate}}*</small>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                        <div class="p-col-12 p-md-12 p-lg-6">
+                          <div class="p-field p-fluid">
+                            <label for="EduactioLevels">{{'register.levelEducation'|translate}}*</label>
+                            <select
+                              id="EduactioLevels"
+                              class="class-dropdown-i"
+                              formControlName="educacionL"
+                              aria-describedby="educacionL"
+                              [ngClass]="{'ng-dirty ng-invalid':educacionL.invalid && (educacionL.dirty || educacionL.touched)}">
+                              <option [ngValue]="null" disabled>{{'register.chooseOption'|translate}}</option>
+                              @for (item of levelsEdications; track item.id) {
+                                <option [ngValue]="item.id">{{item.name}}</option>
+                              }
+                            </select>
+                          @if (educacionL.invalid && (educacionL.dirty || educacionL.touched)) {
+                            <div>
+                              @if (educacionL.errors.required) {
+                                <small id="educacionL " class="p-error"
+                                  >*{{'validation.obligatoryCamp'|
+                                translate}}*</small>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                      <div class="p-col-12 p-md-12 p-lg-12">
+                        <div class="p-field p-fluid">
+                          <p-accordion [value]="null" styleClass="signup-accordion">
+                            <p-accordion-panel value="interest-areas">
+                              <p-accordion-header>{{'register.areasInterest'|translate}}*</p-accordion-header>
+                              <p-accordion-content>
+                                @if (areasInterestings) {
+                                  <div class="signup-choice-list">
+                                    @for (item of areasInterestings; track item) {
+                                      <div class="forms_areas signup-choice-row">
+                                        <p-checkbox [value]="item.id"
+                                          formControlName="areasInteres" [inputId]="'interest-area-' + item.id">
+                                        </p-checkbox>
+                                        <label class="label_areas" [for]="'interest-area-' + item.id">
+                                        {{item.name}}</label>
+                                      </div>
+                                    }
+                                  </div>
+                                }
+                              </p-accordion-content>
+                            </p-accordion-panel>
+                          </p-accordion>
+                          @if (areasInteres.invalid && (areasInteres.dirty || areasInteres.touched)) {
+                            <div
+                              >
+                              @if (areasInteres.errors.required) {
+                                <small id="educacionL " class="p-error"
+                                  >*{{'validation.obligatoryCamp'|
+                                translate}}*</small>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                      <div class="p-col-12 p-md-12 p-lg-12">
+                        <div class="p-field p-fluid">
+                          <span id="disability-label" class="signup-field-label">{{'register.disability'|translate}}</span>
+                          <div class="separador" role="group" aria-labelledby="disability-label">
+                            <div class="p-field-radiobutton">
+                              <p-radioButton (onClick)="onChangeDisability()" group="button"
+                                inputId="siB" value="yes" formControlName="disability"
+                                id="disability1">
+                              </p-radioButton>
+                              <label for="siB">{{'register.yes'|translate}}</label>
+                            </div>
+                            <div class="p-field-radiobutton">
+                              <p-radioButton (onClick)="onChangeDisability()" group="button"
+                                inputId="noB" value="no" formControlName="disability"
+                                id="disability2">
+                              </p-radioButton>
+                              <label for="noB">{{'register.no'|translate}}</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      @if (disability != false) {
+                        <div class="p-col-12 p-md-12 p-lg-12 animate__animated animate__fadeIn position-relative"
+                          >
+                          <div class="p-field p-fluid">
+                            <input id="discapacidad" type="text"
+                              placeholder="{{'register.descriptionDis'| translate}}"
+                              formControlName="typeDisability"
+                              [ngClass]="{'ng-dirty':typeDisability?.invalid && (typeDisability.dirty || typeDisability.touched)}"
+                              pInputText>
+                            </div>
+                            @if (typeDisability?.invalid && (typeDisability.dirty || typeDisability.touched)) {
+                              <div
+                                >
+                                @if (typeDisability.errors.required) {
+                                  <small id="disability" class="p-error signup-error-left"
+                                  >*{{'validation.obligatoryCamp'|translate}}*</small>
+                                }
+                                @if (typeDisability?.errors.pattern) {
+                                  <small id="disability " class="p-error"
+                                    >*{{'validation.letters'|
+                                  translate}}*</small>
+                                }
+                              </div>
+                            }
+                          </div>
+                        }
+                      <div class="p-col-12 p-md-12 p-lg-12 ">
+                        <p-accordion [value]="null" styleClass="signup-accordion">
+                          <p-accordion-panel value="preferences">
+                            <p-accordion-header>{{'register.preferences'|translate}} *</p-accordion-header>
+                            <p-accordion-content>
+                              @if (preferenceAreas) {
+                                <div class="signup-preferences-card">
+                                  @for (item of preferenceAreas; track item) {
+                                    <div>
+                                      <div class="signup-preferences-group">
+                                        <p class="signup-group-label">{{item.label}}</p>
+                                        @for (itemQ of item.items; track itemQ) {
+                                          <div class="labelQu signup-choice-row">
+                                            <p-checkbox [value]="itemQ.value"
+                                              aria-describedby="areasPrefer_message"
+                                              formControlName="areasPrefer"
+                                              [inputId]="'preference-' + itemQ.value">
+                                          </p-checkbox>
+                                          <label class="labelQT" [for]="'preference-' + itemQ.value">
+                                          {{itemQ.label}}</label>
+                                        </div>
+                                      }
+                                    </div>
+                                  </div>
+                                }
+                              </div>
+                            }
+                          </p-accordion-content>
+                        </p-accordion-panel>
+                      </p-accordion>
+                      @if (areasPrefer.invalid && (areasPrefer.dirty || areasPrefer.touched)) {
+                        <div>
+                          @if (areasPrefer.errors.required) {
+                            <small id="areasPrefer_message " class="p-error"
+                            >*{{'validation.obligatoryCamp'|translate}}*</small>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+                <!-- Teacher form -->
+                @if ( checkTe || checkEx) {
+                  <div class="p-grid animate__animated animate__fadeIn position-relative"
+                    >
+                    <div class="p-col-12 p-md-6 p-lg-6">
+                      <div class="p-field p-fluid">
+                        <label for="city">{{'register.city'|translate}}*</label>
+                        <select
+                          id="city"
+                          class="class-dropdown-i"
+                          formControlName="city"
+                          [ngClass]="{'ng-dirty ng-invalid':city?.invalid && (city.dirty || city.touched)}">
+                          <option [ngValue]="null" disabled>{{'register.chooseOption'|translate}}</option>
+                          @for (item of cities; track item.id) {
+                            <option [ngValue]="item.id">{{item.name}}</option>
+                          }
+                        </select>
+                        @if (city?.invalid && (city.dirty || city.touched)) {
+                          <div>
+                            @if (city.errors.required) {
+                              <small id="profession " class="p-error"
+                                >*{{'validation.obligatoryCamp'|
+                                translate}}*
+                              </small>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </div>
+                    <div class="p-col-12 p-md-6 p-lg-6">
+                      <div class="p-field p-fluid">
+                        <label for="university">{{'register.university'|translate}}*</label>
+                        <select
+                          id="university"
+                          class="class-dropdown-i"
+                          formControlName="university"
+                          [disabled]="!universities?.length"
+                          [ngClass]="{'ng-dirty ng-invalid':university?.invalid && (university.dirty || university.touched)}">
+                          <option [ngValue]="null" disabled>{{'register.chooseOption'|translate}}</option>
+                          @for (item of universities; track item.id) {
+                            <option [ngValue]="item.id">{{item.name}}</option>
+                          }
+                        </select>
+                        @if (university?.invalid && (university.dirty || university.touched)) {
+                          <div
+                            >
+                            @if (university.errors.required) {
+                              <small id="profession " class="p-error"
+                                >*{{'validation.obligatoryCamp'|
+                              translate}}*</small>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </div>
+                    <div class="p-col-12 p-md-6 p-lg-6">
+                      <div class="p-field p-fluid">
+                        <label for="campus">{{'register.campus'|translate}}*</label>
+                        <select
+                          id="campus"
+                          class="class-dropdown-i"
+                          formControlName="campus"
+                          [disabled]="!campusArray?.length"
+                          [ngClass]="{'ng-dirty ng-invalid':campus?.invalid && (campus.dirty || campus.touched)}">
+                          <option [ngValue]="null" disabled>{{'register.chooseOption'|translate}}</option>
+                          @for (item of campusArray; track item.id) {
+                            <option [ngValue]="item.id">{{item.name}}</option>
+                          }
+                        </select>
+                        @if (campus?.invalid && (campus.dirty || campus.touched)) {
+                          <div>
+                            @if (campus.errors.required) {
+                              <small id="profession " class="p-error"
+                                >*{{'validation.obligatoryCamp'|
+                              translate}}*</small>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </div>
+                    @if (checkEx) {
+                      <div class="p-col-12 p-md-6 p-lg-6">
+                        <div class="p-field p-fluid">
+                          <span id="expert-level-label" class="signup-field-label">{{'register.expertLevel'|translate}}</span>
+                          <div class="separador" role="group" aria-labelledby="expert-level-label">
+                            <div class="p-field-radiobutton">
+                              <p-radioButton group="button" value="Bajo" inputId="levelE1"
+                              formControlName="levelExpertF"></p-radioButton>
+                              <label for="levelE1">{{'register.low'|translate}}</label>
+                            </div>
+                            <div class="p-field-radiobutton">
+                              <p-radioButton group="button" value="Medio" inputId="levelE2"
+                              formControlName="levelExpertF"></p-radioButton>
+                              <label for="levelE2">{{'register.medium'|translate}}</label>
+                            </div>
+                            <div class="p-field-radiobutton">
+                              <p-radioButton group="button" value="Alto" inputId="levelE3"
+                              formControlName="levelExpertF"></p-radioButton>
+                              <label for="levelE3">{{'register.high'|translate}}</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                    @if ( checkTe) {
+                      <div class="p-col-12 p-md-6 p-lg-6">
+                        <div class="p-field p-fluid">
+                          <label for="Profesion">{{'register.profession'|translate}}*</label>
+                          <select
+                            id="Profesion"
+                            class="class-dropdown-i"
+                            formControlName="profession"
+                            [ngClass]="{'ng-dirty ng-invalid':profession?.invalid && (profession.dirty || profession.touched)}">
+                            <option [ngValue]="null" disabled>{{'register.chooseOption'|translate}}</option>
+                            @for (item of profesions; track item.id) {
+                              <option [ngValue]="item.id">{{item.name}}</option>
+                            }
+                          </select>
+                          @if (profession?.invalid && (profession.dirty || profession.touched)) {
+                            <div
+                              >
+                              @if (profession.errors.required) {
+                                <small id="profession " class="p-error"
+                                  >*{{'validation.obligatoryCamp'|
+                                translate}}*</small>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+                <!-- Expert form -->
+                @if (checkEx) {
+                  <div class="p-grid animate__animated animate__fadeIn">
+                    <div class="p-col-12 p-md-12 p-lg-6">
+                      <div class="p-field p-fluid">
+                        <label for="url">{{'register.webPage'|translate}}*</label>
+                        <input id="url" type="text" formControlName="url"
+                          [ngClass]="{'ng-dirty':url.invalid && (url.dirty || url.touched)}"
+                          placeholder="{{'register.url'|translate}}" pInputText>
+                          @if (url.invalid && (url.dirty || url.touched)) {
+                            <div>
+                              @if (url.errors.required) {
+                                <small id="url" class="p-error"
+                                >*{{'validation.obligatoryCamp'|translate}}*</small>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                      <div class="p-col-12 p-md-12 p-lg-6">
+                        <div class="p-field p-fluid">
+                          <label for="academic">{{'register.academicProfile'|translate}}*</label>
+                          <input id="academic" type="text" formControlName="academic"
+                            [ngClass]="{'ng-dirty':academic.invalid && (academic.dirty || academic.touched)}"
+                            placeholder="{{'register.profileORCID'|translate}}" pInputText>
+                            @if (academic.invalid && (academic.dirty || academic.touched)) {
+                              <div>
+                                @if (academic.errors.required) {
+                                  <small id="academic" class="p-error"
+                                  >*{{'validation.obligatoryCamp'|translate}}*</small>
+                                }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                  <div class="p-grid">
+                    <div class="p-col-12 p-md-12 p-lg-12">
+                      <div class="p-field p-fluid">
+                        <label for="email">{{'register.email'|translate}}*</label>
+                        <input id="email" type="text" formControlName="email"
+                          (keyup)="validateInstitutionalEmailPolicy()"
+                          [attr.aria-describedby]="getEmailDescribedBy()"
+                          [ngClass]="{'ng-dirty ng-invalid':(email.invalid && (email.dirty || email.touched) )}"
+                          placeholder="{{'register.email'|translate}}" pInputText>
+                          @if (email.invalid && (email.dirty || email.touched)) {
+                            <div>
+                              @if (email.errors.required) {
+                                <small id="emailLabel" class="p-error"
+                                >{{'validation.obligatoryCamp'|translate}}</small>
+                              }
+                              @if (email.errors.email && (checkEx || checkTe || checkEs)) {
+                                <small id="emailLabel1" class="p-error"
+                                >{{'validation.errorEmail'|translate}}</small>
+                              }
+                              <!-- hasError -->
+                              </div>
+                            }
+                            @if (showInstitutionalEmailWarning && (checkEx || checkTe)) {
+                              <small id="emailLabel3" class="signup-warning"
+                                >{{'register.institutionalWarning'|translate}}</small>
+                            }
+                            @if (showBackendEmailError && !showDuplicatedEmailError) {
+                              <small id="emailLabel4" class="p-error"
+                              >{{'validation.invalidEmail'|translate}}</small>
+                            }
+                            @if (showDuplicatedEmailError) {
+                              <small id="emailLabel5" class="p-error"
+                              >{{'validation.emailRepit'|translate}}</small>
+                            }
+                          </div>
+                        </div>
+                        <div class="p-col-12 p-md-12 p-lg-12">
+                          <div class="p-field p-fluid">
+                            <label for="password">{{'register.password'|translate}}*</label>
+                            <div class="viewPass">
+                              <input id="password" [type]="show?'text':'password'"
+                                formControlName="password"
+                                [attr.aria-describedby]="getPasswordDescribedBy()"
+                                placeholder="{{'register.password'|translate}}"
+                                [ngClass]="{'ng-dirty':password.invalid && (password.dirty || password.touched)}"
+                                (focus)="onPasswordFocus()"
+                                (blur)="onPasswordBlur()"
+                                pInputText>
+                                <i tabindex="0" role="button" (keyup.enter)="togglePasswordVisibility()"
+                                  [attr.aria-label]="(show ? 'a11y.hidePassword' : 'a11y.showPassword') | translate"
+                                  [attr.aria-pressed]="show"
+                                  [ngClass]="{'pi-eye':!show,'pi-eye-slash':show}" class="pi"
+                                  (keyup.space)="togglePasswordVisibility()"
+                                  (click)="togglePasswordVisibility()"></i>
+                              </div>
+                              @if (password.invalid && (password.dirty || password.touched)) {
+                                <div>
+                                  @if (password.errors.required) {
+                                    <small id="password-required" class="p-error"
+                                    >{{'validation.obligatoryCamp'|translate}}</small>
+                                  }
+                                </div>
+                              }
+                              @if (shouldShowPasswordRequirements) {
+                                <div id="password-requirements" class="signup-password-requirements" aria-live="polite">
+                                  <small class="signup-password-requirements-title">
+                                    {{'validation.passwordPendingRequirements'|translate}}
+                                  </small>
+                                  <ul class="signup-password-rules">
+                                    @if (!passwordHasValidLength) {
+                                      <li>{{'validation.passChar'|translate}}</li>
+                                    }
+                                    @if (!passwordHasDigit) {
+                                      <li>{{'validation.passDigit'|translate}}</li>
+                                    }
+                                    @if (!passwordHasLowercase) {
+                                      <li>{{'validation.passMinu'|translate}}</li>
+                                    }
+                                    @if (!passwordHasUppercase) {
+                                      <li>{{'validation.passMayu'|translate}}</li>
+                                    }
+                                  </ul>
+                                </div>
+                              }
+                            </div>
+                          </div>
+                          <div class="p-col-12 p-md-12 p-lg-12 ">
+                            <div class="p-field p-fluid terms">
+                              <p-checkbox binary="true" inputId="Terms"
+                                [ngClass]="{'ng-invalid ng-dirty': !terms.value && (terms.dirty || terms.touched)}"
+                                [attr.aria-describedby]="getTermsDescribedBy()"
+                                name="groupname" formControlName="terms">
+                              </p-checkbox>
+                              <label for="Terms" class="signup-sr-only">{{'register.terms'|translate}}</label>
+                              <button
+                                type="button"
+                                class="terms-link-button"
+                                (click)="openTermsDialog($event)">
+                                <span>{{'register.terms'|translate}}</span>
+                                <i class="pi pi-external-link terms-popup-icon" aria-hidden="true"></i>
+                              </button>
+                              <p-dialog
+                                [(visible)]="termsDialogVisible"
+                                [modal]="true"
+                                [focusTrap]="true"
+                                [closeOnEscape]="true"
+                                [dismissableMask]="true"
+                                [blockScroll]="true"
+                                appendTo="body"
+                                styleClass="terms-dialog"
+                                [style]="{width: '78vw', maxWidth: '78rem'}"
+                                [breakpoints]="{'960px': '90vw', '640px': '96vw'}"
+                                [header]="'termsandconditions.title' | translate"
+                                (onHide)="restoreTermsDialogFocus()">
+                                <div class="terms-dialog-content" tabindex="0">
+                                  <app-terms-content [compact]="true"></app-terms-content>
+                                </div>
+                                <ng-template pTemplate="footer">
+                                  <button
+                                    pButton
+                                    pRipple
+                                    type="button"
+                                    class="p-button-outlined"
+                                    [label]="'register.closeTerms' | translate"
+                                    (click)="closeTermsDialog()">
+                                  </button>
+                                  <button
+                                    pButton
+                                    pRipple
+                                    type="button"
+                                    [label]="'register.acceptTermsAction' | translate"
+                                    (click)="acceptTermsFromDialog()">
+                                  </button>
+                                </ng-template>
+                              </p-dialog>
+                            </div>
+                            @if (!terms.value && (terms.dirty || terms.touched)) {
+                              <div>
+                                @if (!terms.value) {
+                                  <small id="terms-error" class="p-error"
+                                  >*{{'register.termsCond' | translate}}*</small>
+                                }
+                              </div>
+                            }
+                          </div>
+                          <div class="p-col-12 p-md-12 p-lg-6 button-submit">
+                            <p-button
+                              type="submit"
+                              label="{{'register.register' | translate}}"
+                              [disabled]="isSubmitting"
+                              [loading]="isSubmitting"
+                            ></p-button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+              } @else {
+                  <div class="forms"></div>
+                }
+              } @else {
+                @if (showVerificationEmailMessage == false) {
+                  <div class="register animate__animated animate__fadeIn"
+                    tabindex="0">
+                    <p>{{'register.registerSuccessful' | translate }}</p>
+                    <a [routerLink]="['/login']">{{'menu.login' | translate}}</a>
+                  </div>
+                }
+                @if (showVerificationEmailMessage == true) {
+                  <div class="register animate__animated animate__fadeIn"
+                    tabindex="0">
+                    <p>{{'register.verificationEmailTitle' | translate}}</p>
+                    <br />
+                    <p>{{'register.verificationEmailDescription' | translate}}</p>
+                    <label for="Texto"> {{user.email}} </label>
+                  </div>
+                }
+              }
+                </div>
+              </div>
+            </div>
+            <!-- <div class="desert"></div> -->
+          </div>
         </div>
-        <!-- <div class="desert"></div> -->
-    </div>
-</div>
