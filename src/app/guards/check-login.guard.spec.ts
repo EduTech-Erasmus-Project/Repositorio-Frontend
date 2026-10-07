@@ -9,7 +9,10 @@ describe("CheckLoginGuard", () => {
   let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    loginServiceSpy = jasmine.createSpyObj("LoginService", ["bootstrapSession"]);
+    loginServiceSpy = jasmine.createSpyObj("LoginService", [
+      "bootstrapSession",
+      "validateUser",
+    ]);
     routerSpy = jasmine.createSpyObj("Router", ["navigateByUrl"]);
     routerSpy.navigateByUrl.and.returnValue(Promise.resolve(true));
 
@@ -24,13 +27,15 @@ describe("CheckLoginGuard", () => {
     guard = TestBed.inject(CheckLoginGuard);
   });
 
-  it("debe bloquear el acceso y redirigir al inicio cuando ya existe sesion", async () => {
+  it("debe bloquear el acceso y delegar la redireccion por rol cuando ya existe sesion", async () => {
     loginServiceSpy.bootstrapSession.and.returnValue(Promise.resolve(true));
+    loginServiceSpy.validateUser.and.returnValue(Promise.resolve(true));
 
     const result = await guard.canActivate();
 
     expect(result).toBeFalse();
-    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith("/");
+    expect(loginServiceSpy.validateUser).toHaveBeenCalled();
+    expect(routerSpy.navigateByUrl).not.toHaveBeenCalled();
   });
 
   it("debe permitir el acceso cuando no existe sesion", async () => {

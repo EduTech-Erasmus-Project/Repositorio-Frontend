@@ -82,6 +82,17 @@ describe("MenuPublicComponent", () => {
     expect(routerSpy.navigateByUrl).toHaveBeenCalledWith("/admin");
   });
 
+  it("debe redirigir a admin cuando la rehidratacion recupera un administrador", async () => {
+    loginServiceSpy.bootstrapSession.and.callFake(async () => {
+      loginServiceSpy.user = { administrator: { id: 1 }, roles: [] };
+      return true;
+    });
+
+    await createComponent();
+
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith("/admin");
+  });
+
   it("debe cargar el menu base y asignar el rol abreviado del usuario actual", async () => {
     loginServiceSpy.user = {
       administrator: null,

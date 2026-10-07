@@ -18,7 +18,7 @@ export class CheckLoginGuard implements CanActivate {
         return true;
       }
 
-      await this.router.navigateByUrl("/");
+      await this.loginService.validateUser();
       return false;
     } catch {
       return true;

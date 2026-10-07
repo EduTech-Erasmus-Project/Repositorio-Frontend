@@ -88,6 +88,14 @@ export class MenuPublicComponent implements OnInit {
       this.loginService.bootstrapSession(),
     ]);
 
+    if (
+      this.loginService.user?.administrator ||
+      this.loginService.validateRole("superuser")
+    ) {
+      await this.router.navigateByUrl("/admin");
+      return;
+    }
+
     if (this.loginService.user?.roles?.length) {
       this.role_name = this.getRolePrefix(this.loginService.user.roles[0]);
     }
