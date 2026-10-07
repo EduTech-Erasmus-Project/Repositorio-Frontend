@@ -89,14 +89,14 @@
                                 <p-checkbox type="checkbox" inputId="student"
                                   [ngClass]="{'ng-dirty ng-invalid': validateRole}"
                                   (onChange)="onChangeTypeStudentEnter($event)"
-                                  formControlName="check" binary="true" id="st">
+                                  formControlName="check" [binary]="true" id="st">
                                 </p-checkbox>
                                 <label for="student">{{'register.studen'|translate}}</label>
                               </div>
                               <div class="p-field-checkbox">
                                 <p-checkbox (onChange)="onChangeTypeTeacher($event)" type="checkbox"
                                   inputId="teacher"
-                                  [ngClass]="{'ng-dirty ng-invalid': validateRole}" binary="true"
+                                  [ngClass]="{'ng-dirty ng-invalid': validateRole}" [binary]="true"
                                   formControlName="checkTe" id="te">
                                 </p-checkbox>
                                 <label for="teacher">{{'register.teacher'|translate}}</label>
@@ -104,7 +104,7 @@
                               <div class="p-field-checkbox">
                                 <p-checkbox (onChange)="onChangeTypeExpert($event)" type="checkbox"
                                   inputId="expert"
-                                  [ngClass]="{'ng-dirty ng-invalid': validateRole}" binary="true"
+                                  [ngClass]="{'ng-dirty ng-invalid': validateRole}" [binary]="true"
                                   formControlName="checkEx" id="ex">
                                 </p-checkbox>
                                 <label

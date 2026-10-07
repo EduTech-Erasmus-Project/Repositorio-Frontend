@@ -234,7 +234,7 @@ export class ProfileComponent implements OnInit {
       this.campusArray = [];
       if (universityId) {
         this.campusArray = await firstValueFrom(
-          this._addressService.getCampusByUniversityActive(universityId)
+          this.loadCampusByUniversityAndCity(universityId, cityId)
         );
       }
     } catch (error) {
@@ -1082,7 +1082,7 @@ export class ProfileComponent implements OnInit {
       }
 
       this.campusArray = await firstValueFrom(
-        this._addressService.getCampusByUniversityActive(universityId)
+        this.loadCampusByUniversityAndCity(universityId)
       );
     } catch (error) {
       this.campusArray = [];
@@ -1092,6 +1092,14 @@ export class ProfileComponent implements OnInit {
 
   async onChangeCampus(evt: unknown) {
     this.angForm.controls["campus"].setValue(this.getSelectEventId(evt));
+  }
+
+  private loadCampusByUniversityAndCity(universityId: number, currentCityId?: number | null) {
+    const cityId = currentCityId ?? this.getRelationId(this.angForm?.controls["city"]?.value);
+
+    return cityId
+      ? this._addressService.getCampusByUniversityActive(universityId, cityId)
+      : this._addressService.getCampusByUniversityActive(universityId);
   }
 
 }

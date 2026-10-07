@@ -858,7 +858,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
     this.angForm.markAllAsTouched();
     this.angForm.updateValueAndValidity();
     try {
-      if (!this.checkTe && !this.checkEx && !this.checkEs) {
+      const selectedRoles = this.getSelectedRegisterRoles();
+
+      if (selectedRoles.length !== 1) {
         this.validateRole = true;
         this.markTouchForm();
         document.getElementById("student")?.focus();
@@ -890,6 +892,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
       Swal.showLoading(null);
 
       this.mapFormDataToUserPayload();
+      if (!this.user.roles || this.user.roles.length !== 1) {
+        throw new Error("Invalid register role payload");
+      }
       await firstValueFrom(this.userService.registerUser(this.user));
 
       this.registered = true;
@@ -955,24 +960,17 @@ export class SignUpComponent implements OnInit, OnDestroy {
    */
   mapFormDataToUserPayload() {
     const formValue = this.angForm.getRawValue();
+    const userPayload = new UserGeneral();
+    const selectedRoles = this.getSelectedRegisterRoles();
 
-    this.user.roles = [];
-    if (this.checkEs) {
-      this.user.roles.push("student");
-    }
-    if (this.checkTe) {
-      this.user.roles.push("teacher");
-    }
-    if (this.checkEx) {
-      this.user.roles.push("expert");
-    }
-    this.user.first_name = formValue.name;
-    this.user.last_name = formValue.lastname;
-    this.user.email = formValue.email;
-    this.user.password = formValue.password;
+    userPayload.roles = selectedRoles;
+    userPayload.first_name = formValue.name;
+    userPayload.last_name = formValue.lastname;
+    userPayload.email = formValue.email;
+    userPayload.password = formValue.password;
 
-    if (this.checkEs) {
-      this.user.education_levels =
+    if (selectedRoles.includes("student")) {
+      userPayload.education_levels =
         formValue.educacionL !== null &&
         formValue.educacionL !== undefined
           ? [Number(formValue.educacionL)]
@@ -980,55 +978,78 @@ export class SignUpComponent implements OnInit, OnDestroy {
       //this.user.knowledge_areas = this.angForm.value.areasInteres.map(
       //(res) => res.id
       //);
-      this.user.knowledge_areas = formValue.areasInteres;
+      userPayload.knowledge_areas = formValue.areasInteres;
       /*this.user.preferences = this.angForm.value.areasPrefer.map(
         (res) => res.id
       );*/
-      this.user.preferences = (formValue.areasPrefer as number[]) || [];
+      userPayload.preferences = (formValue.areasPrefer as number[]) || [];
 
-      this.user.has_disability = formValue.disability;
-      if (this.user.has_disability === "yes") {
-        this.user.disability_description = formValue.typeDisability;
+      userPayload.has_disability = formValue.disability;
+      if (userPayload.has_disability === "yes") {
+        userPayload.disability_description = formValue.typeDisability;
       }
 
-      this.user.birthday = moment(formValue.calendar).format(
+      userPayload.birthday = moment(formValue.calendar).format(
         "YYYY-MM-DD"
       );
     }
 
-    if (this.checkTe) {
-      this.user.professions =
+    if (selectedRoles.includes("teacher")) {
+      userPayload.professions =
         formValue.profession !== null &&
         formValue.profession !== undefined
           ? [Number(formValue.profession)]
           : [];
     }
 
-    if (this.checkTe || this.checkEx) {
-      this.user.city =
+    if (selectedRoles.includes("teacher") || selectedRoles.includes("expert")) {
+      userPayload.city =
         formValue.city !== null && formValue.city !== undefined
           ? Number(formValue.city)
           : null;
-      this.user.university =
+      userPayload.university =
         formValue.university !== null &&
         formValue.university !== undefined
           ? Number(formValue.university)
           : null;
-      this.user.campus =
+      userPayload.campus =
         formValue.campus !== null && formValue.campus !== undefined
           ? Number(formValue.campus)
           : null;
     }
-    if (this.checkEx) {
-      this.user.expert_level = (formValue.levelExpertF as string) || "";
+    if (selectedRoles.includes("expert")) {
+      userPayload.expert_level = (formValue.levelExpertF as string) || "";
 
       if (formValue.url != null) {
-        this.user.web = formValue.url as string;
+        userPayload.web = formValue.url as string;
       }
       if (formValue.academic != null) {
-        this.user.academic_profile = formValue.academic as string;
+        userPayload.academic_profile = formValue.academic as string;
       }
     }
+
+    this.user = userPayload;
+  }
+
+  private getSelectedRegisterRoles(): RegisterRole[] {
+    const formValue = this.angForm?.getRawValue();
+
+    if (!formValue) {
+      return [];
+    }
+
+    const roles: RegisterRole[] = [];
+    if (formValue.check === true) {
+      roles.push("student");
+    }
+    if (formValue.checkTe === true) {
+      roles.push("teacher");
+    }
+    if (formValue.checkEx === true) {
+      roles.push("expert");
+    }
+
+    return roles;
   }
   private extractSelectValue(evt: unknown): number | null {
     return coerceEventRelationId(evt);
@@ -1208,7 +1229,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       }
 
       const res = await firstValueFrom(
-        this._addressService.getCampusByUniversityActive(universityId)
+        this.loadCampusByUniversityAndCity(universityId)
       );
       this.campusArray = res;
     } catch (error) {
@@ -1228,6 +1249,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
     if (!this.destroyed) {
       this.cdr.detectChanges();
     }
+  }
+
+  private loadCampusByUniversityAndCity(universityId: number) {
+    const cityId = this.extractSelectValue(this.angForm.controls["city"]?.value);
+
+    return cityId
+      ? this._addressService.getCampusByUniversityActive(universityId, cityId)
+      : this._addressService.getCampusByUniversityActive(universityId);
   }
 }
 

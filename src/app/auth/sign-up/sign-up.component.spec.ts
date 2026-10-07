@@ -146,6 +146,27 @@ describe("SignUpComponent", () => {
     expect(component.angForm.get("checkEx")?.disabled).toBeFalse();
   });
 
+  it("no debe enviar el registro si la seleccion de rol es inconsistente", async () => {
+    createComponentWithoutRegisterParam();
+    component.createForm();
+    userServiceSpy.registerUser.and.returnValue(of({ id: 88 }));
+
+    component.angForm.patchValue({
+      name: "Ana",
+      lastname: "Perez",
+      email: "ana@test.com",
+      password: "Password1",
+      terms: true,
+      check: true,
+      checkTe: true,
+    });
+
+    await component.validateUser();
+
+    expect(userServiceSpy.registerUser).not.toHaveBeenCalled();
+    expect(component.validateRole).toBeTrue();
+  });
+
   it("debe crear los controles de estudiante y deshabilitar los otros roles", () => {
     createComponent("student");
 
@@ -258,6 +279,7 @@ describe("SignUpComponent", () => {
     await component.validateUser();
 
     expect(userServiceSpy.registerUser).toHaveBeenCalled();
+    expect(userServiceSpy.registerUser.calls.mostRecent().args[0].roles).toEqual(["teacher"]);
     expect(component.user.roles).toEqual(["teacher"]);
     expect(component.user.professions).toEqual([1]);
     expect(component.user.city).toBe(5);
@@ -290,6 +312,7 @@ describe("SignUpComponent", () => {
     await component.validateUser();
 
     expect(userServiceSpy.registerUser).toHaveBeenCalled();
+    expect(userServiceSpy.registerUser.calls.mostRecent().args[0].roles).toEqual(["student"]);
     expect(component.user.roles).toEqual(["student"]);
     expect(component.user.education_levels).toEqual([2]);
     expect(component.user.knowledge_areas).toEqual([10, 11]);
@@ -376,6 +399,7 @@ describe("SignUpComponent", () => {
     await component.validateUser();
 
     expect(userServiceSpy.registerUser).toHaveBeenCalled();
+    expect(userServiceSpy.registerUser.calls.mostRecent().args[0].roles).toEqual(["expert"]);
     expect(component.user.roles).toEqual(["expert"]);
     expect(component.user.city).toBe(3);
     expect(component.user.university).toBe(6);
@@ -409,10 +433,11 @@ describe("SignUpComponent", () => {
       of([{ id: 13, name: "Campus Sur" }])
     );
 
+    component.angForm.get("city")?.setValue(5, { emitEvent: false });
     component.angForm.get("university")?.setValue(8);
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(addressServiceSpy.getCampusByUniversityActive).toHaveBeenCalledWith(8);
+    expect(addressServiceSpy.getCampusByUniversityActive).toHaveBeenCalledWith(8, 5);
     expect(component.campusArray).toEqual([{ id: 13, name: "Campus Sur" }] as any);
     expect(component.angForm.get("campus")?.value == null).toBeTrue();
   });

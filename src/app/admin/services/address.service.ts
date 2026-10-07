@@ -32,8 +32,9 @@ export class AddressService {
   getUniversitiesByCityActive(id: number) {
     return this.http.get<University[]>(`${baseUrl}/address/universities-by-city/${id}`);
   }
-  getCampusByUniversityActive(id: number) {
-    return this.http.get<Campus[]>(`${baseUrl}/address/campus/active/${id}`);
+  getCampusByUniversityActive(id: number, cityId?: number | null) {
+    const cityQuery = cityId ? `?city=${cityId}` : "";
+    return this.http.get<Campus[]>(`${baseUrl}/address/campus/active/${id}${cityQuery}`);
   }
 
   getUniversitiesActive() {

@@ -54,6 +54,16 @@ describe("AddressService", () => {
     req.flush([]);
   });
 
+  it("debe consultar campus activos por universidad y ciudad", () => {
+    service.getCampusByUniversityActive(7, 3).subscribe();
+
+    const req = httpMock.expectOne(
+      `${environment.baseUrl}/address/campus/active/7?city=3`
+    );
+    expect(req.request.method).toBe("GET");
+    req.flush([]);
+  });
+
   it("debe consultar paises activos", () => {
     service.getCountriesActive().subscribe();
 

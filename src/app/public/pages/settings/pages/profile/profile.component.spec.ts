@@ -353,7 +353,7 @@ describe("ProfileComponent", () => {
     await component.onChangeUniversity({ target: { value: 40 } } as any);
 
     expect(component.angForm.get("university")?.value).toBe(40);
-    expect(addressServiceSpy.getCampusByUniversityActive).toHaveBeenCalledWith(40);
+    expect(addressServiceSpy.getCampusByUniversityActive).toHaveBeenCalledWith(40, 5);
     expect(component.campusArray).toEqual([{ id: 40, name: "Campus Norte" }] as any);
   });
 
