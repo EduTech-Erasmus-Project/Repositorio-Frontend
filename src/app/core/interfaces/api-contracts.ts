@@ -133,7 +133,10 @@ export interface EmailServerConfigPayload {
   port: number | string | null;
   tls: boolean;
   email_from: string;
-  emailtest?: string | null;
+}
+
+export interface EmailServerTestPayload {
+  emailtest: string;
 }
 
 export interface TypeUserOptionRegisterResponse {

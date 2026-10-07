@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import {
   EmailServerConfigPayload,
   EmailServerConfigResponse,
+  EmailServerTestPayload,
 } from "src/app/core/interfaces/api-contracts";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { AdminComponent } from "../../admin.component";
@@ -107,7 +108,7 @@ export class EmailServerFormComponent implements OnInit {
       this.saving = true;
       this.refreshView();
       await firstValueFrom(
-        this.settingsService.updateServer(this.buildPayload(false))
+        this.settingsService.updateServer(this.buildPayload())
       );
       Swal.fire({
         icon: "success",
@@ -144,7 +145,7 @@ export class EmailServerFormComponent implements OnInit {
       this.testing = true;
       this.refreshView();
       Swal.showLoading();
-      await firstValueFrom(this.settingsService.testServer(this.buildPayload(true)));
+      await firstValueFrom(this.settingsService.testServer(this.buildTestPayload()));
       Swal.hideLoading();
       Swal.fire({
         icon: "success",
@@ -180,7 +181,7 @@ export class EmailServerFormComponent implements OnInit {
     });
   }
 
-  private buildPayload(includeTestEmail: boolean): EmailServerConfigPayload {
+  private buildPayload(): EmailServerConfigPayload {
     return {
       host: normalizeTrimmedText(this.form.controls.host.value),
       username: normalizeTrimmedText(this.form.controls.username.value),
@@ -188,9 +189,12 @@ export class EmailServerFormComponent implements OnInit {
       port: this.form.controls.port.value,
       tls: this.form.controls.tls.value,
       email_from: normalizeTrimmedText(this.form.controls.email_from.value),
-      ...(includeTestEmail
-        ? { emailtest: normalizeTrimmedText(this.form.controls.emailtest.value) || null }
-        : {}),
+    };
+  }
+
+  private buildTestPayload(): EmailServerTestPayload {
+    return {
+      emailtest: normalizeTrimmedText(this.form.controls.emailtest.value),
     };
   }
 

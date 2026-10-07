@@ -112,12 +112,6 @@ describe("EmailServerFormComponent", () => {
     await component.onTestEmail();
 
     expect(settingsServiceSpy.testServer).toHaveBeenCalledWith({
-      host: "smtp.mail.com",
-      port: 465,
-      username: "admin@mail.com",
-      password: "abc123",
-      tls: true,
-      email_from: "admin@mail.com",
       emailtest: "test@mail.com",
     });
   });

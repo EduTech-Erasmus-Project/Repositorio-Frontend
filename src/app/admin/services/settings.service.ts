@@ -9,6 +9,7 @@ import {
   EmailDomainResponse,
   EmailServerConfigPayload,
   EmailServerConfigResponse,
+  EmailServerTestPayload,
   OptionRegisterResponse,
   TypeUserOptionRegisterResponse,
 } from "src/app/core/interfaces/api-contracts";
@@ -71,7 +72,7 @@ export class SettingsService {
     return this.http.post<EmailServerConfigResponse>(`${baseUrl}/settings/email/`, data);
   }
 
-  testServer(data: EmailServerConfigPayload){
+  testServer(data: EmailServerTestPayload){
     return this.http.post<ApiMessageResponse>(`${baseUrl}/settings/email-testing/`, data);
   }
 
