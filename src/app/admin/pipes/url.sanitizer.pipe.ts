@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { upgradeToHttpsIfPageIsSecure } from '../../core/utils/secure-url.utils';
 
 @Pipe({
     name: 'sanitizerurl',
@@ -12,6 +13,6 @@ export class UrlSanitizerPipe implements PipeTransform {
   }
 
   transform(url:string ):SafeResourceUrl {
-    return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+    return this.domSanitizer.bypassSecurityTrustResourceUrl(upgradeToHttpsIfPageIsSecure(url));
   }
 }
