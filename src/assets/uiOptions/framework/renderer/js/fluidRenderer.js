@@ -1,88 +1,19 @@
 /*
-Copyright 2008-2010 University of Cambridge
-Copyright 2008-2009 University of Toronto
-Copyright 2010-2011 Lucendo Development Ltd.
-Copyright 2013 OCAD University
-Copyright 2013 Raising the Floor - US
-Copyright 2015 Raising the Floor - International
+Copyright The Infusion copyright holders
+See the AUTHORS.md file at the top-level directory of this distribution and at
+https://github.com/fluid-project/infusion/raw/main/AUTHORS.md.
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
 Licenses.
 
 You may obtain a copy of the ECL 2.0 License and BSD License at
-https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+https://github.com/fluid-project/infusion/raw/main/Infusion-LICENSE.txt
 */
 
-fluid_2_0_0 = fluid_2_0_0 || {};
+"use strict";
 
-(function ($, fluid) {
-    "use strict";
-
-
-    fluid.defaults("fluid.messageResolver", {
-        gradeNames: ["fluid.component"],
-        mergePolicy: {
-            messageBase: "nomerge",
-            parents: "nomerge"
-        },
-        resolveFunc: fluid.stringTemplate,
-        parseFunc: fluid.identity,
-        messageBase: {},
-        members: {
-            messageBase: "@expand:{that}.options.parseFunc({that}.options.messageBase)"
-        },
-        invokers: {
-            lookup: "fluid.messageResolver.lookup({that}, {arguments}.0)", // messagecodes
-            resolve: "fluid.messageResolver.resolve({that}, {arguments}.0, {arguments}.1)" // messagecodes, args
-        },
-        parents: []
-    });
-
-    fluid.messageResolver.lookup = function (that, messagecodes) {
-        var resolved = fluid.messageResolver.resolveOne(that.messageBase, messagecodes);
-        if (resolved === undefined) {
-            return fluid.find(that.options.parents, function (parent) {
-                return parent ? parent.lookup(messagecodes) : undefined;
-            });
-        } else {
-            return {template: resolved, resolveFunc: that.options.resolveFunc};
-        }
-    };
-
-    fluid.messageResolver.resolve = function (that, messagecodes, args) {
-        if (!messagecodes) {
-            return "[No messagecodes provided]";
-        }
-        messagecodes = fluid.makeArray(messagecodes);
-        var looked = that.lookup(messagecodes);
-        return looked ? looked.resolveFunc(looked.template, args) :
-            "[Message string for key " + messagecodes[0] + " not found]";
-    };
-
-
-    // unsupported, NON-API function
-    fluid.messageResolver.resolveOne = function (messageBase, messagecodes) {
-        for (var i = 0; i < messagecodes.length; ++i) {
-            var code = messagecodes[i];
-            var message = messageBase[code];
-            if (message !== undefined) {
-                return message;
-            }
-        }
-    };
-
-    /** Converts a data structure consisting of a mapping of keys to message strings,
-     * into a "messageLocator" function which maps an array of message codes, to be
-     * tried in sequence until a key is found, and an array of substitution arguments,
-     * into a substituted message string.
-     */
-    fluid.messageLocator = function (messageBase, resolveFunc) {
-        var resolver = fluid.messageResolver({messageBase: messageBase, resolveFunc: resolveFunc});
-        return function (messagecodes, args) {
-            return resolver.resolve(messagecodes, args);
-        };
-    };
+(function () {
 
     function debugPosition(component) {
         return "as child of " + (component.parent.fullID ? "component with full ID " + component.parent.fullID : "root");
@@ -123,7 +54,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
 
     renderer.isBoundPrimitive = function (value) {
         return fluid.isPrimitive(value) || fluid.isArrayable(value) &&
-            (value.length === 0 || typeof (value[0]) === "string");
+            (value.length === 0 || typeof(value[0]) === "string");
     };
 
     var unzipComponent;
@@ -151,10 +82,10 @@ fluid_2_0_0 = fluid_2_0_0 || {};
                 if (fluid.isArrayable(value)) {
                     for (var i = 0; i < value.length; ++i) {
                         var processed = processChild(value[i], key);
-          //            if (processed.componentType === "UIContainer" &&
-          //              processed.localID === undefined) {
-          //              processed.localID = i;
-          //            }
+                        // if (processed.componentType === "UIContainer" &&
+                        //     processed.localID === undefined) {
+                        //     processed.localID = i;
+                        // }
                         togo[togo.length] = processed;
                     }
                 } else {
@@ -186,16 +117,18 @@ fluid_2_0_0 = fluid_2_0_0 || {};
         fixupValue(holder[property], model, resolverGetConfig);
     }
 
-    renderer.duckMap = {children: "UIContainer",
-            value: "UIBound", valuebinding: "UIBound", messagekey: "UIMessage",
-            markup: "UIVerbatim", selection: "UISelect", target: "UILink",
-            choiceindex: "UISelectChoice", functionname: "UIInitBlock"};
+    renderer.duckMap = {
+        children: "UIContainer",
+        value: "UIBound", valuebinding: "UIBound", messagekey: "UIMessage",
+        markup: "UIVerbatim", selection: "UISelect", target: "UILink",
+        choiceindex: "UISelectChoice", functionname: "UIInitBlock"
+    };
 
     var boundMap = {
-        UISelect:   ["selection", "optionlist", "optionnames"],
-        UILink:     ["target", "linktext"],
+        UISelect: ["selection", "optionlist", "optionnames"],
+        UILink: ["target", "linktext"],
         UIVerbatim: ["markup"],
-        UIMessage:  ["messagekey"]
+        UIMessage: ["messagekey"]
     };
 
     renderer.boundMap = fluid.transform(boundMap, fluid.arrayToHash);
@@ -335,14 +268,12 @@ fluid_2_0_0 = fluid_2_0_0 || {};
     renderer.invokeFluidDecorator = function (func, args, ID, num, options) {
         var that;
         if (options.parentComponent) {
-            var parent = options.parentComponent;
             var name = renderer.IDtoComponentName(ID, num);
-            fluid.set(parent, ["options", "components", name], {
-                type: func,
-                container: args[0],
-                options: args[1]
-            });
-            that = fluid.initDependent(options.parentComponent, name);
+            that = fluid.constructChild(options.parentComponent, name,
+                $.extend({
+                    type: func,
+                    container: args[0]
+                }, args[1]));
         }
         else {
             that = fluid.invokeGlobalFunction(func, args);
@@ -350,7 +281,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
         return that;
     };
 
-    fluid.renderer = function (templates, tree, options, fossilsIn) {
+    fluid.oldRenderer = function (templates, tree, options, fossilsIn) {
 
         options = options || {};
         tree = tree || {};
@@ -442,7 +373,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
             // collect any rewritten ids for the purpose of later rewriting
             if (parentlump.downmap) {
                 for (id in parentlump.downmap) {
-                  //if (id.indexOf(":") === -1) {
+                    //if (id.indexOf(":") === -1) {
                     var lumps = parentlump.downmap[id];
                     for (i = 0; i < lumps.length; ++i) {
                         var lump = lumps[i];
@@ -656,8 +587,8 @@ fluid_2_0_0 = fluid_2_0_0 || {};
 
         function applyAutoBind(torender, finalID) {
             if (!finalID) {
-              // if no id is assigned so far, this is a signal that this is a "virtual" component such as
-              // a non-HTML UISelect which will not have physical markup.
+                // if no id is assigned so far, this is a signal that this is a "virtual" component such as
+                // a non-HTML UISelect which will not have physical markup.
                 return;
             }
             var tagname = trc.uselump.tagname;
@@ -666,14 +597,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
                 fluid.applyBoundChange(fluid.byId(finalID, renderOptions.document), undefined, applier);
             }
             if (renderOptions.autoBind && /input|select|textarea/.test(tagname) && !renderedbindings[finalID]) {
-                var decorators = [{jQuery: ["change", applyFunc]}];
-                // Work around bug 193: http://webbugtrack.blogspot.com/2007/11/bug-193-onchange-does-not-fire-properly.html
-                if ($.browser.msie && tagname === "input" && /radio|checkbox/.test(trc.attrcopy.type)) {
-                    decorators.push({jQuery: ["click", applyFunc]});
-                }
-                if ($.browser.safari && tagname === "input" && trc.attrcopy.type === "radio") {
-                    decorators.push({jQuery: ["keyup", applyFunc]});
-                }
+                var decorators = [{jQuery: ["on", "change", applyFunc]}];
                 outDecoratorsImpl(torender, decorators, trc.attrcopy, finalID);
             }
         }
@@ -683,13 +607,13 @@ fluid_2_0_0 = fluid_2_0_0 || {};
                 var holder = parent ? parent : torender;
                 if (renderOptions.fossils && holder.valuebinding !== undefined) {
                     var fossilKey = holder.submittingname || torender.finalID;
-                  // TODO: this will store multiple times for each member of a UISelect
+                    // TODO: this will store multiple times for each member of a UISelect
                     renderOptions.fossils[fossilKey] = {
                         name: fossilKey,
                         EL: holder.valuebinding,
                         oldvalue: holder.value
                     };
-                  // But this has to happen multiple times
+                    // But this has to happen multiple times
                     applyAutoBind(torender, torender.finalID);
                 }
                 if (torender.fossilizedbinding) {
@@ -765,8 +689,8 @@ fluid_2_0_0 = fluid_2_0_0 || {};
 
         function assignSubmittingName(attrcopy, component, parent) {
             var submitting = parent || component;
-          // if a submittingName is required, we must already go out to the document to
-          // uniquify the id that it will be derived from
+            // if a submittingName is required, we must already go out to the document to
+            // uniquify the id that it will be derived from
             adjustForID(attrcopy, component, true, component.fullID);
             if (submitting.submittingname === undefined && submitting.willinput !== false) {
                 submitting.submittingname = submitting.finalID || submitting.fullID;
@@ -840,7 +764,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
                 else if (type === "addClass" || type === "removeClass") {
                     // Using an unattached DOM node because jQuery will use the
                     // node's setAttribute method to add the class.
-                    var fakeNode = $("<div>", {class: attrcopy["class"]})[0];
+                    var fakeNode = $("<div>", {"class": attrcopy["class"]})[0];
                     renderOptions.jQuery(fakeNode)[type](decorator.classes);
                     attrcopy["class"] = fakeNode.className;
                 }
@@ -974,7 +898,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
                 else { // String value
                     value = parent ?
                         parent[tagname === "textarea" || tagname === "input" ? "optionlist" : "optionnames"].value[torender.choiceindex] :
-                            torender.value;
+                        torender.value;
                     if (tagname === "textarea") {
                         if (isPlaceholder(value) && torender.willinput) {
                             // FORCE a blank value for input components if nothing from
@@ -1001,7 +925,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
                 var ismultiple = false; // eslint-disable-line no-unused-vars
 
                 if (fluid.isArrayable(torender.selection.value)) {
-                    ismultiple = true;
+                    ismultiple = true; // eslint-disable-line no-unused-vars
                     if (ishtmlselect) {
                         attrcopy.multiple = "multiple";
                     }
@@ -1080,7 +1004,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
                 degradeMessage(torender.markup);
                 var rendered = torender.markup.value;
                 if (rendered === null) {
-                  // TODO, doesn't quite work due to attr folding cf Java code
+                    // TODO, doesn't quite work due to attr folding cf Java code
                     out += fluid.dumpAttributes(attrcopy);
                     out += ">";
                     renderUnchanged();
@@ -1476,7 +1400,9 @@ fluid_2_0_0 = fluid_2_0_0 || {};
 
     };
 
-    jQuery.extend(true, fluid.renderer, renderer);
+    // Final definition for backwards compatibility - remove with old renderer
+    $.extend(fluid.oldRenderer, fluid.renderer, renderer);
+    fluid.renderer = fluid.oldRenderer;
 
     /*
      * This function is unsupported: It is not really intended for use by implementors.
@@ -1496,16 +1422,18 @@ fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 
-   /**
-    * A common utility function to make a simple view of rows, where each row has a selection control and a label
-    * @param {Object} optionlist An array of the values of the options in the select
-    * @param {Object} opts An object with this structure: {
-            selectID: "",
-            rowID: "",
-            inputID: "",
-            labelID: ""
-        }
-    */
+    /**
+     * A common utility function to make a simple view of rows, where each row has a selection control and a label
+     *
+     * @param {Object} optionlist - An array of the values of the options in the select
+     * @param {Object} opts - An object with this structure: {
+     *       selectID: "",
+     *       rowID: "",
+     *       inputID: "",
+     *       labelID: ""
+     *   }
+     * @return {Object} - The results of transforming optionlist.
+     */
     fluid.explodeSelectionToInputs = function (optionlist, opts) {
         return fluid.transform(optionlist, function (option, index) {
             return {
@@ -1518,48 +1446,34 @@ fluid_2_0_0 = fluid_2_0_0 || {};
         });
     };
 
-    fluid.resolveMessageSource = function (messageSource) {
-        if (messageSource.type === "data") {
-            if (messageSource.url === undefined) {
-                return fluid.messageLocator(messageSource.messages, messageSource.resolveFunc);
-            }
-            else {
-              // TODO: fetch via AJAX, and convert format if necessary
-            }
-        }
-        else if (messageSource.type === "resolver") {
-            return messageSource.resolver.resolve;
-        }
-    };
-
     fluid.renderTemplates = function (templates, tree, options, fossilsIn) {
         var renderer = fluid.renderer(templates, tree, options, fossilsIn);
         var rendered = renderer.renderTemplates();
         return rendered;
     };
-    /** A driver to render and bind an already parsed set of templates onto
+    /**
+     * A driver to render and bind an already parsed set of templates onto
      * a node. See documentation for fluid.selfRender.
-     * @param templates A parsed template set, as returned from fluid.selfRender or
-     * fluid.parseTemplates.
+     *
+     * @param {Object} templates - A parsed template set, as returned from fluid.selfRender or fluid.parseTemplates.
+     * @param {jQuery|DomElement} node - The node both holding the template, and whose markup is to be
+     * replaced with the rendered result.
+     * @param {Object} tree - The component tree to be rendered.
+     * @param {Object} [options] - (optional) An options structure to configure the rendering and binding process.
+     * @return {Object} - A templates structure, suitable for a further call to fluid.reRender or fluid.renderTemplates.
      */
-
     fluid.reRender = function (templates, node, tree, options) {
         options = options || {};
-        var renderer = fluid.renderer(templates, tree, options, options.fossils);
+        var renderer = fluid.oldRenderer(templates, tree, options, options.fossils);
         options = renderer.options;
-              // Empty the node first, to head off any potential id collisions when rendering
+        // Empty the node first, to head off any potential id collisions when rendering
         node = fluid.unwrap(node);
-        var lastFocusedElement = fluid.getLastFocusedElement ? fluid.getLastFocusedElement() : null;
+        var lastFocusedElement = fluid.lastFocusedElement;
         var lastId;
-        if (lastFocusedElement && fluid.dom.isContainer(node, lastFocusedElement)) {
+        if (lastFocusedElement && node.contains(lastFocusedElement)) {
             lastId = lastFocusedElement.id;
         }
-        if ($.browser.msie) {
-            options.jQuery(node).empty(); //- this operation is very slow.
-        }
-        else {
-            node.innerHTML = "";
-        }
+        node.innerHTML = "";
 
         var rendered = renderer.renderTemplates();
         if (options.renderRaw) {
@@ -1569,17 +1483,13 @@ fluid_2_0_0 = fluid_2_0_0 || {};
         if (options.model) {
             fluid.bindFossils(node, options.model, options.fossils);
         }
-        if ($.browser.msie) {
-            options.jQuery(node).html(rendered);
-        }
-        else {
-            node.innerHTML = rendered;
-        }
+        node.innerHTML = rendered;
+
         renderer.processDecoratorQueue();
         if (lastId) {
             var element = fluid.byId(lastId, options.document);
             if (element) {
-                options.jQuery(element).focus();
+                options.jQuery(element).trigger("focus");
             }
         }
 
@@ -1588,7 +1498,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
 
     function findNodeValue(rootNode) {
         var node = fluid.dom.iterateDom(rootNode, function (node) {
-          // NB, in Firefox at least, comment and cdata nodes cannot be distinguished!
+            // NB, in Firefox at least, comment and cdata nodes cannot be distinguished!
             return node.nodeType === 8 || node.nodeType === 4 ? "stop" : null;
         }, true);
         var value = node.nodeValue;
@@ -1610,10 +1520,12 @@ fluid_2_0_0 = fluid_2_0_0 || {};
     };
     /** A slightly generalised version of fluid.selfRender that does not assume that the
      * markup used to source the template is within the target node.
-     * @param source Either a structure {node: node, armouring: armourstyle} or a string
+     * @param {Object | String} source - Either a structure {node: node, armouring: armourstyle} or a string
      * holding a literal template
-     * @param target The node to receive the rendered markup
-     * @param tree, options, return as for fluid.selfRender
+     * @param {Object} target - The node to receive the rendered markup
+     * @param {Object} tree - The component tree to be rendered.
+     * @param {Object} options - An options structure to configure the rendering and binding process.
+     * @return {Object} - A templates structure, suitable for a further call to fluid.reRender or fluid.renderTemplates.
      */
     fluid.render = function (source, target, tree, options) {
         options = options || {};
@@ -1622,9 +1534,13 @@ fluid_2_0_0 = fluid_2_0_0 || {};
             template = fluid.extractTemplate(fluid.unwrap(source.node), source.armouring);
         }
         target = fluid.unwrap(target);
-        var resourceSpec = {base: {resourceText: template,
-                            href: ".", resourceKey: ".", cutpoints: options.cutpoints}
-                            };
+
+        var resourceSpec = {
+            base: {
+                resourceText: template,
+                url: ".", resourceKey: ".", cutpoints: options.cutpoints
+            }
+        };
         var templates = fluid.parseTemplates(resourceSpec, ["base"], options);
         return fluid.reRender(templates, target, tree, options);
     };
@@ -1635,16 +1551,15 @@ fluid_2_0_0 = fluid_2_0_0 || {};
      * node with the rendered markup, and finally performs any required data
      * binding. The parsed template is returned for use with a further call to
      * reRender.
-     * @param node The node both holding the template, and whose markup is to be
+     * @param {Object} node - The node both holding the template, and whose markup is to be
      * replaced with the rendered result.
-     * @param tree The component tree to be rendered.
-     * @param options An options structure to configure the rendering and binding process.
-     * @return A templates structure, suitable for a further call to fluid.reRender or
-     * fluid.renderTemplates.
+     * @param {Object} tree - The component tree to be rendered.
+     * @param {Object} options - An options structure to configure the rendering and binding process.
+     * @return {Object} - A templates structure, suitable for a further call to fluid.reRender or fluid.renderTemplates.
      */
     fluid.selfRender = function (node, tree, options) {
         options = options || {};
         return fluid.render({node: node, armouring: options.armouring}, node, tree, options);
     };
 
-})(jQuery, fluid_2_0_0);
+})();

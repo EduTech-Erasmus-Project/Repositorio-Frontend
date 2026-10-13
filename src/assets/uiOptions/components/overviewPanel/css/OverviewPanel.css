@@ -1,40 +1,24 @@
 
 @font-face {
     font-family: "Icons";
-    src:url('../fonts/overviewPanel-icons.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/overviewPanel-icons.eot'),
-         url('../fonts/overviewPanel-icons.ttf');
+    src: url('../fonts/OverviewPanel-Icons.woff');
 }
 
+/* open-sans-latin-wght-normal */
 @font-face {
-    font-family: "Fluid-star";
-    src:url('../fonts/fluid-star.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/fluid-star.eot'),
-         url('../fonts/fluid-star.ttf');
+    font-family: 'Open Sans Variable';
+    font-style: normal;
+    font-weight: 300 800;
+    src: url('../../../lib/opensans/fonts/open-sans-latin-wght-normal.woff2') format('woff2-variations');
 }
 
+/* roboto-slab-latin-wght-normal */
 @font-face {
-    font-family: 'OpenSans';
-    src: url('../fonts/OpenSans-Regular.ttf');
+    font-family: 'Roboto Slab Variable';
+    font-style: normal;
+    font-weight: 100 900;
+    src: url('../../../lib/roboto-slab/fonts/roboto-slab-latin-wght-normal.woff2') format('woff2-variations');
 }
-
-@font-face {
-    font-family: 'OpenSans';
-    src: url('../fonts/OpenSans-Bold.ttf');
-    font-weight: bold;
-}
-
-@font-face {
-    font-family: 'RobotoSlab';
-    src: url('../fonts/RobotoSlab-Regular.ttf');
-}
-
-@font-face {
-    font-family: 'RobotoSlab';
-    src: url('../fonts/RobotoSlab-Bold.ttf');
-    font-weight: bold;
-}
-
 
 .fl-overviewPanel-container {
     /*
@@ -45,18 +29,19 @@
      * .fl-overviewPanel-hidden styles so that the transition goes in the desired
      * direction.
      */
-    position:fixed;
-    top:0;
-    left:0;
-    width:24em;
-    z-index: 9999;
+
+    font-family: "Open Sans Variable", "Helvetica Neue", "Helvetica", Arial, sans-serif;
     font-size: 1em;
-    font-family: "OpenSans","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
     height: 100%;
+    left: 0;
     min-height: 28em;
+    position: fixed;
+    top: 0;
 
     /* Transition used to control hide/show of this container */
     transition: all 0.2s linear;
+    width: 24em;
+    z-index: 9999;
 }
 
 .fl-overviewPanel-container * {
@@ -65,14 +50,15 @@
 
 .fl-overviewPanel .fl-overviewPanel-title {
     background-color: #333;
-    font-family: 'RobotoSlab', serif;
     color: #ccc;
-    padding: 0.5em 0.5em 0.5em 3em;
+    font-family: 'Roboto Slab Variable', serif;
     height: 5.5em;
-    position: absolute;
-    top: 0;
     left: 0;
     line-height: 2em;
+    padding: 0.5em 0.5em 0.5em 3em;
+    position: absolute;
+    top: 0;
+    width: calc(100% - 3.5em);
 }
 
 .fl-overviewPanel .fl-overviewPanel-title * {
@@ -80,101 +66,105 @@
 }
 
 .fl-overviewPanel .fl-overviewPanel-contents {
+    bottom: 18.5em; /* Change this if needed - offset the height of fl-overviewPanel-footer. */
+    overflow: auto;
+    padding: 1.5em;
+    position: absolute;
+
     /*
      * If changing the height of title or footer, make sure the top and bottom
      * positions of fl-overviewPanel-contents are adjusted.
      */
     top: 6.5em;     /* Change this if needed - offset the height of fl-overviewPanel-title + 1em (for line-height compensation).  */
-    bottom: 18.5em; /* Change this if needed - offset the height of fl-overviewPanel-footer. */
-    padding: 1.5em;
-    position: absolute;
-    overflow: auto;
 }
 
 .fl-overviewPanel .fl-overviewPanel-footer {
-    height: 18.5em;
-    position: absolute;
     bottom: 0;
+    height: 18.5em;
     left: 0;
-    width: 100%;
     line-height: 1em;
+    overflow: auto;
+    position: absolute;
+    width: 100%;
 }
-
 
 /* General styles */
 
 .fl-overviewPanel {
-    position: relative;
-    left: 0;
     color: #fff;
     height: inherit;
+    left: 0;
+    position: relative;
 }
 
 .fl-overviewPanel h1 {
-    margin: 0;
     font-size: 1.4em;
+    margin: 0;
 }
 
 .fl-overviewPanel h2 {
-    margin: 0;
     font-size: 1em;
+    margin: 0;
 }
 
 .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus,
 .fl-overviewPanel a:active,
 .fl-overviewPanel a:focus {
-    outline: 0.3em solid #27A9E1;
+    outline: 0.3em solid #27a9e1;
 }
 
-.fl-overviewPanel-group:after { /* clearfix (aka. group) */
+.fl-overviewPanel-group::after { /* clearfix (aka. group) */
+    clear: both;
     content: "";
     display: table;
-    clear: both;
 }
 
 /* The Star icon that acts as a toggle button */
 
 .fl-overviewPanel .fl-overviewPanel-icon-fluidStar {
-    position:fixed;
-    top:0.2em;
-    left:0.2em;
-    z-index: 1; /* Z-index and position relative is defined so it appears properly relative to the panel's title. */
     font-size: 1.5em;
+    left: 0.2em;
+    position: fixed;
+    top: 0.2em;
+    z-index: 1; /* Z-index and position relative is defined so it appears properly relative to the panel's title. */
 }
 
 .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    text-decoration: none;
-    font-family: "Fluid-star" !important; /* FLUID-5321: use important to keep learner prefs from changing it. */
-    font-weight: normal !important; /* Keep UIO from changing the weight of icons. Bold icons look poor. */
-    padding: 0.7em 0.3em;
-    color: #FFCC00;
-    float: left;
-    position:relative;
     background-color: #333; /* IE8 */
-    background-color: rgba(51,51,51,.96);
+    background-color: rgba(51, 51, 51, 0.96);
+    color: #fc0;
+    float: left;
+
+    /* FLUID-5321: use important to keep learner prefs from changing it. */
+    font-family: "Icons" !important;  /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
+    font-weight: normal !important; /* Keep UIO from changing the weight of icons. Bold icons look poor. */
+    letter-spacing: normal; /* to prevent override from letter spacing adjuster */
     line-height: 1.8em;
-    transition: background-color 0.2s ease;
     outline: 0.2em solid #333;
-    outline: 0.2em solid rgba(51,51,51,.96);
+    outline: 0.2em solid rgba(51, 51, 51, 0.96);
+    padding: 0.7em 0.3em;
+    position: relative;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
 }
 
 .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:hover {
     background-color: #444;
 }
 
-.fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:before {
-    content: "\e600";
+.fl-overviewPanel .fl-overviewPanel-icon-fluidStar a::before {
+    content: "\e604";
 }
 
 /* The Demo Menu itself */
 .fl-overviewPanel .fl-overviewPanel-body {
-    background-color:#444; /* IE8 */
-    background-color: rgba(51,51,51,.96);
+    background-color: #444; /* IE8 */
+    background-color: rgba(51, 51, 51, 0.96);
     height: 100%;
 
     /* Fade out the overviewPanel contents. Otherwise it just disappears. */
     transition: visibility 0.1s linear;
-    visibility:visible;
+    visibility: visible;
 }
 
 /* Demo Menu Visibility */
@@ -185,37 +175,37 @@
 }
 
 .fl-overviewPanel-container.fl-overviewPanel-hidden {
-    /* Make this container essentially hidden. Some dimensions need to be given to avoid a problem with rendering on Safari. */
-    width: 0.01em;
     height: 0.01em;
     transition: all 0.2s linear; /* This transition creates the desired sliding effect. */
-}
 
+    /* Make this container essentially hidden. Some dimensions need to be given to avoid a problem with rendering on Safari. */
+    width: 0.01em;
+}
 
 /* Header area with title */
 
 .fl-overviewPanel .fl-overviewPanel-title h1 {
     display: inline-block;
-    padding: 0.5em;
     margin-left: 0.2em;
+    padding: 0.5em;
 }
 
 .fl-overviewPanel .fl-overviewPanel-title a {
-    text-decoration: none;
     color: #fff;
+    text-decoration: none;
     transition: color 0.2s ease;
 }
 
 .fl-overviewPanel .fl-overviewPanel-title a:hover {
-    color: #ffcc00;
+    color: #fc0;
 }
 
 /* Content area of the component */
 
 .fl-overviewPanel .fl-overviewPanel-componentName {
+    display: block;
     font-weight: bold;
     margin: 0.6em 0;
-    display:block;
 }
 
 .fl-overviewPanel .fl-overviewPanel-componentVersion {
@@ -223,14 +213,14 @@
 }
 
 .fl-overviewPanel .fl-overviewPanel-instructions {
-    border: 0.2em solid #FFCC00;
-    padding: 1em;
+    border: 0.2em solid #fc0;
     margin-top: 2em;
+    padding: 1em;
 }
 
 .fl-overviewPanel .fl-overviewPanel-instructions h2 {
-    text-transform: uppercase;
     font-weight: normal;
+    text-transform: uppercase;
 }
 
 /* Icon links to code, API, and designs. */
@@ -246,17 +236,17 @@
 .fl-overviewPanel .fl-overviewPanel-links ul li {
     display: inline-block;
     list-style: none outside none;
-    margin-bottom: 1.5em ;
+    margin-bottom: 1.5em;
     width: 49%;
 }
 
 .fl-overviewPanel .fl-overviewPanel-links ul li a {
     color: #fff;
+    display: inline-block;
+    text-align: center;
     text-decoration: none;
     transition: color 0.2s ease;
     width: 100%;
-    text-align:center;
-    display: inline-block;
 }
 
 .fl-overviewPanel .fl-overviewPanel-links ul li a:focus .fl-overviewPanel-iconContainer,
@@ -268,7 +258,7 @@
 }
 
 .fl-overviewPanel .fl-overviewPanel-links ul li a:hover {
-    color: #ffcc00;
+    color: #fc0;
 }
 
 .fl-overviewPanel .fl-overviewPanel-links ul li a:hover .fl-overviewPanel-iconContainer,
@@ -280,42 +270,48 @@
 }
 
 .fl-overviewPanel .fl-overviewPanel-footer .fl-overviewPanel-links .fl-overviewPanel-links-icon {
-    display: inline-block;
     background-color: #fff;
-    width: 2em;
-    height: 2em;
     border-radius: 50em;
-    font-family: icons !important; /* FLUID-5321: use important to keep learner prefs from changing it. */
+    color: #333;
+    display: inline-block;
+
+    /* FLUID-5321: use important to keep learner prefs from changing it. */
+    font-family: icons !important;  /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
     font-weight: normal !important; /* Keep UIO from changing the weight of icons. Bold icons look poor. */
-    color: #333333;
+    height: 2.5em;
+    letter-spacing: normal; /* to prevent override from letter spacing adjuster */
     line-height: 1em;
     text-align: center;
     transition: background-color 0.2s ease;
+    width: 2.5em;
 }
 
-.fl-overviewPanel .fl-overviewPanel-footer .fl-overviewPanel-links .fl-overviewPanel-links-icon:before {
-    position: relative;
-    top: 0.35em;
+.fl-overviewPanel .fl-overviewPanel-footer .fl-overviewPanel-links .fl-overviewPanel-links-icon::before {
     font-size: 1.2em;
+    position: relative;
+    top: 0.6em;
 }
 
 .fl-overviewPanel .fl-overviewPanel-links ul li a:hover .fl-overviewPanel-links-icon {
-    background-color: #ffcc00;
+    background-color: #fc0;
 }
 
-.fl-overviewPanel .fl-overviewPanel-links-icon-api:before {
+.fl-overviewPanel .fl-overviewPanel-links-icon-api::before {
     content: "\e602";
 }
 
-.fl-overviewPanel .fl-overviewPanel-links-icon-github:before {
+.fl-overviewPanel .fl-overviewPanel-links-icon-github::before {
     content: "\e601";
 }
 
-.fl-overviewPanel .fl-overviewPanel-links-icon-code:before {
+.fl-overviewPanel .fl-overviewPanel-links-icon-code::before {
     content: "\e600";
+
+    /* Adjust centering of icon */
+    margin-left: -0.2em;
 }
 
-.fl-overviewPanel .fl-overviewPanel-links-icon-design:before {
+.fl-overviewPanel .fl-overviewPanel-links-icon-design::before {
     content: "\e603";
 }
 
@@ -323,21 +319,20 @@
 .fl-overviewPanel-apiLinkText,
 .fl-overviewPanel-designLinkText,
 .fl-overviewPanel-infusionCodeLinkText {
-    display:block;
+    display: block;
 }
 
-
 .fl-overviewPanel .fl-overviewPanel-feedback-link {
-    text-align: center;
     margin-top: 1em;
+    text-align: center;
 }
 
 .fl-overviewPanel .fl-overviewPanel-feedbackText {
-    display:block;
+    display: block;
 }
 
 .fl-overviewPanel .fl-overviewPanel-feedback-link a {
-    color: #FFCC00;
+    color: #fc0;
 }
 
 /* Footer / Close button */
@@ -345,248 +340,58 @@
 .fl-overviewPanel .fl-overviewPanel-footer .fl-overviewPanel-closeControl {
     background-color: #fff;
     border-radius: 0.3em;
-    padding: 0.3em 1em;
-    color:  #333333;
-    text-decoration: none;
-    text-transform: lowercase;
+    color: #333;
     display: inline-block;
     float: right;
     margin: 1em 1em 0 0;
+    padding: 0.3em 1em;
+    text-decoration: none;
+    text-transform: lowercase;
 }
 
 /* Theming */
+
+.fl-theme-bw .fl-overviewPanel,
+.fl-theme-wb .fl-overviewPanel,
+.fl-theme-yb .fl-overviewPanel,
+.fl-theme-by .fl-overviewPanel,
+.fl-theme-lgdg .fl-overviewPanel,
+.fl-theme-gd .fl-overviewPanel,
+.fl-theme-gw .fl-overviewPanel,
+.fl-theme-bbr .fl-overviewPanel {
+    border-right: 0.2em solid;
+}
+
+.fl-theme-bw .fl-overviewPanel a,
+.fl-theme-wb .fl-overviewPanel a,
+.fl-theme-yb .fl-overviewPanel a,
+.fl-theme-by .fl-overviewPanel a,
+.fl-theme-lgdg .fl-overviewPanel a,
+.fl-theme-gd .fl-overviewPanel a,
+.fl-theme-gw .fl-overviewPanel a,
+.fl-theme-bbr .fl-overviewPanel a {
+    text-decoration: underline;
+}
+
+.fl-theme-bw .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a,
+.fl-theme-wb .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a,
+.fl-theme-yb .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a,
+.fl-theme-by .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a,
+.fl-theme-lgdg .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a,
+.fl-theme-gd .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a,
+.fl-theme-gw .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a,
+.fl-theme-bbr .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
+    outline: none;
+}
 
 .fl-theme-bw .fl-overviewPanel-hidden .fl-overviewPanel,
 .fl-theme-wb .fl-overviewPanel-hidden .fl-overviewPanel,
 .fl-theme-yb .fl-overviewPanel-hidden .fl-overviewPanel,
 .fl-theme-by .fl-overviewPanel-hidden .fl-overviewPanel,
-.fl-theme-lgdg .fl-overviewPanel-hidden .fl-overviewPanel {
+.fl-theme-lgdg .fl-overviewPanel-hidden .fl-overviewPanel,
+.fl-theme-gd .fl-overviewPanel-hidden .fl-overviewPanel,
+.fl-theme-gw .fl-overviewPanel-hidden .fl-overviewPanel,
+.fl-theme-bbr .fl-overviewPanel-hidden .fl-overviewPanel {
     /* on all themes, hide the right border when "hidden". */
     border-right: 0;
-}
-
-/* black on white */
-.fl-theme-bw .fl-overviewPanel,
-.fl-theme-bw .fl-overviewPanel-body,
-.fl-theme-bw .fl-overviewPanel a,
-.fl-theme-bw .fl-overviewPanel .fl-overviewPanel-links-icon-api,
-.fl-theme-bw .fl-overviewPanel .fl-overviewPanel-links-icon-github,
-.fl-theme-bw .fl-overviewPanel .fl-overviewPanel-links-icon-design {
-    color: #000;
-    background-color: #fff;
-}
-
-.fl-theme-bw .fl-overviewPanel {
-    border-right: 0.2em solid #000;
-}
-
-.fl-theme-bw .fl-overviewPanel .fl-overviewPanel-title .fl-overviewPanel-icon-fluidStar,
-.fl-theme-bw .fl-overviewPanel .fl-overviewPanel-title a,
-.fl-theme-bw .fl-overviewPanel .fl-overviewPanel-title {
-    background-color: #000;
-    color: #fff;
-}
-
-.fl-theme-bw .fl-overviewPanel a {
-    text-decoration: underline;
-}
-
-.fl-theme-bw .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.2em solid #fff;
-}
-
-.fl-theme-bw .fl-overviewPanel *:focus,
-.fl-theme-bw .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus,
-.fl-theme-bw .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus {
-    outline: 0.3em solid #000;
-}
-
-.fl-theme-bw .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.1em solid #000;
-}
-
-.fl-theme-bw .fl-overviewPanel-instructions {
-    border: 0.2em solid #000;
-}
-
-
-/* white on black */
-.fl-theme-wb .fl-overviewPanel,
-.fl-theme-wb .fl-overviewPanel-body,
-.fl-theme-wb .fl-overviewPanel a,
-.fl-theme-wb .fl-overviewPanel .fl-overviewPanel-links-icon-api,
-.fl-theme-wb .fl-overviewPanel .fl-overviewPanel-links-icon-github,
-.fl-theme-wb .fl-overviewPanel .fl-overviewPanel-links-icon-design {
-    color: #fff;
-    background-color: #000;
-}
-
-.fl-theme-wb .fl-overviewPanel {
-    border-right: 0.2em solid #fff;
-}
-
-.fl-theme-wb .fl-overviewPanel .fl-overviewPanel-title .fl-overviewPanel-icon-fluidStar,
-.fl-theme-wb .fl-overviewPanel .fl-overviewPanel-title a,
-.fl-theme-wb .fl-overviewPanel .fl-overviewPanel-title {
-    background-color: #fff;
-    color: #000;
-}
-
-.fl-theme-wb .fl-overviewPanel a {
-    text-decoration: underline;
-}
-
-.fl-theme-wb .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.2em solid #000;
-}
-
-.fl-theme-wb .fl-overviewPanel *:focus,
-.fl-theme-wb .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus,
-.fl-theme-wb .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus {
-    outline: 0.3em solid #fff;
-}
-
-.fl-theme-wb .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.1em solid #fff;
-}
-
-.fl-theme-wb .fl-overviewPanel-instructions {
-    border: 0.2em solid #fff;
-}
-
-
-/* Low contrast: light grey on dark grey */
-.fl-theme-lgdg .fl-overviewPanel,
-.fl-theme-lgdg .fl-overviewPanel-body,
-.fl-theme-lgdg .fl-overviewPanel a,
-.fl-theme-lgdg .fl-overviewPanel .fl-overviewPanel-links-icon-api,
-.fl-theme-lgdg .fl-overviewPanel .fl-overviewPanel-links-icon-github,
-.fl-theme-lgdg .fl-overviewPanel .fl-overviewPanel-links-icon-design {
-    color: #bdbdbb;
-    background-color: #555;
-}
-
-.fl-theme-lgdg .fl-overviewPanel {
-    border-right: 0.2em solid #bdbdbb;
-}
-
-.fl-theme-lgdg .fl-overviewPanel .fl-overviewPanel-title .fl-overviewPanel-icon-fluidStar,
-.fl-theme-lgdg .fl-overviewPanel .fl-overviewPanel-title a,
-.fl-theme-lgdg .fl-overviewPanel .fl-overviewPanel-title {
-    background-color: #bdbdbb;
-    color: #555;
-}
-
-.fl-theme-lgdg .fl-overviewPanel a {
-    text-decoration: underline;
-}
-
-.fl-theme-lgdg .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.2em solid #555;
-}
-
-.fl-theme-lgdg .fl-overviewPanel *:focus,
-.fl-theme-lgdg .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus,
-.fl-theme-lgdg .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus {
-    outline: 0.3em solid #bdbdbb;
-}
-
-.fl-theme-lgdg .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.1em solid #bdbdbb;
-}
-
-.fl-theme-lgdg .fl-overviewPanel-instructions {
-    border: 0.2em solid #bdbdbb;
-}
-
-/* Yellow on Black */
-.fl-theme-yb .fl-overviewPanel,
-.fl-theme-yb .fl-overviewPanel-body,
-.fl-theme-yb .fl-overviewPanel a,
-.fl-theme-yb .fl-overviewPanel .fl-overviewPanel-links-icon-api,
-.fl-theme-yb .fl-overviewPanel .fl-overviewPanel-links-icon-github,
-.fl-theme-yb .fl-overviewPanel .fl-overviewPanel-links-icon-design {
-    color: #FFFF00;
-    background-color: #000;
-}
-
-.fl-theme-yb .fl-overviewPanel {
-    border-right: 0.2em solid #ffcc00;
-}
-
-.fl-theme-yb .fl-overviewPanel .fl-overviewPanel-title .fl-overviewPanel-icon-fluidStar,
-.fl-theme-yb .fl-overviewPanel .fl-overviewPanel-title a,
-.fl-theme-yb .fl-overviewPanel .fl-overviewPanel-title {
-    background-color: #FFFF00;
-    color: #000;
-}
-
-.fl-theme-yb .fl-overviewPanel a {
-    text-decoration: underline;
-}
-
-.fl-theme-yb .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.2em solid #000;
-}
-
-.fl-theme-yb .fl-overviewPanel *:focus,
-.fl-theme-yb .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus,
-.fl-theme-yb .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus {
-    outline: 0.3em solid #FFFF00;
-}
-
-.fl-theme-yb .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.1em solid #FFFF00;
-}
-
-.fl-theme-yb .fl-overviewPanel-instructions {
-    border: 0.2em solid #FFFF00;
-}
-
-/* Black on Yellow */
-.fl-theme-by .fl-overviewPanel,
-.fl-theme-by .fl-overviewPanel-body,
-.fl-theme-by .fl-overviewPanel a,
-.fl-theme-by .fl-overviewPanel .fl-overviewPanel-links-icon-api,
-.fl-theme-by .fl-overviewPanel .fl-overviewPanel-links-icon-github,
-.fl-theme-by .fl-overviewPanel .fl-overviewPanel-links-icon-design {
-    color: #000;
-    background-color: #FFFF00;
-}
-
-.fl-theme-by .fl-overviewPanel {
-    border-right: 0.2em solid #000;
-}
-
-.fl-theme-by .fl-overviewPanel-hidden .fl-overviewPanel {
-    border: none;
-}
-
-.fl-theme-by .fl-overviewPanel .fl-overviewPanel-title .fl-overviewPanel-icon-fluidStar,
-.fl-theme-by .fl-overviewPanel .fl-overviewPanel-title a,
-.fl-theme-by .fl-overviewPanel .fl-overviewPanel-title {
-    background-color: #000;
-    color: #FFFF00;
-}
-
-.fl-theme-by .fl-overviewPanel a {
-    text-decoration: underline;
-}
-
-.fl-theme-by .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.2em solid #FFFF00;
-}
-
-.fl-theme-by .fl-overviewPanel *:focus,
-.fl-theme-by .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus,
-.fl-theme-by .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a:focus {
-    outline: 0.3em solid #000;
-}
-
-.fl-theme-by .fl-overviewPanel-hidden .fl-overviewPanel .fl-overviewPanel-icon-fluidStar a {
-    outline: 0.1em solid #000;
-}
-
-.fl-theme-by .fl-overviewPanel-instructions {
-    border: 0.2em solid #000;
 }

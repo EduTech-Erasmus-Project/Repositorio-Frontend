@@ -14,48 +14,8 @@
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@duetds/date-picker@1.4.0/dist/duet/themes/default.css" />
 
-        <!-- js -->
-        <script type="text/javascript" src="assets/uiOptions/lib/jquery/core/js/jquery.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/lib/jquery/ui/js/jquery-ui.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidDocument.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/jquery.keyboard-a11y.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/Fluid.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidRequests.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidDOMUtilities.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidIoC.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/DataBinding.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/ModelTransformation.js"></script>
-        <script type="text/javascript"
-            src="assets/uiOptions/framework/core/js/ModelTransformationTransforms.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/FluidView.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/core/js/ResourceLoader.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/lib/fastXmlPull/js/fastXmlPull.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/fluidParser.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/fluidRenderer.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/renderer/js/RendererUtilities.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/enhancement/js/ContextAwareness.js"></script>
-        <script type="text/javascript"
-            src="assets/uiOptions/framework/enhancement/js/ProgressiveEnhancement.js"></script>
-
-        <!-- For the IoC Inspector UI -->
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/URLUtilities.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Store.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/components/textfieldSlider/js/TextfieldSlider.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/UIEnhancer.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/PrefsEditor.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Panels.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Enactors.js"></script>
-        <script type="text/javascript"
-            src="assets/uiOptions/framework/preferences/js/SeparatedPanelPrefsEditor.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/components/slidingPanel/js/SlidingPanel.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/components/tableOfContents/js/TableOfContents.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/PrimaryBuilder.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/AuxBuilder.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/StarterSchemas.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/framework/preferences/js/Builder.js"></script>
-        <script type="text/javascript" src="assets/uiOptions/components/uiOptions/js/UIOptions.js"></script>
-
-        <script type="text/javascript" src="assets/uiOptions/components/overviewPanel/js/OverviewPanel.js"></script>
+        <!-- js: Fluid Infusion UI Options 4.8.0 (incluye jQuery 3.7.1) -->
+        <script type="text/javascript" src="assets/uiOptions/js/infusion-uio.js"></script>
         <script type="text/javascript" src="assets/lightbox/lightbox.js"></script>
 
         <!-- Google tag (gtag.js) -->
@@ -140,19 +100,89 @@
             window.addEventListener("scroll", rafSync, { passive: true });
         }
 
+        // Idioma elegido en el selector de la app (LanguageService); cambiarlo recarga la pagina.
+        function resolvePrefsEditorLocale() {
+            try {
+                return JSON.parse(localStorage.getItem("lenguaje")) === "en" ? "en" : "es";
+            } catch (e) {
+                return "es";
+            }
+        }
+
+        /*
+         * Con lazyLoad, Infusion descarga ~25 plantillas/mensajes recien al primer clic,
+         * lo que hace lenta la primera apertura. Se precargan en segundo plano cuando la
+         * pagina queda libre; si el usuario abre el panel mientras la precarga esta en
+         * curso, se espera a que termine en vez de dispararla otra vez.
+         */
+        var lazyShowPanel = fluid.prefs.separatedPanel.lazyLoad.showPanel;
+
+        fluid.prefs.separatedPanel.lazyLoad.showPanel = function (separatedPanel, callback) {
+            if (!separatedPanel.prefsEditor && separatedPanel.roaLazyLoadStarted) {
+                separatedPanel.events.onReady.addListener(function () {
+                    separatedPanel.events.onReady.removeListener("showPanelCallBack");
+                    fluid.invokeLater(callback);
+                }, "showPanelCallBack");
+                return;
+            }
+
+            separatedPanel.roaLazyLoadStarted = true;
+            lazyShowPanel(separatedPanel, callback);
+        };
+
+        function prefetchPrefsEditor(separatedPanel) {
+            if (!separatedPanel || separatedPanel.prefsEditor || separatedPanel.roaLazyLoadStarted) {
+                return;
+            }
+
+            separatedPanel.roaLazyLoadStarted = true;
+            separatedPanel.events.onLazyLoad.fire();
+        }
+
+        function schedulePrefsEditorPrefetch(separatedPanel) {
+            var start = function () {
+                if ("requestIdleCallback" in window) {
+                    window.requestIdleCallback(function () {
+                        prefetchPrefsEditor(separatedPanel);
+                    }, { timeout: 3000 });
+                } else {
+                    window.setTimeout(function () {
+                        prefetchPrefsEditor(separatedPanel);
+                    }, 1500);
+                }
+            };
+
+            if (document.readyState === "complete") {
+                start();
+            } else {
+                window.addEventListener("load", start, { once: true });
+            }
+        }
+
         $(document).ready(function () {
-            fluid.uiOptions.prefsEditor(".flc-prefsEditor-separatedPanel", {
-                lazyLoad: true,
-                terms: {
-                    "templatePrefix": "assets/uiOptions/framework/preferences/html",
-                    "messagePrefix": "assets/uiOptions/framework/preferences/messages"
+            var uiOptions = fluid.uiOptions(".flc-prefsEditor-separatedPanel", {
+                auxiliarySchema: {
+                    defaultLocale: resolvePrefsEditorLocale(),
+                    terms: {
+                        "templatePrefix": "assets/uiOptions/framework/preferences/html",
+                        "messagePrefix": "assets/uiOptions/framework/preferences/messages"
+                    },
+                    "fluid.prefs.tableOfContents": {
+                        enactor: {
+                            "tocTemplate": "assets/uiOptions/components/tableOfContents/html/TableOfContents.html",
+                            "tocMessage": "assets/uiOptions/framework/preferences/messages/tableOfContents-enactor.json",
+                            "ignoreForToC": {
+                                "overviewPanel": ".flc-overviewPanel"
+                            }
+                        }
+                    }
                 },
-                "tocTemplate": "assets/uiOptions/components/tableOfContents/html/TableOfContents.html",
-                "ignoreForToC": {
-                    "overviewPanel": ".flc-overviewPanel"
+                prefsEditorLoader: {
+                    lazyLoad: true
                 }
             });
 
+            schedulePrefsEditorPrefetch(uiOptions.prefsEditorLoader);
             bindPrefsEditorOffsetSync();
             window.setTimeout(bindPrefsEditorOffsetSync, 450);
         });
@@ -160,10 +190,10 @@
 
     <!-- BEGIN markup for Preference Editor -->
     <div class="flc-prefsEditor-separatedPanel fl-prefsEditor-separatedPanel">
-        <!-- This is the div that will contain the Preference Editor component -->
-        <div class="flc-slidingPanel-panel flc-prefsEditor-iframe"></div>
+        <!-- Contenedor donde se renderiza el editor de preferencias -->
+        <div class="flc-slidingPanel-panel"></div>
 
-        <!-- This div is for the sliding panel that shows and hides the Preference Editor controls -->
+        <!-- Barra con los botones que muestran/ocultan el editor de preferencias -->
         <div class="fl-panelBar">
 
             <!-------------------------------Botones de Accesibilidad-------------------------------->

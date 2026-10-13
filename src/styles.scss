@@ -2,6 +2,84 @@
   padding: 0 75px;
 }
 
+/*
+ * Preferencias de visualización (Fluid Infusion 4.x).
+ * Fija el aspecto que tenía la barra/botón con Infusion 2.0 para que la
+ * actualización no cambie la posición, tipografía ni tamaño del botón.
+ */
+@font-face {
+  font-family: 'OpenSans';
+  src: url("./assets/fonts/opensans/OpenSans-Light.ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OpenSans';
+  src: url("./assets/fonts/opensans/OpenSans-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OpenSans';
+  src: url("./assets/fonts/opensans/OpenSans-Semibold.ttf");
+  font-weight: 600;
+  font-style: normal;
+}
+
+.fl-prefsEditor-separatedPanel.fl-prefsEditor-separatedPanel {
+  display: block;
+  background-color: transparent;
+  border-bottom: 0;
+
+  .fl-panelBar {
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    box-shadow: none;
+    color: inherit;
+    font-size: inherit;
+
+    .fl-prefsEditor-buttons {
+      display: block;
+      float: right;
+      width: auto;
+      height: auto;
+      min-height: 2em;
+      line-height: normal;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+  }
+
+  .fl-prefsEditor-showHide,
+  .fl-prefsEditor-reset {
+    flex: none;
+    text-transform: lowercase;
+    text-align: center;
+    font-family: 'OpenSans', "Myriad Pro", Helvetica, Arial, sans-serif;
+    letter-spacing: normal;
+    word-spacing: normal;
+    white-space: normal;
+    overflow: visible;
+    min-height: 0;
+    padding-left: 6px;
+    padding-right: 6px;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    border: 0;
+  }
+
+  .fl-prefsEditor-showHide {
+    min-width: 15em;
+  }
+
+  .fl-prefsEditor-reset {
+    border-right: 1px solid #ccc;
+  }
+}
+
 .fl-prefsEditor-buttons{
   z-index: 50000;
   position: absolute;

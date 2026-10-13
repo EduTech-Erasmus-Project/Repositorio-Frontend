@@ -1,59 +1,25 @@
 /*
-Copyright 2012-2016 OCAD University
-Copyright 2012 Raising the Floor - US
-Copyright 2014-2016 Raising the Floor - International
+Copyright The Infusion copyright holders
+See the AUTHORS.md file at the top-level directory of this distribution and at
+https://github.com/fluid-project/infusion/raw/main/AUTHORS.md.
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
 Licenses.
 
 You may obtain a copy of the ECL 2.0 License and BSD License at
-https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+https://github.com/fluid-project/infusion/raw/main/Infusion-LICENSE.txt
 */
 /* eslint-env node */
-/* global global */
+
 "use strict";
 
 var fs = require("fs"),
     path = require("path"),
     vm = require("vm"),
-    // We use a forked version of this dependency to resolve FLUID-5940
-    // This can be removed once resolve's issue #106 is resolved
     resolve = require("fluid-resolve");
 
-// Version of resolve.sync which does not throw when module is not found
-var resolveModuleSync = function (moduleId, fromPath) {
-    try {
-        return resolve.sync(moduleId, {
-            basedir: fromPath
-        });
-    } catch (e) {
-        return null;
-    }
-};
-
 var moduleBaseDir = path.resolve(__dirname, "../..");
-
-/** Implementation for FLUID-5822 to avoid requirement for dedupe-infusion **/
-
-var upInfusion;
-
-var upPath = path.resolve(__dirname, "../../../../..");
-var upInfusionPath = resolveModuleSync("infusion", upPath);
-if (upInfusionPath) {
-    upInfusion = require(upInfusionPath);
-}
-
-// Fix for FLUID-5940, when Infusion is a dependency of a Node.js project that is located in the
-// root of a filesystem we were resolving to the current version of Infusion. Doing a 'require'
-// on the same version of Infusion results in an empty object.
-if (upInfusion && upInfusion.module) {
-    upInfusion.log("Resolved infusion from path " + __dirname + " to " + upInfusion.module.modules.infusion.baseDir);
-    module.exports = upInfusion;
-    return;
-} else {
-    //console.log("Infusion at path " + moduleBaseDir + " is at top level ");
-}
 
 var getBaseDir = function () {
     return __dirname;
@@ -81,6 +47,7 @@ var context = vm.createContext({
     clearInterval: clearInterval,
     __dirname: __dirname,
     path: path,
+    process: process, // Enable straightforward ContextAwareness check
     require: require
 });
 
@@ -89,8 +56,8 @@ context.window = context;
 /** Load a standard, non-require-aware Fluid framework file into the Fluid context, given a filename
  * relative to this directory (src/module) **/
 
-var loadInContext = function (path) {
-    var fullpath = buildPath(path);
+var loadInContext = function (path, absolute) {
+    var fullpath = absolute ? path : buildPath(path);
     var data = fs.readFileSync(fullpath);
     vm.runInContext(data, context, fullpath);
 };
@@ -118,35 +85,6 @@ fluid.invokeLater = function (func) {
 
 fluid.logObjectRenderChars = 1024;
 
-fluid.onUncaughtException = fluid.makeEventFirer({
-    name: "Global uncaught exception handler"
-});
-
-// This registry of priorities will be removed once the implementation of FLUID-5506 is complete
-fluid.handlerPriorities = {
-    uncaughtException: {
-        log: 100, // high priority - do all logging first
-        logActivity: "after:log",
-        fail: "last"
-    }
-};
-
-process.on("uncaughtException", function onUncaughtException(err) {
-    fluid.onUncaughtException.fire(err);
-});
-
-fluid.logUncaughtException = function (err) {
-    var message = "FATAL ERROR: Uncaught exception: " + err.message;
-    fluid.log(fluid.logLevel.FATAL, message);
-    //console.log(err.stack);
-};
-
-fluid.onUncaughtException.addListener(fluid.logUncaughtException, "log",
-    fluid.handlerPriorities.uncaughtException.log);
-
-fluid.onUncaughtException.addListener(function () {fluid.logActivity();}, "logActivity",
-    fluid.handlerPriorities.uncaughtException.logActivity);
-
 // Convert an argument intended for console.log in the node environment to a readable form (the
 // default action of util.inspect censors at depth 1)
 fluid.renderLoggingArg = function (arg) {
@@ -157,11 +95,19 @@ fluid.renderLoggingArg = function (arg) {
     return togo;
 };
 
-// Monkey-patch the built-in fluid.doLog utility to improve its behaviour within node.js - see FLUID-5475
-fluid.doLog = function (args) {
-    args = fluid.transform(args, fluid.renderLoggingArg);
-    //console.log(args.join(""));
+// Improve the rendering of logged arguments within node.js - see FLUID-5475
+fluid.renderNodeLoggingArgs = function (args) {
+    fluid.each(args, function (arg, i) {
+        args[i] = fluid.renderLoggingArg(arg);
+    });
 };
+
+fluid.doNodeLog = function (args) {
+    console.log(args.join("")); // eslint-disable-line no-console
+};
+
+fluid.loggingEvent.addListener(fluid.doNodeLog, "log");
+fluid.loggingEvent.addListener(fluid.renderNodeLoggingArgs, "renderNodeLoggingArgs", "before:log");
 
 fluid.prepareV8StackTrace = function (err, stack) {
     return stack;
@@ -189,22 +135,95 @@ fluid.getCallerInfo = function (atDepth) {
 
 fluid.loadInContext = loadInContext;
 fluid.loadIncludes = loadIncludes;
-fluid.module.resolveSync = resolveModuleSync;
+
+fluid.testingSupportLoaded = false;
 
 /**
  * Set up testing environment with jqUnit and IoC Test Utils in node.
- * This function will load everything necessary for running node jqUnit.
+ * This function will load the Infusion internal dependencies (QUnit, jqUnit and the IoC Testing Framework) necessary
+ * for running node-jqUnit - the node-jqunit module itself must still be loaded by the user via their own devDependencies.
  */
 fluid.loadTestingSupport = function () {
-    fluid.loadIncludes("devIncludes.json");
+    // Guard against multiple inclusion of QUnit - FLUID-6188
+    if (!fluid.testingSupportLoaded) {
+        fluid.loadIncludes("devIncludes.json");
+        fluid.testingSupportLoaded = true;
+    }
 };
+
+/** Implementation of self-deduplication algorithm for FLUID-5822 **/
+
+// Version of resolve.sync which does not throw when module is not found
+fluid.module.resolveSync = function (moduleId, fromPath) {
+    try {
+        return resolve.sync(moduleId, {
+            basedir: fromPath
+        });
+    } catch (e) {
+        return null;
+    }
+};
+
+// Method 1: Resolve to the highest infusion which is observable through the "pre-inspection" method of looking
+// literally into the filesystem for package.json files which can be successfully loaded
+
+var moduleInfo = fluid.module.modulesToRoot(__dirname);
+
+var highestInfusionIndex = fluid.find(moduleInfo.names, function (name, index) {
+    return name === "infusion" ? index : undefined;
+});
+
+if (highestInfusionIndex !== undefined) {
+    // If this require throws, there is some other undesirable problem with the thing appearing to be an Infusion at
+    // this path which should be reported as an uncaught exception
+    var highestInfusionPath = moduleInfo.paths[highestInfusionIndex];
+    var infusionModule = require(highestInfusionPath);
+    if ("module" in infusionModule && infusionModule.module.modules.infusion.baseDir !== moduleBaseDir) {
+        // eslint-disable-next-line no-console
+        console.log("Pre-inspection from path " + __dirname + " resolved to infusion at higher path " + highestInfusionPath);
+        module.exports = infusionModule;
+        return;
+    }
+}
+
+// Method 2: Resolve to any infusion which is observable to the standard node loader at a path strictly higher than ours
+// TODO: Is this completely subsumed by Method 1?
+
+var upInfusion;
+
+var upPath = path.resolve(__dirname, "../../../../..");
+var upInfusionPath = fluid.module.resolveSync("infusion", upPath);
+if (upInfusionPath) {
+    upInfusion = require(upInfusionPath);
+}
+
+// Fix for FLUID-5940, when Infusion is a dependency of a Node.js project that is located in the
+// root of a filesystem we were resolving to the current version of Infusion. Doing a 'require'
+// on the same version of Infusion results in an empty object since we have not completed our own assignment to
+// module.exports yet
+if (upInfusion && upInfusion.module) {
+    // eslint-disable-next-line no-console
+    console.log("Resolved infusion from path " + __dirname + " to " + upInfusion.module.modules.infusion.baseDir);
+    module.exports = upInfusion;
+    return;
+} else {
+    // eslint-disable-next-line no-console
+    console.log("Infusion at path " + moduleBaseDir + " is at top level ");
+}
+
+// If we reach here without hitting the "return" statements above, we believe ourselves to be the highest resolvable
+// Infusion in the filesystem. If we are wrong, some other Infusion has already registered itself in node's
+// pan-module global registry - if we find it there, we should bail out with a fatal error since corruption will
+// shortly soon result in the grade registry and component tree.
 
 if (global.fluid) {
     var oldPath = global.fluid.module.modules.infusion.baseDir;
     fluid.fail("Error loading infusion - infusion has already been loaded from the path \n\t" + path.resolve(oldPath) +
-        "\n - please delete the duplicate copy which is found at \n\t" + path.resolve(__dirname) +
-        "\n This can be done automatically by running the task \"grunt dedupe-infusion\"");
+        "\n - please delete the duplicate copy which is found at \n\t" + path.resolve(__dirname));
 }
+
+// Pre-inspect any other module (there should be at most one) which is loading at top level so that it is self-resolvable
+// via fluid.require("%other-module") for whatever it is
 
 fluid.module.preInspect();
 
@@ -212,5 +231,48 @@ fluid.module.register("infusion", moduleBaseDir, require);
 
 // Export the fluid object into the pan-module node.js global object
 global.fluid = fluid;
+
+
+/** Registering and instrumenting uncaught exception handler:
+ * Do this after determining that we are top-level Infusion to avoid FLUID-6225
+ */
+process.on("uncaughtException", function onUncaughtException(err) {
+    fluid.onUncaughtException.fire(err);
+});
+
+fluid.onUncaughtException = fluid.makeEventFirer({
+    name: "Global uncaught exception handler"
+});
+
+// This registry of priorities will be removed once the implementation of FLUID-5506 is complete
+fluid.handlerPriorities = {
+    uncaughtException: {
+        log: 100, // high priority - do all logging first
+        logActivity: "after:log",
+        fail: "last"
+    }
+};
+
+fluid.logUncaughtException = function (err) {
+    var message = "FATAL ERROR: Uncaught exception: " + err.message;
+    fluid.log(fluid.logLevel.FATAL, message);
+    console.log(err.stack || "(No error stack)"); // eslint-disable-line no-console
+};
+
+fluid.onUncaughtException.addListener(fluid.logUncaughtException, "log",
+    fluid.handlerPriorities.uncaughtException.log);
+
+fluid.onUncaughtException.addListener(function () {fluid.logActivity();}, "logActivity",
+    fluid.handlerPriorities.uncaughtException.logActivity);
+
+
+// Make sure process exits with error (see FLUID-5920)
+fluid.handleUncaughtException = function () {
+    process.exit(1);
+};
+
+fluid.onUncaughtException.addListener(fluid.handleUncaughtException, "fail",
+    fluid.handlerPriorities.uncaughtException.fail);
+
 
 module.exports = fluid;
