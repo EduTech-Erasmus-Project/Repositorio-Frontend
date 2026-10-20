@@ -139,6 +139,13 @@
     .report-search-input .p-inputtext {
       padding-left: 2.5rem;
     }
+
+    // Filtros de texto (provincia, ciudad, universidad y busqueda) a la altura
+    // de los selectores.
+    .filter-field > .p-inputtext,
+    .report-search-input .p-inputtext {
+      min-height: 44px;
+    }
   }
 
   .report-table {

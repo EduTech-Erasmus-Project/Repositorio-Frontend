@@ -443,6 +443,19 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
+// `app-user-location-fields`: etiquetas como las del perfil e inputs a la
+// altura de `.profile-select` (48px mas el borde).
+:host ::ng-deep app-user-location-fields .profile-static-label {
+  color: #36505e;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+:host ::ng-deep app-user-location-fields .p-inputtext {
+  min-height: 50px;
+  border-radius: 12px;
+}
+
 :host ::ng-deep .profile-select.p-select:hover,
 :host ::ng-deep .profile-select.p-select.p-focus {
   border-color: #3b5b68;

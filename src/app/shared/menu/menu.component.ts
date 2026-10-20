@@ -144,11 +144,6 @@ export class MenuComponent implements OnInit {
       ]),
       this.createRootLinkItem("Reporte", "pi pi-file", ["/admin/report"]),
       this.createRootGroupItem("Configuraciones", "pi pi-cog", "/admin/config", [
-        this.createLeafItem("Países", ["/admin/config/country"]),
-        this.createLeafItem("Provincias", ["/admin/config/province"]),
-        this.createLeafItem("Ciudades", ["/admin/config/city"]),
-        this.createLeafItem("Universidades", ["/admin/config/university"]),
-        this.createLeafItem("Campus", ["/admin/config/campus"]),
         this.createLeafItem("Correos", ["/admin/config/domain"]),
         this.createLeafItem("Servidor de correo", ["/admin/config/server"])
       ])

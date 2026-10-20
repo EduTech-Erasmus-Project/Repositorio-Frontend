@@ -202,11 +202,13 @@ export interface ManagedUserSummary {
     }>;
   } | null;
   administrator?: AdministratorProfileSummary | null;
-  country?: { id?: number; name?: string } | null;
-  province?: { id?: number; name?: string } | null;
-  city?: { id?: number; name?: string } | number | null;
-  university?: { id?: number; name?: string } | number | null;
-  campus?: { id?: number; name?: string } | number | null;
+  /** Ubicacion de docentes y expertos (ver `UserLocation`). */
+  country_code?: string;
+  country_name?: string;
+  province_code?: string;
+  province_name?: string;
+  city_name?: string;
+  university_name?: string;
   learning_objects?: Array<{
     general_title?: string;
     learning_object_file?: { url?: string };

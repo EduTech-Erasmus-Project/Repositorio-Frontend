@@ -229,9 +229,6 @@
     "teacher": "Teacher",
     "collaboraingExpert": "Collaborating Expert",
     "profession": "Profession",
-    "city": "City",
-    "university": "University",
-    "campus": "Campus",
     "select": "Select...",
     "expertLevel": "Expert Level",
     "high": "High",
@@ -275,6 +272,32 @@
     "verificationEmailTitle": "Done! Check your email.",
     "verificationEmailDescription": "This action requires verification before activating your account. Follow the link sent to your email to continue.",
     "submitting": "Registering..."
+  },
+  "location": {
+    "country": "Country",
+    "province": "Province / State",
+    "city": "City",
+    "otherCity": "Type your city",
+    "otherCityOption": "Other city",
+    "university": "University",
+    "placeholders": {
+      "country": "Choose a country",
+      "province": "Choose a province",
+      "city": "Choose a city",
+      "needsCountry": "Country first",
+      "needsProvince": "Province first",
+      "otherCity": "Name of your city",
+      "university": "Name of your university"
+    },
+    "noResults": "No results",
+    "cityNotListed": "Not listed: choose \"Other city\"",
+    "savedProvince": "Registered province: {{name}}. It is kept unless you choose another one.",
+    "loading": "Loading...",
+    "retry": "Retry",
+    "errors": {
+      "countriesUnavailable": "The country list could not be loaded.",
+      "maxLength": "Maximum {{max}} characters"
+    }
   },
   "validation": {
     "obligatoryCamp": "Obligatory field",
@@ -606,7 +629,7 @@
     "studentProfileTitle": "Student profile",
     "studentProfileCopy": "Define your education level, interests, and accessibility preferences.",
     "institutionalAffiliationTitle": "Institutional affiliation",
-    "institutionalAffiliationCopy": "Keep your city, university, and campus up to date.",
+    "institutionalAffiliationCopy": "Keep your country, province, city, and university up to date.",
     "teacherInformationTitle": "Teacher information",
     "expertProfileTitle": "Expert profile",
     "expertProfileCopy": "Complete your level, website, and academic profile.",
@@ -620,9 +643,6 @@
     "saving": "Saving...",
     "placeholders": {
       "educationLevel": "Select an education level",
-      "city": "Select a city",
-      "university": "Select a university",
-      "campus": "Select a campus",
       "profession": "Select a profession"
     },
     "datePicker": {

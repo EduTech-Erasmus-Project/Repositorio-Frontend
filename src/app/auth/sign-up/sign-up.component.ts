@@ -20,16 +20,20 @@ import { MessageService } from "primeng/api";
 import * as moment from "moment";
 import { LanguageService } from "src/app/services/language.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
-import { AddressService } from "src/app/admin/services/address.service";
-import { City } from "src/app/core/interfaces/city";
-import { University } from "src/app/core/interfaces/university";
-import { Campus } from "src/app/core/interfaces/campus";
 import { EducationLevel } from "src/app/core/interfaces/EducationLevel";
 import { KnowledgeArea } from "src/app/core/interfaces/KnowledgeArea";
 import { focusFirstInvalidControl } from "src/app/core/utils/accessibility-focus";
-import { coerceEventRelationId } from "src/app/core/utils/coercion.utils";
 import { translateInstant } from "src/app/core/utils/i18n.utils";
 import { UserService } from "src/app/services/user.service";
+import { UserLocation } from "src/app/core/interfaces/user-location";
+import {
+  UserLocationErrors,
+  getLocationErrorMessage,
+} from "src/app/core/utils/location-errors.utils";
+import {
+  PERSON_NAME_MAX_LENGTH,
+  PERSON_NAME_PATTERN,
+} from "src/app/core/utils/person-name.utils";
 import {
   PreferenceAreaGroupResponse,
   PreferenceAreaOptionResponse,
@@ -77,9 +81,7 @@ interface RegisterFormControls {
   disability?: FormControl<DisabilityValue | null>;
   typeDisability?: FormControl<string | null>;
   profession?: FormControl<number | null>;
-  city?: FormControl<number | null>;
-  university?: FormControl<number | null>;
-  campus?: FormControl<number | null>;
+  location?: FormControl<UserLocation | null>;
   levelExpertF?: FormControl<string | null>;
   url?: FormControl<string | null>;
   academic?: FormControl<string | null>;
@@ -90,7 +92,8 @@ interface RegisterFormControls {
  *
  * Responsabilidades:
  * - construir el formulario segun el rol solicitado en la URL
- * - cargar catalogos base y relaciones institucionales
+ * - cargar catalogos base; la ubicacion de docentes y expertos la resuelve
+ *   `app-user-location-fields` con el catalogo de paises
  * - mapear el formulario al payload esperado por `user-management`
  * - advertir localmente cuando el correo no coincide con la politica institucional
  */
@@ -110,7 +113,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
   public angForm!: FormGroup<RegisterFormControls>;
   public show: boolean = false;
   private subscribes: Subscription[] = [];
-  private institutionalSubscriptions: Subscription[] = [];
   public validateRole: boolean = false;
   public showBackendEmailError = false;
   public showDuplicatedEmailError = false;
@@ -172,9 +174,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
   public showVerificationEmailMessage: boolean = false;
   public termsDialogVisible = false;
   public registerErrorMessage = "";
-  public cities: City[] = [];
-  public universities: University[] = [];
-  public campusArray: Campus[] = [];
   private emailDomains: EmailDomainResponse[] = [];
   private roleOptionCode = "";
   private emailDomainRuleType: EmailDomainRuleType = "";
@@ -189,7 +188,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private languageService: LanguageService,
     private breadcrumbService: BreadcrumbService,
-    private _addressService: AddressService,
     private userService: UserService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -206,7 +204,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     this.subscribes.forEach((subscription) => {
       subscription.unsubscribe();
     });
-    this.clearInstitutionalSubscriptions();
   }
 
   ngOnInit(): void {
@@ -318,14 +315,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
     this.angForm = new FormGroup<RegisterFormControls>({
       name: new FormControl<string | null>(null, [
         Validators.required,
-        Validators.pattern("[a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“Ãšs ]+"),
-        Validators.maxLength(50),
+        Validators.pattern(PERSON_NAME_PATTERN),
+        Validators.maxLength(PERSON_NAME_MAX_LENGTH),
         Validators.minLength(3),
       ]),
       lastname: new FormControl<string | null>(null, [
         Validators.required,
-        Validators.pattern("[a-zA-ZÃ±Ã‘Ã¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“Ãšs ]+"),
-        Validators.maxLength(50),
+        Validators.pattern(PERSON_NAME_PATTERN),
+        Validators.maxLength(PERSON_NAME_MAX_LENGTH),
         Validators.minLength(3),
       ]),
       check: new FormControl<boolean | null>(this.typeRegister == "student"),
@@ -361,8 +358,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     } else {
       this.removeExpertControls();
     }
-
-    this.setupInstitutionalSubscriptions();
   }
 
   private disable_Buttons_type_member(type1: RoleToggleControl, type2: RoleToggleControl) {
@@ -425,20 +420,22 @@ export class SignUpComponent implements OnInit, OnDestroy {
       "profession",
       new FormControl<number | null>(null, { validators: [Validators.required] })
     );
-    this.angForm.addControl(
-      "city",
-      new FormControl<number | null>(null, { validators: [Validators.required] })
-    );
-    this.angForm.addControl(
-      "university",
-      new FormControl<number | null>(null, { validators: [Validators.required] })
-    );
-    this.angForm.addControl(
-      "campus",
-      new FormControl<number | null>(null, { validators: [Validators.required] })
-    );
+    this.addLocationControl();
     // this.removeEmail();
     //   this.addEmailPathTeacherAndExpert();
+  }
+
+  /**
+   * Ubicacion de docentes y expertos: un solo control con los 6 campos de texto
+   * que espera el backend. `app-user-location-fields` valida cada campo.
+   */
+  private addLocationControl() {
+    if (!this.angForm.contains("location")) {
+      this.angForm.addControl(
+        "location",
+        new FormControl<UserLocation | null>(null, { validators: [Validators.required] })
+      );
+    }
   }
 
   removeControlsTeacher() {
@@ -446,9 +443,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       //this.dropDowProfession.nativeElement.remove();
       this.angForm.removeControl("profession");
       if (!this.checkEx) {
-        this.angForm.removeControl("city");
-        this.angForm.removeControl("university");
-        this.angForm.removeControl("campus");
+        this.angForm.removeControl("location");
       }
     } catch (error) {
       console.log(error);
@@ -470,18 +465,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       "academic",
       new FormControl<string | null>(null, { validators: [Validators.required] })
     );
-    this.angForm.addControl(
-      "city",
-      new FormControl<number | null>(null, { validators: [Validators.required] })
-    );
-    this.angForm.addControl(
-      "university",
-      new FormControl<number | null>(null, { validators: [Validators.required] })
-    );
-    this.angForm.addControl(
-      "campus",
-      new FormControl<number | null>(null, { validators: [Validators.required] })
-    );
+    this.addLocationControl();
     //  this.removeEmail();
     //  this.addEmailPathTeacherAndExpert();
   }
@@ -491,9 +475,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     this.angForm.removeControl("url");
     this.angForm.removeControl("academic");
     if (!this.checkTe) {
-      this.angForm.removeControl("city");
-      this.angForm.removeControl("university");
-      this.angForm.removeControl("campus");
+      this.angForm.removeControl("location");
     }
   }
 
@@ -507,13 +489,11 @@ export class SignUpComponent implements OnInit, OnDestroy {
         educationLevels,
         preferences,
         interestAreas,
-        cities,
       ] = await Promise.all([
         firstValueFrom(this.searchService.getProfession()),
         firstValueFrom(this.searchService.getLevelEducation()),
         firstValueFrom(this.searchService.getPreferencesArea()),
         firstValueFrom(this.searchService.getInterestAreas()),
-        firstValueFrom(this._addressService.getCitiesActive()),
       ]);
 
       this.profesions = professions.map((item) => ({
@@ -539,14 +519,11 @@ export class SignUpComponent implements OnInit, OnDestroy {
         id: item.id,
         name: item.name,
       }));
-
-      this.cities = Array.isArray(cities) ? cities : [];
     } catch (error) {
       this.profesions = [];
       this.levelsEdications = [];
       this.preferenceAreas = [];
       this.areasInterestings = [];
-      this.cities = [];
     } finally {
       this.cdr.detectChanges();
     }
@@ -731,14 +708,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
   get profession() {
     return this.angForm.get("profession");
   }
-  get city() {
-    return this.angForm.get("city");
-  }
-  get university() {
-    return this.angForm.get("university");
-  }
-  get campus() {
-    return this.angForm.get("campus");
+  get location() {
+    return this.angForm.get("location");
   }
   get terms() {
     return this.angForm.get("terms");
@@ -804,10 +775,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
       this.roleOptionCode = "TEACHER";
       void this.loadEmailDomainRules();
-      this.setupInstitutionalSubscriptions();
     } else {
       this.removeControlsTeacher();
-      this.setupInstitutionalSubscriptions();
       this.angForm.get("check").enable();
       this.angForm.get("checkEx").enable();
     }
@@ -823,10 +792,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
       this.roleOptionCode = "EXPERT";
       void this.loadEmailDomainRules();
-      this.setupInstitutionalSubscriptions();
     } else {
       this.removeExpertControls();
-      this.setupInstitutionalSubscriptions();
       this.angForm.get("checkTe").enable();
       this.angForm.get("check").enable();
     }
@@ -915,7 +882,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         error?: {
           email?: string[];
           message?: string;
-        };
+        } & UserLocationErrors;
         message?: string;
       };
 
@@ -930,6 +897,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
         );
         this.showError(messageDes);
         this.showDuplicatedEmailError = true;
+      } else if (getLocationErrorMessage(this.languageService.translate, httpError?.error)) {
+        this.showError(getLocationErrorMessage(this.languageService.translate, httpError?.error));
       } else {
         this.showError(
           httpError?.error?.message ||
@@ -1002,20 +971,11 @@ export class SignUpComponent implements OnInit, OnDestroy {
           : [];
     }
 
-    if (selectedRoles.includes("teacher") || selectedRoles.includes("expert")) {
-      userPayload.city =
-        formValue.city !== null && formValue.city !== undefined
-          ? Number(formValue.city)
-          : null;
-      userPayload.university =
-        formValue.university !== null &&
-        formValue.university !== undefined
-          ? Number(formValue.university)
-          : null;
-      userPayload.campus =
-        formValue.campus !== null && formValue.campus !== undefined
-          ? Number(formValue.campus)
-          : null;
+    if (
+      (selectedRoles.includes("teacher") || selectedRoles.includes("expert")) &&
+      formValue.location
+    ) {
+      Object.assign(userPayload, formValue.location);
     }
     if (selectedRoles.includes("expert")) {
       userPayload.expert_level = (formValue.levelExpertF as string) || "";
@@ -1051,9 +1011,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
     return roles;
   }
-  private extractSelectValue(evt: unknown): number | null {
-    return coerceEventRelationId(evt);
-  }
 
   private parseRegisterType(value: unknown): RegisterRole | null {
     if (value === "expert" || value === "student" || value === "teacher") {
@@ -1074,40 +1031,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
       default:
         return "";
     }
-  }
-
-  /**
-   * Sincroniza las dependencias institucionales del formulario:
-   * ciudad -> universidades y universidad -> campus.
-   */
-  private setupInstitutionalSubscriptions() {
-    this.clearInstitutionalSubscriptions();
-
-    const cityControl = this.angForm?.get("city");
-    const universityControl = this.angForm?.get("university");
-
-    if (cityControl) {
-      this.institutionalSubscriptions.push(
-        cityControl.valueChanges.subscribe((value) => {
-          void this.onChangeCity(value);
-        })
-      );
-    }
-
-    if (universityControl) {
-      this.institutionalSubscriptions.push(
-        universityControl.valueChanges.subscribe((value) => {
-          void this.onChangeUniversity(value);
-        })
-      );
-    }
-  }
-
-  private clearInstitutionalSubscriptions() {
-    this.institutionalSubscriptions.forEach((subscription) =>
-      subscription.unsubscribe()
-    );
-    this.institutionalSubscriptions = [];
   }
 
   //Generamos la consulta para obtener el mensaje.
@@ -1185,59 +1108,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     });
   }
 
-  async onChangeCity(evt) {
-    try {
-      const cityId = this.extractSelectValue(evt);
-      if (this.angForm.controls["city"]?.value !== cityId) {
-        this.angForm.controls["city"]?.setValue(cityId, { emitEvent: false });
-      }
-      this.universities = [];
-      this.campusArray = [];
-      this.angForm.controls["university"]?.setValue(null);
-      this.angForm.controls["campus"]?.setValue(null);
-
-      if (cityId == null) {
-        this.cdr.detectChanges();
-        return;
-      }
-
-      const res = await firstValueFrom(
-        this._addressService.getUniversitiesByCityActive(cityId)
-      );
-      this.universities = res;
-    } catch (error) {
-      this.universities = [];
-    } finally {
-      this.cdr.detectChanges();
-    }
-  }
-
-  async onChangeUniversity(evt) {
-    try {
-      const universityId = this.extractSelectValue(evt);
-      if (this.angForm.controls["university"]?.value !== universityId) {
-        this.angForm.controls["university"]?.setValue(universityId, {
-          emitEvent: false,
-        });
-      }
-      this.campusArray = [];
-      this.angForm.controls["campus"]?.setValue(null);
-
-      if (universityId == null) {
-        this.cdr.detectChanges();
-        return;
-      }
-
-      const res = await firstValueFrom(
-        this.loadCampusByUniversityAndCity(universityId)
-      );
-      this.campusArray = res;
-    } catch (error) {
-      this.campusArray = [];
-    } finally {
-      this.cdr.detectChanges();
-    }
-  }
 
   private focusInvalidControl() {
     setTimeout(() => {
@@ -1249,14 +1119,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     if (!this.destroyed) {
       this.cdr.detectChanges();
     }
-  }
-
-  private loadCampusByUniversityAndCity(universityId: number) {
-    const cityId = this.extractSelectValue(this.angForm.controls["city"]?.value);
-
-    return cityId
-      ? this._addressService.getCampusByUniversityActive(universityId, cityId)
-      : this._addressService.getCampusByUniversityActive(universityId);
   }
 }
 

@@ -36,16 +36,6 @@ import { LearningObjectQualificateExpertListComponent } from './components/learn
 import { ViewExpertEvaluationsAdminComponent } from './components/view-expert-evaluations-admin/view-expert-evaluations-admin.component';
 import { ReportComponent } from './components/report/report.component';
 import { MetadataQuestionListComponent } from './components/metadata-question-list/metadata-question-create-list.component';
-import { CountriesListComponent } from './components/countries-list/countries-list.component';
-import { CountriesFormComponent } from './components/countries-form/countries-form.component';
-import { ProvincesListComponent } from './components/provinces-list/provinces-list.component';
-import { ProvincesFormComponent } from './components/provinces-form/provinces-form.component';
-import { CitiesListComponent } from './components/cities-list/cities-list.component';
-import { CitiesFormComponent } from './components/cities-form/cities-form.component';
-import { UniversityListComponent } from './components/university-list/university-list.component';
-import { UniversityFormComponent } from './components/university-form/university-form.component';
-import { CampusListComponent } from './components/campus-list/campus-list.component';
-import { CampusFormComponent } from './components/campus-form/campus-form.component';
 import { EmailDomainsListComponent } from './components/email-domains-list/email-domains-list.component';
 import { EmailDomainsFormComponent } from './components/email-domains-form/email-domains-form.component';
 import { EmailServerFormComponent } from './components/email-server-form/email-server-form.component';
@@ -89,16 +79,6 @@ import { IframeIntegratedMenuComponent } from "../public/components/iframe-integ
         ViewExpertEvaluationsAdminComponent,
         ReportComponent,
         MetadataQuestionListComponent,
-        CountriesListComponent,
-        CountriesFormComponent,
-        ProvincesListComponent,
-        ProvincesFormComponent,
-        CitiesListComponent,
-        CitiesFormComponent,
-        UniversityListComponent,
-        UniversityFormComponent,
-        CampusListComponent,
-        CampusFormComponent,
         EmailDomainsListComponent,
         EmailDomainsFormComponent,
         EmailServerFormComponent,

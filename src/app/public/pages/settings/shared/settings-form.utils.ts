@@ -1,4 +1,10 @@
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import {
+  PERSON_NAME_MAX_LENGTH,
+  PERSON_NAME_PATTERN,
+} from "src/app/core/utils/person-name.utils";
+
+export { PERSON_NAME_PATTERN };
 
 export type SelectOption = { name?: string; code?: number | string | null };
 export type CatalogLike = {
@@ -8,7 +14,6 @@ export type CatalogLike = {
   description?: string;
 };
 
-export const PERSON_NAME_PATTERN = "[a-zA-ZñÑáéíóúÁÉÍÓÚs ]+";
 export const PASSWORD_STRENGTH_PATTERN =
   "(?=\\D*\\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{8,30}";
 export const DEFAULT_AGE_RANGE: [number, number] = [5, 100];
@@ -17,7 +22,7 @@ export const OA_TITLE_MAX_LENGTH = 180;
 export const PERSON_NAME_VALIDATORS = [
   Validators.required,
   Validators.pattern(PERSON_NAME_PATTERN),
-  Validators.maxLength(20),
+  Validators.maxLength(PERSON_NAME_MAX_LENGTH),
   Validators.minLength(3),
 ];
 

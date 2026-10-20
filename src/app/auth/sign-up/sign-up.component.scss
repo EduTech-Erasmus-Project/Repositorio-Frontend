@@ -396,6 +396,19 @@
 }
 
 :host ::ng-deep {
+  // Campos de `app-user-location-fields`, con el mismo estilo del resto del formulario.
+  .forms .signup-location-label {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: #4c566a;
+    font-weight: 500;
+  }
+
+  .forms .signup-location-select {
+    width: 100%;
+    min-height: 42px;
+  }
+
   .forms .p-inputtext,
   .forms .p-password,
   .forms .class-dropdown-i,

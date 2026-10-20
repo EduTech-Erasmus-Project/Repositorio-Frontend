@@ -297,82 +297,12 @@
                 @if ( checkTe || checkEx) {
                   <div class="p-grid animate__animated animate__fadeIn position-relative"
                     >
-                    <div class="p-col-12 p-md-6 p-lg-6">
-                      <div class="p-field p-fluid">
-                        <label for="city">{{'register.city'|translate}}*</label>
-                        <select
-                          id="city"
-                          class="class-dropdown-i"
-                          formControlName="city"
-                          [ngClass]="{'ng-dirty ng-invalid':city?.invalid && (city.dirty || city.touched)}">
-                          <option [ngValue]="null" disabled>{{'register.chooseOption'|translate}}</option>
-                          @for (item of cities; track item.id) {
-                            <option [ngValue]="item.id">{{item.name}}</option>
-                          }
-                        </select>
-                        @if (city?.invalid && (city.dirty || city.touched)) {
-                          <div>
-                            @if (city.errors.required) {
-                              <small id="profession " class="p-error"
-                                >*{{'validation.obligatoryCamp'|
-                                translate}}*
-                              </small>
-                            }
-                          </div>
-                        }
-                      </div>
-                    </div>
-                    <div class="p-col-12 p-md-6 p-lg-6">
-                      <div class="p-field p-fluid">
-                        <label for="university">{{'register.university'|translate}}*</label>
-                        <select
-                          id="university"
-                          class="class-dropdown-i"
-                          formControlName="university"
-                          [disabled]="!universities?.length"
-                          [ngClass]="{'ng-dirty ng-invalid':university?.invalid && (university.dirty || university.touched)}">
-                          <option [ngValue]="null" disabled>{{'register.chooseOption'|translate}}</option>
-                          @for (item of universities; track item.id) {
-                            <option [ngValue]="item.id">{{item.name}}</option>
-                          }
-                        </select>
-                        @if (university?.invalid && (university.dirty || university.touched)) {
-                          <div
-                            >
-                            @if (university.errors.required) {
-                              <small id="profession " class="p-error"
-                                >*{{'validation.obligatoryCamp'|
-                              translate}}*</small>
-                            }
-                          </div>
-                        }
-                      </div>
-                    </div>
-                    <div class="p-col-12 p-md-6 p-lg-6">
-                      <div class="p-field p-fluid">
-                        <label for="campus">{{'register.campus'|translate}}*</label>
-                        <select
-                          id="campus"
-                          class="class-dropdown-i"
-                          formControlName="campus"
-                          [disabled]="!campusArray?.length"
-                          [ngClass]="{'ng-dirty ng-invalid':campus?.invalid && (campus.dirty || campus.touched)}">
-                          <option [ngValue]="null" disabled>{{'register.chooseOption'|translate}}</option>
-                          @for (item of campusArray; track item.id) {
-                            <option [ngValue]="item.id">{{item.name}}</option>
-                          }
-                        </select>
-                        @if (campus?.invalid && (campus.dirty || campus.touched)) {
-                          <div>
-                            @if (campus.errors.required) {
-                              <small id="profession " class="p-error"
-                                >*{{'validation.obligatoryCamp'|
-                              translate}}*</small>
-                            }
-                          </div>
-                        }
-                      </div>
-                    </div>
+                    <app-user-location-fields
+                      formControlName="location"
+                      idPrefix="register-location"
+                      labelClass="signup-location-label"
+                      selectStyleClass="signup-location-select"
+                    ></app-user-location-fields>
                     @if (checkEx) {
                       <div class="p-col-12 p-md-6 p-lg-6">
                         <div class="p-field p-fluid">

@@ -230,9 +230,6 @@
     "teacher": "Docente",
     "collaboraingExpert": "Experto Colaborador",
     "profession": "Profesión",
-    "city": "Ciudad",
-    "university": "Universidad",
-    "campus": "Campus",
     "select": "Seleccione ...",
     "expertLevel": "Nivel de experto",
     "high": "Alto",
@@ -276,6 +273,32 @@
     "verificationEmailTitle": "Listo! Revisa tu correo electrónico.",
     "verificationEmailDescription": "Esta acción requiere una verificación antes de activar tu cuenta. Sigue el enlace enviado a tu correo para continuar.",
     "submitting": "Registrando..."
+  },
+  "location": {
+    "country": "País",
+    "province": "Provincia / Estado",
+    "city": "Ciudad",
+    "otherCity": "Escribe tu ciudad",
+    "otherCityOption": "Otra ciudad",
+    "university": "Universidad",
+    "placeholders": {
+      "country": "Elige un país",
+      "province": "Elige una provincia",
+      "city": "Elige una ciudad",
+      "needsCountry": "Primero el país",
+      "needsProvince": "Primero la provincia",
+      "otherCity": "Nombre de tu ciudad",
+      "university": "Nombre de tu universidad"
+    },
+    "noResults": "Sin resultados",
+    "cityNotListed": "No está en la lista: elige «Otra ciudad»",
+    "savedProvince": "Provincia registrada: {{name}}. Se conserva mientras no elijas otra.",
+    "loading": "Cargando...",
+    "retry": "Reintentar",
+    "errors": {
+      "countriesUnavailable": "No se pudo cargar la lista de países.",
+      "maxLength": "Máximo {{max}} caracteres"
+    }
   },
   "validation": {
     "obligatoryCamp": "Campo obligatorio",
@@ -608,7 +631,7 @@
     "studentProfileTitle": "Perfil de estudiante",
     "studentProfileCopy": "Define tu nivel educativo, intereses y preferencias de accesibilidad.",
     "institutionalAffiliationTitle": "Afiliación institucional",
-    "institutionalAffiliationCopy": "Mantiene actualizada tu ciudad, universidad y campus.",
+    "institutionalAffiliationCopy": "Mantén actualizado tu país, provincia, ciudad y universidad.",
     "teacherInformationTitle": "Información docente",
     "expertProfileTitle": "Perfil experto",
     "expertProfileCopy": "Completa tu nivel, sitio web y perfil académico.",
@@ -622,9 +645,6 @@
     "saving": "Guardando...",
     "placeholders": {
       "educationLevel": "Seleccione un nivel educativo",
-      "city": "Seleccione una ciudad",
-      "university": "Seleccione una universidad",
-      "campus": "Seleccione un campus",
       "profession": "Seleccione una profesión"
     },
     "datePicker": {
