@@ -22,7 +22,12 @@
             "assets": [
               "src/favicon.ico",
               "src/upload.php",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*.json",
+                "input": "node_modules/@countrystatecity/countries-browser/dist/data",
+                "output": "assets/csc/data"
+              }
             ],
             "styles": [
               "src/assets/theme/blue/theme-light.css",

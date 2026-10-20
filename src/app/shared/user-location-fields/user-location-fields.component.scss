@@ -1,0 +1,38 @@
+// Las columnas participan directamente del `p-grid` del formulario que lo usa.
+:host {
+  display: contents;
+}
+
+// Etiqueta arriba y control a todo el ancho, sin depender de los estilos del
+// formulario que lo usa (sus reglas no llegan aqui por la encapsulacion).
+.p-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.location-label {
+  margin-bottom: 0.45rem;
+}
+
+.location-hint {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--text-color-secondary, #6c757d);
+}
+
+// Separa "Escribe tu ciudad" del selector cuando se elige "Otra ciudad".
+.location-other-city {
+  margin-top: 0.75rem;
+}
+
+.location-retry {
+  margin-left: 0.25rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}

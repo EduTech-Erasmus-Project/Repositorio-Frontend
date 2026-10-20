@@ -448,3 +448,29 @@
     }
   }
 }
+
+// Paneles de `app-user-location-fields`. PrimeNG pone al panel un `min-width`
+// igual al campo; con `width: 0` queda siempre de ese ancho y no cambia al
+// filtrar. Los nombres largos pasan a la siguiente linea, salvo en las listas
+// con scroll virtual (alto fijo por opcion), donde se recortan.
+.p-overlay:has(> * > .p-overlay-content > .location-select-panel) {
+  width: 0;
+}
+
+.location-select-panel {
+  .p-select-option {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  // El contenido de la lista virtual toma el ancho de la opcion mas larga.
+  .p-virtualscroller-content {
+    width: 100%;
+  }
+
+  .p-virtualscroller .p-select-option {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
