@@ -74,6 +74,11 @@ const routes: Routes = [
         },
       },
       {
+        path: "author",
+        loadChildren: () =>
+          import("./pages/author/author.module").then((m) => m.AuthorModule),
+      },
+      {
         path: "contact",
         loadChildren: () =>
           import("./pages/contact/contact.module").then((m) => m.ContactModule),

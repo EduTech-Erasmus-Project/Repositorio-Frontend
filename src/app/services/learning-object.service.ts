@@ -26,7 +26,6 @@ import { normalizeMultilineMessage } from "../core/utils/multiline-message.utils
 
 const baseUrl = environment.baseUrl;
 const baseUrlOer = environment.oerUrl;
-const INTERACTION_REFERENCE_BOOTSTRAP_KEY = "@-rcxionqt";
 @Injectable({
   providedIn: "root",
 })
@@ -149,12 +148,15 @@ export class LearningObjectService {
     return this.http.get<LearningObjectInteractionResponse>(`${baseUrl}/learning-objects/liked/${id}`);
   }
 
-  downloadCreateCount(data: Record<string, unknown>){
-    return this.http.post<LearningObjectInteractionResponse[]>(`${baseUrl}/learning-objects/downloaded`, data);
-  }
-
-  downloadUpdateCount(data: Record<string, unknown>, learningObjectId: number){
-    return this.http.put<LearningObjectInteractionResponse[]>(`${baseUrl}/learning-objects/downloaded/${learningObjectId}`, data);
+  /**
+   * Registra una descarga del usuario. El backend suma 1 si la referencia es
+   * valida y no se uso hoy para este OA; crea la fila si no existe.
+   */
+  registerDownload(learningObjectId: number, reference: string | null) {
+    return this.http.put<LearningObjectInteractionResponse[]>(
+      `${baseUrl}/learning-objects/downloaded/${learningObjectId}`,
+      reference ? { reference } : {}
+    );
   }
 
   getdownloadCount(learningObjectId: number){
@@ -162,12 +164,15 @@ export class LearningObjectService {
   }
 
 
- viewedCreateCount(data: Record<string, unknown>){
-    return this.http.post<LearningObjectViewCountResponse>(`${baseUrl}/learning-objects/viewed`, data);
-  }
-
-  viewedUpdateCount(data: Record<string, unknown>, learningObjectId: number){
-    return this.http.put<LearningObjectViewCountResponse>(`${baseUrl}/learning-objects/viewed/${learningObjectId}`, data);
+  /**
+   * Registra una vista y devuelve el total. Mismas reglas que las descargas;
+   * crea el contador si el OA aun no tiene.
+   */
+  registerView(learningObjectId: number, reference: string | null) {
+    return this.http.put<LearningObjectViewCountResponse[]>(
+      `${baseUrl}/learning-objects/viewed/${learningObjectId}`,
+      reference ? { reference } : {}
+    );
   }
 
   getViewedCount(learningObjectId: number){
@@ -335,16 +340,4 @@ export class LearningObjectService {
   public getLearningObjectsMostLiked(){
     return this.http.get<ObjectLearning[]>(`${baseUrl}/learning-objects/most-liked/`);
   }
-
-
-  /**
-   * Solicita la referencia anónima usada para contabilizar interacciones.
-   */
-  public getReferenceUserView(){
-    const data = {
-      key_ref : INTERACTION_REFERENCE_BOOTSTRAP_KEY
-    }
-    return this.http.post<ApiReferenceResponse>(`${baseUrl}/interaction-ref/`, data);
-  }
-
 }

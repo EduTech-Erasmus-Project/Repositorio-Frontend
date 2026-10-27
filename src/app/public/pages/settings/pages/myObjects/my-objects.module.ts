@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 
 import { MyObjectsRoutingModule } from './my-objects-routing.module';
 import { MyObjectsComponent } from './my-objects.component';
+import { CompleteProfileNoticeComponent } from './complete-profile-notice/complete-profile-notice.component';
 import { SharedModule } from '../../../../../shared/shared.module';
 import { ComponentsModule } from 'src/app/public/components/components.module';
 
 
 @NgModule({
-  declarations: [MyObjectsComponent],
+  declarations: [MyObjectsComponent, CompleteProfileNoticeComponent],
   imports: [
     CommonModule,
     MyObjectsRoutingModule,

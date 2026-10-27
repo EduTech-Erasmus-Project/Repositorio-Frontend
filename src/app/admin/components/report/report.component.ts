@@ -5,12 +5,12 @@ import Swal from "sweetalert2";
 import { getHttpErrorMessage } from "src/app/core/utils/http-error.utils";
 import { UserService } from "../../services/user.service";
 import * as moment from "moment";
-import { AddressService } from "../../services/address.service";
-import { University } from "src/app/core/interfaces/university";
-import { Campus } from "src/app/core/interfaces/campus";
 import * as XLSX from "xlsx";
-import { City } from "src/app/core/interfaces/city";
-import { firstValueFrom, forkJoin } from "rxjs";
+import { firstValueFrom } from "rxjs";
+import {
+  LocationCatalogService,
+  getCountryDisplayName,
+} from "src/app/services/location-catalog.service";
 import { ApiPaginatedResponse, ManagedUserSummary, ReportFilterParams } from "src/app/core/interfaces/api-contracts";
 import { normalizeCollectionResponse } from "src/app/core/utils/backend-response.utils";
 import { buildTimestampedFileName, downloadBlob } from "src/app/core/utils/file.utils";
@@ -25,9 +25,17 @@ interface ReportFormControls {
   created_end: FormControl<string | null>;
   query: FormControl<string | null>;
   upload: FormControl<UploadFilterValue>;
-  university: FormControl<number | null>;
-  campus: FormControl<number | null>;
-  city: FormControl<number | null>;
+  /** Codigo ISO del pais. */
+  country: FormControl<string | null>;
+  /** Provincia, ciudad y universidad: texto, coincidencia parcial en el backend. */
+  province: FormControl<string | null>;
+  city: FormControl<string | null>;
+  university: FormControl<string | null>;
+}
+
+interface CountryOption {
+  label: string;
+  value: string;
 }
 
 interface NormalizedReportResponse {
@@ -50,9 +58,7 @@ type ReportExportRow = Record<string, string | undefined>;
 export class ReportComponent implements OnInit {
   public form: FormGroup<ReportFormControls>;
 
-  public cities: City[] = [];
-  public universities: University[] = [];
-  public campus: Campus[] = [];
+  public countryOptions: CountryOption[] = [];
 
   public loader = false;
   public exporting = false;
@@ -83,7 +89,7 @@ export class ReportComponent implements OnInit {
     private fb: FormBuilder,
     private _activeRoute: ActivatedRoute,
     private _userService: UserService,
-    private _addressService: AddressService,
+    private _locationCatalog: LocationCatalogService,
     private cdr: ChangeDetectorRef
   ) {
     const queryParams = this._activeRoute.snapshot.queryParams;
@@ -97,9 +103,10 @@ export class ReportComponent implements OnInit {
       ],
       query: [null as string | null],
       upload: ["all" as UploadFilterValue],
-      university: [null as number | null],
-      campus: [null as number | null],
-      city: [null as number | null],
+      country: [null as string | null],
+      province: [null as string | null],
+      city: [null as string | null],
+      university: [null as string | null],
     });
   }
   ngOnInit(): void {
@@ -107,21 +114,16 @@ export class ReportComponent implements OnInit {
   }
 
   /**
-   * Carga los catalogos base del formulario de filtros.
+   * Carga la lista de paises del filtro. Provincia, ciudad y universidad se
+   * filtran por texto, porque se guardan como texto en cada usuario.
    */
   private async loadData() {
     try {
-      const [cities, universities, campus] = await firstValueFrom(
-        forkJoin([
-        this._addressService.getCitiesActive(),
-        this._addressService.getUniversitiesActive(),
-        this._addressService.getCampusActive(),
-        ])
-      );
+      const countries = await firstValueFrom(this._locationCatalog.getCountries());
 
-      this.cities = cities;
-      this.universities = universities;
-      this.campus = campus;
+      this.countryOptions = countries
+        .map((country) => ({ label: getCountryDisplayName(country, "es"), value: country.iso2 }))
+        .sort((a, b) => a.label.localeCompare(b.label, "es"));
       this.refreshView();
     } catch (error: unknown) {
       const errorMessage = this.getErrorMessage(error);
@@ -244,19 +246,24 @@ export class ReportComponent implements OnInit {
     const params: ReportFilterParams = {
       query: this.form.value?.query || "",
       upload: this.form.value?.upload,
-      city: this.form.value?.city,
-      university: this.form.value?.university,
-      campus: this.form.value?.campus,
       page,
       page_size: pageSize,
     };
+
+    for (const key of ["country", "province", "city", "university"] as const) {
+      const value = this.form.value?.[key]?.trim();
+      if (value) {
+        params[key] = value;
+      }
+    }
 
     if (this.form.value?.created_init) {
       params.created_init = moment(this.form.value.created_init).format("YYYY-MM-DD");
     }
 
+    // El backend ya incluye el día final completo.
     if (this.form.value?.created_end) {
-      params.created_end = moment(this.form.value.created_end).add(1, "days").format("YYYY-MM-DD");
+      params.created_end = moment(this.form.value.created_end).format("YYYY-MM-DD");
     }
 
     return params;
@@ -318,11 +325,7 @@ export class ReportComponent implements OnInit {
             Nombre: user.first_name,
             Apellido: user.last_name,
             Email: user.email,
-            Pais: user.country?.name,
-            Provincia: user.province?.name,
-            Ciudad: this.getEntityName(user.city),
-            Universidad: this.getEntityName(user.university),
-            Campus: this.getEntityName(user.campus),
+            ...this.getLocationColumns(user),
             OA: object.general_title,
             URL: object.learning_object_file.url,
           };
@@ -333,11 +336,7 @@ export class ReportComponent implements OnInit {
         Nombre: user.first_name,
         Apellido: user.last_name,
         Email: user.email,
-        Pais: user.country?.name,
-        Provincia: user.province?.name,
-        Ciudad: this.getEntityName(user.city),
-        Universidad: this.getEntityName(user.university),
-        Campus: this.getEntityName(user.campus),
+        ...this.getLocationColumns(user),
         OA: "",
         URL: "",
       };
@@ -383,10 +382,18 @@ export class ReportComponent implements OnInit {
     return "Error inesperado.";
   }
 
-  private getEntityName(
-    value: number | { id?: number; name?: string } | null | undefined
-  ): string | undefined {
-    return typeof value === "object" ? value?.name : undefined;
+  private getLocationColumns(user: ManagedUserSummary): ReportExportRow {
+    return {
+      Pais: user.country_name,
+      Provincia: user.province_name,
+      Ciudad: user.city_name,
+      Universidad: user.university_name,
+    };
+  }
+
+  /** Ciudad, provincia y pais del usuario para la tabla, o "-" si no tiene. */
+  public getLocationLabel(user: ManagedUserSummary): string {
+    return [user.city_name, user.province_name, user.country_name].filter(Boolean).join(", ") || "-";
   }
 
   private refreshView(): void {

@@ -246,7 +246,10 @@ export class LearningObjectPendingListComponent implements OnInit {
     });
   }
 
-  public async paginate(event: { page: number }): Promise<void> {
+  public async paginate(event: { page: number; first: number }): Promise<void> {
+    // `first` sigue al paginador: si la carga termina en otra página (404 o
+    // página fuera de rango), el nuevo valor sí cambia y el paginador se mueve.
+    this.first = event.first;
     this.form.controls["page"].setValue(event.page + 1);
     await this.loadLearningObjects();
   }
@@ -303,14 +306,18 @@ export class LearningObjectPendingListComponent implements OnInit {
     const data: Record<string, string | number> = {
       general_title__icontains: this.form.value?.general_title || "",
       page: this.getCurrentPage(),
+      // El backend pagina con este tamaño; si no se envía usa el suyo y el
+      // paginador calcula mal el número de páginas.
+      page_size: this.pageSize,
     };
 
     if (this.form.value?.created_init) {
       data["created_init"] = moment(this.form.value.created_init).format("YYYY-MM-DD");
     }
 
+    // El backend ya incluye el día final completo.
     if (this.form.value?.created_end) {
-      data["created_end"] = moment(this.form.value.created_end).add(1, "days").format("YYYY-MM-DD");
+      data["created_end"] = moment(this.form.value.created_end).format("YYYY-MM-DD");
     }
 
     return data;

@@ -77,7 +77,7 @@
                   <label for="firstnamelabel">{{'register.name'|translate}}*</label>
                   <input id="firstnamelabel" type="text" placeholder="{{'register.name'|translate}}"
                     [attr.aria-describedby]="getNameDescribedBy()"
-                    maxlength="20" formControlName="name"
+                    [attr.maxlength]="nameMaxLength" formControlName="name"
                     [ngClass]="{'ng-dirty': isControlInvalid('name')}" pInputText>
                   @if (isControlInvalid('name')) {
                     <div>
@@ -101,7 +101,7 @@
                 <div class="p-field p-fluid">
                   <label for="apellido_label">{{'register.lastName'|translate}}*</label>
                   <input id="apellido_label" type="text" formControlName="lastname"
-                    maxlength="20"
+                    [attr.maxlength]="nameMaxLength"
                     placeholder="{{'register.lastName'|translate}}"
                     [ngClass]="{'ng-dirty': isControlInvalid('lastname')}"
                     pInputText>
@@ -359,92 +359,13 @@
                 <p class="profile-section-copy">{{ 'profile.institutionalAffiliationCopy' | translate }}</p>
               </div>
               <div class="p-grid profile-grid">
-                <div class="p-col-12 p-md-6 p-lg-6">
-                  <div class="p-field p-fluid">
-                    <p id="cityLabel" class="profile-static-label">{{'register.city'|translate}}*</p>
-                    <p-select
-                      inputId="city"
-                      ariaLabelledBy="cityLabel"
-                      formControlName="city"
-                      [options]="cities"
-                      optionLabel="name"
-                      optionValue="id"
-                      [placeholder]="'profile.placeholders.city' | translate"
-                      appendTo="body"
-                      styleClass="profile-select"
-                      panelStyleClass="profile-select-panel"
-                      (onChange)="onChangeCity($event)"
-                    ></p-select>
-                    @if (city?.invalid && (city.dirty || city.touched)) {
-                      <div>
-                        @if (city.errors.required) {
-                          <small class="p-error">*{{'validation.obligatoryCamp'|translate}}*</small>
-                        }
-                        @if (city.errors.first_item_default) {
-                          <small class="p-error">*{{'validation.obligatoryCamp'|translate}}*</small>
-                        }
-                      </div>
-                    }
-                  </div>
-                </div>
-                <div class="p-col-12 p-md-6 p-lg-6">
-                  <div class="p-field p-fluid">
-                    <p id="universityLabel" class="profile-static-label">{{'register.university'|translate}}*</p>
-                    <p-select
-                      inputId="university"
-                      ariaLabelledBy="universityLabel"
-                      formControlName="university"
-                      [options]="universities"
-                      optionLabel="name"
-                      optionValue="id"
-                      [placeholder]="'profile.placeholders.university' | translate"
-                      appendTo="body"
-                      styleClass="profile-select"
-                      panelStyleClass="profile-select-panel"
-                      [disabled]="!universities?.length"
-                      (onChange)="onChangeUniversity($event)"
-                    ></p-select>
-                    @if (university?.invalid && (university.dirty || university.touched)) {
-                      <div>
-                        @if (university.errors.required) {
-                          <small class="p-error">*{{'validation.obligatoryCamp'|translate}}*</small>
-                        }
-                        @if (university.errors.first_item_default) {
-                          <small class="p-error">*{{'validation.obligatoryCamp'|translate}}*</small>
-                        }
-                      </div>
-                    }
-                  </div>
-                </div>
-                <div class="p-col-12 p-md-6 p-lg-6">
-                  <div class="p-field p-fluid">
-                    <p id="campusLabel" class="profile-static-label">{{'register.campus'|translate}}*</p>
-                    <p-select
-                      inputId="campus"
-                      ariaLabelledBy="campusLabel"
-                      formControlName="campus"
-                      [options]="campusArray"
-                      optionLabel="name"
-                      optionValue="id"
-                      [placeholder]="'profile.placeholders.campus' | translate"
-                      appendTo="body"
-                      styleClass="profile-select"
-                      panelStyleClass="profile-select-panel"
-                      [disabled]="!campusArray?.length"
-                      (onChange)="onChangeCampus($event)"
-                    ></p-select>
-                    @if (campus?.invalid && (campus.dirty || campus.touched)) {
-                      <div>
-                        @if (campus.errors.required) {
-                          <small class="p-error">*{{'validation.obligatoryCamp'|translate}}*</small>
-                        }
-                        @if (campus.errors.first_item_default) {
-                          <small class="p-error">*{{'validation.obligatoryCamp'|translate}}*</small>
-                        }
-                      </div>
-                    }
-                  </div>
-                </div>
+                <app-user-location-fields
+                  formControlName="location"
+                  idPrefix="profile-location"
+                  labelClass="profile-static-label"
+                  selectStyleClass="profile-select"
+                  panelStyleClass="profile-select-panel"
+                ></app-user-location-fields>
               </div>
             </section>
           }
@@ -528,6 +449,7 @@
                   <div class="p-field p-fluid">
                     <label for="academic">{{'register.academicProfile'|translate}}</label>
                   <input id="academic" type="text" formControlName="academic"
+                      [attr.maxlength]="academicMaxLength"
                       [attr.aria-describedby]="getAcademicDescribedBy()"
                       [ngClass]="{'ng-dirty': isControlInvalid('academic')}"
                       placeholder="{{'register.profileORCID'|translate}}" pInputText>
@@ -536,10 +458,6 @@
                         @if (controlHasError('academic', 'required')) {
                           <small id="academic_required" class="p-error"
                           >*{{'validation.obligatoryCamp'|translate}}*</small>
-                        }
-                        @if (controlHasError('academic', 'pattern')) {
-                          <small id="academic_pattern" class="p-error"
-                          >*{{'validation.letters'|translate}}*</small>
                         }
                       </div>
                     }
@@ -582,11 +500,19 @@
                   }
                 </div>
               </div>
-              <div class="profile-field profile-field--full button-submit profile-submit-wrap">
-                <p-button type="submit" label="{{'profile.btnUpdate' | translate}}"></p-button>
-              </div>
             </div>
           </section>
+          <div class="profile-actions" [class.is-dirty]="hasUnsavedChanges">
+            @if (hasUnsavedChanges) {
+              <span class="profile-actions__unsaved">
+                <i class="pi pi-info-circle" aria-hidden="true"></i>
+                {{ 'unsavedChanges.notice' | translate }}
+              </span>
+              <button pButton type="button" class="p-button-text" [label]="'unsavedChanges.discard' | translate"
+                (click)="discardChanges()"></button>
+            }
+            <p-button type="submit" icon="pi pi-check" label="{{'profile.btnUpdate' | translate}}"></p-button>
+          </div>
         </form>
       </div>
     }
@@ -594,3 +520,4 @@
   </div>
 
   <p-toast></p-toast>
+  <p-confirmDialog key="unsavedChanges" styleClass="settings-confirm-dialog"></p-confirmDialog>

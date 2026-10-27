@@ -180,4 +180,87 @@ describe("ObjectComponent", () => {
     expect(component.groupedQuestionsEx[0].observation).toBe("Observacion del experto");
     expect(component.flagConfirm).toBeTrue();
   });
+
+  describe("docente que tambien es experto", () => {
+    const expertEvaluation = [
+      {
+        id: 21,
+        observation: "Evaluacion de otro experto",
+        concept_evaluations: [
+          {
+            evaluation_concept: { concept: "Comprensible" },
+            average: 4,
+            question_evaluations: [{ id: 301, question: "Es claro", qualification: "2" }],
+          },
+        ],
+      },
+    ];
+
+    beforeEach(() => {
+      loginServiceSpy.validateRole.and.callFake((role: string) => role === "teacher" || role === "expert");
+      Object.defineProperty(loginServiceSpy, "user", { value: { id: 5 }, configurable: true });
+      objectServiceSpy.getResultsEvaluation.and.returnValue(of(expertEvaluation));
+      objectServiceSpy.getObjectResultsEvaluation.and.returnValue(of([]));
+    });
+
+    it("ve en su propio OA las evaluaciones que recibio, como docente", async () => {
+      component.objectData = { id: 30, user_created: { id: 5 } } as any;
+
+      await component.loadData();
+
+      expect(component.evaluationView).toBe("teacher");
+      expect(objectServiceSpy.getResultsEvaluation).toHaveBeenCalledWith(30);
+      expect(objectServiceSpy.getObjectResultsEvaluation).not.toHaveBeenCalled();
+      expect(component.groupedQuestionsTeacher.length).toBe(1);
+      expect(component.shouldShowEvaluationEmptyState).toBeFalse();
+    });
+
+    it("ve en un OA ajeno su propia evaluacion, como experto", async () => {
+      component.objectData = { id: 31, user_created: { id: 99 } } as any;
+
+      await component.loadData();
+
+      expect(component.evaluationView).toBe("expert");
+      expect(objectServiceSpy.getObjectResultsEvaluation).toHaveBeenCalledWith(31);
+      expect(objectServiceSpy.getResultsEvaluation).not.toHaveBeenCalled();
+      expect(component.shouldShowEvaluationEmptyState).toBeTrue();
+    });
+  });
+
+  it("tras una evaluacion refresca la pestaña y solo la valoracion del OA", async () => {
+    loginServiceSpy.validateRole.and.callFake((role: string) => role === "expert");
+    objectServiceSpy.getObjectResultsEvaluation.and.returnValue(of([]));
+    objectServiceSpy.getObjectDetail.and.returnValue(of({ ...sampleObject, rating: 5 }));
+    component.objectData = { ...sampleObject, rating: 3 };
+    const loadDataSpy = spyOn(component, "loadData").and.callThrough();
+
+    await (component as any).refreshAfterEvaluation();
+
+    expect(loadDataSpy).toHaveBeenCalled();
+    expect(objectServiceSpy.getObjectDetail).toHaveBeenCalledWith(sampleObject.slug);
+    expect(component.objectData?.rating).toBe(5);
+    expect(component.objectData?.general_title).toBe(sampleObject.general_title);
+  });
+
+  it("refresca solo cuando la evaluacion se completo", () => {
+    const refreshSpy = spyOn(component as any, "refreshAfterEvaluation").and.resolveTo();
+
+    component.coutComment1(false);
+    expect(refreshSpy).not.toHaveBeenCalled();
+
+    component.coutComment1(true);
+    expect(refreshSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("mantiene la vista de docente para quien solo es docente", async () => {
+    loginServiceSpy.validateRole.and.callFake((role: string) => role === "teacher");
+    objectServiceSpy.getResultsEvaluation.and.returnValue(of([]));
+    component.objectData = { id: 32, user_created: { id: 99 } } as any;
+
+    await component.loadData();
+
+    expect(component.evaluationView).toBe("teacher");
+    expect(objectServiceSpy.getResultsEvaluation).toHaveBeenCalledWith(32);
+    expect(component.shouldShowEvaluationEmptyState).toBeTrue();
+  });
 });

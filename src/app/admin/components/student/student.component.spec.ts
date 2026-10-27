@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { fakeAsync, ComponentFixture, TestBed, tick } from "@angular/core/testing";
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 import { AdministratorService } from "src/app/services/administrator.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { AdminComponent } from "../../admin.component";
@@ -11,15 +11,8 @@ describe("StudentComponent", () => {
   let fixture: ComponentFixture<StudentComponent>;
   let administratorServiceSpy: jasmine.SpyObj<AdministratorService>;
   let breadcrumbServiceSpy: jasmine.SpyObj<BreadcrumbService>;
-
-  beforeEach(async () => {
-    administratorServiceSpy = jasmine.createSpyObj<AdministratorService>("AdministratorService", [
-      "getStudentList",
-    ]);
-    breadcrumbServiceSpy = jasmine.createSpyObj<BreadcrumbService>("BreadcrumbService", ["setItems"]);
-
-    administratorServiceSpy.getStudentList.and.returnValue(
-      of({
+  const firstPageResponse = () =>
+    of({
         count: 2,
         next: null,
         previous: null,
@@ -46,8 +39,15 @@ describe("StudentComponent", () => {
             },
           },
         ],
-      })
-    );
+      });
+
+  beforeEach(async () => {
+    administratorServiceSpy = jasmine.createSpyObj<AdministratorService>("AdministratorService", [
+      "getStudentList",
+    ]);
+    breadcrumbServiceSpy = jasmine.createSpyObj<BreadcrumbService>("BreadcrumbService", ["setItems"]);
+
+    administratorServiceSpy.getStudentList.and.returnValue(firstPageResponse());
 
     await TestBed.configureTestingModule({
       declarations: [StudentComponent],
@@ -86,6 +86,29 @@ describe("StudentComponent", () => {
     expect(administratorServiceSpy.getStudentList).toHaveBeenCalledWith(1, "maria");
     expect(component.searchTerm).toBe("maria");
   }));
+
+  it("debe mantener el tamano de pagina aunque una busqueda traiga pocos resultados", () => {
+    fixture.detectChanges();
+
+    component.paginate({ page: 1, first: 10 });
+
+    expect(component.pageSize).toBe(10);
+    expect(component.first).toBe(10);
+  });
+
+  it("debe volver a la pagina anterior si la pedida ya no existe", () => {
+    fixture.detectChanges();
+    administratorServiceSpy.getStudentList.calls.reset();
+    const firstPage = administratorServiceSpy.getStudentList.and.callFake((page: number) =>
+      page === 2 ? throwError(() => ({ status: 404 })) : firstPageResponse()
+    );
+
+    component.paginate({ page: 1, first: 10 });
+
+    expect(firstPage.calls.allArgs().map(([page]) => page)).toEqual([2, 1]);
+    expect(component.first).toBe(0);
+    expect(component.listStudent.length).toBe(2);
+  });
 
   it("debe exponer avatar y preferencias normalizadas", () => {
     const student = {

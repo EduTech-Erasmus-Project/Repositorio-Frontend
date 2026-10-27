@@ -2,7 +2,7 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { AdministratorService } from "src/app/services/administrator.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
@@ -91,6 +91,38 @@ describe("LearningObjectApprovedListComponent", () => {
     expect(component.pageSize).toBe(10);
     expect(component.first).toBe(10);
     expect(component.totalRecords).toBe(17);
+  });
+
+  it("debe pedir el tamano de pagina y la fecha final tal como se eligio", async () => {
+    component.form.patchValue({
+      created_init: new Date(2026, 8, 14),
+      created_end: new Date(2026, 8, 17),
+    });
+
+    await component.loadLearningObjects(true);
+
+    expect(administratorServiceSpy.listLearningObject).toHaveBeenCalledWith(1, jasmine.objectContaining({
+      page: 1,
+      page_size: 10,
+      created_init: "2026-09-14",
+      created_end: "2026-09-17",
+    }));
+  });
+
+  it("debe devolver el paginador a la pagina 1 si la pagina pedida ya no existe", async () => {
+    administratorServiceSpy.listLearningObject.and.returnValues(
+      throwError(() => ({ status: 404, error: { detail: "Invalid page." } })),
+      of({ count: 30, next: null, previous: null, results: [{ id: 1 }] as any[] } as any)
+    );
+
+    await component.paginate({ page: 55, first: 550 });
+
+    const pagesRequested = administratorServiceSpy.listLearningObject.calls
+      .allArgs()
+      .map(([, params]) => (params as Record<string, unknown>)["page"]);
+    expect(pagesRequested).toEqual([56, 1]);
+    expect(component.first).toBe(0);
+    expect(component.totalRecords).toBe(30);
   });
 
   it("debe navegar al detalle aprobado", () => {

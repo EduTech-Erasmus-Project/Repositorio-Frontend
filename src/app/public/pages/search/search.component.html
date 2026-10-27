@@ -20,7 +20,7 @@
       </div>
     </aside>
 
-    <section class="search-results-column">
+    <section id="search-results" class="search-results-column">
       <div class="box content">
         <div class="header-search">
           <div class="search-chip-row">
@@ -106,7 +106,8 @@
           }
           @if (showPaginator) {
             <p-paginator [rows]="rows" [first]="first" [totalRecords]="totalRecords"
-            (onPageChange)="paginate($event)"></p-paginator>
+              [rowsPerPageOptions]="rowsPerPageOptions"
+              (onPageChange)="paginate($event)"></p-paginator>
           }
         </div>
       </section>

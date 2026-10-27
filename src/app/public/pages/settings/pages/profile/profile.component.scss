@@ -340,11 +340,33 @@
   font-weight: 700;
 }
 
-.profile-submit-wrap {
+/* Misma barra que settings/public-profile: fija al pie solo con cambios. */
+.profile-actions {
   display: flex;
-  align-items: flex-end;
   justify-content: flex-end;
-  width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #dde7ee;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+}
+
+.profile-actions.is-dirty {
+  position: sticky;
+  bottom: 1rem;
+  z-index: 1;
+  border-color: #3b5b68;
+}
+
+.profile-actions__unsaved {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-right: auto;
+  color: #36505e;
+  font-weight: 600;
 }
 
 .profile-readonly-input {
@@ -406,11 +428,6 @@
   width: 100%;
 }
 
-.button-submit {
-  text-align: right;
-  width: 100%;
-}
-
 .position-relative {
   position: relative;
   z-index: 1;
@@ -441,6 +458,19 @@
   border-radius: 12px;
   background: #ffffff;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+// `app-user-location-fields`: etiquetas como las del perfil e inputs a la
+// altura de `.profile-select` (48px mas el borde).
+:host ::ng-deep app-user-location-fields .profile-static-label {
+  color: #36505e;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+:host ::ng-deep app-user-location-fields .p-inputtext {
+  min-height: 50px;
+  border-radius: 12px;
 }
 
 :host ::ng-deep .profile-select.p-select:hover,
@@ -539,10 +569,6 @@
   background: #ffffff;
 }
 
-:host ::ng-deep .profile-submit-wrap .p-button {
-  min-width: 12rem;
-}
-
 @media (max-width: 991px) {
   .content.profile-page {
     padding: 0 1rem 1.25rem;
@@ -589,14 +615,16 @@
     justify-content: flex-start;
   }
 
-  .profile-submit-wrap,
-  .button-submit {
-    justify-content: stretch;
-    text-align: left;
+  .profile-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
   }
 
-  :host ::ng-deep .profile-submit-wrap .p-button {
+  .profile-actions__unsaved {
+    margin-right: 0;
+  }
+
+  :host ::ng-deep .profile-actions .p-button {
     width: 100%;
-    min-width: 0;
   }
 }

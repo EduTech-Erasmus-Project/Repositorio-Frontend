@@ -63,6 +63,7 @@
     "studentGuide": "User Guide with the role of Student",
     "expertGuide": "User Guide with the role of Expert",
     "sideMenu": {
+      "publicProfile": "Public profile",
       "myAccount": "My Profile",
       "security": "Security",
       "exit": "Exit",
@@ -216,7 +217,11 @@
     "isNotActiveAccount":"Your account is not activated.",
     "isNotActiveAccountButton":"Activate Account",
     "isNotActiveAccountMessage":"Mail sent successfully",
-    "isNotActiveAccountMessageSummary":"Successful"
+    "isNotActiveAccountMessageSummary":"Successful",
+    "errorNotVerified": "You must verify your email before signing in.",
+    "errorPendingApproval": "Your account is pending approval or was deactivated by the administrator.",
+    "errorServer": "Could not connect to the server. Please try again later.",
+    "errorGeneric": "An error occurred while signing in. Please try again."
   },
   "register": {
     "objectUploadOer": "Successfully integrated learning object",
@@ -229,9 +234,6 @@
     "teacher": "Teacher",
     "collaboraingExpert": "Collaborating Expert",
     "profession": "Profession",
-    "city": "City",
-    "university": "University",
-    "campus": "Campus",
     "select": "Select...",
     "expertLevel": "Expert Level",
     "high": "High",
@@ -275,6 +277,32 @@
     "verificationEmailTitle": "Done! Check your email.",
     "verificationEmailDescription": "This action requires verification before activating your account. Follow the link sent to your email to continue.",
     "submitting": "Registering..."
+  },
+  "location": {
+    "country": "Country",
+    "province": "Province / State",
+    "city": "City",
+    "otherCity": "Type your city",
+    "otherCityOption": "Other city",
+    "university": "University",
+    "placeholders": {
+      "country": "Choose a country",
+      "province": "Choose a province",
+      "city": "Choose a city",
+      "needsCountry": "Country first",
+      "needsProvince": "Province first",
+      "otherCity": "Name of your city",
+      "university": "Name of your university"
+    },
+    "noResults": "No results",
+    "cityNotListed": "Not listed: choose \"Other city\"",
+    "savedProvince": "Registered province: {{name}}. It is kept unless you choose another one.",
+    "loading": "Loading...",
+    "retry": "Retry",
+    "errors": {
+      "countriesUnavailable": "The country list could not be loaded.",
+      "maxLength": "Maximum {{max}} characters"
+    }
   },
   "validation": {
     "obligatoryCamp": "Obligatory field",
@@ -568,7 +596,6 @@
     "publicationPendingHelp": "Pending approval by administration.",
     "loginRequiredAction": "You must log in to perform this action",
     "interactionSaveError": "The interaction could not be saved",
-    
     "countDownloads": "Downloads",
     "countViews": "Visits",
     "errorDownload": "You must login to perform this action",
@@ -606,7 +633,7 @@
     "studentProfileTitle": "Student profile",
     "studentProfileCopy": "Define your education level, interests, and accessibility preferences.",
     "institutionalAffiliationTitle": "Institutional affiliation",
-    "institutionalAffiliationCopy": "Keep your city, university, and campus up to date.",
+    "institutionalAffiliationCopy": "Keep your country, province, city, and university up to date.",
     "teacherInformationTitle": "Teacher information",
     "expertProfileTitle": "Expert profile",
     "expertProfileCopy": "Complete your level, website, and academic profile.",
@@ -620,9 +647,6 @@
     "saving": "Saving...",
     "placeholders": {
       "educationLevel": "Select an education level",
-      "city": "Select a city",
-      "university": "Select a university",
-      "campus": "Select a campus",
       "profession": "Select a profession"
     },
     "datePicker": {
@@ -933,5 +957,203 @@
     "p2": "The expert can evaluate the learning objects for this he can enter inside each learning object in the same way he has the possibility to download the learning object or open the learning object in a new tab to perform a review of this before carrying out the evaluation.",
     "subtitle3": "My graded learning objects",
     "p3": "One of the additional functions also within the user menu we have an option so that the expert user can see within a section their learning objects qualified by him."
+  },
+  "authorProfile": {
+    "teacher": "Teacher",
+    "headline": "Position",
+    "about": "About",
+    "academicInfo": "Academic information",
+    "highestDegree": "Highest academic degree",
+    "faculty": "Faculty or program",
+    "researchGroup": "Research group",
+    "professions": "Professions",
+    "knowledgeAreas": "Areas they publish in",
+    "researchLines": "Research lines",
+    "subjects": "Subjects taught",
+    "degrees": "Academic background",
+    "links": "Academic and professional profiles",
+    "memberSince": "Member since {{year}}",
+    "opensNewTab": "(opens in a new tab)",
+    "hiddenFromPublic": "Hidden from the public",
+    "profileNotPublic": "The teacher has hidden their public profile",
+    "publicProfileSection": "Public profile",
+    "empty": "This teacher has not completed their public profile yet.",
+    "degreeLevels": {
+      "technical": "Associate degree",
+      "third": "Bachelor's degree",
+      "specialty": "Specialization",
+      "master": "Master's degree",
+      "phd": "PhD"
+    },
+    "linkTypes": {
+      "orcid": "ORCID",
+      "scholar": "Google Scholar",
+      "scopus": "Scopus",
+      "researchgate": "ResearchGate",
+      "linkedin": "LinkedIn",
+      "institutional": "Institutional page",
+      "website": "Personal website"
+    }
+  },
+  "authorPage": {
+    "showLess": "Show less",
+    "pageReport": "Showing {first}–{last} of {totalRecords}",
+    "links": "Professional links",
+    "sidebarLabel": "Areas, links and professions",
+    "moreDegrees": "Show {{count}} more",
+    "moreSubjects": "+{{count}} subjects",
+    "moreResearchLines": "+{{count}} lines",
+    "tabs": {
+      "label": "Profile content",
+      "trajectory": "Background",
+      "research": "Research",
+      "resources": "Resources"
+    },
+    "sections": {
+      "aboutKicker": "Professional profile",
+      "formationKicker": "Academic background",
+      "formation": "Education",
+      "researchKicker": "Scientific work",
+      "research": "Research",
+      "resourcesKicker": "Published resources"
+    },
+    "viewProfileOf": "View {{name}}'s profile",
+    "editProfile": "Edit my profile",
+    "breadcrumb": "Teacher profile",
+    "pageTitle": "{{name}} - ROA",
+    "learningObjects": "Published learning objects",
+    "learningObjectsSubtitle": "Public resources this teacher has shared on ROA.",
+    "emptyTitle": "No published objects yet",
+    "empty": "This teacher has no public learning objects yet.",
+    "objectsError": "We couldn't load the learning objects. Please try again.",
+    "notFoundTitle": "Profile not available",
+    "notFound": "The profile you are looking for doesn't exist or the teacher chose not to show it.",
+    "goToSearch": "Search learning objects",
+    "errorTitle": "We couldn't load the profile",
+    "error": "Something went wrong while loading the profile. Please try again in a few minutes.",
+    "retry": "Try again",
+    "table": {
+      "image": "Image",
+      "title": "Title",
+      "publishedAt": "Published",
+      "views": "Views",
+      "downloads": "Downloads"
+    }
+  },
+  "unsavedChanges": {
+    "title": "Leave without saving?",
+    "message": "You have unsaved changes. If you leave now, they will be lost.",
+    "leave": "Leave without saving",
+    "stay": "Keep editing",
+    "notice": "You have unsaved changes.",
+    "discard": "Discard changes"
+  },
+  "publicProfileEdit": {
+    "statusTitle": "Profile status",
+    "progress": {
+      "title": "Profile progress",
+      "count": "{{done}} of {{total}}",
+      "done": "Complete",
+      "pending": "Pending"
+    },
+    "isPublicOn": "Public profile on",
+    "isPublicOnHint": "Any visitor can see the «Public» fields.",
+    "isPublicOffHint": "No one else can see it; administrators can.",
+    "isPublicOff": "Public profile hidden",
+    "viewPublic": "View my public profile",
+    "notVisibleYet": "Your profile will be shown once you publish your first learning object.",
+    "uploadFirst": "Upload a learning object",
+    "optional": "Optional",
+    "save": "Save changes",
+    "remove": "Remove",
+    "moveUp": "Move link up",
+    "moveDown": "Move link down",
+    "addResearchLine": "Add research line",
+    "addSubject": "Add subject",
+    "addDegree": "Add degree",
+    "addLink": "Add link",
+    "degreeNumber": "Degree {{number}}",
+    "degreeLevel": "Level",
+    "degreeTitle": "Degree obtained",
+    "degreeInstitution": "Institution",
+    "degreeYear": "Year",
+    "linkNumber": "Link {{number}}",
+    "linkType": "Type",
+    "linkUrl": "Address (URL)",
+    "visibility": {
+      "public": "Public",
+      "private": "Only me"
+    },
+    "sections": {
+      "presentation": "Introduction",
+      "presentationCopy": "How you introduce yourself to students and colleagues.",
+      "academicCopy": "Your faculty and research group.",
+      "research": "Research and teaching",
+      "researchCopy": "Your research lines and the subjects you teach.",
+      "degreesCopy": "Your higher education degrees: associate, bachelor's, specialization, master's and doctorate. The highest one is shown as your academic degree.",
+      "linksCopy": "Your profiles on ORCID, Google Scholar, Scopus and other sites. Use the arrows to order them."
+    },
+    "placeholders": {
+      "headline": "E.g.: Associate Professor of Civil Engineering",
+      "bio": "Tell your students and colleagues about your work and interests.",
+      "faculty": "E.g.: Faculty of Engineering",
+      "researchGroup": "E.g.: Engineering and Transport Research Group"
+    },
+    "errors": {
+      "required": "This field is required.",
+      "maxLength": "Maximum {{max}} characters.",
+      "https": "The link must start with https://.",
+      "domain": "The link must be from {{domain}}.",
+      "orcid": "The ORCID link must look like https://orcid.org/0000-0000-0000-0000; the last character can be X.",
+      "orcidChecksum": "This ORCID number is not valid. Check that it was copied correctly.",
+      "year": "The year must be between {{min}} and {{max}}.",
+      "server": "Check this value; it could not be saved.",
+      "duplicateLink": "There can only be one link of each type."
+    },
+    "messages": {
+      "saved": "Your public profile was saved.",
+      "saveError": "We couldn't save your changes. Please try again.",
+      "invalid": "Check the fields marked in red.",
+      "shown": "Your public profile is on.",
+      "hidden": "Your public profile is hidden."
+    },
+    "completeBanner": {
+      "title": "Complete your public profile",
+      "text": "Add your position, education and academic profiles so students and colleagues can learn about your work.",
+      "action": "Complete profile",
+      "dismiss": "Hide notice"
+    }
+  },
+  "adminTeacherProfile": {
+    "approved": "Approved",
+    "pending": "Pending",
+    "notAvailable": "Not available",
+    "registered": "Registered",
+    "email": "Email",
+    "verified": "Verified",
+    "notVerified": "Not verified",
+    "learningObjects": "Learning objects",
+    "publicCount": "{{count}} public",
+    "public": "Public",
+    "inReview": "In review",
+    "notConfigured": "Not set up",
+    "publicProfileNotConfigured": "This teacher has not set up their public profile yet.",
+    "hidden": "Hidden from the public",
+    "expertInfo": "Expert information",
+    "roles": {
+      "title": "Role",
+      "teacher": "Teacher",
+      "expert": "Expert",
+      "student": "Student"
+    },
+    "table": {
+      "image": "Image",
+      "title": "Title",
+      "status": "Status",
+      "publishedAt": "Published on",
+      "views": "Views",
+      "downloads": "Downloads"
+    },
+    "openLearningObject": "Open learning object"
   }
 }

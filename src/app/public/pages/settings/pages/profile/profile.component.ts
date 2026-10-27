@@ -2,20 +2,22 @@
 import {
   ChangeDetectorRef,
   Component,
+  HostListener,
+  OnDestroy,
   OnInit,
   ElementRef,
   ViewChild,
 } from "@angular/core";
 import { SearchService } from "../../../../../services/search.service";
 import { LoginService } from "../../../../../services/login.service";
-import { firstValueFrom, forkJoin } from "rxjs";
+import { Subscription, firstValueFrom, forkJoin } from "rxjs";
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
   UntypedFormControl,
 } from "@angular/forms";
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { HttpErrorResponse } from "@angular/common/http";
 import { UserGeneral } from "../../../../../core/models/userGeneral";
 import { CurrentUser } from "../../../../../core/interfaces/CurrentUser";
@@ -28,18 +30,25 @@ import Swal from "sweetalert2";
 import { UserService } from "../../../../../services/user.service";
 import { LanguageService } from "src/app/services/language.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
-import { AddressService } from "src/app/admin/services/address.service";
 import {
   PERSON_NAME_PATTERN,
   PERSON_NAME_VALIDATORS,
   controlHasError,
   controlInvalid,
 } from "../../shared/settings-form.utils";
-import {
-  coerceEventRelationId,
-  coerceRelationId,
-} from "src/app/core/utils/coercion.utils";
+import { coerceEventRelationId } from "src/app/core/utils/coercion.utils";
 import { translateInstant } from "src/app/core/utils/i18n.utils";
+import { confirmDiscardChanges } from "src/app/core/utils/unsaved-changes.utils";
+import { LeaveConfirmable } from "src/app/guards/unsaved-changes.guard";
+import {
+  UserLocationErrors,
+  getLocationErrorMessage,
+} from "src/app/core/utils/location-errors.utils";
+import { PERSON_NAME_MAX_LENGTH } from "src/app/core/utils/person-name.utils";
+import {
+  USER_LOCATION_MAX_LENGTH,
+  UserLocation,
+} from "src/app/core/interfaces/user-location";
 import {
   PreferenceAreaGroupResponse,
   PreferenceAreaOptionResponse,
@@ -54,6 +63,8 @@ type PreferenceGroup = {
 };
 type ProfileUserResponse = CurrentUser & UserGeneral & { image?: string };
 type ProfileImageResponse = { image?: string };
+/** Campos de ubicacion del usuario, en el orden del contrato del backend. */
+const USER_LOCATION_FIELDS = Object.keys(USER_LOCATION_MAX_LENGTH) as (keyof UserLocation)[];
 type DuetDateChangeEvent = CustomEvent<{ value: string | null }>;
 type FocusableDatePicker = { setFocus?: () => Promise<void> | void };
 
@@ -61,7 +72,8 @@ type FocusableDatePicker = { setFocus?: () => Promise<void> | void };
     selector: "app-profile",
     templateUrl: "./profile.component.html",
     styleUrls: ["./profile.component.scss"],
-    standalone: false
+    standalone: false,
+    providers: [ConfirmationService]
 })
 /**
  * Gestiona el perfil editable del usuario autenticado.
@@ -70,17 +82,14 @@ type FocusableDatePicker = { setFocus?: () => Promise<void> | void };
  * - hidratar catalogos y datos actuales del usuario
  * - construir un formulario distinto segun los roles activos
  * - traducir el formulario a payloads de actualizacion e imagen
+ * - avisar antes de salir con cambios sin guardar
  */
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy, LeaveConfirmable {
   @ViewChild("inputFile") inputFile?: ElementRef<HTMLInputElement>;
   public user: UserGeneral;
   public isLoading = true;
   public loadError = false;
   public profesions: CatalogOption[] = [];
-
-  public cities: CatalogOption[] = [];
-  public universities: CatalogOption[] = [];
-  public campusArray: CatalogOption[] = [];
 
   public levelsEdications: CatalogOption[] = [];
   public preferenceAreas: PreferenceGroup[] = [];
@@ -95,9 +104,18 @@ export class ProfileComponent implements OnInit {
   public interestAreasPanel: string | null = null;
   public preferencesPanel: string | null = null;
 
+  /** Hay diferencias con lo ultimo guardado; muestra la barra fija de guardar. */
+  public hasUnsavedChanges = false;
+  private savedFormSnapshot: string | null = null;
+  private formChangesSubscription?: Subscription;
+
   public validateRole: boolean = false;
   public validateEmail: boolean = false;
   public blockEmail: boolean = false;
+
+  public readonly nameMaxLength = PERSON_NAME_MAX_LENGTH;
+  /** Largo maximo de `academic_profile` en el backend. */
+  public readonly academicMaxLength = 100;
 
   public patternV: string =
     "^([a-zA-Z0-9_' - '.]+)@([a-zA-Z0-9_' - '.]+).([a-zA-Z]{2,5})$";
@@ -110,14 +128,76 @@ export class ProfileComponent implements OnInit {
     private messageService: MessageService,
     private breadcrumbService: BreadcrumbService,
     private languageService: LanguageService,
-    private _addressService: AddressService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private confirmationService: ConfirmationService
   ) {
     this.configureBreadcrumb();
   }
 
   ngOnInit(): void {
     this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.formChangesSubscription?.unsubscribe();
+  }
+
+  /** Pregunta antes de salir si hay cambios o una foto elegida sin subir. */
+  confirmLeave(): boolean | Promise<boolean> {
+    return this.hasUnsavedChanges || this.fileImage
+      ? confirmDiscardChanges(this.confirmationService, this.languageService.translate)
+      : true;
+  }
+
+  /** Al recargar o cerrar la pestana el navegador muestra su propio aviso. */
+  @HostListener("window:beforeunload", ["$event"])
+  warnBeforeUnload(event: BeforeUnloadEvent): void {
+    if (this.hasUnsavedChanges || this.fileImage) {
+      event.preventDefault();
+    }
+  }
+
+  /** Vuelve el formulario a lo ultimo guardado. */
+  async discardChanges(): Promise<void> {
+    this.createForm();
+    this.validateRole = false;
+    this.validateEmail = false;
+    this.markFormAsSaved();
+    // Igual que en `loadData`: tras las cargas asincronas la vista no se refresca sola.
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Toma el formulario actual como lo guardado. Se compara por valor, no con
+   * `dirty`, porque varios campos (ciudad, fecha, areas) se llenan por codigo.
+   */
+  private markFormAsSaved(): void {
+    this.savedFormSnapshot = this.serializeForm();
+    this.hasUnsavedChanges = false;
+    this.formChangesSubscription?.unsubscribe();
+    this.formChangesSubscription = this.angForm.valueChanges.subscribe(() => {
+      this.hasUnsavedChanges = this.serializeForm() !== this.savedFormSnapshot;
+    });
+
+    // `app-user-location-fields` termina de precargar despues (busca en el
+    // catalogo) y completa datos como el `province_code` de un usuario
+    // migrado. Mientras el usuario no toque la ubicacion, eso es lo guardado.
+    // Se suscribe despues del formulario pero el control emite antes que el
+    // padre, asi la foto ya esta al dia cuando se compara.
+    const location = this.angForm.get("location");
+    if (location) {
+      this.formChangesSubscription.add(
+        location.valueChanges.subscribe(() => {
+          if (location.pristine) {
+            this.savedFormSnapshot = this.serializeForm();
+          }
+        })
+      );
+    }
+  }
+
+  private serializeForm(): string {
+    return JSON.stringify(this.angForm.getRawValue());
   }
 
   get localization() {
@@ -185,7 +265,7 @@ export class ProfileComponent implements OnInit {
       });
 
       this.createForm();
-      await this.loadDataAddress();
+      this.markFormAsSaved();
     } catch (error) {
       this.loadError = true;
       console.log(error);
@@ -195,52 +275,8 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  private getRelationId(value: unknown): number | null {
-    return coerceRelationId(value);
-  }
-
   private getSelectEventId(event: unknown): number | null {
     return coerceEventRelationId(event);
-  }
-
-  /**
-   * Resuelve catalogos dependientes de ciudad y universidad para docente y experto.
-   */
-  private async loadDataAddress() {
-    try {
-      this.cities = await firstValueFrom(this._addressService.getCitiesActive());
-    } catch (error) {
-      this.cities = [];
-      console.log(error);
-    }
-
-    const cityId = this.getRelationId(this.user?.city);
-    const universityId = this.getRelationId(this.user?.university);
-
-    try {
-      if (cityId) {
-        this.universities = await firstValueFrom(
-          this._addressService.getUniversitiesByCityActive(cityId)
-        );
-      } else {
-        this.universities = [];
-      }
-    } catch (e) {
-      this.universities = [];
-      console.log(e);
-    }
-
-    try {
-      this.campusArray = [];
-      if (universityId) {
-        this.campusArray = await firstValueFrom(
-          this.loadCampusByUniversityAndCity(universityId, cityId)
-        );
-      }
-    } catch (error) {
-      this.campusArray = [];
-      console.log(error);
-    }
   }
 
   onSubmit() { }
@@ -296,13 +332,9 @@ export class ProfileComponent implements OnInit {
     }
 
     if (this.checkTe || this.checkEx) {
-      this.addCityControl();
-      this.addUniversityControl();
-      this.addCampusControl();
+      this.addLocationControl();
     } else {
-      this.removeCityControl();
-      this.removeUniversityControl();
-      this.removeCampusControl();
+      this.angForm.removeControl("location");
     }
   }
 
@@ -407,43 +439,28 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  addCityControl() {
-    if (this.angForm.contains("city")) {
+  /**
+   * Ubicacion de docentes y expertos como un solo control. La precarga
+   * (buscar pais, provincia y ciudad en el catalogo) la hace
+   * `app-user-location-fields`.
+   */
+  addLocationControl() {
+    if (this.angForm.contains("location")) {
       return;
     }
     this.angForm.addControl(
-      "city",
-      new UntypedFormControl(
-        this.getRelationId(this.user.city),
-        Validators.required
-      )
+      "location",
+      new UntypedFormControl(this.getUserLocation(), Validators.required)
     );
   }
 
-  addUniversityControl() {
-    if (this.angForm.contains("university")) {
-      return;
+  /** Ubicacion guardada del usuario, o `null` si no tiene ninguna. */
+  private getUserLocation(): UserLocation | null {
+    const location = {} as UserLocation;
+    for (const field of USER_LOCATION_FIELDS) {
+      location[field] = this.user?.[field] ?? "";
     }
-    this.angForm.addControl(
-      "university",
-      new UntypedFormControl(
-        this.getRelationId(this.user.university),
-        Validators.required
-      )
-    );
-  }
-
-  addCampusControl() {
-    if (this.angForm.contains("campus")) {
-      return;
-    }
-    this.angForm.addControl(
-      "campus",
-      new UntypedFormControl(
-        this.getRelationId(this.user.campus),
-        Validators.required
-      )
-    );
+    return USER_LOCATION_FIELDS.some((field) => location[field]) ? location : null;
   }
 
   removeProfesionControl() {
@@ -452,22 +469,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  removeCityControl() {
-    if (this.angForm.contains("city")) {
-      this.angForm.removeControl("city");
-    }
-  }
-
-  removeUniversityControl() {
-    if (this.angForm.contains("university")) {
-      this.angForm.removeControl("university");
-    }
-  }
-  removeCampusControl() {
-    if (this.angForm.contains("campus")) {
-      this.angForm.removeControl("campus");
-    }
-  }
   addExpertControls() {
     if (this.angForm.contains("levelExpertF")) {
       return;
@@ -491,8 +492,8 @@ export class ProfileComponent implements OnInit {
     this.angForm.addControl(
       "academic",
       new UntypedFormControl(this.user.collaboratingExpert?.academic_profile || null, [
-        //Validators.required,
-        Validators.pattern(this.textOnlyPattern),
+        // Texto libre, como en el registro (los expertos suelen poner un enlace).
+        Validators.maxLength(this.academicMaxLength),
       ])
     );
   }
@@ -563,14 +564,8 @@ export class ProfileComponent implements OnInit {
   get profession() {
     return this.angForm.get("profession");
   }
-  get city() {
-    return this.angForm.get("city");
-  }
-  get university() {
-    return this.angForm.get("university");
-  }
-  get campus() {
-    return this.angForm.get("campus");
+  get location() {
+    return this.angForm.get("location");
   }
   get terms() {
     return this.angForm.get("terms");
@@ -641,18 +636,31 @@ export class ProfileComponent implements OnInit {
     const payload = this.buildUpdatePayload();
     try {
       const res = await firstValueFrom(this.userService.updateUser(payload)) as ProfileUserResponse;
-      if (res?.id) {
-        this.user = res;
+      // El PUT responde solo `{"message": ...}`: se vuelve a pedir el usuario
+      // para que "Descartar cambios" vuelva a lo recien guardado y no a lo de antes.
+      const savedUser = res?.id ? res : await this.reloadUser();
+      if (savedUser) {
+        this.user = savedUser;
         this.createForm();
-        await this.loadDataAddress();
       }
+      this.markFormAsSaved();
+      this.cdr.detectChanges();
       this.showSuccess(translateInstant(this.languageService.translate, "profile.updateSuccess", "Los datos se han actualizado con éxito"));
-      this.syncSessionUser(res?.id ? res : payload);
+      this.syncSessionUser(savedUser ?? payload);
       Swal.close();
       this.validateEmail = false;
     } catch (err: unknown) {
       this.handleValidateUserError(err);
       Swal.close();
+    }
+  }
+
+  /** Usuario actual desde el backend, o `null` si no se pudo leer. */
+  private async reloadUser(): Promise<ProfileUserResponse | null> {
+    try {
+      return await firstValueFrom(this.userService.getUserDetail(this.loginService.user.id)) as ProfileUserResponse;
+    } catch {
+      return null;
     }
   }
 
@@ -704,9 +712,15 @@ export class ProfileComponent implements OnInit {
     const error = err as HttpErrorResponse & {
       error?: {
         message?: string;
-      };
+      } & UserLocationErrors;
     };
     const message = error?.error?.message;
+    const locationError = getLocationErrorMessage(this.languageService.translate, error?.error);
+
+    if (locationError) {
+      this.showError(locationError);
+      return;
+    }
 
     if (message == "Debe tener un email institucional") {
       if (this.roleUser) {
@@ -764,9 +778,6 @@ export class ProfileComponent implements OnInit {
       payload.professions = [
         professionValue?.[0]?.id ?? professionValue?.id ?? professionValue,
       ];
-      payload.city = this.angForm.value.city;
-      payload.university = this.angForm.value.university;
-      payload.campus = this.angForm.value.campus;
     }
 
     if (this.checkEx) {
@@ -774,9 +785,12 @@ export class ProfileComponent implements OnInit {
       payload.expert_level = this.angForm.value.levelExpertF;
       payload.web = this.angForm.value.url || null;
       payload.academic_profile = this.angForm.value.academic || null;
-      payload.city = this.angForm.value.city;
-      payload.university = this.angForm.value.university;
-      payload.campus = this.angForm.value.campus;
+    }
+
+    // Los seis campos, aunque provincia o ciudad vayan vacias: el backend
+    // conserva los omitidos y quedaria la provincia del pais anterior (D8).
+    if ((this.checkTe || this.checkEx) && this.angForm.value.location) {
+      Object.assign(payload, this.angForm.value.location);
     }
 
     return payload;
@@ -838,22 +852,19 @@ export class ProfileComponent implements OnInit {
       this.user.professions = [
         professionValue?.[0]?.id ?? professionValue?.id ?? professionValue,
       ];
-      this.user.city = this.angForm.value.city;
-      this.user.university = this.angForm.value.university;
-      this.user.campus = this.angForm.value.campus;
     }
     if (this.checkEx) {
       this.user.collaboratingExpert = this.user.collaboratingExpert || {};
       this.user.expert_level = this.angForm.value.levelExpertF;
       this.user.collaboratingExpert.expert_level = this.angForm.value.levelExpertF;
-      this.user.city = this.angForm.value.city;
-      this.user.university = this.angForm.value.university;
-      this.user.campus = this.angForm.value.campus;
 
       this.user.web = this.angForm.value.url || null;
       this.user.academic_profile = this.angForm.value.academic || null;
       this.user.collaboratingExpert.web = this.angForm.value.url || null;
       this.user.collaboratingExpert.academic_profile = this.angForm.value.academic || null;
+    }
+    if ((this.checkTe || this.checkEx) && this.angForm.value.location) {
+      Object.assign(this.user, this.angForm.value.location);
     }
   }
   selectLevels(evt) {
@@ -985,10 +996,6 @@ export class ProfileComponent implements OnInit {
       ids.push("academic_required");
     }
 
-    if (this.controlHasError("academic", "pattern")) {
-      ids.push("academic_pattern");
-    }
-
     return ids.length ? ids.join(" ") : null;
   }
 
@@ -1037,69 +1044,4 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
-  /**
-   * Reinicia universidad y campus cuando cambia la ciudad para evitar
-   * combinaciones institucionales invalidas.
-   */
-  async onChangeCity(evt: unknown) {
-    try {
-      const cityId = this.getSelectEventId(evt);
-      this.angForm.controls["city"].setValue(cityId);
-      this.universities = [];
-      this.campusArray = [];
-      this.angForm.controls["university"]?.setValue(null);
-      this.angForm.controls["campus"]?.setValue(null);
-
-      if (!cityId) {
-        return;
-      }
-
-      this.universities = await firstValueFrom(
-        this._addressService.getUniversitiesByCityActive(cityId)
-      );
-    } catch (error) {
-      this.universities = [];
-      this.campusArray = [];
-      console.log(error);
-    }
-  }
-
-  /**
-   * Reinicia campus cuando cambia la universidad y recarga solo los campus
-   * validos para la nueva seleccion.
-   */
-  async onChangeUniversity(evt: unknown) {
-    try {
-      const universityId = this.getSelectEventId(evt);
-      this.angForm.controls["university"].setValue(universityId);
-      this.campusArray = [];
-
-      this.angForm.controls["campus"]?.setValue(null);
-
-      if (!universityId) {
-        return;
-      }
-
-      this.campusArray = await firstValueFrom(
-        this.loadCampusByUniversityAndCity(universityId)
-      );
-    } catch (error) {
-      this.campusArray = [];
-      console.log(error);
-    }
-  }
-
-  async onChangeCampus(evt: unknown) {
-    this.angForm.controls["campus"].setValue(this.getSelectEventId(evt));
-  }
-
-  private loadCampusByUniversityAndCity(universityId: number, currentCityId?: number | null) {
-    const cityId = currentCityId ?? this.getRelationId(this.angForm?.controls["city"]?.value);
-
-    return cityId
-      ? this._addressService.getCampusByUniversityActive(universityId, cityId)
-      : this._addressService.getCampusByUniversityActive(universityId);
-  }
-
 }

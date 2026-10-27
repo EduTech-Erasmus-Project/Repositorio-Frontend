@@ -1,9 +1,10 @@
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 import { MessageService } from "primeng/api";
-import { AddressService } from "src/app/admin/services/address.service";
+import Swal from "sweetalert2";
+import { UserLocation } from "src/app/core/interfaces/user-location";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { LanguageService } from "src/app/services/language.service";
 import { LoginService } from "src/app/services/login.service";
@@ -11,19 +12,34 @@ import { SearchService } from "src/app/services/search.service";
 import { UserService } from "src/app/services/user.service";
 import { ProfileComponent } from "./profile.component";
 
+const EC_LOCATION: UserLocation = {
+  country_code: "EC",
+  country_name: "Ecuador",
+  province_code: "P",
+  province_name: "Pichincha",
+  city_name: "Quito",
+  university_name: "UPS",
+};
+
+const MX_LOCATION: UserLocation = {
+  country_code: "MX",
+  country_name: "México",
+  province_code: "JAL",
+  province_name: "Jalisco",
+  city_name: "Guadalajara",
+  university_name: "Universidad de Guadalajara",
+};
+
 describe("ProfileComponent", () => {
   let fixture: ComponentFixture<ProfileComponent>;
   let component: ProfileComponent;
-  let addressServiceSpy: jasmine.SpyObj<AddressService>;
   let searchServiceSpy: jasmine.SpyObj<SearchService>;
   let userServiceSpy: jasmine.SpyObj<UserService>;
 
+  let messageServiceSpy: jasmine.SpyObj<MessageService>;
+
   beforeEach(async () => {
-    addressServiceSpy = jasmine.createSpyObj("AddressService", [
-      "getCitiesActive",
-      "getUniversitiesByCityActive",
-      "getCampusByUniversityActive",
-    ]);
+    messageServiceSpy = jasmine.createSpyObj("MessageService", ["add"]);
     searchServiceSpy = jasmine.createSpyObj("SearchService", [
       "getProfession",
       "getLevelEducation",
@@ -40,9 +56,6 @@ describe("ProfileComponent", () => {
     searchServiceSpy.getPreferencesArea.and.returnValue(of([]));
     searchServiceSpy.getInterestAreas.and.returnValue(of({ values: [] } as any));
     userServiceSpy.getUserDetail.and.returnValue(of({} as any));
-    addressServiceSpy.getCitiesActive.and.returnValue(of([]));
-    addressServiceSpy.getUniversitiesByCityActive.and.returnValue(of([]));
-    addressServiceSpy.getCampusByUniversityActive.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, FormsModule],
@@ -64,7 +77,7 @@ describe("ProfileComponent", () => {
           provide: UserService,
           useValue: userServiceSpy,
         },
-        { provide: MessageService, useValue: jasmine.createSpyObj("MessageService", ["add"]) },
+        { provide: MessageService, useValue: messageServiceSpy },
         {
           provide: BreadcrumbService,
           useValue: jasmine.createSpyObj("BreadcrumbService", ["setItems"]),
@@ -74,10 +87,10 @@ describe("ProfileComponent", () => {
           useValue: {
             translate: {
               get: jasmine.createSpy("get").and.returnValue(of("Texto traducido")),
+              instant: (key: string) => ({ "location.city": "Ciudad" })[key] ?? key,
             },
           },
         },
-        { provide: AddressService, useValue: addressServiceSpy },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
@@ -120,9 +133,7 @@ describe("ProfileComponent", () => {
         professions: [{ id: 7, description: "Ingeniero" }],
       },
       collaboratingExpert: null,
-      city: { id: 5, name: "Quito" },
-      university: { id: 8, name: "UPS" },
-      campus: { id: 13, name: "Campus Sur" },
+      ...EC_LOCATION,
     } as any;
   }
 
@@ -139,13 +150,11 @@ describe("ProfileComponent", () => {
         web: "https://example.com",
         academic_profile: "Perfil academico",
       },
-      city: { id: 9, name: "Cuenca" },
-      university: { id: 15, name: "UPS Cuenca" },
-      campus: { id: 22, name: "El Vecino" },
+      ...MX_LOCATION,
     } as any;
   }
 
-  function createTeacherUserWithNumericRelations() {
+  function createTeacherUserWithoutLocation() {
     return {
       id: 4,
       first_name: "Mario",
@@ -156,11 +165,52 @@ describe("ProfileComponent", () => {
         professions: [{ id: 9, description: "Licenciado" }],
       },
       collaboratingExpert: null,
-      city: 5,
-      university: 8,
-      campus: 13,
+      country_code: "",
+      country_name: "",
+      province_code: "",
+      province_name: "",
+      city_name: "",
+      university_name: "",
     } as any;
   }
+
+  it("debe detectar cambios sin guardar y descartarlos", async () => {
+    component.user = createTeacherUser();
+    await component.discardChanges();
+
+    expect(component.hasUnsavedChanges).toBeFalse();
+    expect(component.confirmLeave()).toBeTrue();
+
+    component.angForm.get("name")?.setValue("Carla");
+    expect(component.hasUnsavedChanges).toBeTrue();
+
+    // Volver al valor original tambien cuenta como sin cambios.
+    component.angForm.get("name")?.setValue("Carlos");
+    expect(component.hasUnsavedChanges).toBeFalse();
+
+    // El usuario cambia la ubicacion (el componente marca el control como modificado).
+    const location = component.angForm.get("location");
+    location?.markAsDirty();
+    location?.setValue(MX_LOCATION);
+    expect(component.hasUnsavedChanges).toBeTrue();
+
+    await component.discardChanges();
+    expect(component.hasUnsavedChanges).toBeFalse();
+    expect(component.angForm.get("location")?.value).toEqual(EC_LOCATION);
+  });
+
+  it("no debe marcar cambios cuando la precarga completa la ubicacion de un usuario migrado", async () => {
+    component.user = { ...createTeacherUser(), province_code: "", province_name: "PICHINCHA" };
+    await component.discardChanges();
+
+    // Lo que hace `app-user-location-fields` al terminar de precargar: completa
+    // el codigo y el nombre de la provincia sin marcar el control.
+    component.angForm.get("location")?.setValue(EC_LOCATION, { emitModelToViewChange: false });
+
+    expect(component.angForm.get("location")?.pristine).toBeTrue();
+    expect(component.hasUnsavedChanges).toBeFalse();
+    expect(component.confirmLeave()).toBeTrue();
+  });
 
   it("debe crear los controles de estudiante con los valores precargados", () => {
     component.user = createStudentUser();
@@ -180,29 +230,35 @@ describe("ProfileComponent", () => {
     expect(component.angForm.get("checkEx")?.disabled).toBeTrue();
   });
 
-  it("debe precargar direccion y profesion para docente", () => {
+  it("debe precargar la ubicacion y la profesion del docente", () => {
     component.user = createTeacherUser();
 
     component.createForm();
 
     expect(component.angForm.get("profession")?.value).toBe(7);
-    expect(component.angForm.get("city")?.value).toBe(5);
-    expect(component.angForm.get("university")?.value).toBe(8);
-    expect(component.angForm.get("campus")?.value).toBe(13);
+    expect(component.angForm.get("location")?.value).toEqual(EC_LOCATION);
+    expect(component.angForm.contains("city")).toBeFalse();
+    expect(component.angForm.contains("campus")).toBeFalse();
   });
 
-  it("debe soportar direccion como ids numericos planos", () => {
-    component.user = createTeacherUserWithNumericRelations();
+  it("debe pedir la ubicacion si el usuario no tiene una guardada", () => {
+    component.user = createTeacherUserWithoutLocation();
 
     component.createForm();
 
-    expect(component.angForm.get("profession")?.value).toBe(9);
-    expect(component.angForm.get("city")?.value).toBe(5);
-    expect(component.angForm.get("university")?.value).toBe(8);
-    expect(component.angForm.get("campus")?.value).toBe(13);
+    expect(component.angForm.get("location")?.value).toBeNull();
+    expect(component.angForm.get("location")?.hasError("required")).toBeTrue();
   });
 
-  it("debe precargar direccion y datos academicos para experto", () => {
+  it("no debe pedir ubicacion al estudiante", () => {
+    component.user = createStudentUser();
+
+    component.createForm();
+
+    expect(component.angForm.contains("location")).toBeFalse();
+  });
+
+  it("debe precargar la ubicacion y los datos academicos del experto", () => {
     component.user = createExpertUser();
 
     component.createForm();
@@ -210,9 +266,28 @@ describe("ProfileComponent", () => {
     expect(component.angForm.get("levelExpertF")?.value).toBe("Alto");
     expect(component.angForm.get("url")?.value).toBe("https://example.com");
     expect(component.angForm.get("academic")?.value).toBe("Perfil academico");
-    expect(component.angForm.get("city")?.value).toBe(9);
-    expect(component.angForm.get("university")?.value).toBe(15);
-    expect(component.angForm.get("campus")?.value).toBe(22);
+    expect(component.angForm.get("location")?.value).toEqual(MX_LOCATION);
+  });
+
+  it("debe aceptar un enlace como perfil academico", () => {
+    component.user = createExpertUser();
+    component.createForm();
+
+    component.angForm.get("academic")?.setValue("https://orcid.org/0000-0002-1825-0097");
+
+    expect(component.angForm.get("academic")?.valid).toBeTrue();
+  });
+
+  it("debe aceptar nombres con tildes y de otros idiomas hasta 50 caracteres", () => {
+    component.user = createTeacherUser();
+    component.createForm();
+
+    for (const value of ["Lucía", "Peña Gómez", "Zoë", "O'Connor", "Müller-Chen"]) {
+      component.angForm.get("lastname")?.setValue(value);
+      expect(component.angForm.get("lastname")?.valid).withContext(value).toBeTrue();
+    }
+    component.angForm.get("name")?.setValue("A".repeat(51));
+    expect(component.angForm.get("name")?.hasError("maxlength")).toBeTrue();
   });
 
   it("debe exigir descripcion de discapacidad cuando el valor es yes", () => {
@@ -232,7 +307,7 @@ describe("ProfileComponent", () => {
     expect(component.angForm.get("typeDisability")?.hasError("required")).toBeFalse();
   });
 
-  it("debe mapear correctamente profession y direccion para docente", () => {
+  it("debe mapear profesion y ubicacion del docente", () => {
     component.user = createTeacherUser();
     component.createForm();
 
@@ -240,21 +315,17 @@ describe("ProfileComponent", () => {
       name: "Carlos",
       lastname: "Lopez",
       profession: 7,
-      city: 5,
-      university: 8,
-      campus: 13,
+      location: MX_LOCATION,
     });
 
     component.getDataMaped();
 
     expect(component.user.roles).toEqual(["teacher"]);
     expect(component.user.professions).toEqual([7]);
-    expect(component.user.city).toBe(5);
-    expect(component.user.university).toBe(8);
-    expect(component.user.campus).toBe(13);
+    expect(component.user).toEqual(jasmine.objectContaining(MX_LOCATION));
   });
 
-  it("debe mapear direccion y datos de experto al guardar", () => {
+  it("debe mapear ubicacion y datos de experto al guardar", () => {
     component.user = createExpertUser();
     component.createForm();
 
@@ -262,9 +333,7 @@ describe("ProfileComponent", () => {
       levelExpertF: "Medio",
       url: "https://nuevo.example.com",
       academic: "Nuevo perfil",
-      city: 9,
-      university: 15,
-      campus: 22,
+      location: EC_LOCATION,
     });
 
     component.getDataMaped();
@@ -274,12 +343,10 @@ describe("ProfileComponent", () => {
     expect(component.user.collaboratingExpert.expert_level).toBe("Medio");
     expect(component.user.web).toBe("https://nuevo.example.com");
     expect(component.user.academic_profile).toBe("Nuevo perfil");
-    expect(component.user.city).toBe(9);
-    expect(component.user.university).toBe(15);
-    expect(component.user.campus).toBe(22);
+    expect(component.user).toEqual(jasmine.objectContaining(EC_LOCATION));
   });
 
-  it("debe construir el payload de actualizacion para docente", () => {
+  it("debe enviar los seis campos de ubicacion del docente", () => {
     component.user = createTeacherUser();
     component.createForm();
 
@@ -288,21 +355,42 @@ describe("ProfileComponent", () => {
       lastname: "Lopez",
       email: "carlos@test.com",
       profession: 7,
-      city: 5,
-      university: 8,
-      campus: 13,
     });
 
     const payload = (component as any).buildUpdatePayload();
 
     expect(payload.roles).toEqual(["teacher"]);
     expect(payload.professions).toEqual([7]);
-    expect(payload.city).toBe(5);
-    expect(payload.university).toBe(8);
-    expect(payload.campus).toBe(13);
+    expect(payload).toEqual(jasmine.objectContaining(EC_LOCATION));
+    expect(payload.city).toBeUndefined();
+    expect(payload.university).toBeUndefined();
+    expect(payload.campus).toBeUndefined();
   });
 
-  it("debe construir el payload de actualizacion para experto", () => {
+  it("debe enviar provincia y ciudad vacias al cambiar a un pais sin provincias", () => {
+    component.user = createTeacherUser();
+    component.createForm();
+
+    component.angForm.patchValue({
+      location: {
+        country_code: "MO",
+        country_name: "Macau S.A.R.",
+        province_code: "",
+        province_name: "",
+        city_name: "Macao",
+        university_name: "University of Macau",
+      },
+    });
+
+    const payload = (component as any).buildUpdatePayload();
+
+    expect(payload.country_code).toBe("MO");
+    expect(payload.province_code).toBe("");
+    expect(payload.province_name).toBe("");
+    expect(payload.city_name).toBe("Macao");
+  });
+
+  it("debe enviar la ubicacion y los datos del experto", () => {
     component.user = createExpertUser();
     component.createForm();
 
@@ -313,9 +401,6 @@ describe("ProfileComponent", () => {
       levelExpertF: "Medio",
       url: "https://nuevo.example.com",
       academic: "Nuevo perfil",
-      city: 9,
-      university: 15,
-      campus: 22,
     });
 
     const payload = (component as any).buildUpdatePayload();
@@ -324,37 +409,54 @@ describe("ProfileComponent", () => {
     expect(payload.expert_level).toBe("Medio");
     expect(payload.web).toBe("https://nuevo.example.com");
     expect(payload.academic_profile).toBe("Nuevo perfil");
-    expect(payload.city).toBe(9);
-    expect(payload.university).toBe(15);
-    expect(payload.campus).toBe(22);
+    expect(payload).toEqual(jasmine.objectContaining(MX_LOCATION));
   });
 
-  it("debe cargar universidades al cambiar de ciudad", async () => {
-    component.user = createTeacherUser();
+  it("no debe enviar ubicacion en el perfil del estudiante", () => {
+    component.user = createStudentUser();
     component.createForm();
-    addressServiceSpy.getUniversitiesByCityActive.and.returnValue(
-      of([{ id: 30, name: "UPS Nueva" }] as any)
-    );
 
-    await component.onChangeCity({ target: { value: 30 } } as any);
+    const payload = (component as any).buildUpdatePayload();
 
-    expect(component.angForm.get("city")?.value).toBe(30);
-    expect(addressServiceSpy.getUniversitiesByCityActive).toHaveBeenCalledWith(30);
-    expect(component.universities).toEqual([{ id: 30, name: "UPS Nueva" }] as any);
+    expect(payload.country_code).toBeUndefined();
+    expect(payload.city_name).toBeUndefined();
   });
 
-  it("debe cargar campus al cambiar de universidad", async () => {
+  it("debe tomar lo recien guardado como base para descartar cambios", async () => {
+    component.user = createTeacherUser();
+    await component.discardChanges();
+    // El PUT solo responde un mensaje; el perfil vuelve a pedir el usuario.
+    userServiceSpy.updateUser.and.returnValue(of({ message: "success update" } as any));
+    userServiceSpy.getUserDetail.and.returnValue(of({ ...createTeacherUser(), ...MX_LOCATION } as any));
+    spyOn(Swal, "fire");
+    spyOn(Swal, "showLoading");
+    spyOn(Swal, "close");
+
+    const location = component.angForm.get("location");
+    location?.markAsDirty();
+    location?.setValue(MX_LOCATION);
+    component.angForm.patchValue({ profession: 7 });
+    await component.validateUser();
+
+    expect(userServiceSpy.getUserDetail).toHaveBeenCalled();
+    expect(component.hasUnsavedChanges).toBeFalse();
+    await component.discardChanges();
+    expect(component.angForm.get("location")?.value).toEqual(MX_LOCATION);
+  });
+
+  it("debe mostrar los errores de ubicacion que devuelve el backend", async () => {
     component.user = createTeacherUser();
     component.createForm();
-    addressServiceSpy.getCampusByUniversityActive.and.returnValue(
-      of([{ id: 40, name: "Campus Norte" }] as any)
+    component.angForm.patchValue({ profession: 7 });
+    userServiceSpy.updateUser.and.returnValue(
+      throwError(() => ({ status: 400, error: { city_name: ["Este campo es obligatorio."] } }))
     );
 
-    await component.onChangeUniversity({ target: { value: 40 } } as any);
+    await component.validateUser();
 
-    expect(component.angForm.get("university")?.value).toBe(40);
-    expect(addressServiceSpy.getCampusByUniversityActive).toHaveBeenCalledWith(40, 5);
-    expect(component.campusArray).toEqual([{ id: 40, name: "Campus Norte" }] as any);
+    expect(messageServiceSpy.add).toHaveBeenCalledWith(
+      jasmine.objectContaining({ severity: "error", detail: "Ciudad: Este campo es obligatorio." })
+    );
   });
 
   it("debe generar la previsualizacion local al seleccionar una nueva imagen", () => {

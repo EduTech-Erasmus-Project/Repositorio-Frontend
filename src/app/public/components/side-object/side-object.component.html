@@ -32,22 +32,28 @@
     <p-scrollPanel styleClass="side-object-scroll">
       <div class="side-object__list">
         @for (object of objects; track trackByObject($index, object)) {
-          <button
-            type="button"
-            pRipple
-            class="side-object-card"
-            (click)="onClick(object.slug)"
-            >
+          <!-- El titulo es el enlace al OA y cubre toda la tarjeta; el autor es un
+               enlace aparte por encima (un enlace dentro de un boton no es valido). -->
+          <article class="side-object-card">
             <img
               loading="lazy"
               class="side-object-card__image"
               [src]="object.avatar"
-              [alt]="object.general_title"
+              alt=""
               />
             <div class="side-object-card__content">
-              <h3 class="side-object-card__heading">{{ object.general_title }}</h3>
+              <h3 class="side-object-card__heading">
+                <a class="side-object-card__link" [routerLink]="['/object', object.slug]">{{ object.general_title }}</a>
+              </h3>
               <p class="side-object-card__author">
-                {{ object.user_created.first_name }} {{ object.user_created.last_name }}
+                @if (object.user_created?.user_key) {
+                  <a class="side-object-card__author-link" [routerLink]="['/author', object.user_created.user_key]"
+                    [attr.aria-label]="'authorPage.viewProfileOf' | translate: { name: object.user_created.first_name + ' ' + object.user_created.last_name }">
+                    {{ object.user_created.first_name }} {{ object.user_created.last_name }}
+                  </a>
+                } @else {
+                  {{ object.user_created?.first_name }} {{ object.user_created?.last_name }}
+                }
               </p>
               <span class="side-object-card__category">{{ object.knowledge_area?.name }}</span>
               <div class="side-object-card__rating">
@@ -59,7 +65,7 @@
                 ></p-rating>
               </div>
             </div>
-          </button>
+          </article>
         }
       </div>
     </p-scrollPanel>

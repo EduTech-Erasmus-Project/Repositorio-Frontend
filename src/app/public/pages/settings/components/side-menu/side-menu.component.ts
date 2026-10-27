@@ -68,8 +68,11 @@ export class SideMenuComponent implements OnInit {
     this.items = items;
   }
 
+  /**
+   * Opciones de la cuenta: Mi perfil, Perfil publico (solo docentes) y Seguridad.
+   */
   private buildBaseItems(): MenuItem[] {
-    return [
+    const items: MenuItem[] = [
       {
         label: translateInstant(this.languageService.translate, "menu.sideMenu.myAccount", "Mi perfil"),
         icon: "pi pi-fw pi-user-edit",
@@ -79,6 +82,17 @@ export class SideMenuComponent implements OnInit {
           styleClass: "router-active",
         },
       },
+    ];
+
+    if (this.loginService.validateRole("teacher")) {
+      items.push(this.buildMenuRouteItem(
+        translateInstant(this.languageService.translate, "menu.sideMenu.publicProfile", "Perfil público"),
+        "pi pi-fw pi-id-card",
+        "public-profile"
+      ));
+    }
+
+    items.push(
       {
         label: translateInstant(this.languageService.translate, "menu.sideMenu.security", "Seguridad"),
         icon: "pi pi-fw pi-key",
@@ -87,8 +101,10 @@ export class SideMenuComponent implements OnInit {
           exact: true,
           styleClass: "router-active",
         },
-      },
-    ];
+      }
+    );
+
+    return items;
   }
 
   private appendStudentItems(items: MenuItem[]): void {

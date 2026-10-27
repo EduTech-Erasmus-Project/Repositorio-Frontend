@@ -1,0 +1,220 @@
+<article class="author-profile-card" [class.author-profile-card--embedded]="!showHeader()">
+  @if (showHeader()) {
+    <header class="author-profile-card-hero">
+      <div class="author-profile-card-avatar-shell">
+        @if (profile().image_url; as imageUrl) {
+          <img class="author-profile-card-avatar-image" [src]="imageUrl" [alt]="fullName()" loading="lazy" />
+        } @else {
+          <div class="author-profile-card-avatar-fallback" aria-hidden="true">{{ initials() }}</div>
+        }
+      </div>
+      <div class="author-profile-card-hero-copy">
+        <p class="author-profile-card-kicker">{{ 'authorProfile.teacher' | translate }}</p>
+        <h2>{{ fullName() }}</h2>
+        @if (profile().headline) {
+          <p class="author-profile-card-headline">{{ profile().headline }}</p>
+        }
+        @if (institution()) {
+          <p class="author-profile-card-meta">
+            <i class="pi pi-building" aria-hidden="true"></i>
+            {{ institution() }}
+          </p>
+        }
+        @if (profile().email) {
+          <p class="author-profile-card-meta">
+            <i class="pi pi-envelope" aria-hidden="true"></i>
+            <a class="author-profile-card-link" [href]="'mailto:' + profile().email">{{ profile().email }}</a>
+          </p>
+        }
+        @if (profile().member_since) {
+          <p class="author-profile-card-meta">
+            <i class="pi pi-calendar" aria-hidden="true"></i>
+            {{ 'authorProfile.memberSince' | translate: { year: profile().member_since } }}
+          </p>
+        }
+      </div>
+    </header>
+  }
+
+  @if (isPublic() === false) {
+    <p-tag
+      class="author-profile-card-status"
+      severity="warn"
+      icon="pi pi-eye-slash"
+      [value]="'authorProfile.profileNotPublic' | translate"
+    ></p-tag>
+  }
+
+  @if (!showHeader()) {
+    @if (profile().headline || profile().bio) {
+      <section class="author-profile-card-section">
+        <div class="author-profile-card-grid">
+          @if (profile().headline) {
+            <article class="author-profile-card-data-card author-profile-card-data-card--stacked">
+              <span>{{ 'authorProfile.headline' | translate }}</span>
+              <strong>{{ profile().headline }}</strong>
+              @if (isHidden('headline')) {
+                <ng-container *ngTemplateOutlet="hiddenTag"></ng-container>
+              }
+            </article>
+          }
+          @if (profile().bio) {
+            <article class="author-profile-card-data-card author-profile-card-data-card--stacked">
+              <span>{{ 'authorProfile.about' | translate }}</span>
+              <p class="author-profile-card-text">{{ profile().bio }}</p>
+              @if (isHidden('bio')) {
+                <ng-container *ngTemplateOutlet="hiddenTag"></ng-container>
+              }
+            </article>
+          }
+        </div>
+      </section>
+    }
+  } @else if (profile().bio) {
+    <section class="author-profile-card-section">
+      <div class="author-profile-card-section-header">
+        <h3 [attr.aria-level]="showHeader() ? null : 4">{{ 'authorProfile.about' | translate }}</h3>
+      </div>
+      <p class="author-profile-card-text">{{ profile().bio }}</p>
+    </section>
+  }
+
+  @if (profile().highest_degree || infoItems().length || professions().length || knowledgeAreas().length) {
+    <section class="author-profile-card-section">
+      <div class="author-profile-card-section-header">
+        <h3 [attr.aria-level]="showHeader() ? null : 4">{{ 'authorProfile.academicInfo' | translate }}</h3>
+      </div>
+      <div class="author-profile-card-grid">
+        @if (profile().highest_degree; as level) {
+          <article class="author-profile-card-data-card">
+            <span>{{ 'authorProfile.highestDegree' | translate }}</span>
+            <strong>{{ 'authorProfile.degreeLevels.' + level | translate }}</strong>
+          </article>
+        }
+        @for (item of infoItems(); track item.labelKey) {
+          <article class="author-profile-card-data-card">
+            <span>{{ item.labelKey | translate }}</span>
+            <strong>{{ item.value }}</strong>
+            @if (item.hidden) {
+              <ng-container *ngTemplateOutlet="hiddenTag"></ng-container>
+            }
+          </article>
+        }
+        @if (professions().length) {
+          <article class="author-profile-card-data-card author-profile-card-data-card--stacked">
+            <span>{{ 'authorProfile.professions' | translate }}</span>
+            <div class="author-profile-card-chip-list">
+              @for (profession of professions(); track profession) {
+                <span class="author-profile-card-chip">{{ profession }}</span>
+              }
+            </div>
+          </article>
+        }
+        @if (knowledgeAreas().length) {
+          <article class="author-profile-card-data-card author-profile-card-data-card--stacked">
+            <span>{{ 'authorProfile.knowledgeAreas' | translate }}</span>
+            <div class="author-profile-card-chip-list">
+              @for (area of knowledgeAreas(); track area) {
+                <span class="author-profile-card-chip">{{ area }}</span>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+  @if (researchLines().length || subjects().length) {
+    <section class="author-profile-card-section">
+      <div class="author-profile-card-grid">
+        @if (researchLines().length) {
+          <article class="author-profile-card-data-card">
+            <span>{{ 'authorProfile.researchLines' | translate }}</span>
+            <div class="author-profile-card-chip-list">
+              @for (line of researchLines(); track $index) {
+                <span class="author-profile-card-chip">{{ line }}</span>
+              }
+            </div>
+            @if (isHidden('research_lines')) {
+              <ng-container *ngTemplateOutlet="hiddenTag"></ng-container>
+            }
+          </article>
+        }
+        @if (subjects().length) {
+          <article class="author-profile-card-data-card">
+            <span>{{ 'authorProfile.subjects' | translate }}</span>
+            <div class="author-profile-card-chip-list">
+              @for (subject of subjects(); track $index) {
+                <span class="author-profile-card-chip">{{ subject }}</span>
+              }
+            </div>
+            @if (isHidden('subjects')) {
+              <ng-container *ngTemplateOutlet="hiddenTag"></ng-container>
+            }
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+  @if (degrees().length) {
+    <section class="author-profile-card-section">
+      <div class="author-profile-card-section-header">
+        <h3 [attr.aria-level]="showHeader() ? null : 4">{{ 'authorProfile.degrees' | translate }}</h3>
+      </div>
+      <ul class="author-profile-card-item-list">
+        @for (degree of degrees(); track $index) {
+          <li class="author-profile-card-item">
+            <div class="author-profile-card-item-copy">
+              <strong>{{ degree.title }}</strong>
+              <span>
+                {{ 'authorProfile.degreeLevels.' + degree.level | translate }} · {{ degree.institution }}
+                @if (degree.year) {
+                  · {{ degree.year }}
+                }
+              </span>
+            </div>
+            @if (degree.is_visible === false) {
+              <ng-container *ngTemplateOutlet="hiddenTag"></ng-container>
+            }
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  @if (links().length) {
+    <section class="author-profile-card-section">
+      <div class="author-profile-card-section-header">
+        <h3 [attr.aria-level]="showHeader() ? null : 4">{{ 'authorProfile.links' | translate }}</h3>
+      </div>
+      <ul class="author-profile-card-item-list">
+        @for (link of links(); track link.type) {
+          <li class="author-profile-card-item">
+            <a
+              class="author-profile-card-link author-profile-card-external"
+              [href]="link.url"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>{{ 'authorProfile.linkTypes.' + link.type | translate }}</span>
+              <i class="pi pi-external-link" aria-hidden="true"></i>
+              <span class="author-profile-card-sr-only">{{ 'authorProfile.opensNewTab' | translate }}</span>
+            </a>
+            @if (link.is_visible === false) {
+              <ng-container *ngTemplateOutlet="hiddenTag"></ng-container>
+            }
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  @if (!hasAcademicContent()) {
+    <p class="author-profile-card-empty">{{ 'authorProfile.empty' | translate }}</p>
+  }
+</article>
+
+<ng-template #hiddenTag>
+  <p-tag severity="secondary" icon="pi pi-eye-slash" [value]="'authorProfile.hiddenFromPublic' | translate"></p-tag>
+</ng-template>

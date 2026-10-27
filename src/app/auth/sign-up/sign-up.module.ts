@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SignUpRoutingModule } from './sign-up-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { SignUpComponent } from './sign-up.component';
+import { UserLocationFieldsComponent } from 'src/app/shared/user-location-fields/user-location-fields.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from 'src/app/app.component';
 
@@ -14,7 +15,8 @@ import { AppComponent } from 'src/app/app.component';
     SignUpRoutingModule,
     SharedModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    UserLocationFieldsComponent
   ],
   
   bootstrap: [AppComponent]

@@ -26,16 +26,6 @@ import { ExpertPendingComponent } from "./components/expert-pending/expert-pendi
 import { ExpertApprovedComponent } from "./components/expert-approved/expert-approved.component";
 import { ReportComponent } from "./components/report/report.component";
 import { MetadataQuestionListComponent } from "./components/metadata-question-list/metadata-question-create-list.component";
-import { CountriesListComponent } from "./components/countries-list/countries-list.component";
-import { CountriesFormComponent } from "./components/countries-form/countries-form.component";
-import { ProvincesListComponent } from "./components/provinces-list/provinces-list.component";
-import { ProvincesFormComponent } from "./components/provinces-form/provinces-form.component";
-import { CitiesListComponent } from "./components/cities-list/cities-list.component";
-import { CitiesFormComponent } from "./components/cities-form/cities-form.component";
-import { UniversityListComponent } from "./components/university-list/university-list.component";
-import { UniversityFormComponent } from "./components/university-form/university-form.component";
-import { CampusListComponent } from "./components/campus-list/campus-list.component";
-import { CampusFormComponent } from "./components/campus-form/campus-form.component";
 import { EmailDomainsListComponent } from "./components/email-domains-list/email-domains-list.component";
 import { EmailDomainsFormComponent } from "./components/email-domains-form/email-domains-form.component";
 import { EmailServerFormComponent } from "./components/email-server-form/email-server-form.component";
@@ -86,16 +76,6 @@ const routes: Routes = [
       { path: "administrator/register", component: AdministratorUserRegisterComponent },
       { path: "administrator/list", component: AdministratorUserListComponent },
       { path: "report", component: ReportComponent },
-      { path: "config/country", component: CountriesListComponent },
-      { path: "config/country/:id", component: CountriesFormComponent },
-      { path: "config/province", component: ProvincesListComponent },
-      { path: "config/province/:id", component: ProvincesFormComponent },
-      { path: "config/city", component: CitiesListComponent },
-      { path: "config/city/:id", component: CitiesFormComponent },
-      { path: "config/university", component: UniversityListComponent },
-      { path: "config/university/:id", component: UniversityFormComponent },
-      { path: "config/campus", component: CampusListComponent },
-      { path: "config/campus/:id", component: CampusFormComponent },
       { path: "config/domain", component: EmailDomainsListComponent },
       { path: "config/domain/:id", component: EmailDomainsFormComponent },
       { path: "config/server", component: EmailServerFormComponent },

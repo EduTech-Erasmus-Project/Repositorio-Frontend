@@ -1,0 +1,56 @@
+/* Misma tarjeta que los estados de "Mis objetos" y la paleta del perfil. */
+
+.complete-profile-notice {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #dbe5ee;
+  border-radius: 1.25rem;
+  background: #f8fbfc;
+  box-shadow: 0 14px 35px rgba(56, 80, 108, 0.08);
+}
+
+.complete-profile-notice__icon {
+  color: #3b5b68;
+  font-size: 1.75rem;
+}
+
+.complete-profile-notice__copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.complete-profile-notice__copy h3 {
+  margin: 0;
+  color: #1d3f5a;
+  font-size: 1.05rem;
+}
+
+.complete-profile-notice__copy p {
+  margin: 0.3rem 0 0;
+  color: #607285;
+  line-height: 1.5;
+}
+
+.complete-profile-notice__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+@media (max-width: 767px) {
+  .complete-profile-notice {
+    flex-wrap: wrap;
+  }
+
+  .complete-profile-notice__icon {
+    display: none;
+  }
+
+  .complete-profile-notice__actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

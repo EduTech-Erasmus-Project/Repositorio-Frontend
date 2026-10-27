@@ -27,9 +27,6 @@ function buildStudentProfileResponse() {
     },
     teacher: null,
     collaboratingExpert: null,
-    city: null,
-    university: null,
-    campus: null,
   };
 }
 
@@ -87,7 +84,8 @@ async function expectBreadcrumbContains(page: Page, expected: RegExp) {
 async function installProfileMocks(page: Page) {
   const currentProfile = buildStudentProfileResponse();
 
-  await page.route("**/api/v1/user-management/*", async (route) => {
+  // `GET /user-management/{id}` y `PUT /user-management/{id}/` (con barra final).
+  await page.route(/\/api\/v1\/user-management\/\d+\/?$/, async (route) => {
     const method = route.request().method();
 
     if (method === "GET") {
@@ -163,14 +161,6 @@ async function installProfileMocks(page: Page) {
       body: JSON.stringify({
         values: [{ id: 100, name: "Tecnologia" }],
       }),
-    });
-  });
-
-  await page.route("**/api/v1/address/cities/active", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify([]),
     });
   });
 }

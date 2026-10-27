@@ -68,44 +68,6 @@
   word-break: break-word;
 }
 
-.teacher-expert-profile-email {
-  margin: 0.55rem 0 0;
-  color: #64748b;
-  line-height: 1.6;
-  word-break: break-word;
-}
-
-.teacher-expert-profile-section {
-  padding-top: 1.25rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-.teacher-expert-profile-section:first-of-type {
-  padding-top: 0;
-  border-top: 0;
-}
-
-.teacher-expert-profile-section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-
-.teacher-expert-profile-section-header h3 {
-  margin: 0;
-  color: #344f5b;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.teacher-expert-profile-section-header span {
-  color: #64748b;
-  font-size: 0.88rem;
-}
-
 .teacher-expert-profile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -138,10 +100,6 @@
   word-break: break-word;
 }
 
-.teacher-expert-profile-data-card--stacked {
-  grid-column: 1 / -1;
-}
-
 .teacher-expert-profile-role-list {
   display: flex;
   flex-wrap: wrap;
@@ -162,23 +120,6 @@
   line-height: 1.3;
 }
 
-.teacher-expert-profile-list,
-.teacher-expert-profile-link-list {
-  margin: 0;
-  padding-left: 1.1rem;
-}
-
-.teacher-expert-profile-list li,
-.teacher-expert-profile-link-list li {
-  color: #344f5b;
-  line-height: 1.55;
-}
-
-.teacher-expert-profile-list li + li,
-.teacher-expert-profile-link-list li + li {
-  margin-top: 0.45rem;
-}
-
 .teacher-expert-profile-link {
   color: #3b5b68;
   text-decoration: underline;
@@ -187,6 +128,183 @@
 
 .teacher-expert-profile-link:hover {
   color: #2f4954;
+}
+
+.teacher-expert-profile-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.teacher-expert-profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.55rem 0 0;
+  color: #64748b;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* Fila de resumen: reemplaza las tarjetas de informacion general y docente. */
+.teacher-expert-profile-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0;
+  margin: 0;
+  border: 1px solid #dbe5ec;
+  border-radius: 16px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.teacher-expert-profile-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem 1.1rem;
+  border-right: 1px solid #e2e8f0;
+  min-width: 0;
+}
+
+.teacher-expert-profile-summary-item:last-child {
+  border-right: 0;
+}
+
+.teacher-expert-profile-summary-item dt {
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.teacher-expert-profile-summary-item dd {
+  margin: 0;
+  color: #344f5b;
+  font-weight: 600;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.teacher-expert-profile-summary-note {
+  color: #64748b;
+  font-weight: 400;
+}
+
+.teacher-expert-profile-accordion {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* El contenido del acordeon (grid interno de PrimeNG) no debe crecer mas que
+   la pantalla: asi la tabla se desplaza dentro de su caja en movil. */
+:host ::ng-deep .teacher-expert-profile-accordion .p-motion,
+:host ::ng-deep .teacher-expert-profile-accordion .p-accordioncontent-wrapper {
+  min-width: 0;
+}
+
+/* Docente que aun no guarda su perfil publico */
+.teacher-expert-profile-empty {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 1rem 1.1rem;
+  border: 1px dashed #dbe5ec;
+  border-radius: 16px;
+  background: #f8fbfc;
+  color: #607285;
+}
+
+.teacher-expert-profile-empty .pi {
+  color: #3b5b68;
+  font-size: 1.1rem;
+}
+
+.teacher-expert-profile-panel-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #344f5b;
+  font-weight: 700;
+}
+
+.teacher-expert-profile-panel-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  min-height: 1.5rem;
+  padding: 0 0.5rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 999px;
+  background: #f8fbfc;
+  color: #344f5b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* Tabla de OA: miniatura, titulo, fecha, vistas y descargas; la fila abre el OA. */
+.teacher-expert-profile-thumb-col {
+  width: 6rem;
+}
+
+.teacher-expert-profile-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.5rem;
+  height: 3rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 8px;
+  background: #f8fbfc;
+  color: #64748b;
+  overflow: hidden;
+}
+
+.teacher-expert-profile-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.teacher-expert-profile-row {
+  cursor: pointer;
+}
+
+.teacher-expert-profile-oa-title {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.teacher-expert-profile-oa-title:hover {
+  color: #2f4954;
+}
+
+.teacher-expert-profile-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.teacher-expert-profile-stat .pi {
+  color: #64748b;
+}
+
+.teacher-expert-profile-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media screen and (max-width: 640px) {
@@ -208,4 +326,14 @@
   .teacher-expert-profile-grid {
     grid-template-columns: 1fr;
   }
+
+  .teacher-expert-profile-summary-item {
+    border-right: 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .teacher-expert-profile-summary-item:last-child {
+    border-bottom: 0;
+  }
+
 }

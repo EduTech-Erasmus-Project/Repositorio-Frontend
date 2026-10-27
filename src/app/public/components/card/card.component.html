@@ -20,7 +20,13 @@
     </div>
     @if (authorName) {
       <div class="p-card-subtitle ng-star-inserted card-author">
-        {{ authorName }}
+        <!-- El autor lleva a su pagina publica; si no hay user_key, solo el nombre. -->
+        @if (authorKey) {
+          <a class="card-author-link" [routerLink]="['/author', authorKey]"
+            [attr.aria-label]="'authorPage.viewProfileOf' | translate: { name: authorName }">{{ authorName }}</a>
+        } @else {
+          {{ authorName }}
+        }
       </div>
     }
 
@@ -65,7 +71,7 @@
           (onShow)="show = true" (onHide)="show = false">
           @if (object) {
             <app-view-evaluacions [resultsEv]="resultsEv"
-              [roleExpert]="roleExpert">
+              [roleExpert]="showsOwnExpertEvaluation">
             </app-view-evaluacions>
           }
         </p-popover>

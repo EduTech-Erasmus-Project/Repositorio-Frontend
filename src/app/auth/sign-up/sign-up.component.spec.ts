@@ -2,15 +2,33 @@ import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
-import { of, BehaviorSubject } from "rxjs";
+import { of, BehaviorSubject, throwError } from "rxjs";
 import Swal from "sweetalert2";
 import { MessageService } from "primeng/api";
-import { AddressService } from "src/app/admin/services/address.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { LanguageService } from "src/app/services/language.service";
 import { SearchService } from "src/app/services/search.service";
 import { UserService } from "src/app/services/user.service";
+import { UserLocation } from "src/app/core/interfaces/user-location";
 import { SignUpComponent } from "./sign-up.component";
+
+const EC_LOCATION: UserLocation = {
+  country_code: "EC",
+  country_name: "Ecuador",
+  province_code: "P",
+  province_name: "Pichincha",
+  city_name: "Quito",
+  university_name: "Universidad Politecnica Salesiana",
+};
+
+const DE_LOCATION: UserLocation = {
+  country_code: "DE",
+  country_name: "Alemania",
+  province_code: "BY",
+  province_name: "Bavaria",
+  city_name: "Kleinstadt",
+  university_name: "Technische Universitat Munchen",
+};
 
 @Pipe({
     name: "translate",
@@ -27,24 +45,19 @@ describe("SignUpComponent", () => {
   let component: SignUpComponent;
   let routeParams$: BehaviorSubject<any>;
   let userServiceSpy: jasmine.SpyObj<UserService>;
-  let addressServiceSpy: jasmine.SpyObj<AddressService>;
   let routerSpy: jasmine.SpyObj<Router>;
   let messageServiceSpy: jasmine.SpyObj<MessageService>;
   let searchServiceSpy: jasmine.SpyObj<SearchService>;
   const instantTranslations: Record<string, string> = {
     "message.titleError": "Error",
     "register.submitting": "Registrando...",
+    "location.city": "Ciudad",
   };
 
   beforeEach(async () => {
     routeParams$ = new BehaviorSubject<any>({ register: "student" });
 
     userServiceSpy = jasmine.createSpyObj("UserService", ["registerUser"]);
-    addressServiceSpy = jasmine.createSpyObj("AddressService", [
-      "getCitiesActive",
-      "getUniversitiesByCityActive",
-      "getCampusByUniversityActive",
-    ]);
     searchServiceSpy = jasmine.createSpyObj("SearchService", [
       "getProfession",
       "getLevelEducation",
@@ -56,9 +69,6 @@ describe("SignUpComponent", () => {
     routerSpy = jasmine.createSpyObj("Router", ["navigate"]);
     routerSpy.navigate.and.returnValue(Promise.resolve(true));
     messageServiceSpy = jasmine.createSpyObj("MessageService", ["add"]);
-    addressServiceSpy.getCitiesActive.and.returnValue(of([]));
-    addressServiceSpy.getUniversitiesByCityActive.and.returnValue(of([]));
-    addressServiceSpy.getCampusByUniversityActive.and.returnValue(of([]));
     searchServiceSpy.getProfession.and.returnValue(of([]));
     searchServiceSpy.getLevelEducation.and.returnValue(of({ values: [] }));
     searchServiceSpy.getPreferencesArea.and.returnValue(of([]));
@@ -94,10 +104,6 @@ describe("SignUpComponent", () => {
         {
           provide: BreadcrumbService,
           useValue: jasmine.createSpyObj("BreadcrumbService", ["setItems"]),
-        },
-        {
-          provide: AddressService,
-          useValue: addressServiceSpy,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
@@ -202,9 +208,9 @@ describe("SignUpComponent", () => {
     component.createForm();
 
     expect(component.angForm.contains("profession")).toBeTrue();
-    expect(component.angForm.contains("city")).toBeTrue();
-    expect(component.angForm.contains("university")).toBeTrue();
-    expect(component.angForm.contains("campus")).toBeTrue();
+    expect(component.angForm.contains("location")).toBeTrue();
+    expect(component.angForm.contains("city" as any)).toBeFalse();
+    expect(component.angForm.contains("campus" as any)).toBeFalse();
     expect(component.angForm.get("check")?.disabled).toBeTrue();
     expect(component.angForm.get("checkEx")?.disabled).toBeTrue();
   });
@@ -271,9 +277,7 @@ describe("SignUpComponent", () => {
       password: "Password1",
       terms: true,
       profession: 1,
-      city: 5,
-      university: 8,
-      campus: 13,
+      location: EC_LOCATION,
     });
 
     await component.validateUser();
@@ -282,9 +286,12 @@ describe("SignUpComponent", () => {
     expect(userServiceSpy.registerUser.calls.mostRecent().args[0].roles).toEqual(["teacher"]);
     expect(component.user.roles).toEqual(["teacher"]);
     expect(component.user.professions).toEqual([1]);
-    expect(component.user.city).toBe(5);
-    expect(component.user.university).toBe(8);
-    expect(component.user.campus).toBe(13);
+    expect(userServiceSpy.registerUser.calls.mostRecent().args[0]).toEqual(
+      jasmine.objectContaining(EC_LOCATION)
+    );
+    for (const field of ["city", "university", "campus"]) {
+      expect(field in component.user).withContext(field).toBeFalse();
+    }
     expect(component.registered).toBeTrue();
     expect(component.showVerificationEmailMessage).toBeTrue();
     expect(Swal.close).toHaveBeenCalled();
@@ -333,9 +340,7 @@ describe("SignUpComponent", () => {
       lastname: "Mora",
       email: "luisa@test.com",
       password: "Password1",
-      city: 3,
-      university: 6,
-      campus: 9,
+      location: DE_LOCATION,
       levelExpertF: "Medio",
       url: "https://orcid.org/0000-0000-0000-0000",
       academic: "Perfil academico",
@@ -344,9 +349,7 @@ describe("SignUpComponent", () => {
     component.mapFormDataToUserPayload();
 
     expect(component.user.roles).toEqual(["expert"]);
-    expect(component.user.city).toBe(3);
-    expect(component.user.university).toBe(6);
-    expect(component.user.campus).toBe(9);
+    expect(component.user).toEqual(jasmine.objectContaining(DE_LOCATION));
     expect(component.user.expert_level).toBe("Medio");
     expect(component.user.web).toBe("https://orcid.org/0000-0000-0000-0000");
     expect(component.user.academic_profile).toBe("Perfil academico");
@@ -362,9 +365,7 @@ describe("SignUpComponent", () => {
       email: "luisa@test.com",
       password: "Password1",
       terms: true,
-      city: 3,
-      university: 6,
-      campus: 9,
+      location: DE_LOCATION,
       levelExpertF: "Medio",
       url: null,
       academic: null,
@@ -388,9 +389,7 @@ describe("SignUpComponent", () => {
       email: "luisa@test.com",
       password: "Password1",
       terms: true,
-      city: 3,
-      university: 6,
-      campus: 9,
+      location: DE_LOCATION,
       levelExpertF: "Medio",
       url: "https://orcid.org/0000-0000-0000-0000",
       academic: "Perfil academico",
@@ -401,45 +400,77 @@ describe("SignUpComponent", () => {
     expect(userServiceSpy.registerUser).toHaveBeenCalled();
     expect(userServiceSpy.registerUser.calls.mostRecent().args[0].roles).toEqual(["expert"]);
     expect(component.user.roles).toEqual(["expert"]);
-    expect(component.user.city).toBe(3);
-    expect(component.user.university).toBe(6);
-    expect(component.user.campus).toBe(9);
+    expect(component.user).toEqual(jasmine.objectContaining(DE_LOCATION));
     expect(component.user.expert_level).toBe("Medio");
     expect(component.registered).toBeTrue();
     expect(component.showVerificationEmailMessage).toBeTrue();
     expect(Swal.close).toHaveBeenCalled();
   });
 
-  it("debe cargar universidades al cambiar city desde el control", async () => {
+  it("no debe enviar el registro de docente sin ubicacion", async () => {
     createComponent("teacher");
     component.createForm();
-    addressServiceSpy.getUniversitiesByCityActive.and.returnValue(
-      of([{ id: 8, name: "UPS" }])
-    );
 
-    component.angForm.get("city")?.setValue(5);
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    component.angForm.patchValue({
+      name: "Carlos",
+      lastname: "Lopez",
+      email: "carlos@ups.edu.ec",
+      password: "Password1",
+      terms: true,
+      profession: 1,
+    });
 
-    expect(addressServiceSpy.getUniversitiesByCityActive).toHaveBeenCalledWith(5);
-    expect(component.universities).toEqual([{ id: 8, name: "UPS" }] as any);
-    expect(component.angForm.get("university")?.value == null).toBeTrue();
-    expect(component.angForm.get("campus")?.value == null).toBeTrue();
+    await component.validateUser();
+
+    expect(userServiceSpy.registerUser).not.toHaveBeenCalled();
+    expect(component.location?.hasError("required")).toBeTrue();
   });
 
-  it("debe cargar campus al cambiar university desde el control", async () => {
+  it("debe aceptar nombres con tildes y de otros idiomas", () => {
     createComponent("teacher");
     component.createForm();
-    addressServiceSpy.getCampusByUniversityActive.and.returnValue(
-      of([{ id: 13, name: "Campus Sur" }])
+
+    for (const value of ["Lucía", "Hernández Núñez", "Jürgen", "O'Brien", "Jean-Pierre", "François"]) {
+      component.angForm.controls.name.setValue(value);
+      expect(component.angForm.controls.name.hasError("pattern")).withContext(value).toBeFalse();
+    }
+    for (const value of ["Carlos1", "Ana_Maria", "Luis!"]) {
+      component.angForm.controls.lastname.setValue(value);
+      expect(component.angForm.controls.lastname.hasError("pattern")).withContext(value).toBeTrue();
+    }
+  });
+
+  it("no debe enviar ubicacion en el registro de estudiante", () => {
+    createComponent("student");
+    component.createForm();
+
+    expect(component.angForm.contains("location")).toBeFalse();
+    component.mapFormDataToUserPayload();
+    expect(component.user.country_code).toBeUndefined();
+    expect(component.user.city_name).toBeUndefined();
+  });
+
+  it("debe mostrar los errores de ubicacion que devuelve el backend", async () => {
+    createComponent("teacher");
+    component.createForm();
+    userServiceSpy.registerUser.and.returnValue(
+      throwError(() => ({ status: 400, error: { city_name: ["Este campo es obligatorio."] } }))
     );
 
-    component.angForm.get("city")?.setValue(5, { emitEvent: false });
-    component.angForm.get("university")?.setValue(8);
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    component.angForm.patchValue({
+      name: "Carlos",
+      lastname: "Lopez",
+      email: "carlos@ups.edu.ec",
+      password: "Password1",
+      terms: true,
+      profession: 1,
+      location: EC_LOCATION,
+    });
 
-    expect(addressServiceSpy.getCampusByUniversityActive).toHaveBeenCalledWith(8, 5);
-    expect(component.campusArray).toEqual([{ id: 13, name: "Campus Sur" }] as any);
-    expect(component.angForm.get("campus")?.value == null).toBeTrue();
+    await component.validateUser();
+
+    expect(component.registered).toBeFalse();
+    expect(component.registerErrorMessage).toBe("Ciudad: Este campo es obligatorio.");
   });
 
   it("debe mostrar advertencia institucional cuando la regla ONLY no coincide con el dominio", () => {

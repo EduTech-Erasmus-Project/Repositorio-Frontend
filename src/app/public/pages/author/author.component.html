@@ -1,0 +1,367 @@
+<div class="main-content author-page">
+  @if (loading()) {
+    <section class="author-card author-hero" aria-busy="true">
+      <div class="author-hero-skeleton">
+        <p-skeleton width="112px" height="112px" shape="circle"></p-skeleton>
+        <div class="author-hero-skeleton__copy">
+          <p-skeleton width="6rem" height="0.8rem"></p-skeleton>
+          <p-skeleton width="45%" height="2rem"></p-skeleton>
+          <p-skeleton width="60%" height="1rem"></p-skeleton>
+        </div>
+      </div>
+    </section>
+  } @else if (error(); as error) {
+    <section class="author-card">
+      <div class="author-state" [class.author-state--error]="error === 'generic'">
+        <i class="pi" [ngClass]="error === 'notFound' ? 'pi-user-minus' : 'pi-exclamation-circle'" aria-hidden="true"></i>
+        <h2>{{ (error === 'notFound' ? 'authorPage.notFoundTitle' : 'authorPage.errorTitle') | translate }}</h2>
+        <p>{{ (error === 'notFound' ? 'authorPage.notFound' : 'authorPage.error') | translate }}</p>
+        @if (error === 'notFound') {
+          <a class="author-state__action" routerLink="/search">{{ 'authorPage.goToSearch' | translate }}</a>
+        } @else {
+          <button class="author-state__action" type="button" (click)="loadAuthor()">
+            {{ 'authorPage.retry' | translate }}
+          </button>
+        }
+      </div>
+    </section>
+  } @else if (author(); as author) {
+    <!-- Cabecera y pestanas de navegacion -->
+    <section class="author-card author-hero-card" [attr.data-author-tab]="tabs()[0].id">
+      <header class="author-hero">
+        @if (author.image_url) {
+          <!-- La imagen va como contenido: `[image]` de p-avatar la dibuja sin `alt`. -->
+          <p-avatar shape="circle" styleClass="author-hero__avatar">
+            <img [src]="author.image_url" [alt]="fullName()" />
+          </p-avatar>
+        } @else {
+          <p-avatar [label]="initials()" shape="circle" styleClass="author-hero__avatar" [ariaLabel]="fullName()" role="img"></p-avatar>
+        }
+        <div class="author-hero__copy">
+          <p class="author-kicker">{{ 'authorProfile.teacher' | translate }}</p>
+          <h1>{{ fullName() }}</h1>
+          @if (subtitle()) {
+            <p class="author-hero__subtitle">{{ subtitle() }}</p>
+          }
+          <ul class="author-hero__meta">
+            <li>
+              <i class="pi pi-envelope" aria-hidden="true"></i>
+              <a class="author-wrap" [href]="'mailto:' + author.email">{{ author.email }}</a>
+            </li>
+            @if (institution()) {
+              <li>
+                <i class="pi pi-building" aria-hidden="true"></i>
+                <span class="author-wrap">{{ institution() }}</span>
+              </li>
+            }
+            <li>
+              <i class="pi pi-calendar" aria-hidden="true"></i>
+              <span>{{ 'authorProfile.memberSince' | translate: { year: author.member_since } }}</span>
+            </li>
+          </ul>
+        </div>
+        @if (isOwnProfile()) {
+          <div class="author-hero__actions">
+            <a pButton class="p-button-outlined" routerLink="/settings/public-profile" icon="pi pi-pencil"
+              [label]="'authorPage.editProfile' | translate"></a>
+          </div>
+        }
+      </header>
+
+      <!-- Pestanas: llevan a cada seccion sin ocultar las demas; con una sola no hacen falta -->
+      @if (tabs().length > 1) {
+        <p-tabs class="author-tabs" [value]="selectedTab()" (valueChange)="goToTab($event)">
+          <p-tablist [attr.aria-label]="'authorPage.tabs.label' | translate">
+            @for (tab of tabs(); track tab.id) {
+              <p-tab [value]="tab.id">
+                {{ tab.labelKey | translate }}
+                @if (tab.count) {
+                  <p-badge [value]="tab.count" severity="secondary" styleClass="author-tabs__count"></p-badge>
+                }
+              </p-tab>
+            }
+          </p-tablist>
+        </p-tabs>
+      }
+    </section>
+
+    <!-- Cuerpo: secciones numeradas y barra lateral -->
+    @if (sections().length || hasSidebar()) {
+      <div class="author-body" [class.author-body--single]="!sections().length || !hasSidebar()">
+        @if (sections().length) {
+          <div class="author-card author-main">
+            @for (section of sections(); track section; let index = $index) {
+              @switch (section) {
+                @case ("about") {
+                  <section id="author-section-about" class="author-section" data-author-tab="trajectory"
+                    aria-labelledby="author-about-title">
+                    <ng-container *ngTemplateOutlet="sectionHeader; context: { number: index + 1, kicker: 'authorPage.sections.aboutKicker', title: 'authorProfile.about', id: 'author-about-title' }"></ng-container>
+                    @if (author.bio) {
+                      <p class="author-bio author-wrap">{{ author.bio }}</p>
+                    }
+                    @if (profileFacts().length || subjects().length) {
+                      <div class="author-about-grid">
+                        @if (profileFacts().length) {
+                          <dl class="author-facts">
+                            @for (fact of profileFacts(); track fact.labelKey) {
+                              <div>
+                                <dt class="author-label">{{ fact.labelKey | translate }}</dt>
+                                <dd class="author-wrap">{{ fact.translateValue ? (fact.value | translate) : fact.value }}</dd>
+                              </div>
+                            }
+                          </dl>
+                        }
+                        @if (subjects().length) {
+                          <div class="author-chip-group">
+                            <h3 class="author-label">{{ 'authorProfile.subjects' | translate }}</h3>
+                            <ng-container *ngTemplateOutlet="chips; context: { items: visibleSubjects(), hidden: hiddenSubjects(), expanded: subjectsExpanded(), toggle: subjectsExpanded, moreKey: 'authorPage.moreSubjects', id: 'author-subjects' }"></ng-container>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </section>
+                }
+
+                @case ("formation") {
+                  <section id="author-section-formation" class="author-section" data-author-tab="trajectory"
+                    aria-labelledby="author-formation-title">
+                    <ng-container *ngTemplateOutlet="sectionHeader; context: { number: index + 1, kicker: 'authorPage.sections.formationKicker', title: 'authorPage.sections.formation', id: 'author-formation-title' }"></ng-container>
+                    <p-timeline id="author-degrees" [value]="visibleDegrees()" styleClass="author-timeline">
+                      <ng-template #marker>
+                        <span class="author-timeline__marker" aria-hidden="true"></span>
+                      </ng-template>
+                      <ng-template #content let-degree>
+                        <article class="author-timeline__item">
+                          <p class="author-kicker">
+                            {{ 'authorProfile.degreeLevels.' + degree.level | translate }}
+                            @if (degree.year) {
+                              · {{ degree.year }}
+                            }
+                          </p>
+                          <h3 class="author-wrap">{{ degree.title }}</h3>
+                          <p class="author-wrap">{{ degree.institution }}</p>
+                        </article>
+                      </ng-template>
+                    </p-timeline>
+                    @if (hiddenDegrees()) {
+                      <ng-container *ngTemplateOutlet="moreButton; context: { expanded: degreesExpanded(), toggle: degreesExpanded, moreKey: 'authorPage.moreDegrees', count: hiddenDegrees(), id: 'author-degrees' }"></ng-container>
+                    }
+                  </section>
+                }
+
+                @case ("research") {
+                  <section id="author-section-research" class="author-section" data-author-tab="research"
+                    aria-labelledby="author-research-title">
+                    <ng-container *ngTemplateOutlet="sectionHeader; context: { number: index + 1, kicker: 'authorPage.sections.researchKicker', title: 'authorPage.sections.research', id: 'author-research-title' }"></ng-container>
+                    <div class="author-research">
+                      @if (author.research_group) {
+                        <p class="author-label">{{ 'authorProfile.researchGroup' | translate }}</p>
+                        <h3 class="author-research__group author-wrap">{{ author.research_group }}</h3>
+                      }
+                      @if (researchLines().length) {
+                        <p class="author-label">{{ 'authorProfile.researchLines' | translate }}</p>
+                        <ng-container *ngTemplateOutlet="chips; context: { items: visibleResearchLines(), hidden: hiddenResearchLines(), expanded: researchLinesExpanded(), toggle: researchLinesExpanded, moreKey: 'authorPage.moreResearchLines', id: 'author-research-lines' }"></ng-container>
+                      }
+                    </div>
+                  </section>
+                }
+              }
+            }
+          </div>
+        }
+
+        @if (hasSidebar()) {
+          <aside class="author-sidebar" [attr.aria-label]="'authorPage.sidebarLabel' | translate">
+            @if (knowledgeAreas().length) {
+              <section class="author-card author-side-card">
+                <h2 class="author-kicker">{{ 'authorProfile.knowledgeAreas' | translate }}</h2>
+                <div class="author-chips">
+                  @for (area of knowledgeAreas(); track area) {
+                    <p-chip [label]="area" styleClass="author-chip"></p-chip>
+                  }
+                </div>
+              </section>
+            }
+            @if (links().length) {
+              <section class="author-card author-side-card">
+                <h2 class="author-kicker">{{ 'authorPage.links' | translate }}</h2>
+                <ul class="author-links">
+                  @for (link of links(); track link.type) {
+                    <li>
+                      <a [href]="link.url" target="_blank" rel="noopener noreferrer">
+                        <span class="author-wrap">{{ 'authorProfile.linkTypes.' + link.type | translate }}</span>
+                        <i class="pi pi-external-link" aria-hidden="true"></i>
+                        <span class="author-sr-only">{{ 'authorProfile.opensNewTab' | translate }}</span>
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+            @if (professions().length) {
+              <section class="author-card author-side-card">
+                <h2 class="author-kicker">{{ 'authorProfile.professions' | translate }}</h2>
+                <div class="author-chips">
+                  @for (profession of professions(); track profession) {
+                    <p-chip [label]="profession" styleClass="author-chip"></p-chip>
+                  }
+                </div>
+              </section>
+            }
+          </aside>
+        }
+      </div>
+    }
+
+    <!-- Objetos de aprendizaje: tabla paginada a todo el ancho -->
+    <section id="author-section-resources" class="author-card author-objects" data-author-tab="resources"
+      aria-labelledby="author-learning-objects-title">
+      <header class="author-objects__header">
+        <p class="author-kicker">{{ 'authorPage.sections.resourcesKicker' | translate }}</p>
+        <h2 id="author-learning-objects-title">
+          {{ 'authorPage.learningObjects' | translate }}
+          @if (learningObjectsTotal()) {
+            <span class="author-objects__count">{{ learningObjectsTotal() }}</span>
+          }
+        </h2>
+      </header>
+
+      @if (learningObjectsLoading()) {
+        <div class="author-table-skeleton" aria-busy="true">
+          @for (item of skeletonRows; track item) {
+            <div class="author-table-skeleton__row">
+              <p-skeleton width="4.5rem" height="3rem" borderRadius="8px"></p-skeleton>
+              <p-skeleton width="50%" height="1rem"></p-skeleton>
+            </div>
+          }
+        </div>
+      } @else if (learningObjectsError()) {
+        <div class="author-state author-state--error">
+          <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+          <p>{{ 'authorPage.objectsError' | translate }}</p>
+          <button class="author-state__action" type="button" (click)="retryLearningObjects()">
+            {{ 'authorPage.retry' | translate }}
+          </button>
+        </div>
+      } @else if (learningObjects().length) {
+        <!-- Misma tabla que el detalle del docente en el admin; la fila abre el OA. -->
+        <p-table
+          [value]="learningObjects()"
+          [rowHover]="true"
+          [scrollable]="true"
+          [tableStyle]="{ 'min-width': '34rem' }"
+          styleClass="author-table"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th scope="col" class="author-table__thumb-col">{{ 'authorPage.table.image' | translate }}</th>
+              <th scope="col" class="author-table__title-col">{{ 'authorPage.table.title' | translate }}</th>
+              <th scope="col">{{ 'authorPage.table.publishedAt' | translate }}</th>
+              <th scope="col">
+                <span class="author-table__stat">
+                  <i class="pi pi-eye" aria-hidden="true"></i>
+                  {{ 'authorPage.table.views' | translate }}
+                </span>
+              </th>
+              <th scope="col">
+                <span class="author-table__stat">
+                  <i class="pi pi-download" aria-hidden="true"></i>
+                  {{ 'authorPage.table.downloads' | translate }}
+                </span>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-oa>
+            <tr class="author-table__row" (click)="openLearningObject(oa)">
+              <td>
+                <span class="author-table__thumb">
+                  @if (oa.avatar) {
+                    <img [src]="oa.avatar" alt="" loading="lazy" />
+                  } @else {
+                    <i class="pi pi-image" aria-hidden="true"></i>
+                  }
+                </span>
+              </td>
+              <td>
+                @if (oa.slug) {
+                  <a class="author-table__title author-wrap" [routerLink]="['/object', oa.slug]" (click)="$event.stopPropagation()">{{ oa.general_title }}</a>
+                } @else {
+                  <span class="author-wrap">{{ oa.general_title }}</span>
+                }
+              </td>
+              <td>{{ oa.created | date: 'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="author-table__stat">
+                  <i class="pi pi-eye" aria-hidden="true"></i>
+                  {{ oa.views }}
+                </span>
+              </td>
+              <td>
+                <span class="author-table__stat">
+                  <i class="pi pi-download" aria-hidden="true"></i>
+                  {{ oa.downloads }}
+                </span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      } @else {
+        <div class="author-state">
+          <i class="pi pi-inbox" aria-hidden="true"></i>
+          <h3>{{ 'authorPage.emptyTitle' | translate }}</h3>
+          <p>{{ 'authorPage.empty' | translate }}</p>
+        </div>
+      }
+
+      @if (learningObjectsTotal()) {
+        <!-- Pie siempre visible, como en el admin -->
+        <p-paginator
+          [rows]="pageSize()"
+          [first]="learningObjectsFirst()"
+          [totalRecords]="learningObjectsTotal()"
+          [rowsPerPageOptions]="rowsPerPageOptions"
+          [showCurrentPageReport]="true"
+          [currentPageReportTemplate]="'authorPage.pageReport' | translate"
+          (onPageChange)="onPageChange($event)"
+        ></p-paginator>
+      }
+    </section>
+  }
+</div>
+
+<!-- Encabezado de seccion numerada: 01 · PERFIL PROFESIONAL / Sobre mi -->
+<ng-template #sectionHeader let-number="number" let-kicker="kicker" let-title="title" let-id="id">
+  <header class="author-section__header">
+    <span class="author-section__number" aria-hidden="true">{{ number < 10 ? '0' + number : number }}</span>
+    <div>
+      <p class="author-kicker">{{ kicker | translate }}</p>
+      <h2 [id]="id">{{ title | translate }}</h2>
+    </div>
+  </header>
+</ng-template>
+
+<!-- Chips contraibles: muestran unos pocos y "+N" para el resto -->
+<ng-template #chips let-items="items" let-hidden="hidden" let-expanded="expanded" let-toggle="toggle" let-moreKey="moreKey" let-id="id">
+  <div class="author-chips" [id]="id">
+    @for (item of items; track $index) {
+      <p-chip [label]="item" styleClass="author-chip"></p-chip>
+    }
+  </div>
+  @if (hidden) {
+    <ng-container *ngTemplateOutlet="moreButton; context: { expanded: expanded, toggle: toggle, moreKey: moreKey, count: hidden, id: id }"></ng-container>
+  }
+</ng-template>
+
+<!-- "Ver mas" / "Ver menos" de una lista contraida -->
+<ng-template #moreButton let-expanded="expanded" let-toggle="toggle" let-moreKey="moreKey" let-count="count" let-id="id">
+  <button
+    pButton
+    type="button"
+    class="p-button-text p-button-sm author-more"
+    [icon]="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+    [label]="(expanded ? 'authorPage.showLess' : moreKey) | translate: { count: count }"
+    [attr.aria-controls]="id"
+    [attr.aria-expanded]="expanded"
+    (click)="toggle.set(!expanded)"
+  ></button>
+</ng-template>

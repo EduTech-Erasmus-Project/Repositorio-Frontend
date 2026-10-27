@@ -1,0 +1,195 @@
+<ng-container [formGroup]="form">
+  <div class="p-col-12 p-md-6 p-lg-6">
+    <div class="p-field p-fluid">
+      <span [id]="fieldId('country-label')" class="location-label" [class]="labelClass">{{ 'location.country' | translate }}*</span>
+      <p-select
+        [inputId]="fieldId('country')"
+        [ariaLabelledBy]="labelledBy('country')"
+        formControlName="country"
+        [required]="true"
+        [invalid]="!!fieldError('country')"
+        #countrySelect
+        (onFilter)="focusFirstMatch(countrySelect, $event)"
+        [options]="countryOptions"
+        optionLabel="label"
+        optionValue="value"
+        [filter]="true"
+        [resetFilterOnHide]="true"
+        filterBy="label"
+        [loading]="loadingCountries"
+        [placeholder]="'location.placeholders.country' | translate"
+        [emptyFilterMessage]="'location.noResults' | translate"
+        appendTo="body"
+        [styleClass]="selectStyleClass"
+        [panelStyleClass]="panelClass"
+      ></p-select>
+      <div aria-live="polite">
+        @if (countriesError) {
+          <small class="p-error">
+            {{ 'location.errors.countriesUnavailable' | translate }}
+            <button type="button" class="location-retry" (click)="retryCountries()">
+              {{ 'location.retry' | translate }}
+            </button>
+          </small>
+        } @else if (fieldError('country')) {
+          <small [id]="fieldId('country-error')" class="p-error">*{{ 'validation.obligatoryCamp' | translate }}*</small>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (showProvince) {
+    <div class="p-col-12 p-md-6 p-lg-6">
+      <div class="p-field p-fluid">
+        <span [id]="fieldId('province-label')" class="location-label" [class]="labelClass">
+          {{ 'location.province' | translate }}*
+        </span>
+        @if (provincePending) {
+          <p-select
+            [inputId]="fieldId('province')"
+            [ariaLabelledBy]="fieldId('province-label')"
+            [options]="[]"
+            [disabled]="true"
+            [loading]="loadingStates"
+            [placeholder]="(loadingStates ? 'location.loading' : 'location.placeholders.needsCountry') | translate"
+            [styleClass]="selectStyleClass"
+          ></p-select>
+        } @else {
+          <p-select
+            [inputId]="fieldId('province')"
+            [ariaLabelledBy]="labelledBy('province')"
+            formControlName="province"
+            [required]="provinceRequired"
+            [invalid]="!!fieldError('province')"
+            #provinceSelect
+            (onFilter)="focusFirstMatch(provinceSelect, $event)"
+            [options]="stateOptions"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="true"
+            [resetFilterOnHide]="true"
+            filterBy="label,native"
+            [placeholder]="'location.placeholders.province' | translate"
+            [emptyFilterMessage]="'location.noResults' | translate"
+            appendTo="body"
+            [styleClass]="selectStyleClass"
+            [panelStyleClass]="panelClass"
+          ></p-select>
+        }
+        @if (preservedProvince) {
+          <small class="location-hint">
+            {{ 'location.savedProvince' | translate: { name: preservedProvince.name || preservedProvince.code } }}
+          </small>
+        } @else if (fieldError('province')) {
+          <small [id]="fieldId('province-error')" class="p-error">*{{ 'validation.obligatoryCamp' | translate }}*</small>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="p-col-12 p-md-6 p-lg-6">
+    <div class="p-field p-fluid">
+      @if (cityPending) {
+        <span [id]="fieldId('city-label')" class="location-label" [class]="labelClass">{{ 'location.city' | translate }}*</span>
+        <p-select
+          [inputId]="fieldId('city')"
+          [ariaLabelledBy]="fieldId('city-label')"
+          [options]="[]"
+          [disabled]="true"
+          [loading]="loadingStates || loadingCities"
+          [placeholder]="cityPendingPlaceholder | translate"
+          [styleClass]="selectStyleClass"
+        ></p-select>
+      } @else if (showCitySelect) {
+        <span [id]="fieldId('city-label')" class="location-label" [class]="labelClass">{{ 'location.city' | translate }}*</span>
+        <p-select
+          [inputId]="fieldId('city')"
+          [ariaLabelledBy]="labelledBy('city')"
+          formControlName="city"
+          [required]="true"
+          [invalid]="!!fieldError('city')"
+          #citySelect
+          (onFilter)="focusFirstMatch(citySelect, $event)"
+          [options]="cityOptions"
+          optionLabel="label"
+          optionValue="value"
+          [filter]="true"
+          [resetFilterOnHide]="true"
+          filterBy="label,native"
+          [virtualScroll]="useCityVirtualScroll"
+          [virtualScrollItemSize]="38"
+          [placeholder]="'location.placeholders.city' | translate"
+          [emptyFilterMessage]="'location.cityNotListed' | translate"
+          appendTo="body"
+          [styleClass]="selectStyleClass"
+          [panelStyleClass]="panelClass"
+        ></p-select>
+        @if (fieldError('city')) {
+          <small [id]="fieldId('city-error')" class="p-error">*{{ 'validation.obligatoryCamp' | translate }}*</small>
+        }
+      }
+
+      @if (showOtherCity) {
+        <label
+          [for]="fieldId('other-city')"
+          class="location-label" [class]="labelClass"
+          [class.location-other-city]="showCitySelect"
+        >
+          {{ (showCitySelect ? 'location.otherCity' : 'location.city') | translate }}*
+        </label>
+        <input
+          pInputText
+          [fluid]="true"
+          type="text"
+          [id]="fieldId('other-city')"
+          formControlName="otherCity"
+          autocomplete="address-level2"
+          [attr.maxlength]="maxLength.city_name"
+          [invalid]="!!fieldError('otherCity')"
+          aria-required="true"
+          [attr.aria-invalid]="!!fieldError('otherCity')"
+          [attr.aria-describedby]="fieldError('otherCity') ? fieldId('other-city-error') : null"
+          [placeholder]="'location.placeholders.otherCity' | translate"
+        />
+        @if (fieldError('otherCity'); as error) {
+          <small [id]="fieldId('other-city-error')" class="p-error">
+            @if (error === 'maxlength') {
+              *{{ 'location.errors.maxLength' | translate: { max: maxLength.city_name } }}*
+            } @else {
+              *{{ 'validation.obligatoryCamp' | translate }}*
+            }
+          </small>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="p-col-12 p-md-6 p-lg-6">
+    <div class="p-field p-fluid">
+      <label [for]="fieldId('university')" class="location-label" [class]="labelClass">{{ 'location.university' | translate }}*</label>
+      <input
+        pInputText
+        [fluid]="true"
+        type="text"
+        [id]="fieldId('university')"
+        formControlName="university"
+        autocomplete="organization"
+        [attr.maxlength]="maxLength.university_name"
+        [invalid]="!!fieldError('university')"
+        aria-required="true"
+        [attr.aria-invalid]="!!fieldError('university')"
+        [attr.aria-describedby]="fieldError('university') ? fieldId('university-error') : null"
+        [placeholder]="'location.placeholders.university' | translate"
+      />
+      @if (fieldError('university'); as error) {
+        <small [id]="fieldId('university-error')" class="p-error">
+          @if (error === 'maxlength') {
+            *{{ 'location.errors.maxLength' | translate: { max: maxLength.university_name } }}*
+          } @else {
+            *{{ 'validation.obligatoryCamp' | translate }}*
+          }
+        </small>
+      }
+    </div>
+  </div>
+</ng-container>

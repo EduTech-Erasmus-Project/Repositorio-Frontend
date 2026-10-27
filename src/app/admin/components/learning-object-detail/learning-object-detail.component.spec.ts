@@ -92,4 +92,14 @@ describe("LearningObjectDetailComponent", () => {
       { label: "Detalle" },
     ]);
   });
+
+  it("debe enlazar al autor con su perfil del administrador", () => {
+    component.autor = { id: 746, first_name: "Francisco", last_name: "Sanchez" };
+    expect(component.authorProfilePath).toBe(
+      "/admin/teacher/request/approved/teacher-expert-profile/746/approved"
+    );
+
+    component.autor = null;
+    expect(component.authorProfilePath).toBeNull();
+  });
 });

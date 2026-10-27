@@ -154,6 +154,15 @@ export function isManagedExpertActive(user: ManagedUserSummary): boolean {
   return Boolean(expert && (expert.is_active ?? expert.expert_is_active));
 }
 
+/**
+ * Indica si el backend rechazó la página pedida por no existir: DRF responde
+ * 404 (no una lista vacía) cuando la página queda fuera de rango, por ejemplo
+ * al aprobar o deshabilitar al único usuario de la última página.
+ */
+export function isPageNotFoundError(error: unknown): boolean {
+  return (error as { status?: number } | null)?.status === 404;
+}
+
 export function buildLearningObjectEvaluationBreadcrumbs(
   id: number,
   role: LearningObjectEvaluationRole

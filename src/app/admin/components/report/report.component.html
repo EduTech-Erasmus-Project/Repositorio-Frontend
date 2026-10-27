@@ -2,7 +2,7 @@
   <div class="report-header">
     <div>
       <h5>Reporte de usuarios</h5>
-      <p>Filtra por rango de fechas, estado de carga y ubicacion para consultar los objetos de aprendizaje.</p>
+      <p>Filtra por rango de fechas, estado de carga y ubicación para consultar los objetos de aprendizaje.</p>
     </div>
   </div>
 
@@ -49,14 +49,17 @@
     </div>
 
     <div class="filter-field">
-      <label for="city_id">Ciudad</label>
+      <label for="country_code">País</label>
       <p-select
-        inputId="city_id"
-        [options]="cities"
-        formControlName="city"
-        placeholder="Ciudad"
-        optionLabel="name"
-        optionValue="id"
+        inputId="country_code"
+        [options]="countryOptions"
+        formControlName="country"
+        placeholder="Todos"
+        optionLabel="label"
+        optionValue="value"
+        [filter]="true"
+        [resetFilterOnHide]="true"
+        emptyFilterMessage="Sin resultados"
         [showClear]="true"
         appendTo="body"
         [fluid]="true"
@@ -64,33 +67,18 @@
     </div>
 
     <div class="filter-field">
-      <label for="university_id">Universidad</label>
-      <p-select
-        inputId="university_id"
-        [options]="universities"
-        formControlName="university"
-        placeholder="Universidad"
-        optionLabel="name"
-        optionValue="id"
-        [showClear]="true"
-        appendTo="body"
-        [fluid]="true"
-      ></p-select>
+      <label for="province_name">Provincia</label>
+      <input type="text" pInputText id="province_name" placeholder="Contiene..." formControlName="province" [fluid]="true" />
     </div>
 
     <div class="filter-field">
-      <label for="campus_id">Campus</label>
-      <p-select
-        inputId="campus_id"
-        [options]="campus"
-        formControlName="campus"
-        placeholder="Campus"
-        optionLabel="name"
-        optionValue="id"
-        [showClear]="true"
-        appendTo="body"
-        [fluid]="true"
-      ></p-select>
+      <label for="city_name">Ciudad</label>
+      <input type="text" pInputText id="city_name" placeholder="Contiene..." formControlName="city" [fluid]="true" />
+    </div>
+
+    <div class="filter-field">
+      <label for="university_name">Universidad</label>
+      <input type="text" pInputText id="university_name" placeholder="Contiene..." formControlName="university" [fluid]="true" />
     </div>
 
     <div class="filter-field filter-field-search">
@@ -151,7 +139,7 @@
         <th>Nombre/Apellido</th>
         <th>Email</th>
         <th>Universidad</th>
-        <th>Campus</th>
+        <th>Ubicación</th>
         <th>Tot. OAs</th>
         <th>OAs</th>
         <th>Fecha</th>
@@ -170,11 +158,11 @@
         </td>
         <td>
           <span class="p-column-title">Universidad</span>
-          {{ user?.university?.name || '-' }}
+          {{ user?.university_name || '-' }}
         </td>
         <td>
-          <span class="p-column-title">Campus</span>
-          {{ user?.campus?.name || '-' }}
+          <span class="p-column-title">Ubicación</span>
+          {{ getLocationLabel(user) }}
         </td>
         <td>
           <span class="p-column-title">Tot. OAs</span>

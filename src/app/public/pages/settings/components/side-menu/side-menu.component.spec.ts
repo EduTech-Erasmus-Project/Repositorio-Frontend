@@ -16,6 +16,7 @@ describe("SideMenuComponent", () => {
     "menu.sideMenu.myAccount": "Mi cuenta",
     "recommended.viewed": "Vistos",
     "menu.sideMenu.ratedMe": "Calificados",
+    "menu.sideMenu.publicProfile": "Perfil publico",
     "menu.sideMenu.myObjectsA": "Mis objetos",
     "menu.sideMenu.uploadOA": "Subir OA",
     "menu.sideMenu.OAQualificate": "Calificar OA",
@@ -89,14 +90,17 @@ describe("SideMenuComponent", () => {
 
     expect(component.items.map((item) => item.label)).toEqual([
       "Mi cuenta",
+      "Perfil publico",
       "Seguridad",
       "Mis objetos",
       "Subir OA",
       undefined,
       "Salir",
     ]);
-    expect(component.items[2].routerLink).toBe("my-objects");
-    expect(component.items[3].routerLink).toBe("new-object");
+    expect(component.items[1].routerLink).toBe("public-profile");
+    expect(component.items[2].routerLink).toBe("security");
+    expect(component.items[3].routerLink).toBe("my-objects");
+    expect(component.items[4].routerLink).toBe("new-object");
   });
 
   it("debe agregar la opcion de experto en el orden esperado", async () => {

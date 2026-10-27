@@ -4,26 +4,24 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs";
 import { UserService } from "../../services/user.service";
-import { AddressService } from "../../services/address.service";
+import { LocationCatalogService } from "src/app/services/location-catalog.service";
 import { ReportComponent } from "./report.component";
 
 describe("ReportComponent", () => {
   let component: ReportComponent;
   let fixture: ComponentFixture<ReportComponent>;
   let userServiceSpy: jasmine.SpyObj<UserService>;
-  let addressServiceSpy: jasmine.SpyObj<AddressService>;
+  let catalogSpy: jasmine.SpyObj<LocationCatalogService>;
 
   beforeEach(async () => {
     userServiceSpy = jasmine.createSpyObj<UserService>("UserService", ["getReportUsers"]);
-    addressServiceSpy = jasmine.createSpyObj<AddressService>("AddressService", [
-      "getCitiesActive",
-      "getUniversitiesActive",
-      "getCampusActive",
-    ]);
-
-    addressServiceSpy.getCitiesActive.and.returnValue(of([{ id: 1, name: "Quito" }]));
-    addressServiceSpy.getUniversitiesActive.and.returnValue(of([{ id: 2, name: "UPS" }]));
-    addressServiceSpy.getCampusActive.and.returnValue(of([{ id: 3, name: "Sur" }]));
+    catalogSpy = jasmine.createSpyObj<LocationCatalogService>("LocationCatalogService", ["getCountries"]);
+    catalogSpy.getCountries.and.returnValue(
+      of([
+        { iso2: "EC", name: "Ecuador", name_es: "Ecuador", emoji: "" },
+        { iso2: "DE", name: "Germany", name_es: "Alemania", emoji: "" },
+      ])
+    );
     userServiceSpy.getReportUsers.and.returnValue(
       of({
         count: 1,
@@ -46,7 +44,7 @@ describe("ReportComponent", () => {
       declarations: [ReportComponent],
       providers: [
         { provide: UserService, useValue: userServiceSpy },
-        { provide: AddressService, useValue: addressServiceSpy },
+        { provide: LocationCatalogService, useValue: catalogSpy },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -65,17 +63,37 @@ describe("ReportComponent", () => {
     component = fixture.componentInstance;
   });
 
-  it("debe cargar catalogos base en ngOnInit", fakeAsync(() => {
+  it("debe cargar los paises del filtro en espanol y ordenados", fakeAsync(() => {
     fixture.detectChanges();
     tick();
 
-    expect(addressServiceSpy.getCitiesActive).toHaveBeenCalled();
-    expect(addressServiceSpy.getUniversitiesActive).toHaveBeenCalled();
-    expect(addressServiceSpy.getCampusActive).toHaveBeenCalled();
-    expect(component.cities.length).toBe(1);
-    expect(component.universities.length).toBe(1);
-    expect(component.campus.length).toBe(1);
+    expect(catalogSpy.getCountries).toHaveBeenCalled();
+    expect(component.countryOptions).toEqual([
+      { label: "Alemania", value: "DE" },
+      { label: "Ecuador", value: "EC" },
+    ]);
   }));
+
+  it("debe enviar solo los filtros de ubicacion con valor", async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    component.form.patchValue({
+      country: "EC",
+      province: "  ",
+      city: " Quito ",
+      university: "Salesiana",
+    });
+
+    await component.listLearningObject();
+
+    const params = userServiceSpy.getReportUsers.calls.mostRecent().args[0];
+    expect(params).toEqual(
+      jasmine.objectContaining({ country: "EC", city: "Quito", university: "Salesiana" })
+    );
+    expect("province" in params).toBeFalse();
+    expect("campus" in params).toBeFalse();
+  });
 
   it("debe cargar la primera pagina del reporte con los filtros actuales", async () => {
     fixture.detectChanges();
@@ -101,11 +119,12 @@ describe("ReportComponent", () => {
         first_name: "Ana",
         last_name: "Perez",
         email: "ana@test.com",
-        country: { name: "Ecuador" },
-        province: { name: "Pichincha" },
-        city: { name: "Quito" },
-        university: { name: "UPS" },
-        campus: { name: "Sur" },
+        country_code: "EC",
+        country_name: "Ecuador",
+        province_code: "P",
+        province_name: "Pichincha",
+        city_name: "Quito",
+        university_name: "UPS",
         learning_objects: [
           {
             general_title: "OA 1",
@@ -116,6 +135,26 @@ describe("ReportComponent", () => {
     ]);
 
     expect(Array.isArray(rows[0])).toBeTrue();
-    expect((rows[0] as Array<Record<string, string | undefined>>)[0].OA).toBe("OA 1");
+    const row = (rows[0] as Array<Record<string, string | undefined>>)[0];
+    expect(row).toEqual(
+      jasmine.objectContaining({
+        Pais: "Ecuador",
+        Provincia: "Pichincha",
+        Ciudad: "Quito",
+        Universidad: "UPS",
+        OA: "OA 1",
+      })
+    );
+    expect("Campus" in row).toBeFalse();
+  });
+
+  it("debe mostrar la ubicacion en una sola columna", () => {
+    expect(
+      component.getLocationLabel({ city_name: "Quito", province_name: "Pichincha", country_name: "Ecuador" })
+    ).toBe("Quito, Pichincha, Ecuador");
+    expect(component.getLocationLabel({ city_name: "Macao", country_name: "Macau S.A.R." })).toBe(
+      "Macao, Macau S.A.R."
+    );
+    expect(component.getLocationLabel({})).toBe("-");
   });
 });

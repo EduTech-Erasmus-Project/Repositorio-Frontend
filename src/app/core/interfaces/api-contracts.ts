@@ -1,4 +1,5 @@
 import { ObjectLearning } from "./ObjectLearning";
+import { OwnPublicProfile } from "./PublicProfile";
 
 export interface ApiValuesResponse<T> {
   values: T[];
@@ -175,6 +176,23 @@ export interface ManagedExpertSummary {
 }
 
 /**
+ * OA de un docente en el detalle del admin, con sus totales de vistas y
+ * descargas (`learning_objects` de `teacher-to-approve/<id>`).
+ */
+export interface ManagedUserLearningObject {
+  id?: number;
+  slug?: string;
+  general_title?: string;
+  avatar?: string | null;
+  created?: string;
+  public?: boolean;
+  views?: number;
+  downloads?: number;
+  /** Lo usa el reporte de usuarios. */
+  learning_object_file?: { url?: string };
+}
+
+/**
  * Resumen administrativo del usuario gestionado por listados de admin.
  *
  * Mantiene nombres legacy como `rol_aprovados` y `rol_aprobados` porque ambos
@@ -202,15 +220,19 @@ export interface ManagedUserSummary {
     }>;
   } | null;
   administrator?: AdministratorProfileSummary | null;
-  country?: { id?: number; name?: string } | null;
-  province?: { id?: number; name?: string } | null;
-  city?: { id?: number; name?: string } | number | null;
-  university?: { id?: number; name?: string } | number | null;
-  campus?: { id?: number; name?: string } | number | null;
-  learning_objects?: Array<{
-    general_title?: string;
-    learning_object_file?: { url?: string };
-  }>;
+  /** Ubicacion de docentes y expertos (ver `UserLocation`). */
+  country_code?: string;
+  country_name?: string;
+  province_code?: string;
+  province_name?: string;
+  city_name?: string;
+  university_name?: string;
+  learning_objects?: ManagedUserLearningObject[];
+  created?: string;
+  /** Correo verificado; lo envia el detalle del admin (fase 2.1 del backend). */
+  is_account_active?: boolean;
+  /** Perfil publico completo del docente; `null` si nunca lo guardo. */
+  public_profile?: OwnPublicProfile | null;
   [key: string]: unknown;
 }
 

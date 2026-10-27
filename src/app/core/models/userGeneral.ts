@@ -2,8 +2,6 @@ import { EducationLevel } from "../interfaces/EducationLevel";
 import { KnowledgeArea } from "../interfaces/KnowledgeArea";
 import { Preference } from "../interfaces/Preference";
 
-type RelationReference = number | { id?: number; name?: string } | null;
-
 interface UserStudentSummary {
     birthday?: string;
     has_disability?: boolean | string;
@@ -46,10 +44,12 @@ export class UserGeneral{
     student?: UserStudentSummary;
     teacher?: UserTeacherSummary;
     collaboratingExpert?: UserCollaboratingExpertSummary;
-    country?: RelationReference;
-    province?: RelationReference;
-    city?: RelationReference;
-    university?: RelationReference;
-    campus?: RelationReference;
+    /** Ubicacion de docentes y expertos (ver `UserLocation`). */
+    country_code?: string;
+    country_name?: string;
+    province_code?: string;
+    province_name?: string;
+    city_name?: string;
+    university_name?: string;
     
 }
