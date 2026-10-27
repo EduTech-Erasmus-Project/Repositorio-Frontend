@@ -261,8 +261,9 @@ export class ReportComponent implements OnInit {
       params.created_init = moment(this.form.value.created_init).format("YYYY-MM-DD");
     }
 
+    // El backend ya incluye el día final completo.
     if (this.form.value?.created_end) {
-      params.created_end = moment(this.form.value.created_end).add(1, "days").format("YYYY-MM-DD");
+      params.created_end = moment(this.form.value.created_end).format("YYYY-MM-DD");
     }
 
     return params;

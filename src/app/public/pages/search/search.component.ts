@@ -1,12 +1,15 @@
 import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from "@angular/core";
-import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
+import { ViewportScroller } from "@angular/common";
+import { HttpErrorResponse } from "@angular/common/http";
+import { ActivatedRoute, Router, NavigationExtras, Params, Scroll } from "@angular/router";
 import { SearchService } from "../../../services/search.service";
 import { ObjectLearning } from "../../../core/interfaces/ObjectLearning";
-import { firstValueFrom } from "rxjs";
-import { QuerySearchService } from "../../../services/query-search.service";
+import { filter, firstValueFrom } from "rxjs";
+import { DEFAULT_SEARCH_PAGE_SIZE, QuerySearchService } from "../../../services/query-search.service";
 import { LoginService } from "../../../services/login.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { LanguageService } from "src/app/services/language.service";
+import { QuerySearch } from "src/app/core/interfaces/Search";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 interface SearchChip {
@@ -15,6 +18,7 @@ interface SearchChip {
 
 type SearchQueryParams = Record<string, string>;
 
+
 /**
  * Coordina la pagina principal de busqueda publica del repositorio.
  *
@@ -22,6 +26,12 @@ type SearchQueryParams = Record<string, string>;
  * - Sincronizar query params, chips visuales y resultados remotos.
  * - Construir el breadcrumb segun el rol y el modo de evaluacion.
  * - Gestionar paginacion y limpieza de filtros desde la vista.
+ *
+ * Estado al volver atras:
+ * - La pagina (`page`) y el tamano (`page_size`) viven en la URL junto a los
+ *   filtros, asi el historial del navegador los conserva.
+ * - El scroll lo guarda el router en cada navegacion; al volver se restaura
+ *   cuando los resultados ya estan pintados (antes la pagina no tiene altura).
  *
  * Notas:
  * - Conserva `detectChanges()` porque varios cambios de estado ocurren
@@ -37,20 +47,24 @@ export class SearchComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   public chipsSearch: SearchChip[] = [];
   public objects: ObjectLearning[] = [];
-  public objectsSkeleton: number[] = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-  ];
+  /** Resultados por pagina: 15 por defecto y el usuario puede elegir otro. */
+  public readonly rowsPerPageOptions: number[] = [10, 15, 20, 50];
+  public rowsPerPage: number = this.querySearchService.pageSize;
+  public objectsSkeleton: number[] = this.buildSkeleton(this.rowsPerPage);
   public loading: boolean = false;
   public isEvaluatedParams: SearchQueryParams = {};
 
   public rows: number = 0;
   public first: number = 0;
   public totalRecords: number = 0;
-  public pageSize: number = 0;
-  public page_now: number = 0;
-  private nextEvent: string = "";
-  private previousEvent: string = "";
   public resultOAsNone: boolean = false;
+  /** Pagina pedida en la URL (1 si no viene). */
+  private requestedPage: number = 1;
+  /** Scroll guardado por el router para esta entrada del historial. */
+  private pendingScroll: [number, number] | null = null;
+  /** Al cambiar de pagina desde el paginador se sube al inicio de los resultados. */
+  private scrollToResults: boolean = false;
+  private readonly viewportScroller = inject(ViewportScroller);
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -63,14 +77,70 @@ export class SearchComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Con "atras/adelante" el router trae la posicion guardada de esa entrada.
+    this.router.events
+      .pipe(
+        filter((event): event is Scroll => event instanceof Scroll),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((event) => {
+        if (!event.position) {
+          return;
+        }
+        this.pendingScroll = event.position;
+        if (!this.loading && this.hasResults) {
+          this.restoreScroll();
+        }
+      });
+
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
+        // `page` y `page_size` no son filtros: no generan chips y no viajan
+        // cuando el usuario cambia de filtro (eso vuelve a la pagina 1).
+        const { page, page_size, ...filters } = params;
+        if (this.restorePageSizeInUrl(page_size)) {
+          return;
+        }
         this.chipsSearch = [];
-        this.querySearchService.queryParams = { ...params };
-        this.isEvaluatedParams = { ...params };
+        this.applyPagingParams(page, page_size);
+        this.querySearchService.queryParams = { ...filters };
+        this.isEvaluatedParams = { ...filters };
         void this.handleQueryParamsChange();
       });
+  }
+
+  /**
+   * Los filtros (sidebar, input, chips) navegan sin `page_size`. Si el usuario
+   * eligio otro tamano, se vuelve a escribir en la URL reemplazando la entrada,
+   * para que recargar o compartir el enlace lo conserve. La nueva URL dispara
+   * la consulta, asi que esta emision no busca.
+   */
+  private restorePageSizeInUrl(pageSize: string | undefined): boolean {
+    const preferred = this.querySearchService.pageSize;
+    if (pageSize !== undefined || preferred === DEFAULT_SEARCH_PAGE_SIZE) {
+      return false;
+    }
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page_size: preferred },
+      queryParamsHandling: "merge",
+      replaceUrl: true,
+    });
+    return true;
+  }
+
+  /** Lee `page` y `page_size` de la URL, ignorando valores invalidos. */
+  private applyPagingParams(page: string | undefined, pageSize: string | undefined): void {
+    const pageNumber = Number(page);
+    this.requestedPage = Number.isInteger(pageNumber) && pageNumber > 1 ? pageNumber : 1;
+
+    const size = Number(pageSize);
+    if (this.rowsPerPageOptions.includes(size)) {
+      this.querySearchService.pageSize = size;
+    }
+    this.rowsPerPage = this.querySearchService.pageSize;
+    this.objectsSkeleton = this.buildSkeleton(this.rowsPerPage);
   }
 
   /**
@@ -193,43 +263,42 @@ export class SearchComponent implements OnInit {
    */
   searchData(): void {
     this.loading = true;
-    this.first = 0;
+    const page = this.requestedPage;
+    this.first = (page - 1) * this.rowsPerPage;
     this.resultOAsNone = false;
     this.cdr.detectChanges();
 
+    const query = this.withPageSize(this.querySearchService.queryParams);
     this.searchService
-      .search(this.querySearchService.queryParams)
+      .search(page > 1 ? { ...query, page: String(page) } : query)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (res) => {
           if (res.results.length > 0) {
-            this.pageSize = res.pages;
             this.totalRecords = res.count;
-            this.rows = res.results.length;
+            this.rows = this.rowsPerPage;
             this.objects = res.results;
-            this.nextEvent = res.links.next;
-            this.previousEvent = res.links.previous;
             this.resultOAsNone = false;
           } else {
             this.objects = [];
             this.resultOAsNone = true;
-            this.pageSize = 0;
             this.totalRecords = 0;
             this.rows = 0;
-            this.nextEvent = "";
-            this.previousEvent = "";
           }
           this.loading = false;
           this.cdr.detectChanges();
+          this.afterResultsRendered();
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
+          // Una pagina que ya no existe (p. ej. ahora hay menos OA) vuelve a la 1.
+          if (err?.status === 404 && page > 1) {
+            this.goToPage(1, this.rowsPerPage);
+            return;
+          }
           this.objects = [];
           this.resultOAsNone = false;
-          this.pageSize = 0;
           this.totalRecords = 0;
           this.rows = 0;
-          this.nextEvent = "";
-          this.previousEvent = "";
           this.loading = false;
           this.cdr.detectChanges();
         },
@@ -357,38 +426,70 @@ export class SearchComponent implements OnInit {
   }
 
   get showPaginator(): boolean {
-    return this.hasResults && this.totalRecords > this.rows;
+    if (!this.hasResults) {
+      return false;
+    }
+    // Se muestra mientras haya mas resultados que la opcion minima, asi quien
+    // eligio 50 puede volver a una pagina mas corta.
+    return this.totalRecords > Math.min(...this.rowsPerPageOptions);
   }
 
   /**
-   * Solicita una pagina remota adicional manteniendo los filtros activos.
+   * Cambia de pagina o de tamano escribiendolos en la URL; la suscripcion a los
+   * query params hace la consulta.
    */
-  paginate(event: { page: number; first: number }): void {
-    this.loading = true;
-    const page_number: number = event.page + 1;
-    this.first = event.first;
-    this.cdr.detectChanges();
+  paginate(event: { page: number; first: number; rows?: number }): void {
+    const rows = event.rows || this.rowsPerPage;
+    // Al cambiar el tamano se vuelve a la primera pagina.
+    const page = rows !== this.rowsPerPage ? 1 : event.page + 1;
+    this.scrollToResults = true;
+    this.goToPage(page, rows);
+  }
 
-    this.searchService
-      .searchPagePaginator(page_number, this.querySearchService.queryParams)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (search_page) => {
-          if (search_page?.results.length > 0) {
-            this.objects = search_page.results;
-            this.nextEvent = search_page.links.next;
-            this.previousEvent = search_page.links.previous;
-          } else {
-            this.objects = [];
-          }
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: () => {
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-      });
+  /**
+   * Reemplaza la entrada del historial en vez de apilar una por pagina: "atras"
+   * desde un OA vuelve a la pagina donde estaba, y "atras" desde la busqueda
+   * sale de ella sin recorrer cada pagina visitada.
+   */
+  private goToPage(page: number, rows: number): void {
+    this.querySearchService.pageSize = rows;
+    const queryParams: Params = {
+      page: page > 1 ? page : null,
+      page_size: rows !== DEFAULT_SEARCH_PAGE_SIZE ? rows : null,
+    };
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: "merge",
+      replaceUrl: true,
+    });
+  }
+
+  /** Restaura el scroll de "atras" o sube a los resultados tras paginar. */
+  private afterResultsRendered(): void {
+    if (this.pendingScroll) {
+      this.restoreScroll();
+    } else if (this.scrollToResults) {
+      this.scrollToResults = false;
+      requestAnimationFrame(() => this.viewportScroller.scrollToAnchor("search-results"));
+    }
+  }
+
+  private restoreScroll(): void {
+    const position = this.pendingScroll;
+    this.pendingScroll = null;
+    if (position) {
+      requestAnimationFrame(() => this.viewportScroller.scrollToPosition(position));
+    }
+  }
+
+  /** Agrega `page_size` a la consulta sin tocar los query params de la URL. */
+  private withPageSize(params: QuerySearch): QuerySearch & { page_size: string } {
+    return { ...params, page_size: String(this.rowsPerPage) };
+  }
+
+  private buildSkeleton(size: number): number[] {
+    return Array.from({ length: size }, (_, index) => index + 1);
   }
 
   private async getTranslation(key: string): Promise<string> {

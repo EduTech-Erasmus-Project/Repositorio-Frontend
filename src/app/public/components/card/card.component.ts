@@ -26,6 +26,7 @@ import {
 } from "src/app/core/interfaces/evaluation-view";
 import { translateInstant } from "src/app/core/utils/i18n.utils";
 import { openTrustedExternalUrl } from "src/app/core/utils/external-navigation.utils";
+import { isOwnLearningObject } from "src/app/core/utils/learning-object-owner.utils";
 
 /**
  * Renderiza una tarjeta reutilizable de OA para listados publicos y de configuracion.
@@ -167,7 +168,7 @@ export class CardComponent implements OnInit {
     this.resultEvalCeroExpert = false;
 
     try {
-      if (this.roleExpert) {
+      if (this.showsOwnExpertEvaluation) {
         const res = await firstValueFrom(
           this.objectService.getObjectResultsEvaluation(this.object.id)
         );
@@ -240,6 +241,11 @@ export class CardComponent implements OnInit {
       : "object.publicationPendingHelp";
   }
 
+  /** `user_key` del autor para enlazar a `/author/:userKey`. */
+  get authorKey(): string | null {
+    return this.object?.user_created?.user_key ?? null;
+  }
+
   get authorName(): string {
     const firstName = this.object?.user_created?.first_name || "";
     const lastName = this.object?.user_created?.last_name || "";
@@ -255,6 +261,17 @@ export class CardComponent implements OnInit {
 
   get roleExpert() {
     return this.loginService.validateRole("expert");
+  }
+
+  /**
+   * Indica si el resumen muestra la evaluación del propio experto.
+   *
+   * En sus propios OA (Mis OAs no trae `user_created`, por eso cuenta
+   * `teacherOptions`) un docente que también es experto ve el resumen general,
+   * como cualquier docente.
+   */
+  get showsOwnExpertEvaluation() {
+    return this.roleExpert && !this.teacherOptions && !isOwnLearningObject(this.object, this.loginService.user);
   }
 
   get roleTeacher() {

@@ -63,6 +63,7 @@
     "studentGuide": "Guía de usuario con el rol de Estudiante",
     "expertGuide": "Guía de usuario con el rol de Experto",
     "sideMenu": {
+      "publicProfile": "Perfil público",
       "myAccount": "Mi perfil",
       "security": "Seguridad",
       "exit": "Salir",
@@ -217,7 +218,11 @@
     "isNotActiveAccount":"Su cuenta no se encuentra activada.",
     "isNotActiveAccountButton":"Activar cuenta",
     "isNotActiveAccountMessage":"Correo enviado exitosamente",
-    "isNotActiveAccountMessageSummary":"Exitoso"
+    "isNotActiveAccountMessageSummary":"Exitoso",
+    "errorNotVerified": "Debe verificar su correo electrónico antes de iniciar sesión.",
+    "errorPendingApproval": "Su cuenta está pendiente de aprobación o fue desactivada por el administrador.",
+    "errorServer": "No se pudo conectar con el servidor. Intente más tarde.",
+    "errorGeneric": "Ocurrió un error al iniciar sesión. Intente nuevamente."
   },
   "register": {
     "objectUploadOer":"Objeto de aprendizaje integrado con éxito",
@@ -955,5 +960,203 @@
     "p2":"El experto puede evaluar los objetos de aprendizaje para ello puede ingresar dentro de cada objeto de aprendizaje de la misma manera tiene la posibilidad de descargarse el objeto de aprendizaje o abrir el objeto de aprendizaje en una nueva pestaña para realizar una revisión de este antes de realizar la evaluación.",
     "subtitle3":"Mis objetos de aprendizaje calificados",
     "p3": "Una de las funciones adicionales también dentro del menú de usuario tenemos una opción para que el usuario experto pueda ver dentro de un apartado sus objetos de aprendizaje calificados por él."
+  },
+  "authorProfile": {
+    "teacher": "Docente",
+    "headline": "Cargo",
+    "about": "Sobre mí",
+    "academicInfo": "Información académica",
+    "highestDegree": "Grado académico más alto",
+    "faculty": "Facultad o carrera",
+    "researchGroup": "Grupo de investigación",
+    "professions": "Profesiones",
+    "knowledgeAreas": "Áreas en las que publica",
+    "researchLines": "Líneas de investigación",
+    "subjects": "Asignaturas que dicta",
+    "degrees": "Formación académica",
+    "links": "Perfiles académicos y profesionales",
+    "memberSince": "Miembro desde {{year}}",
+    "opensNewTab": "(se abre en una pestaña nueva)",
+    "hiddenFromPublic": "Oculto al público",
+    "profileNotPublic": "El docente ocultó su perfil público",
+    "publicProfileSection": "Perfil público",
+    "empty": "El docente todavía no ha completado su perfil público.",
+    "degreeLevels": {
+      "technical": "Técnico o tecnólogo superior",
+      "third": "Tercer nivel",
+      "specialty": "Especialización",
+      "master": "Magíster",
+      "phd": "PhD"
+    },
+    "linkTypes": {
+      "orcid": "ORCID",
+      "scholar": "Google Scholar",
+      "scopus": "Scopus",
+      "researchgate": "ResearchGate",
+      "linkedin": "LinkedIn",
+      "institutional": "Página institucional",
+      "website": "Sitio web personal"
+    }
+  },
+  "authorPage": {
+    "showLess": "Ver menos",
+    "pageReport": "Mostrando {first}–{last} de {totalRecords}",
+    "links": "Enlaces profesionales",
+    "sidebarLabel": "Áreas, enlaces y profesiones",
+    "moreDegrees": "Ver {{count}} más",
+    "moreSubjects": "+{{count}} asignaturas",
+    "moreResearchLines": "+{{count}} líneas",
+    "tabs": {
+      "label": "Contenido del perfil",
+      "trajectory": "Trayectoria",
+      "research": "Investigación",
+      "resources": "Recursos"
+    },
+    "sections": {
+      "aboutKicker": "Perfil profesional",
+      "formationKicker": "Experiencia académica",
+      "formation": "Formación",
+      "researchKicker": "Producción científica",
+      "research": "Investigación",
+      "resourcesKicker": "Recursos publicados"
+    },
+    "viewProfileOf": "Ver perfil de {{name}}",
+    "editProfile": "Editar mi perfil",
+    "breadcrumb": "Perfil del docente",
+    "pageTitle": "{{name}} - ROA",
+    "learningObjects": "Objetos de aprendizaje publicados",
+    "learningObjectsSubtitle": "Recursos públicos que este docente compartió en el ROA.",
+    "emptyTitle": "Todavía no hay objetos publicados",
+    "empty": "Este docente aún no tiene objetos de aprendizaje públicos.",
+    "objectsError": "No pudimos cargar los objetos de aprendizaje. Intenta de nuevo.",
+    "notFoundTitle": "Perfil no disponible",
+    "notFound": "El perfil que buscas no existe o el docente decidió no mostrarlo.",
+    "goToSearch": "Buscar objetos de aprendizaje",
+    "errorTitle": "No pudimos cargar el perfil",
+    "error": "Ocurrió un problema al consultar el perfil. Intenta de nuevo en unos minutos.",
+    "retry": "Reintentar",
+    "table": {
+      "image": "Imagen",
+      "title": "Título",
+      "publishedAt": "Publicado",
+      "views": "Vistas",
+      "downloads": "Descargas"
+    }
+  },
+  "unsavedChanges": {
+    "title": "¿Salir sin guardar?",
+    "message": "Tienes cambios sin guardar. Si sales ahora, se perderán.",
+    "leave": "Salir sin guardar",
+    "stay": "Seguir editando",
+    "notice": "Tienes cambios sin guardar.",
+    "discard": "Descartar cambios"
+  },
+  "publicProfileEdit": {
+    "statusTitle": "Estado del perfil",
+    "progress": {
+      "title": "Avance de tu perfil",
+      "count": "{{done}} de {{total}}",
+      "done": "Completo",
+      "pending": "Pendiente"
+    },
+    "isPublicOn": "Perfil público activado",
+    "isPublicOnHint": "Cualquier visitante puede ver los campos «Público».",
+    "isPublicOffHint": "Nadie más puede verlo; los administradores sí.",
+    "isPublicOff": "Perfil público oculto",
+    "viewPublic": "Ver mi perfil público",
+    "notVisibleYet": "Tu perfil se mostrará cuando publiques tu primer objeto de aprendizaje.",
+    "uploadFirst": "Subir objeto de aprendizaje",
+    "optional": "Opcional",
+    "save": "Guardar cambios",
+    "remove": "Quitar",
+    "moveUp": "Subir enlace",
+    "moveDown": "Bajar enlace",
+    "addResearchLine": "Agregar línea de investigación",
+    "addSubject": "Agregar asignatura",
+    "addDegree": "Agregar título",
+    "addLink": "Agregar enlace",
+    "degreeNumber": "Título {{number}}",
+    "degreeLevel": "Nivel",
+    "degreeTitle": "Título obtenido",
+    "degreeInstitution": "Institución",
+    "degreeYear": "Año",
+    "linkNumber": "Enlace {{number}}",
+    "linkType": "Tipo",
+    "linkUrl": "Dirección (URL)",
+    "visibility": {
+      "public": "Público",
+      "private": "Solo yo"
+    },
+    "sections": {
+      "presentation": "Presentación",
+      "presentationCopy": "Cómo te presentas ante estudiantes y colegas.",
+      "academicCopy": "Tu facultad y tu grupo de investigación.",
+      "research": "Investigación y docencia",
+      "researchCopy": "Tus líneas de investigación y las asignaturas que dictas.",
+      "degreesCopy": "Tus títulos de educación superior: técnico o tecnólogo, tercer nivel, especialización, maestría y doctorado. El más alto se muestra como tu grado académico.",
+      "linksCopy": "Tus perfiles en ORCID, Google Scholar, Scopus y otros sitios. Usa las flechas para ordenarlos."
+    },
+    "placeholders": {
+      "headline": "Ej.: Docente titular de Ingeniería Civil",
+      "bio": "Cuéntales a tus estudiantes y colegas sobre tu trabajo y tus intereses.",
+      "faculty": "Ej.: Facultad de Ingeniería",
+      "researchGroup": "Ej.: Grupo de Investigación en Ingeniería y Transporte"
+    },
+    "errors": {
+      "required": "Este campo es obligatorio.",
+      "maxLength": "Máximo {{max}} caracteres.",
+      "https": "El enlace debe empezar con https://.",
+      "domain": "El enlace debe ser de {{domain}}.",
+      "orcid": "El enlace de ORCID debe tener el formato https://orcid.org/0000-0000-0000-0000; el último carácter puede ser X.",
+      "orcidChecksum": "El número de ORCID no es válido. Revisa que esté bien copiado.",
+      "year": "El año debe estar entre {{min}} y {{max}}.",
+      "server": "Revisa este valor; no se pudo guardar.",
+      "duplicateLink": "Solo puede haber un enlace de cada tipo."
+    },
+    "messages": {
+      "saved": "Tu perfil público se guardó.",
+      "saveError": "No pudimos guardar los cambios. Intenta de nuevo.",
+      "invalid": "Revisa los campos marcados en rojo.",
+      "shown": "Tu perfil público está activado.",
+      "hidden": "Tu perfil público está oculto."
+    },
+    "completeBanner": {
+      "title": "Completa tu perfil público",
+      "text": "Agrega tu cargo, tu formación y tus perfiles académicos para que estudiantes y colegas conozcan tu trabajo.",
+      "action": "Completar perfil",
+      "dismiss": "Ocultar aviso"
+    }
+  },
+  "adminTeacherProfile": {
+    "approved": "Aprobado",
+    "pending": "Pendiente",
+    "notAvailable": "No disponible",
+    "registered": "Registro",
+    "email": "Correo",
+    "verified": "Verificado",
+    "notVerified": "Sin verificar",
+    "learningObjects": "Objetos de aprendizaje",
+    "publicCount": "{{count}} públicos",
+    "public": "Público",
+    "inReview": "En revisión",
+    "notConfigured": "Sin configurar",
+    "publicProfileNotConfigured": "Este docente aún no ha configurado su perfil público.",
+    "hidden": "Oculto al público",
+    "expertInfo": "Información de experto",
+    "roles": {
+      "title": "Rol",
+      "teacher": "Docente",
+      "expert": "Experto",
+      "student": "Estudiante"
+    },
+    "table": {
+      "image": "Imagen",
+      "title": "Título",
+      "status": "Estado",
+      "publishedAt": "Fecha de publicación",
+      "views": "Vistas",
+      "downloads": "Descargas"
+    },
+    "openLearningObject": "Abrir objeto de aprendizaje"
   }
 }

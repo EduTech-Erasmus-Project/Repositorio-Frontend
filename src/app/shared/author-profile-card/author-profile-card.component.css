@@ -1,0 +1,307 @@
+/* Misma paleta, radios y tipografia que teacher-expert-profile del admin. */
+
+:host {
+  display: block;
+}
+
+.author-profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.author-profile-card-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.author-profile-card-avatar-shell {
+  flex: 0 0 auto;
+}
+
+.author-profile-card-avatar-image,
+.author-profile-card-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #dbe5ec;
+  background: #f8fbfc;
+  box-shadow: 0 14px 28px rgba(47, 69, 81, 0.08);
+}
+
+.author-profile-card-avatar-image {
+  object-fit: cover;
+}
+
+.author-profile-card-avatar-fallback {
+  color: #ffffff;
+  background: linear-gradient(135deg, #3b5b68 0%, #507785 100%);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.author-profile-card-hero-copy {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.author-profile-card-kicker {
+  margin: 0 0 0.45rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.author-profile-card-hero-copy h2 {
+  margin: 0;
+  color: #344f5b;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.author-profile-card-headline {
+  margin: 0.45rem 0 0;
+  color: #344f5b;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.author-profile-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.55rem 0 0;
+  color: #64748b;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.author-profile-card-status {
+  align-self: flex-start;
+}
+
+.author-profile-card-section {
+  padding-top: 1.25rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.author-profile-card-section:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.author-profile-card-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.author-profile-card-section-header h3 {
+  margin: 0;
+  color: #344f5b;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.author-profile-card-text {
+  margin: 0;
+  color: #344f5b;
+  line-height: 1.6;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.author-profile-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.author-profile-card-data-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 16px;
+  background: #ffffff;
+  min-width: 0;
+}
+
+.author-profile-card-data-card > span {
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.author-profile-card-data-card strong {
+  color: #344f5b;
+  line-height: 1.55;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.author-profile-card-data-card--stacked {
+  grid-column: 1 / -1;
+}
+
+.author-profile-card-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.author-profile-card-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 999px;
+  background: #f8fbfc;
+  color: #344f5b;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.author-profile-card-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.author-profile-card-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.1rem;
+  border: 1px solid #dbe5ec;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.author-profile-card-item-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.author-profile-card-item-copy strong {
+  color: #344f5b;
+  font-weight: 600;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.author-profile-card-item-copy span {
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.author-profile-card-link {
+  color: #3b5b68;
+  text-decoration: underline;
+  word-break: break-word;
+}
+
+.author-profile-card-link:hover {
+  color: #2f4954;
+}
+
+.author-profile-card-external {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+}
+
+.author-profile-card-external .pi {
+  font-size: 0.8rem;
+}
+
+.author-profile-card-empty {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.author-profile-card-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media screen and (max-width: 640px) {
+  .author-profile-card-hero {
+    align-items: flex-start;
+  }
+
+  .author-profile-card-avatar-image,
+  .author-profile-card-avatar-fallback {
+    width: 96px;
+    height: 96px;
+    border-radius: 20px;
+  }
+
+  .author-profile-card-hero-copy h2 {
+    font-size: 1.55rem;
+  }
+
+  .author-profile-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*
+ * Dentro del detalle del admin la ficha queda bajo "Perfil publico": sus
+ * subtitulos usan el estilo de etiqueta de las tarjetas de esa pantalla y
+ * sin separadores propios, para no competir con los titulos de la pagina.
+ */
+.author-profile-card--embedded .author-profile-card-section {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.author-profile-card--embedded .author-profile-card-section-header {
+  margin-bottom: 0.65rem;
+}
+
+.author-profile-card--embedded .author-profile-card-section-header h3 {
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}

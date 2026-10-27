@@ -71,7 +71,7 @@
 }
 
 .side-object-card:hover,
-.side-object-card:focus-visible {
+.side-object-card:focus-within {
   border-color: #9ab6c6;
   box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1);
   transform: translateY(-1px);
@@ -108,6 +108,43 @@
   text-transform: capitalize;
 }
 
+/* El titulo cubre la tarjeta: clic en cualquier parte abre el OA. */
+.side-object-card {
+  position: relative;
+}
+
+.side-object-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.side-object-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.side-object-card__link:focus-visible {
+  outline: none;
+}
+
+/* El autor queda por encima del enlace de la tarjeta. */
+.side-object-card__author-link {
+  position: relative;
+  z-index: 1;
+  color: #3b5b68;
+  font-weight: 600;
+  text-decoration: none;
+  text-underline-offset: 0.18rem;
+}
+
+.side-object-card__author-link:hover,
+.side-object-card__author-link:focus-visible {
+  color: #1d3f5a;
+  text-decoration: underline;
+}
+
 .side-object-card__category {
   display: inline-block;
   margin-bottom: 0.55rem;
@@ -117,6 +154,11 @@
 
 :host ::ng-deep .side-object-card__rating .p-rating {
   gap: 0.12rem;
+}
+
+/* Calificacion de solo lectura: el clic pasa al enlace de la tarjeta. */
+.side-object-card__rating {
+  pointer-events: none;
 }
 
 :host ::ng-deep .side-object-card__rating .p-rating-icon {

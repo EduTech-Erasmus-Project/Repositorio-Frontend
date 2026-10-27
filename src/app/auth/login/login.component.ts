@@ -33,6 +33,23 @@ interface ToastMessageConfig {
 }
 
 /**
+ * Mensajes de error del login que dependen de la respuesta del backend.
+ */
+type LoginErrorMessageKey =
+  | "errorNotVerified"
+  | "errorPendingApproval"
+  | "errorServer"
+  | "errorGeneric";
+
+const LOGIN_ERROR_FALLBACKS: Record<LoginErrorMessageKey, string> = {
+  errorNotVerified: "Debe verificar su correo electrónico antes de iniciar sesión.",
+  errorPendingApproval:
+    "Su cuenta está pendiente de aprobación o fue desactivada por el administrador.",
+  errorServer: "No se pudo conectar con el servidor. Intente más tarde.",
+  errorGeneric: "Ocurrió un error al iniciar sesión. Intente nuevamente.",
+};
+
+/**
  * Gestiona el inicio de sesion publico del repositorio.
  *
  * Responsabilidades:
@@ -213,13 +230,27 @@ export class LoginComponent implements OnInit, OnDestroy {
       const httpError = error as HttpErrorResponse & {
         error?: {
           detail?: string;
+          code?: string;
         };
       };
-      if (httpError?.error?.detail === "Account inactive user") {
+      const code = httpError?.error?.code;
+      const detail = httpError?.error?.detail;
+
+      // Las comparaciones por `detail` cubren al backend que aun no envia `code`
+      // (responde estos casos con 500), por eso van antes que el chequeo de status.
+      if (code === "account_not_verified" || detail === "Account inactive user") {
         this.isNotaccountaActive = true;
+        this.showMessageError("errorNotVerified");
+      } else if (code === "account_pending_approval" || detail === "Inactive user") {
+        this.showMessageError("errorPendingApproval");
+      } else if (httpError?.status === 401) {
+        this.showMessageError();
+      } else if (httpError?.status === 0 || httpError?.status >= 500) {
+        this.showMessageError("errorServer");
+      } else {
+        this.showMessageError("errorGeneric");
       }
 
-      this.showMessageError();
       this.cdr.detectChanges();
     } finally {
       this.isSubmitting = false;
@@ -255,9 +286,23 @@ export class LoginComponent implements OnInit, OnDestroy {
     };
   }
 
-  showMessageError() {
-    this.loginErrorMessage = this.msjError.detail;
-    this.messageService.add(this.msjError);
+  showMessageError(messageKey?: LoginErrorMessageKey) {
+    const detail = messageKey
+      ? this.getLoginErrorText(messageKey)
+      : this.msjError.detail;
+
+    this.loginErrorMessage = detail;
+    this.messageService.add({ ...this.msjError, detail });
+  }
+
+  private getLoginErrorText(messageKey: LoginErrorMessageKey): string {
+    const currentLang = this.translate?.currentLang || "es";
+    const translations =
+      this.translate?.translations?.[currentLang] ||
+      this.translate?.translations?.es ||
+      {};
+
+    return translations?.login?.[messageKey] || LOGIN_ERROR_FALLBACKS[messageKey];
   }
 
   onSaveEmail(event: { checked?: boolean }) {

@@ -1,0 +1,652 @@
+/*
+ * Perfil publico del docente: estructura del diseno de Figma (cabecera,
+ * pestanas, secciones numeradas, barra lateral y recursos) con la paleta,
+ * tarjetas y tipografia de ROA (las mismas de settings/profile).
+ */
+
+.author-page {
+  display: grid;
+  align-content: start;
+  gap: 1.25rem;
+  min-height: 95vh;
+  /* Solo vertical: los margenes laterales los da `.main-content`. */
+  padding-top: 1.5rem;
+  padding-bottom: 2.5rem;
+  background-color: #eceff4;
+}
+
+.author-card {
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid #dde7ee;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+}
+
+/* Textos que pueden traer palabras o URLs muy largas (instituciones, grupos, titulos). */
+.author-wrap {
+  overflow-wrap: anywhere;
+}
+
+/*
+ * Etiqueta en mayusculas sobre los titulos (PERFIL PROFESIONAL). 0.8rem
+ * (11.2px con la base de 14px): con 0.72rem quedaba en 10px y WAVE lo
+ * marcaba como texto muy pequeno.
+ */
+.author-kicker {
+  margin: 0;
+  color: #3b5b68;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.author-label {
+  margin: 0;
+  color: #607285;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Cabecera */
+/* Sin pestanas (una sola seccion) la cabecera conserva su margen inferior. */
+.author-hero-card:has(.author-tabs) {
+  padding-bottom: 0;
+}
+
+.author-hero-card {
+  background:
+    radial-gradient(circle at top right, rgba(59, 91, 104, 0.08), transparent 42%),
+    #ffffff;
+}
+
+.author-hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.5rem 0.25rem 1.25rem;
+}
+
+/* Igual que la foto de settings/profile: fondo blanco y borde gris claro. */
+:host ::ng-deep .author-hero__avatar.p-avatar {
+  width: 112px;
+  height: 112px;
+  overflow: hidden;
+  border: 6px solid #f2f6f9;
+  background: #ffffff;
+  color: #3b5b68;
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+:host ::ng-deep .author-hero__avatar.p-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-hero__copy {
+  min-width: 0;
+}
+
+.author-hero__copy h1 {
+  margin: 0.35rem 0 0;
+  color: #1d3f5a;
+  font-size: 1.85rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.author-hero__subtitle {
+  margin: 0.35rem 0 0;
+  color: #36505e;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.author-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.author-hero__meta li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  color: #607285;
+  font-size: 0.9rem;
+}
+
+.author-hero__meta .pi {
+  color: #3b5b68;
+}
+
+.author-hero__meta a {
+  color: #3b5b68;
+}
+
+.author-hero__actions {
+  align-self: start;
+}
+
+/* Pestanas de navegacion (p-tabs sin paneles) con los colores de ROA */
+:host ::ng-deep .author-tabs,
+:host ::ng-deep .author-tabs .p-tablist,
+:host ::ng-deep .author-tabs .p-tablist-content {
+  background: transparent;
+}
+
+:host ::ng-deep .author-tabs .p-tablist-tab-list {
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 0;
+  background: transparent;
+}
+
+:host ::ng-deep .author-tabs .p-tab {
+  gap: 0.5rem;
+  padding: 0.95rem 1.1rem;
+  border-color: transparent;
+  background: transparent;
+  color: #607285;
+  font-weight: 600;
+}
+
+:host ::ng-deep .author-tabs .p-tab:hover,
+:host ::ng-deep .author-tabs .p-tab-active {
+  color: #1d3f5a;
+}
+
+:host ::ng-deep .author-tabs .p-tablist-active-bar {
+  height: 2px;
+  background: #3b5b68;
+}
+
+:host ::ng-deep .author-tabs__count.p-badge {
+  background: #dbe5ec;
+  color: #1d3f5a;
+}
+
+/* Cuerpo: columna principal y barra lateral */
+.author-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.author-body--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.author-main {
+  padding: 1.5rem 1.75rem;
+}
+
+.author-section {
+  scroll-margin-top: 1rem;
+}
+
+.author-section + .author-section {
+  margin-top: 1.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.author-section__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.author-section__number {
+  padding-top: 0.1rem;
+  color: #3b5b68;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.author-section__header h2 {
+  margin: 0.2rem 0 0;
+  color: #1d3f5a;
+  font-size: 1.4rem;
+  line-height: 1.25;
+}
+
+.author-bio {
+  margin: 0;
+  color: #36505e;
+  font-size: 1rem;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.author-about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 1.25rem 2rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed #dbe5ec;
+}
+
+.author-facts {
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+  margin: 0;
+}
+
+.author-facts div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.author-facts dd {
+  margin: 0;
+  color: #1d3f5a;
+  font-weight: 700;
+}
+
+.author-chip-group {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+}
+
+.author-chip-group h3 {
+  font-size: 0.85rem;
+}
+
+.author-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+:host ::ng-deep .author-chip.p-chip {
+  max-width: 100%;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(59, 91, 104, 0.16);
+  border-radius: 999px;
+  background: #f4f8fa;
+  color: #36505e;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+:host ::ng-deep .author-chip .p-chip-label {
+  margin: 0;
+  line-height: 1.35;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* "Ver 7 mas" / "+5 asignaturas" */
+:host ::ng-deep .author-more.p-button {
+  justify-self: start;
+  margin-top: 0.35rem;
+  padding: 0.35rem 0.5rem;
+  color: #3b5b68;
+  font-weight: 600;
+}
+
+/* Formacion: p-timeline vertical con marcadores de ROA */
+:host ::ng-deep .author-timeline .p-timeline-event-opposite {
+  display: none;
+}
+
+:host ::ng-deep .author-timeline .p-timeline-event-content {
+  padding: 0 0 1.25rem 1rem;
+}
+
+:host ::ng-deep .author-timeline .p-timeline-event-connector {
+  background: #dbe5ec;
+}
+
+.author-timeline__marker {
+  display: block;
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 3px solid #3b5b68;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.author-timeline__item h3 {
+  margin: 0.3rem 0 0;
+  color: #1d3f5a;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.author-timeline__item p:last-child {
+  margin: 0.2rem 0 0;
+  color: #607285;
+  font-size: 0.9rem;
+}
+
+/* Investigacion: caja con borde izquierdo de ROA */
+.author-research {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1.1rem 1.25rem;
+  border-left: 3px solid #3b5b68;
+  border-radius: 0 16px 16px 0;
+  background: #f8fbfc;
+}
+
+.author-research__group {
+  margin: 0 0 0.5rem;
+  color: #1d3f5a;
+  font-size: 1.05rem;
+}
+
+/* Barra lateral */
+.author-sidebar {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.author-side-card {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.1rem 1.25rem;
+}
+
+.author-side-card h2 {
+  font-size: 0.8rem;
+}
+
+.author-links {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.author-links li + li {
+  border-top: 1px solid #e2e8f0;
+}
+
+.author-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  color: #36505e;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.author-links a:hover,
+.author-links a:focus-visible {
+  color: #1d3f5a;
+}
+
+.author-links .pi {
+  flex: 0 0 auto;
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+/* Recursos */
+.author-objects {
+  scroll-margin-top: 1rem;
+}
+
+.author-objects__header {
+  margin-bottom: 1rem;
+}
+
+.author-objects__header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.25rem 0 0;
+  color: #1d3f5a;
+  font-size: 1.4rem;
+}
+
+.author-objects__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: #dbe5ec;
+  color: #1d3f5a;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.author-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Tabla de OA: los mismos estilos que el detalle del docente en el admin. */
+.author-table__thumb-col {
+  width: 6rem;
+}
+
+/* En pantallas angostas la tabla se desplaza; el titulo no se corta palabra por palabra. */
+.author-table__title-col {
+  min-width: 14rem;
+}
+
+.author-table__thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.5rem;
+  height: 3rem;
+  overflow: hidden;
+  border: 1px solid #dbe5ec;
+  border-radius: 8px;
+  background: #f8fbfc;
+  color: #64748b;
+}
+
+.author-table__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-table__row {
+  cursor: pointer;
+}
+
+.author-table__title {
+  color: #3b5b68;
+  font-weight: 600;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.author-table__title:hover {
+  color: #2f4954;
+}
+
+.author-table__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.author-table__stat .pi {
+  color: #64748b;
+}
+
+.author-table-skeleton {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.author-table-skeleton__row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.author-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 220px;
+  padding: 1.5rem;
+  border: 1px dashed rgba(22, 58, 92, 0.18);
+  border-radius: 20px;
+  background: #f8fbfd;
+  color: #4b657c;
+  text-align: center;
+}
+
+.author-state i {
+  color: #2b6d95;
+  font-size: 2rem;
+}
+
+.author-state h2,
+.author-state h3 {
+  margin: 0;
+  color: #14344f;
+  font-size: 1.1rem;
+}
+
+.author-state p {
+  max-width: 32rem;
+  margin: 0;
+}
+
+.author-state__action {
+  padding: 0.7rem 1.25rem;
+  border: 0;
+  border-radius: 999px;
+  background: #2f5968;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.author-state__action:hover {
+  background: #244755;
+}
+
+.author-state--error {
+  border-color: rgba(197, 74, 48, 0.24);
+  background: #fff8f7;
+  color: #8b4d43;
+}
+
+.author-state--error i {
+  color: #c54a30;
+}
+
+.author-hero-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.author-hero-skeleton__copy {
+  display: grid;
+  flex: 1 1 320px;
+  gap: 0.75rem;
+}
+
+:host ::ng-deep .p-paginator {
+  margin-top: 1rem;
+}
+
+/* "Mostrando 1-7 de 7" como texto de apoyo, no como una caja mas del paginador. */
+:host ::ng-deep .p-paginator .p-paginator-current {
+  height: auto;
+  margin-right: 0.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #607285;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+@media (max-width: 991px) {
+  /* La barra lateral baja despues de las secciones, como en el diseno mobile. */
+  .author-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .author-about-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 575px) {
+  .author-card,
+  .author-main {
+    padding: 1rem;
+    border-radius: 18px;
+  }
+
+  .author-hero-card:has(.author-tabs) {
+    padding-bottom: 0;
+  }
+
+  /* La foto va arriba para que el texto use todo el ancho. */
+  .author-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  :host ::ng-deep .author-hero__avatar.p-avatar {
+    width: 78px;
+    height: 78px;
+    font-size: 1.5rem;
+  }
+
+  .author-hero__copy h1 {
+    font-size: 1.5rem;
+  }
+
+  .author-hero__meta {
+    flex-direction: column;
+  }
+
+  /* Las tres pestanas caben en 390px. */
+  :host ::ng-deep .author-tabs .p-tab {
+    padding: 0.85rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  :host ::ng-deep .p-paginator {
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+}

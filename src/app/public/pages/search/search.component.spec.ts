@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed, fakeAsync, flushMicrotasks } from "@angular/core/testing";
-import { ActivatedRoute, Router } from "@angular/router";
-import { of, Subject } from "rxjs";
+import { ActivatedRoute, Router, Scroll, NavigationEnd } from "@angular/router";
+import { ViewportScroller } from "@angular/common";
+import { of, Subject, throwError } from "rxjs";
+import { HttpErrorResponse } from "@angular/common/http";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { LanguageService } from "src/app/services/language.service";
 import { LoginService } from "src/app/services/login.service";
@@ -12,6 +14,8 @@ describe("SearchComponent", () => {
   let component: SearchComponent;
   let fixture: ComponentFixture<SearchComponent>;
   let queryParams$: Subject<any>;
+  let routerEvents$: Subject<any>;
+  let activatedRoute: { queryParams: any };
   let searchServiceSpy: jasmine.SpyObj<SearchService>;
   let routerSpy: jasmine.SpyObj<Router>;
   let loginServiceSpy: jasmine.SpyObj<LoginService>;
@@ -31,9 +35,10 @@ describe("SearchComponent", () => {
     queryParams$ = new Subject<any>();
     searchServiceSpy = jasmine.createSpyObj("SearchService", [
       "search",
-      "searchPagePaginator",
     ]);
-    routerSpy = jasmine.createSpyObj("Router", ["navigate"]);
+    routerEvents$ = new Subject<any>();
+    routerSpy = jasmine.createSpyObj("Router", ["navigate"], { events: routerEvents$.asObservable() });
+    routerSpy.navigate.and.returnValue(Promise.resolve(true));
     loginServiceSpy = jasmine.createSpyObj("LoginService", ["validateRole"]);
     breadcrumbServiceSpy = jasmine.createSpyObj("BreadcrumbService", ["setItems"]);
 
@@ -47,8 +52,9 @@ describe("SearchComponent", () => {
         { provide: BreadcrumbService, useValue: breadcrumbServiceSpy },
         {
           provide: ActivatedRoute,
-          useValue: {
-            queryParams: queryParams$.asObservable(),
+          useFactory: () => {
+            activatedRoute = { queryParams: queryParams$.asObservable() };
+            return activatedRoute;
           },
         },
         {
@@ -71,14 +77,6 @@ describe("SearchComponent", () => {
     querySearchService = TestBed.inject(QuerySearchService);
     loginServiceSpy.validateRole.and.returnValue(false);
     searchServiceSpy.search.and.returnValue(
-      of({
-        results: [],
-        pages: 0,
-        count: 0,
-        links: { next: null, previous: null },
-      })
-    );
-    searchServiceSpy.searchPagePaginator.and.returnValue(
       of({
         results: [],
         pages: 0,
@@ -114,9 +112,10 @@ describe("SearchComponent", () => {
         jasmine.objectContaining({ value: "Me gusta" }),
       ])
     );
-    expect(searchServiceSpy.search).toHaveBeenCalledWith(
-      querySearchService.queryParams
-    );
+    expect(searchServiceSpy.search).toHaveBeenCalledWith({
+      ...querySearchService.queryParams,
+      page_size: "15",
+    });
     expect(component.objects.length).toBe(1);
     expect(component.totalRecords).toBe(1);
     expect(component.loading).toBeFalse();
@@ -194,38 +193,107 @@ describe("SearchComponent", () => {
     });
   });
 
-  it("debe actualizar los resultados al paginar", async () => {
-    searchServiceSpy.searchPagePaginator.and.returnValue(
-      of({
-        results: [{ id: 8, general_title: "Quimica", source_file: null, is_adapted_oer: false }],
-        pages: 2,
-        count: 2,
-        links: { next: null, previous: "page=1" },
-      })
-    );
-    querySearchService.queryParams = { general_title: "Algebra" };
+  it("debe escribir la pagina en la URL al paginar, reemplazando el historial", () => {
+    component.paginate({ page: 1, first: 15, rows: 15 });
 
-    await component.paginate({ page: 1, first: 10 });
-
-    expect(searchServiceSpy.searchPagePaginator).toHaveBeenCalledWith(2, {
-      general_title: "Algebra",
+    expect(routerSpy.navigate).toHaveBeenCalledWith([], {
+      relativeTo: activatedRoute as any,
+      queryParams: { page: 2, page_size: null },
+      queryParamsHandling: "merge",
+      replaceUrl: true,
     });
-    expect(component.objects).toEqual([
-      { id: 8, general_title: "Quimica", source_file: null, is_adapted_oer: false },
-    ] as any);
-    expect(component.loading).toBeFalse();
   });
 
-  it("debe mostrar paginador solo cuando hay mas registros que resultados visibles", () => {
+  it("debe pedir la pagina de la URL sin convertirla en chip", fakeAsync(() => {
+    queryParams$.next({ general_title: "Algebra", page: "3", page_size: "20" });
+    flushMicrotasks();
+
+    expect(searchServiceSpy.search).toHaveBeenCalledWith({
+      general_title: "Algebra",
+      page_size: "20",
+      page: "3",
+    });
+    expect(querySearchService.queryParams).toEqual({ general_title: "Algebra" });
+    expect(component.chipsSearch).toEqual([{ value: "Algebra" }]);
+    expect(component.rowsPerPage).toBe(20);
+    expect(component.first).toBe(40);
+  }));
+
+  it("debe volver a la pagina 1 si la pagina de la URL ya no existe", fakeAsync(() => {
+    searchServiceSpy.search.and.returnValue(throwError(() => new HttpErrorResponse({ status: 404 })));
+
+    queryParams$.next({ general_title: "Algebra", page: "20" });
+    flushMicrotasks();
+
+    expect(routerSpy.navigate).toHaveBeenCalledWith([], jasmine.objectContaining({
+      queryParams: { page: null, page_size: null },
+      replaceUrl: true,
+    }));
+  }));
+
+  it("debe restaurar el scroll guardado al volver atras cuando llegan los resultados", fakeAsync(() => {
+    const scroller = TestBed.inject(ViewportScroller);
+    spyOn(scroller, "scrollToPosition");
+    spyOn(window, "requestAnimationFrame").and.callFake((cb: FrameRequestCallback) => {
+      cb(0);
+      return 0;
+    });
+    searchServiceSpy.search.and.returnValue(
+      of({ results: [{ id: 1 }], pages: 1, count: 1, links: { next: null, previous: null } } as any)
+    );
+
+    routerEvents$.next(new Scroll(new NavigationEnd(2, "/search", "/search"), [0, 1800], null));
+    queryParams$.next({ general_title: "Algebra" });
+    flushMicrotasks();
+
+    expect(scroller.scrollToPosition).toHaveBeenCalledWith([0, 1800]);
+  }));
+
+  it("debe mostrar paginador mientras haya mas registros que la opcion minima de filas", () => {
     component.objects = [{ id: 1 } as any, { id: 2 } as any];
-    component.rows = 2;
-    component.totalRecords = 5;
+    component.totalRecords = 11;
 
     expect(component.hasResults).toBeTrue();
     expect(component.showPaginator).toBeTrue();
 
-    component.totalRecords = 2;
+    component.totalRecords = 10;
 
     expect(component.showPaginator).toBeFalse();
   });
+
+  it("debe volver a la primera pagina al cambiar las filas", () => {
+    component.paginate({ page: 3, first: 45, rows: 50 });
+
+    expect(routerSpy.navigate).toHaveBeenCalledWith([], jasmine.objectContaining({
+      queryParams: { page: null, page_size: 50 },
+    }));
+  });
+
+  it("debe reponer page_size en la URL cuando un filtro navega sin el", fakeAsync(() => {
+    querySearchService.pageSize = 20;
+    searchServiceSpy.search.calls.reset();
+
+    queryParams$.next({ general_title: "Algebra" });
+    flushMicrotasks();
+
+    expect(routerSpy.navigate).toHaveBeenCalledWith([], {
+      relativeTo: activatedRoute as any,
+      queryParams: { page_size: 20 },
+      queryParamsHandling: "merge",
+      replaceUrl: true,
+    });
+    expect(searchServiceSpy.search).not.toHaveBeenCalled();
+  }));
+
+  it("no debe reponer page_size al volver a 15 filas", fakeAsync(() => {
+    querySearchService.pageSize = 20;
+
+    component.paginate({ page: 0, first: 0, rows: 15 });
+    routerSpy.navigate.calls.reset();
+    queryParams$.next({ general_title: "Algebra" });
+    flushMicrotasks();
+
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
+    expect(component.rowsPerPage).toBe(15);
+  }));
 });

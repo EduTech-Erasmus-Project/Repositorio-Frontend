@@ -143,6 +143,25 @@
   }
 }
 
+.web-view__creator-avatar-link {
+  display: block;
+  flex: 0 0 72px;
+  border-radius: 22px;
+}
+
+/* Enlace al autor: color ROA en reposo; subrayado al pasar el cursor o con foco. */
+.web-view__creator-link {
+  color: #3b5b68;
+  text-decoration: none;
+  text-underline-offset: 0.2rem;
+}
+
+.web-view__creator-link:hover,
+.web-view__creator-link:focus-visible {
+  color: #1d3f5a;
+  text-decoration: underline;
+}
+
 .web-view__creator-avatar--fallback {
   display: flex;
   align-items: center;

@@ -49,8 +49,11 @@
       </p-divider>
       <p>
         <span class="p-tag">Autor:</span>
-        <a [routerLink]="[ '/admin/teacher/request/approved/learning-object/upload', autor?.id ]"> {{
-        autor?.first_name }} {{ autor?.last_name }}</a>
+        @if (authorProfilePath) {
+          <a [routerLink]="authorProfilePath">{{ autor?.first_name }} {{ autor?.last_name }}</a>
+        } @else {
+          {{ autor?.first_name }} {{ autor?.last_name }}
+        }
       </p>
       <div class="card">
 

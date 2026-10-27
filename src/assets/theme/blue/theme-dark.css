@@ -2561,12 +2561,13 @@ p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
   transition: box-shadow 0.15s;
   border-radius: 0;
 }
-.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight,
+.p-paginator .p-paginator-pages .p-paginator-page.p-paginator-page-selected {
   background: #3B5B68;
   border-color: #3B5B68;
   color: #ffffff;
 }
-.p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
+.p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):not(.p-paginator-page-selected):hover {
   background: rgba(255, 255, 255, 0.04);
   border-color: #3f4b5b;
   color: #3B5B68;

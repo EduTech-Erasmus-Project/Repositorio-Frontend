@@ -57,6 +57,10 @@ describe("LoginComponent", () => {
             errorMesage: "Credenciales invalidas",
             isNotActiveAccountMessageSummary: "Cuenta inactiva",
             isNotActiveAccountMessage: "Se reenvio el correo",
+            errorNotVerified: "Verifica tu correo",
+            errorPendingApproval: "Cuenta pendiente de aprobacion",
+            errorServer: "Sin conexion con el servidor",
+            errorGeneric: "Error al iniciar sesion",
           },
           message: {
             titleError: "Error",
@@ -68,6 +72,10 @@ describe("LoginComponent", () => {
             errorMesage: "Invalid credentials",
             isNotActiveAccountMessageSummary: "Inactive account",
             isNotActiveAccountMessage: "Email resent",
+            errorNotVerified: "Verify your email",
+            errorPendingApproval: "Account pending approval",
+            errorServer: "Cannot reach the server",
+            errorGeneric: "Sign in error",
           },
           message: {
             titleError: "Error",
@@ -227,10 +235,114 @@ describe("LoginComponent", () => {
     expect(messageServiceSpy.add).toHaveBeenCalledWith({
       severity: "error",
       summary: "Error",
-      detail: "Credenciales invalidas",
+      detail: "Verifica tu correo",
     });
-    expect(component.loginErrorMessage).toBe("Credenciales invalidas");
+    expect(component.loginErrorMessage).toBe("Verifica tu correo");
     expect(Swal.close).toHaveBeenCalled();
+  });
+
+  describe("errores del backend al iniciar sesion", () => {
+    async function loginWithError(httpError: unknown) {
+      loginServiceSpy.signIn.and.returnValue(throwError(() => httpError));
+
+      component.loginForm.patchValue({
+        email: "usuario@ups.edu.ec",
+        password: "123456",
+        rememberMe: false,
+      });
+
+      await component.onLogin();
+      await fixture.whenStable();
+    }
+
+    it("debe pedir verificar el correo y mostrar el boton de reenvio con code account_not_verified", async () => {
+      await loginWithError({
+        status: 403,
+        error: { detail: "Account inactive user", code: "account_not_verified" },
+      });
+
+      expect(component.isNotaccountaActive).toBeTrue();
+      expect(component.loginErrorMessage).toBe("Verifica tu correo");
+    });
+
+    it("debe indicar cuenta pendiente de aprobacion con code account_pending_approval", async () => {
+      await loginWithError({
+        status: 403,
+        error: { detail: "Inactive user", code: "account_pending_approval" },
+      });
+
+      expect(component.isNotaccountaActive).toBeFalse();
+      expect(component.loginErrorMessage).toBe("Cuenta pendiente de aprobacion");
+    });
+
+    it("debe indicar cuenta pendiente con el backend anterior (500 sin code)", async () => {
+      await loginWithError({ status: 500, error: { detail: "Inactive user" } });
+
+      expect(component.isNotaccountaActive).toBeFalse();
+      expect(component.loginErrorMessage).toBe("Cuenta pendiente de aprobacion");
+    });
+
+    it("debe pedir verificar el correo con el backend anterior (500 sin code)", async () => {
+      await loginWithError({ status: 500, error: { detail: "Account inactive user" } });
+
+      expect(component.isNotaccountaActive).toBeTrue();
+      expect(component.loginErrorMessage).toBe("Verifica tu correo");
+    });
+
+    it("debe mostrar credenciales invalidas con 401", async () => {
+      await loginWithError({
+        status: 401,
+        error: {
+          detail: "No active account found with the given credentials",
+          code: "no_active_account",
+        },
+      });
+
+      expect(component.isNotaccountaActive).toBeFalse();
+      expect(component.loginErrorMessage).toBe("Credenciales invalidas");
+    });
+
+    it("debe indicar que no hay conexion con status 0", async () => {
+      await loginWithError({ status: 0, error: null });
+
+      expect(component.loginErrorMessage).toBe("Sin conexion con el servidor");
+    });
+
+    it("debe indicar que no hay conexion con un 500 real", async () => {
+      await loginWithError({ status: 502, error: null });
+
+      expect(component.loginErrorMessage).toBe("Sin conexion con el servidor");
+    });
+
+    it("debe mostrar un error generico para otros status", async () => {
+      await loginWithError({ status: 400, error: { detail: "Bad request" } });
+
+      expect(component.isNotaccountaActive).toBeFalse();
+      expect(component.loginErrorMessage).toBe("Error al iniciar sesion");
+    });
+
+    it("debe mostrar el mensaje en el idioma actual", async () => {
+      translateMock.currentLang = "en";
+
+      await loginWithError({
+        status: 403,
+        error: { detail: "Inactive user", code: "account_pending_approval" },
+      });
+
+      expect(component.loginErrorMessage).toBe("Account pending approval");
+    });
+
+    it("no debe mostrar nunca el detail del backend al usuario", async () => {
+      await loginWithError({
+        status: 401,
+        error: {
+          detail: "No active account found with the given credentials",
+          code: "no_active_account",
+        },
+      });
+
+      expect(component.loginErrorMessage).not.toContain("No active account");
+    });
   });
 
   it("debe emitir la actualizacion de menu al iniciar sesion como experto", async () => {

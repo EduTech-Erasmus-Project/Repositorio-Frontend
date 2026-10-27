@@ -31,7 +31,7 @@
 
       <div class="web-view__actions">
         <div class="web-view__actions-primary">
-          @if (roleExpert && expertEvaluationStateResolved && !flagQuestionsEx && flagQuestionsExNumber == 0) {
+          @if (canEvaluateAsExpert && expertEvaluationStateResolved && !flagQuestionsEx && flagQuestionsExNumber == 0) {
             <p-button
               id="web-view-expert-create-trigger"
               (click)="openExpertDialog('create', $event, 'web-view-expert-create-trigger')"
@@ -39,7 +39,7 @@
             ></p-button>
           }
 
-          @if (roleExpert && expertEvaluationStateResolved && flagQuestionsEx && flagQuestionsExNumber == 1) {
+          @if (canEvaluateAsExpert && expertEvaluationStateResolved && flagQuestionsEx && flagQuestionsExNumber == 1) {
             <p-button
               id="web-view-expert-update-trigger"
               (click)="openExpertDialog('update', $event, 'web-view-expert-update-trigger')"
@@ -159,25 +159,43 @@
   <section class="web-view__info-panel">
     <div class="web-view__context-row">
       <div class="web-view__creator">
-        @if (object.user_created?.image_url) {
-          <div class="web-view__creator-avatar">
-            <img
-              loading="lazy"
-              [src]="object.user_created.image_url"
-              [alt]="object.user_created.first_name + ' ' + object.user_created.last_name"
-              />
-          </div>
+        <!-- La foto tambien lleva al perfil, pero fuera del orden de tabulacion:
+             el enlace accesible es el nombre. -->
+        @if (authorKey) {
+          <a class="web-view__creator-avatar-link" [routerLink]="['/author', authorKey]" tabindex="-1" aria-hidden="true">
+            <ng-container *ngTemplateOutlet="creatorAvatar"></ng-container>
+          </a>
         } @else {
-          <div class="web-view__creator-avatar web-view__creator-avatar--fallback">
-            {{ (object.user_created?.first_name || '').charAt(0) }}{{ (object.user_created?.last_name || '').charAt(0) }}
-          </div>
+          <ng-container *ngTemplateOutlet="creatorAvatar"></ng-container>
         }
+        <ng-template #creatorAvatar>
+          @if (object.user_created?.image_url) {
+            <div class="web-view__creator-avatar">
+              <img
+                loading="lazy"
+                [src]="object.user_created.image_url"
+                [alt]="authorKey ? '' : object.user_created.first_name + ' ' + object.user_created.last_name"
+                />
+            </div>
+          } @else {
+            <div class="web-view__creator-avatar web-view__creator-avatar--fallback">
+              {{ (object.user_created?.first_name || '').charAt(0) }}{{ (object.user_created?.last_name || '').charAt(0) }}
+            </div>
+          }
+        </ng-template>
 
 
         <div class="web-view__creator-copy">
           <span class="web-view__creator-label">Autor</span>
           <p class="web-view__creator-name">
-            {{ object.user_created.first_name + ' ' + object.user_created.last_name }}
+            @if (authorKey) {
+              <a class="web-view__creator-link" [routerLink]="['/author', authorKey]"
+                [attr.aria-label]="'authorPage.viewProfileOf' | translate: { name: object.user_created.first_name + ' ' + object.user_created.last_name }">
+                {{ object.user_created.first_name + ' ' + object.user_created.last_name }}
+              </a>
+            } @else {
+              {{ object.user_created.first_name + ' ' + object.user_created.last_name }}
+            }
           </p>
           <div class="web-view__creator-meta">
             @if (object.rating) {

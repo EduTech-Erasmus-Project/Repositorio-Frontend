@@ -108,9 +108,9 @@ describe("SearchComponent Integracion", () => {
 
     searchServiceSpy = jasmine.createSpyObj("SearchService", [
       "search",
-      "searchPagePaginator",
     ]);
-    routerSpy = jasmine.createSpyObj("Router", ["navigate"]);
+    routerSpy = jasmine.createSpyObj("Router", ["navigate"], { events: of() });
+    routerSpy.navigate.and.returnValue(Promise.resolve(true));
     loginServiceSpy = jasmine.createSpyObj("LoginService", ["validateRole"]);
     breadcrumbServiceSpy = jasmine.createSpyObj("BreadcrumbService", ["setItems"]);
 
@@ -121,14 +121,6 @@ describe("SearchComponent Integracion", () => {
         pages: 1,
         count: 1,
         links: { next: null, previous: null },
-      })
-    );
-    searchServiceSpy.searchPagePaginator.and.returnValue(
-      of({
-        results: [{ id: 2, general_title: "Quimica organica", source_file: null, is_adapted_oer: false }],
-        pages: 2,
-        count: 2,
-        links: { next: null, previous: "page=1" },
       })
     );
 
@@ -251,7 +243,7 @@ describe("SearchComponent Integracion", () => {
       of({
         results: [{ id: 1, general_title: "Algebra lineal", source_file: null, is_adapted_oer: false }],
         pages: 2,
-        count: 2,
+        count: 20,
         links: { next: "page=2", previous: null },
       })
     );
@@ -264,12 +256,26 @@ describe("SearchComponent Integracion", () => {
     expect(paginator).toBeTruthy();
 
     paginator.componentInstance.onPageChange.emit({ page: 1 });
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
 
-    expect(searchServiceSpy.searchPagePaginator).toHaveBeenCalledWith(2, {
+    expect(routerSpy.navigate).toHaveBeenCalledWith([], jasmine.objectContaining({
+      queryParams: { page: 2, page_size: null },
+    }));
+
+    // El router publica la nueva URL y la busqueda pide esa pagina.
+    searchServiceSpy.search.and.returnValue(
+      of({
+        results: [{ id: 2, general_title: "Quimica organica", source_file: null, is_adapted_oer: false }],
+        pages: 2,
+        count: 2,
+        links: { next: null, previous: "page=1" },
+      })
+    );
+    await emitirQueryParams({ general_title: "Algebra", page: "2" });
+
+    expect(searchServiceSpy.search).toHaveBeenCalledWith({
       general_title: "Algebra",
+      page_size: "15",
+      page: "2",
     });
     expect(component.objects).toEqual([
       { id: 2, general_title: "Quimica organica", source_file: null, is_adapted_oer: false },

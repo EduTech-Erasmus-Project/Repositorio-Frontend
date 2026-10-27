@@ -1,0 +1,17 @@
+@if (visible()) {
+  <aside class="complete-profile-notice" aria-labelledby="complete-profile-notice-title">
+    <i class="pi pi-id-card complete-profile-notice__icon" aria-hidden="true"></i>
+    <div class="complete-profile-notice__copy">
+      <h3 id="complete-profile-notice-title">{{ 'publicProfileEdit.completeBanner.title' | translate }}</h3>
+      <p>{{ 'publicProfileEdit.completeBanner.text' | translate }}</p>
+    </div>
+    <div class="complete-profile-notice__actions">
+      <a pButton routerLink="/settings/public-profile" icon="pi pi-pencil"
+        [label]="'publicProfileEdit.completeBanner.action' | translate"></a>
+      <button pButton type="button" class="p-button-text" icon="pi pi-times"
+        [attr.aria-label]="'publicProfileEdit.completeBanner.dismiss' | translate"
+        [pTooltip]="'publicProfileEdit.completeBanner.dismiss' | translate"
+        (click)="dismiss()"></button>
+    </div>
+  </aside>
+}

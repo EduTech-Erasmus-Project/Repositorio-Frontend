@@ -7,7 +7,7 @@ import { Router } from "@angular/router";
 import { WebViewComponent } from "./web-view.component";
 import { LoginService } from "../../../services/login.service";
 import { LearningObjectService } from "src/app/services/learning-object.service";
-import { StorageService } from "src/app/services/storage.service";
+import { InteractionReferenceService } from "src/app/services/interaction-reference.service";
 import { LanguageService } from "src/app/services/language.service";
 
 @Pipe({
@@ -27,9 +27,8 @@ describe("WebViewComponent", () => {
   let learningObjectSpy: jasmine.SpyObj<LearningObjectService>;
   let messageServiceSpy: jasmine.SpyObj<MessageService>;
   let routerSpy: jasmine.SpyObj<Router>;
-  let storageServiceSpy: jasmine.SpyObj<StorageService>;
+  let referenceServiceSpy: jasmine.SpyObj<InteractionReferenceService>;
   let selectedLearningObject$: Subject<any>;
-  let cookieStore: Record<string, string | null>;
   const instantTranslations: Record<string, string> = {
     "message.titleError": "Error",
     "message.titleSuccess": "Correcto",
@@ -84,10 +83,6 @@ describe("WebViewComponent", () => {
 
   beforeEach(async () => {
     selectedLearningObject$ = new Subject<any>();
-    cookieStore = {
-      key_ref: "ref-001",
-      array_view: JSON.stringify([]),
-    };
 
     loginServiceSpy = jasmine.createSpyObj(
       "LoginService",
@@ -102,15 +97,12 @@ describe("WebViewComponent", () => {
         "validateLike",
         "getdownloadCount",
         "getViewedCount",
-        "viewedUpdateCount",
-        "viewedCreateCount",
+        "registerView",
         "getObjectResultsEvaluation",
         "getObjectResultsEvaluationStudent",
-        "downloadCreateCount",
-        "downloadUpdateCount",
+        "registerDownload",
         "interactionLike",
         "interactionView",
-        "getReferenceUserView",
       ],
       {
         selectedLearningObject$: selectedLearningObject$.asObservable(),
@@ -118,10 +110,8 @@ describe("WebViewComponent", () => {
     );
     messageServiceSpy = jasmine.createSpyObj("MessageService", ["add"]);
     routerSpy = jasmine.createSpyObj("Router", ["navigate"]);
-    storageServiceSpy = jasmine.createSpyObj("StorageService", [
-      "getLocalItem",
-      "saveLocalItem",
-    ]);
+    referenceServiceSpy = jasmine.createSpyObj("InteractionReferenceService", ["get"]);
+    referenceServiceSpy.get.and.resolveTo("ref-001");
 
     loginServiceSpy.validateRole.and.callFake((role: string) => role === "student");
     learningObjectSpy.validateLike.and.returnValue(
@@ -129,26 +119,12 @@ describe("WebViewComponent", () => {
     );
     learningObjectSpy.getdownloadCount.and.returnValue(of({ number: 5 }));
     learningObjectSpy.getViewedCount.and.returnValue(of([{ view: 3 }]));
-    learningObjectSpy.viewedUpdateCount.and.returnValue(
-      of({ view: 4, learning_object: 7 })
-    );
-    learningObjectSpy.viewedCreateCount.and.returnValue(of({ view: 1 }));
+    learningObjectSpy.registerView.and.returnValue(of([{ view: 4 }]));
     learningObjectSpy.getObjectResultsEvaluation.and.returnValue(of([]));
     learningObjectSpy.getObjectResultsEvaluationStudent.and.returnValue(of([]));
-    learningObjectSpy.downloadCreateCount.and.returnValue(of([{ downloaded: 1 }]));
-    learningObjectSpy.downloadUpdateCount.and.returnValue(of([{ downloaded: 3 }]));
+    learningObjectSpy.registerDownload.and.returnValue(of([{ downloaded: 3 }] as any));
     learningObjectSpy.interactionLike.and.returnValue(of({ liked: false }));
     learningObjectSpy.interactionView.and.returnValue(of({ liked: true }));
-    learningObjectSpy.getReferenceUserView.and.returnValue(
-      of({ reference: "ref-001" })
-    );
-
-    storageServiceSpy.getLocalItem.and.callFake(<T>(key: string): T =>
-      ((cookieStore[key] ?? null) as T)
-    );
-    storageServiceSpy.saveLocalItem.and.callFake(<T>(key: string, value: T) => {
-      cookieStore[key] = value == null ? null : String(value);
-    });
 
     await TestBed.configureTestingModule({
       declarations: [WebViewComponent, TranslatePipeMock],
@@ -157,7 +133,7 @@ describe("WebViewComponent", () => {
         { provide: LearningObjectService, useValue: learningObjectSpy },
         { provide: MessageService, useValue: messageServiceSpy },
         { provide: Router, useValue: routerSpy },
-        { provide: StorageService, useValue: storageServiceSpy },
+        { provide: InteractionReferenceService, useValue: referenceServiceSpy },
         {
           provide: LanguageService,
           useValue: {
@@ -200,7 +176,7 @@ describe("WebViewComponent", () => {
     fixture.detectChanges();
   });
 
-  it("debe renderizar el objeto y actualizar vistas cuando el usuario puede contarlas", () => {
+  it("debe renderizar el objeto y registrar la vista con la referencia firmada", () => {
     expect(component.youNeedMenu).toBeTrue();
     expect(component.liked).toBeTrue();
     expect(component.countDownloads).toBe(5);
@@ -208,18 +184,8 @@ describe("WebViewComponent", () => {
 
     expect(learningObjectSpy.validateLike).toHaveBeenCalledWith(7);
     expect(learningObjectSpy.getdownloadCount).toHaveBeenCalledWith(7);
-    expect(learningObjectSpy.getViewedCount).toHaveBeenCalledWith(7);
-    expect(learningObjectSpy.viewedUpdateCount).toHaveBeenCalledWith(
-      {
-        learning_object: 7,
-        view: 4,
-      },
-      7
-    );
-    expect(storageServiceSpy.saveLocalItem).toHaveBeenCalledWith(
-      "array_view",
-      JSON.stringify([7])
-    );
+    // Una sola vista por OA abierto, aunque el contexto se recargue.
+    expect(learningObjectSpy.registerView).toHaveBeenCalledOnceWith(7, "ref-001");
 
     const title = fixture.nativeElement.querySelector(".web-view__title");
     const profileName = fixture.nativeElement.querySelector(".web-view__creator-name");
@@ -230,6 +196,49 @@ describe("WebViewComponent", () => {
     expect(profileImage?.getAttribute("src")).toBe(
       "http://localhost:8000/media/profile/ana.png"
     );
+  });
+
+  it("no debe ofrecer calificar como experto un OA propio", async () => {
+    loginServiceSpy.validateRole.and.callFake((role: string) => role === "teacher" || role === "expert");
+    learningObjectSpy.getObjectResultsEvaluation.calls.reset();
+    component.object = { ...objectBase, user_created: { ...objectBase.user_created, id: 4 } };
+
+    await component.loadDataExpertEvaluation();
+
+    expect(component.canEvaluateAsExpert).toBeFalse();
+    expect(component.expertEvaluationStateResolved).toBeFalse();
+    expect(learningObjectSpy.getObjectResultsEvaluation).not.toHaveBeenCalled();
+  });
+
+  it("debe ofrecer calificar como experto un OA ajeno", async () => {
+    loginServiceSpy.validateRole.and.callFake((role: string) => role === "teacher" || role === "expert");
+    component.object = { ...objectBase, user_created: { ...objectBase.user_created, id: 99 } };
+
+    await component.loadDataExpertEvaluation();
+
+    expect(component.canEvaluateAsExpert).toBeTrue();
+    expect(component.expertEvaluationStateResolved).toBeTrue();
+    expect(learningObjectSpy.getObjectResultsEvaluation).toHaveBeenCalledWith(7);
+  });
+
+  it("debe avisar a la pagina del OA tanto al crear como al editar la evaluacion", () => {
+    const emitted: boolean[] = [];
+    component.commentEmit1.subscribe((value) => emitted.push(value));
+
+    component.coutComment1(true);
+    component.flagQuestionsEx = true;
+    component.coutComment(false);
+
+    expect(emitted).toEqual([true, true]);
+    expect(component.displayFormRatingExpert).toBeFalse();
+  });
+
+  it("debe exponer el user_key del autor solo cuando llega", () => {
+    component.object = { ...objectBase, user_created: { ...objectBase.user_created, user_key: "abc-123" } };
+    expect(component.authorKey).toBe("abc-123");
+
+    component.object = { ...objectBase };
+    expect(component.authorKey).toBeNull();
   });
 
   it("debe solicitar pantalla completa sobre el visor del OA", () => {
@@ -249,43 +258,28 @@ describe("WebViewComponent", () => {
     expect(window.open).not.toHaveBeenCalled();
   });
 
-  it("debe crear el contador de vistas cuando el backend aun no tiene registro", async () => {
-    learningObjectSpy.getViewedCount.and.returnValue(
-      throwError(() => ({ status: 404 }))
-    );
-    learningObjectSpy.viewedCreateCount.and.returnValue(of({ view: 1 }));
-    cookieStore.array_view = JSON.stringify([]);
-    storageServiceSpy.saveLocalItem.calls.reset();
+  it("debe registrar la vista sin referencia si el backend no la entrega", async () => {
+    referenceServiceSpy.get.and.resolveTo(null);
+    learningObjectSpy.registerView.calls.reset();
 
-    const secondFixture = TestBed.createComponent(WebViewComponent);
-    const secondComponent = secondFixture.componentInstance;
-    secondComponent.object = {
-      ...objectBase,
-      id: 15,
-      learning_object_file: {
-        url: "http://localhost:8000/api/v1/learning-object-file/15/preview/token/index.html",
-        file: "http://localhost:8000/api/v1/learning-object-file/15/download/token/",
-      },
-      preview: {
-        mode: "html",
-        base_url: "http://localhost:8000/api/v1/learning-object-file/15/preview/token/",
-        entrypoint: "index.html",
-        toc: [],
-      },
-    };
-
+    const secondComponent = TestBed.createComponent(WebViewComponent).componentInstance;
+    secondComponent.object = { ...objectBase, id: 15 };
     await secondComponent.loadData();
 
-    expect(secondComponent.youNeedMenu).toBeFalse();
-    expect(learningObjectSpy.viewedCreateCount).toHaveBeenCalledWith({
-      learning_object: 15,
-      view: 1,
-    });
-    expect(secondComponent.countViews).toBe(1);
-    expect(storageServiceSpy.saveLocalItem).toHaveBeenCalledWith(
-      "array_view",
-      JSON.stringify([15])
-    );
+    expect(learningObjectSpy.registerView).toHaveBeenCalledOnceWith(15, null);
+    expect(secondComponent.countViews).toBe(4);
+  });
+
+  it("debe mostrar el total aunque falle el registro de la vista", async () => {
+    learningObjectSpy.registerView.and.returnValue(throwError(() => ({ status: 500 })));
+    learningObjectSpy.getViewedCount.and.returnValue(of([{ view: 9 }]));
+
+    const secondComponent = TestBed.createComponent(WebViewComponent).componentInstance;
+    secondComponent.object = { ...objectBase, id: 16 };
+    await secondComponent.loadData();
+
+    expect(learningObjectSpy.getViewedCount).toHaveBeenCalledWith(16);
+    expect(secondComponent.countViews).toBe(9);
   });
 
   it("debe reaccionar al cambio de objeto emitido desde selectedLearningObject$", async () => {
@@ -306,17 +300,16 @@ describe("WebViewComponent", () => {
     };
 
     learningObjectSpy.getdownloadCount.and.returnValue(of({ number: 8 }));
-    learningObjectSpy.getViewedCount.and.returnValue(of([{ view: 10 }]));
-    cookieStore.array_view = JSON.stringify([7]);
+    learningObjectSpy.registerView.and.returnValue(of([{ view: 11 }]));
 
     selectedLearningObject$.next(emittedObject);
-    cookieStore.array_view = JSON.stringify([7]);
     await (component as any).refreshObjectContext();
 
     expect(component.object.id).toBe(20);
     expect(component.youNeedMenu).toBeFalse();
     expect(component.countDownloads).toBe(8);
     expect(component.countViews).toBe(11);
+    expect(learningObjectSpy.registerView).toHaveBeenCalledWith(20, "ref-001");
   });
 
   it("debe descargar cuando el usuario tiene sesion activa", async () => {
@@ -327,13 +320,9 @@ describe("WebViewComponent", () => {
       "_blank",
       "noopener,noreferrer"
     );
-    expect(learningObjectSpy.downloadUpdateCount).toHaveBeenCalledWith(
-      {
-        downloaded: 2,
-        learning_object: 7,
-      },
-      7
-    );
+    await Promise.resolve();
+    await fixture.whenStable();
+    expect(learningObjectSpy.registerDownload).toHaveBeenCalledWith(7, "ref-001");
   });
 
   it("debe mostrar error si intenta descargar sin sesion", () => {
