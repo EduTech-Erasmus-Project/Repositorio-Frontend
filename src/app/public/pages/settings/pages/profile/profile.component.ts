@@ -636,19 +636,31 @@ export class ProfileComponent implements OnInit, OnDestroy, LeaveConfirmable {
     const payload = this.buildUpdatePayload();
     try {
       const res = await firstValueFrom(this.userService.updateUser(payload)) as ProfileUserResponse;
-      if (res?.id) {
-        this.user = res;
+      // El PUT responde solo `{"message": ...}`: se vuelve a pedir el usuario
+      // para que "Descartar cambios" vuelva a lo recien guardado y no a lo de antes.
+      const savedUser = res?.id ? res : await this.reloadUser();
+      if (savedUser) {
+        this.user = savedUser;
         this.createForm();
       }
       this.markFormAsSaved();
       this.cdr.detectChanges();
       this.showSuccess(translateInstant(this.languageService.translate, "profile.updateSuccess", "Los datos se han actualizado con éxito"));
-      this.syncSessionUser(res?.id ? res : payload);
+      this.syncSessionUser(savedUser ?? payload);
       Swal.close();
       this.validateEmail = false;
     } catch (err: unknown) {
       this.handleValidateUserError(err);
       Swal.close();
+    }
+  }
+
+  /** Usuario actual desde el backend, o `null` si no se pudo leer. */
+  private async reloadUser(): Promise<ProfileUserResponse | null> {
+    try {
+      return await firstValueFrom(this.userService.getUserDetail(this.loginService.user.id)) as ProfileUserResponse;
+    } catch {
+      return null;
     }
   }
 

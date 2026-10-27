@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { of, throwError } from "rxjs";
 import { MessageService } from "primeng/api";
+import Swal from "sweetalert2";
 import { UserLocation } from "src/app/core/interfaces/user-location";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { LanguageService } from "src/app/services/language.service";
@@ -174,9 +175,6 @@ describe("ProfileComponent", () => {
   }
 
   it("debe detectar cambios sin guardar y descartarlos", async () => {
-    addressServiceSpy.getCitiesActive.and.returnValue(of([]));
-    addressServiceSpy.getUniversitiesByCityActive.and.returnValue(of([]));
-    addressServiceSpy.getCampusByUniversityActive.and.returnValue(of([]));
     component.user = createTeacherUser();
     await component.discardChanges();
 
@@ -190,12 +188,28 @@ describe("ProfileComponent", () => {
     component.angForm.get("name")?.setValue("Carlos");
     expect(component.hasUnsavedChanges).toBeFalse();
 
-    component.angForm.get("city")?.setValue(9);
+    // El usuario cambia la ubicacion (el componente marca el control como modificado).
+    const location = component.angForm.get("location");
+    location?.markAsDirty();
+    location?.setValue(MX_LOCATION);
     expect(component.hasUnsavedChanges).toBeTrue();
 
     await component.discardChanges();
     expect(component.hasUnsavedChanges).toBeFalse();
-    expect(component.angForm.get("city")?.value).toBe(5);
+    expect(component.angForm.get("location")?.value).toEqual(EC_LOCATION);
+  });
+
+  it("no debe marcar cambios cuando la precarga completa la ubicacion de un usuario migrado", async () => {
+    component.user = { ...createTeacherUser(), province_code: "", province_name: "PICHINCHA" };
+    await component.discardChanges();
+
+    // Lo que hace `app-user-location-fields` al terminar de precargar: completa
+    // el codigo y el nombre de la provincia sin marcar el control.
+    component.angForm.get("location")?.setValue(EC_LOCATION, { emitModelToViewChange: false });
+
+    expect(component.angForm.get("location")?.pristine).toBeTrue();
+    expect(component.hasUnsavedChanges).toBeFalse();
+    expect(component.confirmLeave()).toBeTrue();
   });
 
   it("debe crear los controles de estudiante con los valores precargados", () => {
@@ -406,6 +420,28 @@ describe("ProfileComponent", () => {
 
     expect(payload.country_code).toBeUndefined();
     expect(payload.city_name).toBeUndefined();
+  });
+
+  it("debe tomar lo recien guardado como base para descartar cambios", async () => {
+    component.user = createTeacherUser();
+    await component.discardChanges();
+    // El PUT solo responde un mensaje; el perfil vuelve a pedir el usuario.
+    userServiceSpy.updateUser.and.returnValue(of({ message: "success update" } as any));
+    userServiceSpy.getUserDetail.and.returnValue(of({ ...createTeacherUser(), ...MX_LOCATION } as any));
+    spyOn(Swal, "fire");
+    spyOn(Swal, "showLoading");
+    spyOn(Swal, "close");
+
+    const location = component.angForm.get("location");
+    location?.markAsDirty();
+    location?.setValue(MX_LOCATION);
+    component.angForm.patchValue({ profession: 7 });
+    await component.validateUser();
+
+    expect(userServiceSpy.getUserDetail).toHaveBeenCalled();
+    expect(component.hasUnsavedChanges).toBeFalse();
+    await component.discardChanges();
+    expect(component.angForm.get("location")?.value).toEqual(MX_LOCATION);
   });
 
   it("debe mostrar los errores de ubicacion que devuelve el backend", async () => {
