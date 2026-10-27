@@ -244,13 +244,32 @@ describe("TeacherExpertProfileComponent", () => {
     expect(component.publicProfileCard).toBeNull();
   });
 
-  it("debe mostrar la institucion con universidad y sede", async () => {
+  it("debe mostrar la universidad y la ubicacion del docente", async () => {
     administratorServiceSpy.getTeacherAndExpertToAproveProfile.and.returnValue(
-      of({ id: 1, university: { id: 1, name: "UPS" }, campus: { id: 2, name: "Cuenca" }, teacher: {} } as any)
+      of({
+        id: 1,
+        country_code: "EC",
+        country_name: "Ecuador",
+        province_code: "A",
+        province_name: "Azuay",
+        city_name: "Cuenca",
+        university_name: "UPS",
+        teacher: {},
+      } as any)
     );
 
     await component.loadProfile();
 
-    expect(component.institution).toBe("UPS · Cuenca");
+    expect(component.institution).toBe("UPS · Cuenca, Azuay, Ecuador");
+  });
+
+  it("debe mostrar solo lo que tenga de la ubicacion", async () => {
+    administratorServiceSpy.getTeacherAndExpertToAproveProfile.and.returnValue(
+      of({ id: 1, country_name: "Macau S.A.R.", city_name: "Macao", province_name: "", university_name: "", teacher: {} } as any)
+    );
+
+    await component.loadProfile();
+
+    expect(component.institution).toBe("Macao, Macau S.A.R.");
   });
 });

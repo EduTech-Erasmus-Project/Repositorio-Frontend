@@ -87,10 +87,12 @@ export class TeacherExpertProfileComponent implements OnInit {
     return role?.is_active ?? this.status === "approved";
   }
 
+  /** Universidad y ubicacion del docente: "Universidad · Ciudad, Provincia, Pais". */
   public get institution(): string {
-    return [this.getCatalogName(this.user?.university), this.getCatalogName(this.user?.campus)]
+    const place = [this.user?.city_name, this.user?.province_name, this.user?.country_name]
       .filter(Boolean)
-      .join(" · ");
+      .join(", ");
+    return [this.user?.university_name, place].filter(Boolean).join(" · ");
   }
 
   public get publicLearningObjectsCount(): number {
@@ -208,10 +210,6 @@ export class TeacherExpertProfileComponent implements OnInit {
     const panel = preferred.find((item) => available.includes(item))
       ?? (this.teacher ? "public-profile" : undefined);
     return panel ? [panel] : [];
-  }
-
-  private getCatalogName(value: { name?: string } | number | null | undefined): string {
-    return typeof value === "object" && value?.name ? value.name : "";
   }
 
   /**
