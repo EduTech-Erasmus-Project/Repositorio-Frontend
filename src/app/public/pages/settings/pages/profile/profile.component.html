@@ -500,11 +500,19 @@
                   }
                 </div>
               </div>
-              <div class="profile-field profile-field--full button-submit profile-submit-wrap">
-                <p-button type="submit" label="{{'profile.btnUpdate' | translate}}"></p-button>
-              </div>
             </div>
           </section>
+          <div class="profile-actions" [class.is-dirty]="hasUnsavedChanges">
+            @if (hasUnsavedChanges) {
+              <span class="profile-actions__unsaved">
+                <i class="pi pi-info-circle" aria-hidden="true"></i>
+                {{ 'unsavedChanges.notice' | translate }}
+              </span>
+              <button pButton type="button" class="p-button-text" [label]="'unsavedChanges.discard' | translate"
+                (click)="discardChanges()"></button>
+            }
+            <p-button type="submit" icon="pi pi-check" label="{{'profile.btnUpdate' | translate}}"></p-button>
+          </div>
         </form>
       </div>
     }
@@ -512,3 +520,4 @@
   </div>
 
   <p-toast></p-toast>
+  <p-confirmDialog key="unsavedChanges" styleClass="settings-confirm-dialog"></p-confirmDialog>

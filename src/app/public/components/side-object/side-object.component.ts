@@ -88,10 +88,6 @@ export class SideObjectComponent implements OnInit {
         });
   }
 
-  onClick(slug: string): void {
-    this.router.navigate(["/object", slug]);
-  }
-
   trackByObject(_: number, object: ObjectLearning): number | string {
     return object.id ?? object.slug;
   }

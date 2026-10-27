@@ -121,36 +121,24 @@ describe("LearningObjectService", () => {
     req.flush({ ok: true });
   });
 
-  it("debe crear el contador de vistas", () => {
-    const payload = {
-      learning_object: 9,
-      view: 1,
-    };
-
-    service.viewedCreateCount(payload).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-
-    const req = httpMock.expectOne(`${environment.baseUrl}/learning-objects/viewed`);
-    expect(req.request.method).toBe("POST");
-    expect(req.request.body).toEqual(payload);
-    req.flush({ ok: true });
-  });
-
-  it("debe actualizar el contador de vistas", () => {
-    const payload = {
-      learning_object: 9,
-      view: 2,
-    };
-
-    service.viewedUpdateCount(payload, 9).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
+  it("debe registrar una vista enviando solo la referencia", () => {
+    service.registerView(9, "valor:firma").subscribe((res: any) => {
+      expect(res).toEqual([{ view: 5 }]);
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/learning-objects/viewed/9`);
     expect(req.request.method).toBe("PUT");
-    expect(req.request.body).toEqual(payload);
-    req.flush({ ok: true });
+    expect(req.request.body).toEqual({ reference: "valor:firma" });
+    req.flush([{ view: 5 }]);
+  });
+
+  it("debe registrar una descarga sin cuerpo si no hay referencia", () => {
+    service.registerDownload(9, null).subscribe();
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/learning-objects/downloaded/9`);
+    expect(req.request.method).toBe("PUT");
+    expect(req.request.body).toEqual({});
+    req.flush([]);
   });
 
   it("debe consultar el contador de vistas", () => {
@@ -165,18 +153,6 @@ describe("LearningObjectService", () => {
     req.flush(response);
   });
 
-  it("debe solicitar la referencia de usuario para interacciones", () => {
-    service.getReferenceUserView().subscribe((res: any) => {
-      expect(res).toEqual({ key_ref: "abc123" });
-    });
-
-    const req = httpMock.expectOne(`${environment.baseUrl}/interaction-ref/`);
-    expect(req.request.method).toBe("POST");
-    expect(req.request.body).toEqual({
-      key_ref: "@-rcxionqt",
-    });
-    req.flush({ key_ref: "abc123" });
-  });
 
   it("debe notificar al autor conservando el formato multilinea del mensaje", () => {
     const message = "HOLA MUNDO,\r\n\r\nQuiero presentar algo.\r\n\r\nAdios";

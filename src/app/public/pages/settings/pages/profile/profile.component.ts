@@ -2,20 +2,22 @@
 import {
   ChangeDetectorRef,
   Component,
+  HostListener,
+  OnDestroy,
   OnInit,
   ElementRef,
   ViewChild,
 } from "@angular/core";
 import { SearchService } from "../../../../../services/search.service";
 import { LoginService } from "../../../../../services/login.service";
-import { firstValueFrom, forkJoin } from "rxjs";
+import { Subscription, firstValueFrom, forkJoin } from "rxjs";
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
   UntypedFormControl,
 } from "@angular/forms";
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { HttpErrorResponse } from "@angular/common/http";
 import { UserGeneral } from "../../../../../core/models/userGeneral";
 import { CurrentUser } from "../../../../../core/interfaces/CurrentUser";
@@ -36,6 +38,8 @@ import {
 } from "../../shared/settings-form.utils";
 import { coerceEventRelationId } from "src/app/core/utils/coercion.utils";
 import { translateInstant } from "src/app/core/utils/i18n.utils";
+import { confirmDiscardChanges } from "src/app/core/utils/unsaved-changes.utils";
+import { LeaveConfirmable } from "src/app/guards/unsaved-changes.guard";
 import {
   UserLocationErrors,
   getLocationErrorMessage,
@@ -68,7 +72,8 @@ type FocusableDatePicker = { setFocus?: () => Promise<void> | void };
     selector: "app-profile",
     templateUrl: "./profile.component.html",
     styleUrls: ["./profile.component.scss"],
-    standalone: false
+    standalone: false,
+    providers: [ConfirmationService]
 })
 /**
  * Gestiona el perfil editable del usuario autenticado.
@@ -77,8 +82,9 @@ type FocusableDatePicker = { setFocus?: () => Promise<void> | void };
  * - hidratar catalogos y datos actuales del usuario
  * - construir un formulario distinto segun los roles activos
  * - traducir el formulario a payloads de actualizacion e imagen
+ * - avisar antes de salir con cambios sin guardar
  */
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy, LeaveConfirmable {
   @ViewChild("inputFile") inputFile?: ElementRef<HTMLInputElement>;
   public user: UserGeneral;
   public isLoading = true;
@@ -97,6 +103,11 @@ export class ProfileComponent implements OnInit {
   public preferenceAreasSave: number[] = [];
   public interestAreasPanel: string | null = null;
   public preferencesPanel: string | null = null;
+
+  /** Hay diferencias con lo ultimo guardado; muestra la barra fija de guardar. */
+  public hasUnsavedChanges = false;
+  private savedFormSnapshot: string | null = null;
+  private formChangesSubscription?: Subscription;
 
   public validateRole: boolean = false;
   public validateEmail: boolean = false;
@@ -117,13 +128,76 @@ export class ProfileComponent implements OnInit {
     private messageService: MessageService,
     private breadcrumbService: BreadcrumbService,
     private languageService: LanguageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private confirmationService: ConfirmationService
   ) {
     this.configureBreadcrumb();
   }
 
   ngOnInit(): void {
     this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.formChangesSubscription?.unsubscribe();
+  }
+
+  /** Pregunta antes de salir si hay cambios o una foto elegida sin subir. */
+  confirmLeave(): boolean | Promise<boolean> {
+    return this.hasUnsavedChanges || this.fileImage
+      ? confirmDiscardChanges(this.confirmationService, this.languageService.translate)
+      : true;
+  }
+
+  /** Al recargar o cerrar la pestana el navegador muestra su propio aviso. */
+  @HostListener("window:beforeunload", ["$event"])
+  warnBeforeUnload(event: BeforeUnloadEvent): void {
+    if (this.hasUnsavedChanges || this.fileImage) {
+      event.preventDefault();
+    }
+  }
+
+  /** Vuelve el formulario a lo ultimo guardado. */
+  async discardChanges(): Promise<void> {
+    this.createForm();
+    this.validateRole = false;
+    this.validateEmail = false;
+    this.markFormAsSaved();
+    // Igual que en `loadData`: tras las cargas asincronas la vista no se refresca sola.
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Toma el formulario actual como lo guardado. Se compara por valor, no con
+   * `dirty`, porque varios campos (ciudad, fecha, areas) se llenan por codigo.
+   */
+  private markFormAsSaved(): void {
+    this.savedFormSnapshot = this.serializeForm();
+    this.hasUnsavedChanges = false;
+    this.formChangesSubscription?.unsubscribe();
+    this.formChangesSubscription = this.angForm.valueChanges.subscribe(() => {
+      this.hasUnsavedChanges = this.serializeForm() !== this.savedFormSnapshot;
+    });
+
+    // `app-user-location-fields` termina de precargar despues (busca en el
+    // catalogo) y completa datos como el `province_code` de un usuario
+    // migrado. Mientras el usuario no toque la ubicacion, eso es lo guardado.
+    // Se suscribe despues del formulario pero el control emite antes que el
+    // padre, asi la foto ya esta al dia cuando se compara.
+    const location = this.angForm.get("location");
+    if (location) {
+      this.formChangesSubscription.add(
+        location.valueChanges.subscribe(() => {
+          if (location.pristine) {
+            this.savedFormSnapshot = this.serializeForm();
+          }
+        })
+      );
+    }
+  }
+
+  private serializeForm(): string {
+    return JSON.stringify(this.angForm.getRawValue());
   }
 
   get localization() {
@@ -191,6 +265,7 @@ export class ProfileComponent implements OnInit {
       });
 
       this.createForm();
+      this.markFormAsSaved();
     } catch (error) {
       this.loadError = true;
       console.log(error);
@@ -565,6 +640,8 @@ export class ProfileComponent implements OnInit {
         this.user = res;
         this.createForm();
       }
+      this.markFormAsSaved();
+      this.cdr.detectChanges();
       this.showSuccess(translateInstant(this.languageService.translate, "profile.updateSuccess", "Los datos se han actualizado con éxito"));
       this.syncSessionUser(res?.id ? res : payload);
       Swal.close();

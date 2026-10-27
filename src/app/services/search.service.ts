@@ -84,18 +84,6 @@ export class SearchService {
     });
   }
 
-  searchPagePaginator(
-    page:number,
-    queryParams: QuerySearch | HttpQueryParams = {}
-  ): Observable<ApiPaginatedResponse<ObjectLearning>> {
-    return this.http.get<ApiPaginatedResponse<ObjectLearning>>(`${ baseUrl }/learning-objects/search/`, {
-      params: {
-        ...this.toHttpQueryParams(queryParams),
-        page
-      }
-    });
-  }
-  
   searchExpert(queryParams: QuerySearch | HttpQueryParams): Observable<ApiPaginatedResponse<ObjectLearning>> {
     return this.http.get<ApiPaginatedResponse<ObjectLearning>>(`${ baseUrl }/learning-objects/search/expert/`, {
       params: this.toHttpQueryParams(queryParams),

@@ -142,7 +142,7 @@
 
               <p-tabpanel [value]="3">
                 <!------------------------------------------------------------------------------------------>
-                @if (roleStudent && (!roleExpert && !roleTeacher)) {
+                @if (evaluationView === 'student') {
                   <div class="student-evaluation-grid">
                     @for (item of resultsEva; track item) {
                       @for (itemQ of item.concepts; track itemQ) {
@@ -159,7 +159,7 @@
                 }
 
 
-                @if (roleTeacher &&(!roleStudent && !roleExpert) ) {
+                @if (evaluationView === 'teacher') {
                   <div>
                     @for (item of groupedQuestionsTeacher; track item) {
                       <div>
@@ -194,7 +194,7 @@
 
 
 
-                @if (roleExpert && flagConfirm) {
+                @if (evaluationView === 'expert' && flagConfirm) {
                   <div>
                     @for (item of groupedQuestionsEx; track item) {
                       <div>

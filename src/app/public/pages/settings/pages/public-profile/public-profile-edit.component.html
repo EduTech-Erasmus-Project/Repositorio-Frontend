@@ -1,0 +1,405 @@
+<div class="public-profile-edit">
+  @if (loading()) {
+    <div class="public-profile-edit-state" aria-busy="true">
+      <p-progressSpinner [style]="{ width: '64px', height: '64px' }" strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+    </div>
+  } @else if (loadError()) {
+    <div class="public-profile-edit-state public-profile-edit-state--error">
+      <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+      <h3>{{ 'states.errorTitle' | translate }}</h3>
+      <p>{{ 'states.errorDescription' | translate }}</p>
+      <p-button icon="pi pi-refresh" [label]="'buttons.refresh' | translate" (onClick)="loadProfile()"></p-button>
+    </div>
+  } @else {
+    <div class="public-profile-edit-shell">
+      <!-- Tarjeta lateral: identidad, estado y avance (como en "Mi perfil") -->
+      <aside class="public-profile-edit-aside">
+        <div class="public-profile-edit-aside-card">
+          <!-- Vista previa: como te ve el publico -->
+          <div class="public-profile-edit-identity">
+            <figure class="public-profile-edit-avatar">
+              @if (account?.image) {
+                <img [src]="account?.image" [alt]="'home.teacher.altImage' | translate" loading="lazy" />
+              } @else {
+                <i class="pi pi-user" aria-hidden="true"></i>
+              }
+            </figure>
+            <div class="public-profile-edit-identity-text">
+              <h2>{{ account?.first_name }} {{ account?.last_name }}</h2>
+              @if (form.controls.headline.value.trim()) {
+                <p>{{ form.controls.headline.value }}</p>
+              }
+            </div>
+          </div>
+
+          <div class="public-profile-edit-aside-block">
+            <h3>{{ 'publicProfileEdit.statusTitle' | translate }}</h3>
+            <div class="public-profile-edit-switch">
+              <p-toggleswitch
+                inputId="public-profile-is-public"
+                [ngModel]="isPublic()"
+                [disabled]="togglingPublic()"
+                (onChange)="togglePublic($event.checked)"
+              ></p-toggleswitch>
+              <label for="public-profile-is-public">
+                <strong>{{ (isPublic() ? 'publicProfileEdit.isPublicOn' : 'publicProfileEdit.isPublicOff') | translate }}</strong>
+                <span>{{ (isPublic() ? 'publicProfileEdit.isPublicOnHint' : 'publicProfileEdit.isPublicOffHint') | translate }}</span>
+              </label>
+            </div>
+            @if (isPublic() && userKey(); as key) {
+              @switch (publicPageState()) {
+                @case ("empty") {
+                  <p class="public-profile-edit-note">
+                    <i class="pi pi-info-circle" aria-hidden="true"></i>
+                    <span>
+                      {{ 'publicProfileEdit.notVisibleYet' | translate }}
+                      <a routerLink="/settings/new-object">{{ 'publicProfileEdit.uploadFirst' | translate }}</a>
+                    </span>
+                  </p>
+                }
+                @case ("checking") {}
+                @default {
+                  <a
+                    pButton
+                    class="p-button-outlined public-profile-edit-view-button"
+                    icon="pi pi-eye"
+                    [routerLink]="['/author', key]"
+                    [label]="'publicProfileEdit.viewPublic' | translate"
+                  ></a>
+                }
+              }
+            }
+          </div>
+
+          <div class="public-profile-edit-aside-block">
+            <div class="public-profile-edit-progress-head">
+              <h3 id="ppe-progress-title">{{ 'publicProfileEdit.progress.title' | translate }}</h3>
+              <span>{{ 'publicProfileEdit.progress.count' | translate: { done: progressDone(), total: progress().length } }}</span>
+            </div>
+            <div
+              class="public-profile-edit-progress-bar"
+              role="progressbar"
+              aria-labelledby="ppe-progress-title"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              [attr.aria-valuenow]="progressPercent()"
+            >
+              <span [style.width.%]="progressPercent()"></span>
+            </div>
+            <ul class="public-profile-edit-checklist">
+              @for (item of progress(); track item.label) {
+                <li>
+                  <button type="button" [class.is-done]="item.done" (click)="goToSection(item.target)">
+                    <i [class]="item.done ? 'pi pi-check-circle' : 'pi pi-circle'" aria-hidden="true"></i>
+                    <span>{{ item.label | translate }}</span>
+                    <span class="public-profile-edit-sr-only">
+                      {{ (item.done ? 'publicProfileEdit.progress.done' : 'publicProfileEdit.progress.pending') | translate }}
+                    </span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <form class="public-profile-edit-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <!-- Presentacion -->
+        <section id="ppe-section-presentation" class="public-profile-edit-card">
+          <div class="public-profile-edit-head">
+            <h3>{{ 'publicProfileEdit.sections.presentation' | translate }}</h3>
+            <p>{{ 'publicProfileEdit.sections.presentationCopy' | translate }}</p>
+          </div>
+          <div class="public-profile-edit-grid">
+            <ng-container *ngTemplateOutlet="textField; context: { name: 'headline', id: 'ppe-headline', label: 'authorProfile.headline', max: limits.headline, placeholder: 'publicProfileEdit.placeholders.headline' }"></ng-container>
+            <div class="public-profile-edit-field public-profile-edit-field--full">
+              <div class="public-profile-edit-label-row">
+                <label id="ppe-bio-label" for="ppe-bio">{{ 'authorProfile.about' | translate }}</label>
+                <ng-container *ngTemplateOutlet="visibility; context: { field: 'bio', labelId: 'ppe-bio-label' }"></ng-container>
+              </div>
+              <textarea
+                id="ppe-bio"
+                pTextarea
+                rows="5"
+                formControlName="bio"
+                [maxlength]="limits.bio"
+                [placeholder]="'publicProfileEdit.placeholders.bio' | translate"
+                [attr.aria-describedby]="'ppe-bio-count'"
+                [invalid]="!!errorKey(form.controls.bio)"
+              ></textarea>
+              <div class="public-profile-edit-meta">
+                @if (errorKey(form.controls.bio); as error) {
+                  <small class="p-error">{{ error.key | translate: error.params }}</small>
+                }
+                <small id="ppe-bio-count" class="public-profile-edit-count">{{ form.controls.bio.value.length }}/{{ limits.bio }}</small>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Informacion academica -->
+        <section id="ppe-section-academic" class="public-profile-edit-card">
+          <div class="public-profile-edit-head">
+            <h3>{{ 'authorProfile.academicInfo' | translate }}</h3>
+            <p>{{ 'publicProfileEdit.sections.academicCopy' | translate }}</p>
+          </div>
+          <div class="public-profile-edit-grid">
+            <ng-container *ngTemplateOutlet="textField; context: { name: 'faculty', id: 'ppe-faculty', label: 'authorProfile.faculty', max: limits.faculty, placeholder: 'publicProfileEdit.placeholders.faculty', half: true }"></ng-container>
+            <ng-container *ngTemplateOutlet="textField; context: { name: 'research_group', id: 'ppe-research-group', label: 'authorProfile.researchGroup', max: limits.researchGroup, placeholder: 'publicProfileEdit.placeholders.researchGroup', half: true }"></ng-container>
+          </div>
+        </section>
+
+        <!-- Investigacion y docencia -->
+        <section id="ppe-section-research" class="public-profile-edit-card">
+          <div class="public-profile-edit-head">
+            <h3>{{ 'publicProfileEdit.sections.research' | translate }}</h3>
+            <p>{{ 'publicProfileEdit.sections.researchCopy' | translate }}</p>
+          </div>
+          <ng-container *ngTemplateOutlet="textList; context: { list: 'research_lines', array: researchLines, label: 'authorProfile.researchLines', max: limits.researchLines, itemMax: limits.researchLine, add: 'publicProfileEdit.addResearchLine' }"></ng-container>
+          <ng-container *ngTemplateOutlet="textList; context: { list: 'subjects', array: subjects, label: 'authorProfile.subjects', max: limits.subjects, itemMax: limits.subject, add: 'publicProfileEdit.addSubject' }"></ng-container>
+        </section>
+
+        <!-- Formacion academica -->
+        <section id="ppe-section-degrees" class="public-profile-edit-card">
+          <div class="public-profile-edit-head public-profile-edit-head--row">
+            <div>
+              <h3>{{ 'authorProfile.degrees' | translate }}</h3>
+              <p>{{ 'publicProfileEdit.sections.degreesCopy' | translate }}</p>
+            </div>
+            <span class="public-profile-edit-counter">{{ degrees.length }}/{{ limits.degrees }}</span>
+          </div>
+          @if (listErrors().degrees) {
+            <small class="p-error public-profile-edit-list-error">{{ 'publicProfileEdit.errors.server' | translate }}</small>
+          }
+          <div formArrayName="degrees" class="public-profile-edit-items">
+            @for (degree of degrees.controls; track degree; let i = $index) {
+              <fieldset class="public-profile-edit-item" [formGroupName]="i">
+                <legend class="public-profile-edit-sr-only">{{ 'publicProfileEdit.degreeNumber' | translate: { number: i + 1 } }}</legend>
+                <div class="public-profile-edit-item-grid public-profile-edit-item-grid--degree">
+                  <div class="public-profile-edit-field">
+                    <label [for]="'ppe-degree-level-' + i">{{ 'publicProfileEdit.degreeLevel' | translate }}</label>
+                    <p-select
+                      [inputId]="'ppe-degree-level-' + i"
+                      formControlName="level"
+                      [options]="degreeLevelOptions()"
+                      optionLabel="label"
+                      optionValue="value"
+                      appendTo="body"
+                    ></p-select>
+                  </div>
+                  <div class="public-profile-edit-field">
+                    <label [for]="'ppe-degree-title-' + i">{{ 'publicProfileEdit.degreeTitle' | translate }}*</label>
+                    <input pInputText [id]="'ppe-degree-title-' + i" formControlName="title" [maxlength]="limits.degreeText"
+                      [invalid]="!!errorKey(degree.controls.title)" />
+                    @if (errorKey(degree.controls.title); as error) {
+                      <small class="p-error">{{ error.key | translate: error.params }}</small>
+                    }
+                  </div>
+                  <div class="public-profile-edit-field">
+                    <label [for]="'ppe-degree-institution-' + i">{{ 'publicProfileEdit.degreeInstitution' | translate }}*</label>
+                    <input pInputText [id]="'ppe-degree-institution-' + i" formControlName="institution" [maxlength]="limits.degreeText"
+                      [invalid]="!!errorKey(degree.controls.institution)" />
+                    @if (errorKey(degree.controls.institution); as error) {
+                      <small class="p-error">{{ error.key | translate: error.params }}</small>
+                    }
+                  </div>
+                  <div class="public-profile-edit-field">
+                    <label [for]="'ppe-degree-year-' + i">{{ 'publicProfileEdit.degreeYear' | translate }}</label>
+                    <p-inputnumber
+                      [inputId]="'ppe-degree-year-' + i"
+                      formControlName="year"
+                      [useGrouping]="false"
+                      [min]="limits.minYear"
+                      [placeholder]="'publicProfileEdit.optional' | translate"
+                      [invalid]="!!errorKey(degree.controls.year)"
+                    ></p-inputnumber>
+                    @if (errorKey(degree.controls.year); as error) {
+                      <small class="p-error">{{ error.key | translate: error.params }}</small>
+                    }
+                  </div>
+                </div>
+                <div class="public-profile-edit-item-actions">
+                  <p-selectbutton
+                    formControlName="is_visible"
+                    [options]="itemVisibilityOptions()"
+                    optionLabel="label"
+                    optionValue="value"
+                    [allowEmpty]="false"
+                    [ariaLabelledBy]="'ppe-degree-title-' + i"
+                  >
+                    <ng-template #item let-option>
+                      <i [class]="option.icon" aria-hidden="true"></i>
+                      <span>{{ option.label }}</span>
+                    </ng-template>
+                  </p-selectbutton>
+                  <button pButton type="button" class="p-button-text p-button-danger" icon="pi pi-trash"
+                    [label]="'publicProfileEdit.remove' | translate" (click)="removeDegree(i)"></button>
+                </div>
+              </fieldset>
+            }
+          </div>
+          @if (degrees.length < limits.degrees) {
+            <button pButton type="button" class="p-button-outlined public-profile-edit-add" icon="pi pi-plus"
+              [label]="'publicProfileEdit.addDegree' | translate" (click)="addDegree()"></button>
+          }
+        </section>
+
+        <!-- Enlaces -->
+        <section id="ppe-section-links" class="public-profile-edit-card">
+          <div class="public-profile-edit-head public-profile-edit-head--row">
+            <div>
+              <h3>{{ 'authorProfile.links' | translate }}</h3>
+              <p>{{ 'publicProfileEdit.sections.linksCopy' | translate }}</p>
+            </div>
+            <span class="public-profile-edit-counter">{{ links.length }}/{{ linkTypes.length }}</span>
+          </div>
+          @if (listErrors().links) {
+            <small class="p-error public-profile-edit-list-error">{{ 'publicProfileEdit.errors.duplicateLink' | translate }}</small>
+          }
+          <div formArrayName="links" class="public-profile-edit-items">
+            @for (link of links.controls; track link; let i = $index, first = $first, last = $last) {
+              <fieldset class="public-profile-edit-item" [formGroupName]="i">
+                <legend class="public-profile-edit-sr-only">{{ 'publicProfileEdit.linkNumber' | translate: { number: i + 1 } }}</legend>
+                <div class="public-profile-edit-item-grid public-profile-edit-item-grid--link">
+                  <div class="public-profile-edit-field">
+                    <label [for]="'ppe-link-type-' + i">{{ 'publicProfileEdit.linkType' | translate }}</label>
+                    <p-select
+                      [inputId]="'ppe-link-type-' + i"
+                      formControlName="type"
+                      [options]="linkTypeOptions()[i] ?? []"
+                      optionLabel="label"
+                      optionValue="value"
+                      appendTo="body"
+                    ></p-select>
+                  </div>
+                  <div class="public-profile-edit-field">
+                    <label [for]="'ppe-link-url-' + i">{{ 'publicProfileEdit.linkUrl' | translate }}*</label>
+                    <input pInputText type="url" [id]="'ppe-link-url-' + i" formControlName="url" [maxlength]="limits.linkUrl"
+                      placeholder="https://" [invalid]="!!errorKey(link.controls.url)" />
+                    @if (errorKey(link.controls.url); as error) {
+                      <small class="p-error">{{ error.key | translate: error.params }}</small>
+                    }
+                  </div>
+                </div>
+                <div class="public-profile-edit-item-actions">
+                  <p-selectbutton
+                    formControlName="is_visible"
+                    [options]="itemVisibilityOptions()"
+                    optionLabel="label"
+                    optionValue="value"
+                    [allowEmpty]="false"
+                    [ariaLabelledBy]="'ppe-link-type-' + i"
+                  >
+                    <ng-template #item let-option>
+                      <i [class]="option.icon" aria-hidden="true"></i>
+                      <span>{{ option.label }}</span>
+                    </ng-template>
+                  </p-selectbutton>
+                  <div class="public-profile-edit-item-buttons">
+                    <button pButton type="button" class="p-button-text" icon="pi pi-arrow-up" [disabled]="first"
+                      [attr.aria-label]="'publicProfileEdit.moveUp' | translate" (click)="moveLink(i, -1)"></button>
+                    <button pButton type="button" class="p-button-text" icon="pi pi-arrow-down" [disabled]="last"
+                      [attr.aria-label]="'publicProfileEdit.moveDown' | translate" (click)="moveLink(i, 1)"></button>
+                    <button pButton type="button" class="p-button-text p-button-danger" icon="pi pi-trash"
+                      [label]="'publicProfileEdit.remove' | translate" (click)="removeLink(i)"></button>
+                  </div>
+                </div>
+              </fieldset>
+            }
+          </div>
+          @if (links.length < linkTypes.length) {
+            <button pButton type="button" class="p-button-outlined public-profile-edit-add" icon="pi pi-plus"
+              [label]="'publicProfileEdit.addLink' | translate" (click)="addLink()"></button>
+          }
+        </section>
+
+        <div class="public-profile-edit-actions" [class.is-dirty]="form.dirty">
+          @if (form.dirty) {
+            <span class="public-profile-edit-unsaved">
+              <i class="pi pi-info-circle" aria-hidden="true"></i>
+              {{ 'unsavedChanges.notice' | translate }}
+            </span>
+            <button pButton type="button" class="p-button-text" [label]="'unsavedChanges.discard' | translate"
+              [disabled]="saving()" (click)="discardChanges()"></button>
+          }
+          <p-button
+            type="submit"
+            icon="pi pi-check"
+            [label]="'publicProfileEdit.save' | translate"
+            [loading]="saving()"
+            [disabled]="saving()"
+          ></p-button>
+        </div>
+
+        <!-- Campo de texto con contador y selector de visibilidad -->
+        <ng-template #textField let-name="name" let-id="id" let-label="label" let-max="max" let-placeholder="placeholder" let-half="half">
+          <div class="public-profile-edit-field" [class.public-profile-edit-field--full]="!half">
+            <div class="public-profile-edit-label-row">
+              <label [id]="id + '-label'" [for]="id">{{ label | translate }}</label>
+              <ng-container *ngTemplateOutlet="visibility; context: { field: name, labelId: id + '-label' }"></ng-container>
+            </div>
+            <input pInputText [id]="id" [formControlName]="name" [maxlength]="max" [placeholder]="placeholder | translate"
+              [attr.aria-describedby]="id + '-count'" [invalid]="!!errorKey($any(form.get(name)))" />
+            <div class="public-profile-edit-meta">
+              @if (errorKey($any(form.get(name))); as error) {
+                <small class="p-error">{{ error.key | translate: error.params }}</small>
+              }
+              <small [id]="id + '-count'" class="public-profile-edit-count">{{ form.get(name)?.value.length }}/{{ max }}</small>
+            </div>
+          </div>
+        </ng-template>
+
+        <!-- Lista de textos (lineas de investigacion, asignaturas) -->
+        <ng-template #textList let-list="list" let-array="array" let-label="label" let-max="max" let-itemMax="itemMax" let-add="add">
+          <div class="public-profile-edit-list">
+            <div class="public-profile-edit-label-row">
+              <span [id]="'ppe-' + list + '-label'" class="public-profile-edit-label">
+                {{ label | translate }} <span class="public-profile-edit-counter">{{ array.length }}/{{ max }}</span>
+              </span>
+              <ng-container *ngTemplateOutlet="visibility; context: { field: list, labelId: 'ppe-' + list + '-label' }"></ng-container>
+            </div>
+            <div class="public-profile-edit-text-items" [formArrayName]="list">
+              @for (item of array.controls; track item; let i = $index) {
+                <div class="public-profile-edit-text-item">
+                  <input pInputText [id]="'ppe-' + list + '-' + i" [formControlName]="i" [maxlength]="itemMax"
+                    [attr.aria-labelledby]="'ppe-' + list + '-label'" [invalid]="!!errorKey(item)" />
+                  <button pButton type="button" class="p-button-text p-button-danger" icon="pi pi-times"
+                    [attr.aria-label]="'publicProfileEdit.remove' | translate" (click)="removeTextItem(list, i)"></button>
+                  @if (errorKey(item); as error) {
+                    <small class="p-error">{{ error.key | translate: error.params }}</small>
+                  }
+                </div>
+              }
+            </div>
+            @if (array.length < max) {
+              <button pButton type="button" class="p-button-text public-profile-edit-add" icon="pi pi-plus"
+                [label]="add | translate" (click)="addTextItem(list)"></button>
+            }
+          </div>
+        </ng-template>
+
+        <!-- Selector Publico / Solo yo de un campo -->
+        <ng-template #visibility let-field="field" let-labelId="labelId">
+          <div formGroupName="field_visibility" class="public-profile-edit-visibility">
+            <p-selectbutton
+              [formControlName]="field"
+              [options]="visibilityOptions()"
+              optionLabel="label"
+              optionValue="value"
+              [allowEmpty]="false"
+              [ariaLabelledBy]="labelId"
+            >
+              <ng-template #item let-option>
+                <i [class]="option.icon" aria-hidden="true"></i>
+                <span>{{ option.label }}</span>
+              </ng-template>
+            </p-selectbutton>
+          </div>
+        </ng-template>
+      </form>
+    </div>
+  }
+</div>
+
+<p-toast></p-toast>
+<p-confirmDialog key="unsavedChanges" styleClass="settings-confirm-dialog"></p-confirmDialog>

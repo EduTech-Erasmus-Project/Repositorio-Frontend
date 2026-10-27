@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Router } from "@angular/router";
-import { of } from "rxjs";
+import { of, Subject } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { ManagedUserSummary } from "src/app/core/interfaces/api-contracts";
 import { AdministratorService } from "src/app/services/administrator.service";
@@ -99,5 +99,19 @@ describe("ExpertPendingComponent", () => {
 
     expect(administratorServiceSpy.deleteUserExpert).toHaveBeenCalledWith(41);
     expect(administratorServiceSpy.getExpertToAprove).toHaveBeenCalledTimes(2);
+  });
+
+  it("no debe borrar lo que el usuario sigue escribiendo mientras llega la busqueda", async () => {
+    const pending = new Subject<typeof expertPendingResponse>();
+    administratorServiceSpy.getExpertToAprove.and.returnValue(pending as any);
+
+    component.onSearchInput("ana");
+    const load = component.loadPendingExperts(1, "ana");
+    component.onSearchInput("ana mar ");
+    pending.next(expertPendingResponse);
+    pending.complete();
+    await load;
+
+    expect(component.searchTerm).toBe("ana mar ");
   });
 });

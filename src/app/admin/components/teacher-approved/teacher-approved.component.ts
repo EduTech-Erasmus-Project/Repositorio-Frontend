@@ -9,7 +9,7 @@ import {
 import { Router } from "@angular/router";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { Subject, debounceTime, distinctUntilChanged, firstValueFrom } from "rxjs";
+import { Subject, debounceTime, distinctUntilChanged, firstValueFrom, map } from "rxjs";
 import {
   ApiCursorPaginatedResponse,
   ManagedUserSummary,
@@ -27,6 +27,7 @@ import {
   getManagedAdminRoles,
   isManagedExpertActive,
   isManagedTeacherActive,
+  isPageNotFoundError,
 } from "../../shared/admin-managed-user.utils";
 
 /**
@@ -67,6 +68,10 @@ export class TeacherApprovedComponent implements OnInit {
   public currentPage = 1;
   public first = 0;
   public searchTerm = "";
+  /** Búsqueda (sin espacios extremos) que corresponde a la tabla mostrada. */
+  private appliedQuery = "";
+  /** Solo la última carga actualiza la tabla; las respuestas viejas se descartan. */
+  private latestRequest = 0;
 
   constructor(
     private breadcrumbService: BreadcrumbService,
@@ -85,12 +90,13 @@ export class TeacherApprovedComponent implements OnInit {
   ngOnInit(): void {
     this.searchInput$
       .pipe(
+        map((query) => query.trim()),
         debounceTime(300),
         distinctUntilChanged(),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((query) => {
-        void this.loadApprovedTeachers(1, query.trim());
+        void this.loadApprovedTeachers(1, query);
       });
 
     void this.loadApprovedTeachers();
@@ -101,8 +107,9 @@ export class TeacherApprovedComponent implements OnInit {
    */
   public async loadApprovedTeachers(
     page: number = this.currentPage,
-    query: string = this.searchTerm.trim()
+    query: string = this.appliedQuery
   ): Promise<void> {
+    const request = ++this.latestRequest;
     this.isLoading = true;
     this.refreshView();
 
@@ -110,6 +117,9 @@ export class TeacherApprovedComponent implements OnInit {
       const response = await firstValueFrom(
         this.administratorService.getTeacherAproved(page, query)
       );
+      if (request !== this.latestRequest) {
+        return;
+      }
       const normalizedResponse = normalizeCollectionResponse(
         response as ApiCursorPaginatedResponse<ManagedUserSummary>
       );
@@ -119,16 +129,24 @@ export class TeacherApprovedComponent implements OnInit {
         normalizedResponse.items.length === 0 &&
         normalizedResponse.hasPreviousPage
       ) {
-        await this.loadApprovedTeachers(page - 1);
+        await this.loadApprovedTeachers(page - 1, query);
         return;
       }
 
       this.currentPage = page;
-      this.searchTerm = query;
+      // `searchTerm` no se toca: es lo que el usuario sigue escribiendo.
+      this.appliedQuery = query;
       this.users = normalizedResponse.items;
       this.totalRecords = normalizedResponse.total;
       this.first = normalizedResponse.total === 0 ? 0 : (page - 1) * this.pageSize;
     } catch (error) {
+      if (request !== this.latestRequest) {
+        return;
+      }
+      if (page > 1 && isPageNotFoundError(error)) {
+        await this.loadApprovedTeachers(page - 1, query);
+        return;
+      }
       this.users = [];
       this.totalRecords = 0;
       this.first = 0;
@@ -138,9 +156,11 @@ export class TeacherApprovedComponent implements OnInit {
         detail: "No se pudo cargar el listado de docentes aprobados",
       });
     } finally {
-      this.isLoading = false;
-      this.hasLoaded = true;
-      this.refreshView();
+      if (request === this.latestRequest) {
+        this.isLoading = false;
+        this.hasLoaded = true;
+        this.refreshView();
+      }
     }
   }
 
@@ -190,7 +210,9 @@ export class TeacherApprovedComponent implements OnInit {
     });
   }
 
-  public async paginate(event: { page: number }): Promise<void> {
+  public async paginate(event: { page: number; first: number }): Promise<void> {
+    // `first` sigue al paginador para que una recuperación de página sí lo mueva.
+    this.first = event.first;
     await this.loadApprovedTeachers(event.page + 1);
   }
 

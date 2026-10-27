@@ -1,4 +1,5 @@
 import { NgModule } from "@angular/core";
+import { AuthorProfileCardComponent } from "./author-profile-card/author-profile-card.component";
 import { CommonModule } from "@angular/common";
 import { MenuComponent } from "./menu/menu.component";
 import { FooterComponent } from "./footer/footer.component";
@@ -108,7 +109,8 @@ import { TermsContentComponent } from "./terms-content/terms-content.component";
     ButtonTranslateComponent,
     HeaderComponent,
     NativeArrowSelectDirective,
-    TermsContentComponent
+    TermsContentComponent,
+    AuthorProfileCardComponent
 
   ],
   exports: [
@@ -202,7 +204,8 @@ import { TermsContentComponent } from "./terms-content/terms-content.component";
     TranslateModule,
     HeaderComponent,
     NativeArrowSelectDirective,
-    TermsContentComponent
+    TermsContentComponent,
+    AuthorProfileCardComponent
   ],
   imports: [
     TranslateModule,

@@ -3,6 +3,8 @@
  */
 export interface UserCreated {
   id?: number;
+  /** UUID publico; identifica al autor en la ruta `author/:userKey`. */
+  user_key?: string;
   first_name?: string;
   last_name?: string;
   email?: string;

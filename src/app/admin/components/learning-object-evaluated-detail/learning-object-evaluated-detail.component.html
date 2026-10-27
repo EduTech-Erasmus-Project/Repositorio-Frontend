@@ -66,10 +66,10 @@
 
       <p-divider layout="horizontal" align="left"></p-divider>
 
-      @if (autor?.id) {
+      @if (authorProfilePath) {
         <p class="meta-author">
           <span class="p-tag">Autor:</span>
-          <a [routerLink]="['/admin/teacher/request/approved/learning-object/upload', autor?.id]">
+          <a [routerLink]="authorProfilePath">
             {{ autor?.first_name }} {{ autor?.last_name }}
           </a>
         </p>

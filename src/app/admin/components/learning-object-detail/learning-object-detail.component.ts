@@ -19,6 +19,7 @@ import { LearningObjectService } from "src/app/services/learning-object.service"
 import { AdministratorService } from "src/app/services/administrator.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { AdminComponent } from "../../admin.component";
+import { buildManagedAdminProfilePath } from "../../shared/admin-managed-user.utils";
 
 /**
  * Muestra el detalle administrativo de un OA pendiente o aprobado y concentra
@@ -54,6 +55,15 @@ export class LearningObjectDetailComponent implements OnInit {
   public autor: UserCreated | null = null;
   public index_url = "";
   public statusUpdate = false;
+
+  /**
+   * Perfil del autor en el administrador, el mismo que abre "Perfil" en
+   * Docentes. `autor.id` es el id del usuario (antes se usaba como id de
+   * docente en "OA cargados" y mostraba los OA de otra persona).
+   */
+  public get authorProfilePath(): string | null {
+    return this.autor?.id ? buildManagedAdminProfilePath("teacher", this.autor.id, "approved") : null;
+  }
   public readMore = true;
   public buttonMenuBoolean = false;
   public youNeedMenu = false;

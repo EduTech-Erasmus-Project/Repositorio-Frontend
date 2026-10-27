@@ -179,6 +179,20 @@ button-expert modelo para el boton
   margin-bottom: 0.35rem;
 }
 
+/* Enlace al autor: color ROA y semibold en reposo; subrayado al pasar el cursor o con foco. */
+.card-author-link {
+  color: #3b5b68;
+  font-weight: 600;
+  text-decoration: none;
+  text-underline-offset: 0.18rem;
+}
+
+.card-author-link:hover,
+.card-author-link:focus-visible {
+  color: #1d3f5a;
+  text-decoration: underline;
+}
+
 .card-knowledge-area {
   line-height: 1.45;
   margin-bottom: 0;

@@ -7,14 +7,13 @@ import { LearningObjectFile } from "src/app/core/interfaces/LearningObjectFile";
 import { ObjectLearning } from "../../../core/interfaces/ObjectLearning";
 import { shouldDisplayLearningObjectMenu } from "src/app/core/utils/learning-object-preview";
 import { firstValueFrom, Subscription } from "rxjs";
-import { StorageService } from "src/app/services/storage.service";
+import { InteractionReferenceService } from "src/app/services/interaction-reference.service";
 import { FocusOrigin, captureFocusOrigin, restoreFocusOrigin } from "src/app/core/utils/accessibility-focus";
 import { LanguageService } from "src/app/services/language.service";
-import { safeJsonParse } from "src/app/core/utils/json.utils";
 import { translateInstant } from "src/app/core/utils/i18n.utils";
 import { openTrustedExternalUrl } from "src/app/core/utils/external-navigation.utils";
+import { isOwnLearningObject } from "src/app/core/utils/learning-object-owner.utils";
 import {
-  ApiReferenceResponse,
   LearningObjectDownloadCountResponse,
   LearningObjectInteractionResponse,
   LearningObjectViewCountResponse,
@@ -92,6 +91,8 @@ export class WebViewComponent implements OnInit, OnDestroy {
 
   public countViews: number = 0;
   public countDownloads: number = 0;
+  /** OA cuya vista ya se registro en esta pantalla; las demas recargas solo leen. */
+  private viewRegisteredFor: number | null = null;
 
   public youNeedMenu = false;
   private lastDialogFocusOrigin: FocusOrigin | null = null;
@@ -101,7 +102,7 @@ export class WebViewComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     private learningObject: LearningObjectService,
     private messageService: MessageService,
-    private localStorage: StorageService,
+    private interactionReference: InteractionReferenceService,
     private languageService: LanguageService,
     private cdr: ChangeDetectorRef,
   ) {
@@ -128,16 +129,20 @@ export class WebViewComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** `user_key` del autor para enlazar a `/author/:userKey`. */
+  get authorKey(): string | null {
+    return this.object?.user_created?.user_key ?? null;
+  }
+
   ngOnInit(): void {
     this.addFullscreenListeners();
     this.syncPreviewState();
-    void this.generateUserRefKey();
     void this.loadData();
     void this.reloadEvaluationState();
   }
 
   async loadDataExpertEvaluation() {
-    if (this.roleExpert) {
+    if (this.canEvaluateAsExpert) {
       this.expertEvaluationStateResolved = false;
       try {
         const res = await firstValueFrom(
@@ -173,117 +178,37 @@ export class WebViewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Funcion para obtener el numero de vistas que 
-   * existen dentro del objeto de aprendizaje.
+   * Registra una vista por cada OA abierto y muestra el total. El backend
+   * cuenta una vez por referencia, OA y dia, asi que recargar no infla el
+   * contador; las recargas de la misma pantalla solo leen el total.
    */
-  private async getNumberOfViews() {
-    try {
-      const res = await firstValueFrom(
-        this.learningObject.getViewedCount(this.object.id)
-      );
-      if (res.length > 0) {
-        this.countViews = res[0].view;
-        if (this.validateOAExistArrayView() && this.exist_Key()) {
-          if (!this.validateIdExistArrayLocalS(this.object.id)) {
-            this.addNewItemArray(this.object.id);
-            await this.countUpdateViews();
-          }
-        } else if (this.exist_Key()) {
-          this.createArrayLocalStorage([this.object.id]);
-          await this.countUpdateViews();
-        }
-      } else {
-        await this.createNumberViews();
+  private async loadViews() {
+    const learningObjectId = this.object?.id;
+    if (!learningObjectId) {
+      return;
+    }
+
+    if (this.viewRegisteredFor !== learningObjectId) {
+      this.viewRegisteredFor = learningObjectId;
+      try {
+        const reference = await this.interactionReference.get();
+        const res = await firstValueFrom(
+          this.learningObject.registerView(learningObjectId, reference)
+        );
+        this.countViews = res[0]?.view ?? this.countViews;
+        return;
+      } catch {
+        // Si no se pudo registrar, al menos se muestra el total.
       }
-    } catch {
-      await this.createNumberViews();
-    }
-  }
-
-  /**
-   * Funcion para validar si existe el Id del objeto de aprendizaje
-   * @param id 
-   */
-  private validateIdExistArrayLocalS(id: number) {
-    return this.getStoredViewedItems().includes(id);
-  }
-
-  private validateOAExistArrayView() {
-    const array_view = this.localStorage.getLocalItem<string>('array_view');
-    if (array_view == null || array_view == undefined) {
-      this.localStorage.saveLocalItem('array_view', JSON.stringify([]));
-      return false;
-    }
-    return true;
-  }
-
-  /***
-   * Funcion para actulazar el numero de vistas del objeto de aprendizaje 
-   */
-  private async countUpdateViews() {
-    const dataUpdate = {
-      learning_object: this.object.id,
-      view: this.countViews + 1
     }
 
     try {
-      await firstValueFrom(
-        this.learningObject.viewedUpdateCount(dataUpdate, this.object.id)
-      );
-      this.countViews = this.countViews + 1;
+      const res = await firstValueFrom(this.learningObject.getViewedCount(learningObjectId));
+      this.countViews = res[0]?.view ?? 0;
     } catch {
+      // El backend responde error si el OA todavia no tiene contador.
+      this.countViews = 0;
     }
-  }
-
-  private async createNumberViews() {
-    const data = {
-      learning_object: this.object.id,
-      view: 1
-    }
-
-    try {
-      const res = await firstValueFrom(this.learningObject.viewedCreateCount(data));
-      this.countViews = res.view;
-      if (this.validateOAExistArrayView() && this.exist_Key()) {
-        this.addNewItemArray(this.object.id);
-      } else if (this.exist_Key()) {
-        this.createArrayLocalStorage([this.object.id]);
-      }
-    } catch {
-    }
-
-  }
-
-  private exist_Key() {
-    const key = this.localStorage.getLocalItem<string>('key_ref')
-    if (key === undefined || key === null) {
-      return false;
-    }
-
-    return true;
-  }
-  /**
-   * funcion para crear el nuevo array
-   */
-  private createArrayLocalStorage(array: number[]) {
-    this.localStorage.saveLocalItem('array_view', JSON.stringify(array));
-  }
-
-  /**
-   * Funcion para agregar un nuevo
-   * regitro al array 
-   */
-  private addNewItemArray(item: number) {
-    const array = this.getStoredViewedItems();
-    array.push(item);
-    this.createArrayLocalStorage(array);
-  }
-
-  private getStoredViewedItems(): number[] {
-    return safeJsonParse<number[]>(
-      this.localStorage.getLocalItem<string>("array_view"),
-      []
-    );
   }
 
   /**
@@ -635,6 +560,11 @@ export class WebViewComponent implements OnInit, OnDestroy {
     return this.loginService.validateRole("expert");
   }
 
+  /** Un experto no califica los OA que él mismo subió como docente. */
+  get canEvaluateAsExpert() {
+    return this.roleExpert && !isOwnLearningObject(this.object, this.loginService.user);
+  }
+
   get isloged() {
     return this.loginService.user;
   }
@@ -686,6 +616,9 @@ export class WebViewComponent implements OnInit, OnDestroy {
       this.flagConfirm = true;
       this.displayFormRatingExpert = false;
       this.reloadEvaluationState();
+      // Igual que al editar (coutComment): la página del OA refresca la
+      // evaluación visible, la valoración y la columna lateral.
+      this.commentEmit1.emit(true);
     } else {
       this.flagConfirm = false;
     }
@@ -728,11 +661,16 @@ export class WebViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Registra la descarga con la referencia del navegador y refresca el total. */
   public async onDonwloaded() {
-    if (this.countDownloads === 0) {
-      await this.createDownloadInteraction();
-    } else {
-      await this.updateDownloadInteraction();
+    try {
+      const reference = await this.interactionReference.get();
+      const res = await firstValueFrom(
+        this.learningObject.registerDownload(this.object.id, reference)
+      );
+      this.interaction = res[0] ?? this.interaction;
+      await this.getNumberOfDownloads();
+    } catch {
     }
 
     this.cdr.detectChanges();
@@ -775,20 +713,6 @@ export class WebViewComponent implements OnInit, OnDestroy {
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  /**
-   * Garantiza que exista una referencia local para tracking anonimo de vistas.
-   */
-  private async generateUserRefKey() {
-    const key_ref = this.localStorage.getLocalItem<string>('key_ref');
-    if (key_ref == null || key_ref == undefined) {
-      try {
-        const userRefKey: ApiReferenceResponse = await firstValueFrom(this.learningObject.getReferenceUserView());
-        this.localStorage.saveLocalItem('key_ref', userRefKey.reference);
-      } catch {
-      }
-    }
-  }
-
   public redirectPreviewAddress(url?: string | null): string | undefined {
     let new_ulr = '';
     if (this.youNeedMenu) {
@@ -805,7 +729,7 @@ export class WebViewComponent implements OnInit, OnDestroy {
   private async refreshObjectContext() {
     await Promise.all([
       this.getNumberOfDownloads(),
-      this.getNumberOfViews(),
+      this.loadViews(),
     ]);
     this.syncPreviewState();
   }
@@ -860,38 +784,6 @@ export class WebViewComponent implements OnInit, OnDestroy {
       this.interaction = res;
     } catch {
       this.liked = !this.liked;
-    }
-  }
-
-  private async createDownloadInteraction() {
-    const data = {
-      downloaded: 1,
-      learning_object: this.object.id,
-    };
-
-    try {
-      const res = await firstValueFrom(this.learningObject.downloadCreateCount(data));
-      this.interaction = res[0];
-      this.countDownloads = 1;
-    } catch {
-    }
-  }
-
-  private async updateDownloadInteraction() {
-    const data = {
-      downloaded: this.interaction?.downloaded ?? this.countDownloads,
-      learning_object: this.object.id,
-    };
-
-    try {
-      const res = await firstValueFrom(
-        this.learningObject.downloadUpdateCount(data, this.object.id)
-      );
-      if (res.length > 0) {
-        this.interaction = res[0];
-        await this.getNumberOfDownloads();
-      }
-    } catch {
     }
   }
 

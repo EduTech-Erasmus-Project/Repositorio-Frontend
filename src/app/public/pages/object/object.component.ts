@@ -13,6 +13,10 @@ import {
 import { LoginService } from "src/app/services/login.service";
 import { LanguageService } from "src/app/services/language.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
+import { isOwnLearningObject } from "src/app/core/utils/learning-object-owner.utils";
+import { SideObjectComponent } from "../../components/side-object/side-object.component";
+
+type EvaluationView = "student" | "teacher" | "expert";
 
 interface EvaluationSummaryView {
   concepto: {
@@ -59,6 +63,7 @@ interface ExpertEvaluationBatchView {
 })
 export class ObjectComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild("objectTabsShell") objectTabsShell?: ElementRef<HTMLElement>;
+  @ViewChild(SideObjectComponent) private sideObject?: SideObjectComponent;
   public objectData: ObjectLearning | null = null;
   private readonly destroyRef = inject(DestroyRef);
   private tabHeaderObserver?: MutationObserver;
@@ -199,7 +204,39 @@ export class ObjectComponent implements OnInit, AfterViewInit, OnDestroy {
 
   coutComment1(evt: boolean) {
     if (evt === true) {
-      void this.loadData();
+      void this.refreshAfterEvaluation();
+    }
+  }
+
+  /**
+   * Tras crear o editar una evaluación experta refresca lo que depende de
+   * ella: la pestaña de evaluación, la valoración del OA y la columna lateral
+   * (para el experto, el OA deja de estar "sin evaluar").
+   */
+  private async refreshAfterEvaluation() {
+    this.sideObject?.loadData();
+    await this.loadData();
+    await this.refreshRating();
+  }
+
+  /**
+   * Actualiza solo la valoración: recargar el detalle completo reiniciaría el
+   * visor, las vistas y los comentarios.
+   */
+  private async refreshRating() {
+    const slug = this.objectData?.slug;
+    if (!slug) {
+      return;
+    }
+
+    try {
+      const res = await firstValueFrom(this.objectService.getObjectDetail(slug));
+      if (this.objectData?.id === res.id) {
+        this.objectData = { ...this.objectData, rating: res.rating };
+        this.cdr.detectChanges();
+      }
+    } catch {
+      // La valoración se verá actualizada al volver a cargar el OA.
     }
   }
 
@@ -216,7 +253,9 @@ export class ObjectComponent implements OnInit, AfterViewInit, OnDestroy {
     this.groupedQuestionsTeacher = [];
     this.resultsEva = [];
 
-    if (this.roleStudent && !this.roleExpert && !this.roleTeacher) {
+    const evaluationView = this.evaluationView;
+
+    if (evaluationView === "student") {
       const res = await firstValueFrom(this.objectService.getResultsEvaluation(this.objectData.id));
       this.resultsEva = res.map((item) => ({
         concepts: (item.concept_evaluations || []).map((conceptEvaluation) => ({
@@ -228,7 +267,7 @@ export class ObjectComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    if (this.roleExpert) {
+    if (evaluationView === "expert") {
       const res = await firstValueFrom(this.objectService.getObjectResultsEvaluation(this.objectData.id));
       this.groupedQuestionsEx = res.map((item) => this.mapExpertEvaluation(item));
       this.flagConfirm = this.groupedQuestionsEx.length > 0;
@@ -236,11 +275,37 @@ export class ObjectComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    if (this.roleTeacher) {
+    if (evaluationView === "teacher") {
       const res = await firstValueFrom(this.objectService.getResultsEvaluation(this.objectData.id));
       this.groupedQuestionsTeacher = res.map((item) => this.mapExpertEvaluation(item));
       this.cdr.detectChanges();
     }
+  }
+
+  /**
+   * Vista de la pestaña de evaluación según los roles del visitante.
+   *
+   * Un docente que también es experto ve en sus propios OA lo que le
+   * calificaron (vista de docente); en los OA ajenos, su propia evaluación.
+   */
+  get evaluationView(): EvaluationView | null {
+    if (this.roleStudent && !this.roleExpert && !this.roleTeacher) {
+      return "student";
+    }
+
+    if (this.roleExpert && this.roleTeacher && isOwnLearningObject(this.objectData, this.loginService.user)) {
+      return "teacher";
+    }
+
+    if (this.roleExpert) {
+      return "expert";
+    }
+
+    if (this.roleTeacher && !this.roleStudent) {
+      return "teacher";
+    }
+
+    return null;
   }
 
   get roleExpert() {
@@ -264,19 +329,16 @@ export class ObjectComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get shouldShowEvaluationEmptyState(): boolean {
-    if (this.roleStudent && !this.roleExpert && !this.roleTeacher) {
-      return !this.hasStudentEvaluation;
+    switch (this.evaluationView) {
+      case "student":
+        return !this.hasStudentEvaluation;
+      case "teacher":
+        return !this.hasTeacherEvaluation;
+      case "expert":
+        return !this.flagConfirm;
+      default:
+        return false;
     }
-
-    if (this.roleTeacher && !this.roleStudent && !this.roleExpert) {
-      return !this.hasTeacherEvaluation;
-    }
-
-    if (this.roleExpert) {
-      return !this.flagConfirm;
-    }
-
-    return false;
   }
 
   private mapExpertEvaluation(item: ExpertEvaluationResultResponse): ExpertEvaluationBatchView {

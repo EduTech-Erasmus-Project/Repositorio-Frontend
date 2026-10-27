@@ -173,6 +173,31 @@ describe("ProfileComponent", () => {
     } as any;
   }
 
+  it("debe detectar cambios sin guardar y descartarlos", async () => {
+    addressServiceSpy.getCitiesActive.and.returnValue(of([]));
+    addressServiceSpy.getUniversitiesByCityActive.and.returnValue(of([]));
+    addressServiceSpy.getCampusByUniversityActive.and.returnValue(of([]));
+    component.user = createTeacherUser();
+    await component.discardChanges();
+
+    expect(component.hasUnsavedChanges).toBeFalse();
+    expect(component.confirmLeave()).toBeTrue();
+
+    component.angForm.get("name")?.setValue("Carla");
+    expect(component.hasUnsavedChanges).toBeTrue();
+
+    // Volver al valor original tambien cuenta como sin cambios.
+    component.angForm.get("name")?.setValue("Carlos");
+    expect(component.hasUnsavedChanges).toBeFalse();
+
+    component.angForm.get("city")?.setValue(9);
+    expect(component.hasUnsavedChanges).toBeTrue();
+
+    await component.discardChanges();
+    expect(component.hasUnsavedChanges).toBeFalse();
+    expect(component.angForm.get("city")?.value).toBe(5);
+  });
+
   it("debe crear los controles de estudiante con los valores precargados", () => {
     component.user = createStudentUser();
 

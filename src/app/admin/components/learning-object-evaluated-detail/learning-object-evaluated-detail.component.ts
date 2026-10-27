@@ -19,6 +19,7 @@ import { shouldDisplayLearningObjectMenu } from "src/app/core/utils/learning-obj
 import { AdministratorService } from "src/app/services/administrator.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import {
+  buildManagedAdminProfilePath,
   buildManagedLearningObjectListBreadcrumbs,
   resolveManagedAdminRoleFromRoute,
 } from "../../shared/admin-managed-user.utils";
@@ -52,6 +53,15 @@ export class LearningObjectEvaluatedDetailComponent implements OnInit {
   public index_url = "";
   public readMore = true;
   public showEvaluation = true;
+
+  /**
+   * Perfil del autor en el administrador, el mismo que abre "Perfil" en
+   * Docentes. `autor.id` es el id del usuario (antes se usaba como id de
+   * docente en "OA cargados" y mostraba los OA de otra persona).
+   */
+  public get authorProfilePath(): string | null {
+    return this.autor?.id ? buildManagedAdminProfilePath("teacher", this.autor.id, "approved") : null;
+  }
   public disableEvaluation = false;
   public conceptEvaluations: ExpertConceptEvaluationResponse[] = [];
   public youNeedMenu = false;

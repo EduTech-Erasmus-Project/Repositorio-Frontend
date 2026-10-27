@@ -104,18 +104,6 @@ describe("SearchService", () => {
     req.flush({ results: [] });
   });
 
-  it("debe paginar la busqueda por numero de pagina", () => {
-    service.searchPagePaginator(3).subscribe((res: any) => {
-      expect(res).toEqual({ results: [] });
-    });
-
-    const req = httpMock.expectOne(
-      `${environment.baseUrl}/learning-objects/search/?page=3`
-    );
-    expect(req.request.method).toBe("GET");
-    req.flush({ results: [] });
-  });
-
   it("debe consultar la busqueda para experto", () => {
     const queryParams = {
       is_evaluated: "True",

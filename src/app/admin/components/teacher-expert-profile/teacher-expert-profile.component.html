@@ -22,109 +22,236 @@
         </div>
         <div class="teacher-expert-profile-hero-copy">
           <p class="teacher-expert-profile-kicker">{{ getProfileKicker() }}</p>
-          <h2>{{ getUserFullName() }}</h2>
-          <p class="teacher-expert-profile-email">{{ user?.email || 'No disponible' }}</p>
+          <div class="teacher-expert-profile-title-row">
+            <h2>{{ getUserFullName() }}</h2>
+            <p-tag
+              [severity]="isApproved ? 'success' : 'warn'"
+              [value]="(isApproved ? 'adminTeacherProfile.approved' : 'adminTeacherProfile.pending') | translate"
+            ></p-tag>
+          </div>
+          <p class="teacher-expert-profile-meta">
+            <i class="pi pi-envelope" aria-hidden="true"></i>
+            {{ user?.email || ('adminTeacherProfile.notAvailable' | translate) }}
+          </p>
+          @if (institution) {
+            <p class="teacher-expert-profile-meta">
+              <i class="pi pi-building" aria-hidden="true"></i>
+              {{ institution }}
+            </p>
+          }
         </div>
       </div>
-      <section class="teacher-expert-profile-section">
-        <div class="teacher-expert-profile-section-header">
-          <h3>Informacion general</h3>
-        </div>
-        <div class="teacher-expert-profile-grid">
-          <article class="teacher-expert-profile-data-card">
-            <span>{{ 'admin.email' | translate }}</span>
-            <strong>{{ user?.email || 'No disponible' }}</strong>
-          </article>
-          <article class="teacher-expert-profile-data-card">
-            <span>{{ rolText || 'Roles' }}</span>
+
+      <dl class="teacher-expert-profile-summary">
+        <div class="teacher-expert-profile-summary-item">
+          <dt>{{ rolText || ('adminTeacherProfile.roles.title' | translate) }}</dt>
+          <dd>
             @if (rolesList?.length) {
-              <div class="teacher-expert-profile-role-list">
+              <span class="teacher-expert-profile-role-list">
                 @for (role of rolesList; track role) {
-                  <span class="teacher-expert-profile-role-chip">
-                    {{ role | upperCapilal }}
-                  </span>
+                  <span class="teacher-expert-profile-role-chip">{{ getRoleLabelKey(role) | translate }}</span>
                 }
-              </div>
+              </span>
             } @else {
-              <strong>No disponible</strong>
+              {{ 'adminTeacherProfile.notAvailable' | translate }}
             }
-          </article>
+          </dd>
         </div>
-      </section>
-      @if (expert) {
-        <section class="teacher-expert-profile-section">
-          <div class="teacher-expert-profile-section-header">
-            <h3>Informacion de experto</h3>
-          </div>
-          <div class="teacher-expert-profile-grid">
-            <article class="teacher-expert-profile-data-card">
-              <span>{{ 'admin.profile' | translate }}</span>
-              <strong>{{ expert?.academic_profile || 'No disponible' }}</strong>
-            </article>
-            <article class="teacher-expert-profile-data-card">
-              <span>{{ 'admin.expertLevel' | translate }}</span>
-              <strong>{{ expert?.expert_level || 'No disponible' }}</strong>
-            </article>
-            @if (expert?.web) {
-              <article class="teacher-expert-profile-data-card">
-                <span>{{ 'admin.web' | translate }}</span>
-                <a
-                  class="teacher-expert-profile-link"
-                  [href]="getExternalUrl(expert.web)"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >
-                  {{ expert.web }}
-                </a>
-              </article>
-            }
-          </div>
-        </section>
-      }
-      @if (teacher) {
-        <section class="teacher-expert-profile-section">
-          <div class="teacher-expert-profile-section-header">
-            <h3>Informacion docente</h3>
-          </div>
-          <div class="teacher-expert-profile-grid">
-            <article class="teacher-expert-profile-data-card teacher-expert-profile-data-card--stacked">
-              <span>{{ 'admin.profesions' | translate }}</span>
-              @if (teacher?.professions?.length) {
-                <ul class="teacher-expert-profile-list">
-                  @for (prof of teacher.professions; track prof) {
-                    <li>{{ prof.description }}</li>
-                  }
-                </ul>
+        @if (teacher) {
+          <div class="teacher-expert-profile-summary-item">
+            <dt>{{ 'admin.profesions' | translate }}</dt>
+            <dd>
+              @if (teacher.professions?.length) {
+                @for (prof of teacher.professions; track prof; let last = $last) {
+                  {{ prof.description }}@if (!last) {, }
+                }
               } @else {
-                <strong>No disponible</strong>
+                {{ 'adminTeacherProfile.notAvailable' | translate }}
               }
-            </article>
+            </dd>
           </div>
-        </section>
-      }
-      @if (teacher && user?.learning_objects?.length) {
-        <section class="teacher-expert-profile-section">
-          <div class="teacher-expert-profile-section-header">
-            <h3>Objetos de aprendizaje</h3>
-            <span>{{ user.learning_objects.length }} registros</span>
+        }
+        @if (user?.created) {
+          <div class="teacher-expert-profile-summary-item">
+            <dt>{{ 'adminTeacherProfile.registered' | translate }}</dt>
+            <dd>{{ user?.created | date: 'dd/MM/yyyy' }}</dd>
           </div>
-          <ul class="teacher-expert-profile-link-list">
-            @for (oa of user.learning_objects; track oa) {
-              <li>
-                <a
-                  class="teacher-expert-profile-link"
-                  [href]="oa?.learning_object_file?.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >
-                  {{ oa.general_title }}
-                </a>
-              </li>
-            }
-          </ul>
-        </section>
+        }
+        @if (user?.is_account_active !== undefined) {
+          <div class="teacher-expert-profile-summary-item">
+            <dt>{{ 'adminTeacherProfile.email' | translate }}</dt>
+            <dd>
+              {{ (user?.is_account_active ? 'adminTeacherProfile.verified' : 'adminTeacherProfile.notVerified') | translate }}
+            </dd>
+          </div>
+        }
+        @if (teacher && (isApproved || learningObjects.length)) {
+          <div class="teacher-expert-profile-summary-item">
+            <dt>{{ 'adminTeacherProfile.learningObjects' | translate }}</dt>
+            <dd>
+              {{ learningObjects.length }}
+              @if (learningObjects.length) {
+                <span class="teacher-expert-profile-summary-note">
+                  ({{ 'adminTeacherProfile.publicCount' | translate: { count: publicLearningObjectsCount } }})
+                </span>
+              }
+            </dd>
+          </div>
+        }
+      </dl>
+
+      @if (learningObjects.length || teacher || expert) {
+        <p-accordion class="teacher-expert-profile-accordion" [value]="openPanels" [multiple]="true">
+          <!-- Todo docente tiene este panel; si nunca guardo su perfil se dice. -->
+          @if (teacher) {
+            <p-accordion-panel value="public-profile">
+              <p-accordion-header>
+                <span class="teacher-expert-profile-panel-title">
+                  {{ 'authorProfile.publicProfileSection' | translate }}
+                  @if (!publicProfile) {
+                    <p-tag severity="secondary" [value]="'adminTeacherProfile.notConfigured' | translate"></p-tag>
+                  } @else if (!publicProfile.is_public) {
+                    <p-tag severity="warn" icon="pi pi-eye-slash" [value]="'adminTeacherProfile.hidden' | translate"></p-tag>
+                  }
+                </span>
+              </p-accordion-header>
+              <p-accordion-content>
+                @if (publicProfileCard && publicProfile) {
+                  <app-author-profile-card
+                    [profile]="publicProfileCard"
+                    [fieldVisibility]="publicProfile.field_visibility"
+                    [isPublic]="publicProfile.is_public"
+                    [showHeader]="false"
+                  ></app-author-profile-card>
+                } @else {
+                  <p class="teacher-expert-profile-empty">
+                    <i class="pi pi-id-card" aria-hidden="true"></i>
+                    {{ 'adminTeacherProfile.publicProfileNotConfigured' | translate }}
+                  </p>
+                }
+              </p-accordion-content>
+            </p-accordion-panel>
+          }
+
+          @if (learningObjects.length) {
+            <p-accordion-panel value="learning-objects">
+              <p-accordion-header>
+                <span class="teacher-expert-profile-panel-title">
+                  {{ 'adminTeacherProfile.learningObjects' | translate }}
+                  <span class="teacher-expert-profile-panel-count">{{ learningObjects.length }}</span>
+                </span>
+              </p-accordion-header>
+              <p-accordion-content>
+                <p-table
+                  [value]="learningObjects"
+                  [paginator]="learningObjects.length > learningObjectsRowsOptions[0]"
+                  [rows]="learningObjectsRowsOptions[0]"
+                  [rowsPerPageOptions]="learningObjectsRowsOptions"
+                  [rowHover]="true"
+                  [scrollable]="true"
+                  [tableStyle]="{ 'min-width': '40rem' }"
+                  styleClass="teacher-expert-profile-table"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th scope="col" class="teacher-expert-profile-thumb-col">{{ 'adminTeacherProfile.table.image' | translate }}</th>
+                      <th scope="col">{{ 'adminTeacherProfile.table.title' | translate }}</th>
+                      <th scope="col">{{ 'adminTeacherProfile.table.status' | translate }}</th>
+                      <th scope="col">{{ 'adminTeacherProfile.table.publishedAt' | translate }}</th>
+                      <th scope="col">
+                        <span class="teacher-expert-profile-stat">
+                          <i class="pi pi-eye" aria-hidden="true"></i>
+                          {{ 'adminTeacherProfile.table.views' | translate }}
+                        </span>
+                      </th>
+                      <th scope="col">
+                        <span class="teacher-expert-profile-stat">
+                          <i class="pi pi-download" aria-hidden="true"></i>
+                          {{ 'adminTeacherProfile.table.downloads' | translate }}
+                        </span>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-oa>
+                    <tr class="teacher-expert-profile-row" (click)="openLearningObject(oa)">
+                      <td>
+                        <span class="teacher-expert-profile-thumb">
+                          @if (oa.avatar) {
+                            <img [src]="oa.avatar" alt="" loading="lazy" />
+                          } @else {
+                            <i class="pi pi-image" aria-hidden="true"></i>
+                          }
+                        </span>
+                      </td>
+                      <td>
+                        @if (getLearningObjectLink(oa); as link) {
+                          <a class="teacher-expert-profile-link teacher-expert-profile-oa-title" [routerLink]="link" (click)="$event.stopPropagation()">{{ oa.general_title }}</a>
+                        } @else {
+                          {{ oa.general_title }}
+                        }
+                      </td>
+                      <td>
+                        @if (oa.public !== undefined) {
+                          <p-tag
+                            [severity]="oa.public ? 'success' : 'warn'"
+                            [value]="(oa.public ? 'adminTeacherProfile.public' : 'adminTeacherProfile.inReview') | translate"
+                          ></p-tag>
+                        }
+                      </td>
+                      <td>{{ oa.created | date: 'dd/MM/yyyy' }}</td>
+                      <td>
+                        <span class="teacher-expert-profile-stat">
+                          <i class="pi pi-eye" aria-hidden="true"></i>
+                          {{ oa.views }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="teacher-expert-profile-stat">
+                          <i class="pi pi-download" aria-hidden="true"></i>
+                          {{ oa.downloads }}
+                        </span>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </p-accordion-content>
+            </p-accordion-panel>
+          }
+
+          @if (expert) {
+            <p-accordion-panel value="expert">
+              <p-accordion-header>
+                <span class="teacher-expert-profile-panel-title">{{ 'adminTeacherProfile.expertInfo' | translate }}</span>
+              </p-accordion-header>
+              <p-accordion-content>
+                <div class="teacher-expert-profile-grid">
+                  <article class="teacher-expert-profile-data-card">
+                    <span>{{ 'admin.profile' | translate }}</span>
+                    <strong>{{ expert.academic_profile || ('adminTeacherProfile.notAvailable' | translate) }}</strong>
+                  </article>
+                  <article class="teacher-expert-profile-data-card">
+                    <span>{{ 'admin.expertLevel' | translate }}</span>
+                    <strong>{{ expert.expert_level || ('adminTeacherProfile.notAvailable' | translate) }}</strong>
+                  </article>
+                  @if (expert.web) {
+                    <article class="teacher-expert-profile-data-card">
+                      <span>{{ 'admin.web' | translate }}</span>
+                      <a
+                        class="teacher-expert-profile-link"
+                        [href]="getExternalUrl(expert.web)"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >
+                        {{ expert.web }}
+                      </a>
+                    </article>
+                  }
+                </div>
+              </p-accordion-content>
+            </p-accordion-panel>
+          }
+        </p-accordion>
       }
     </section>
   }
 </div>
-

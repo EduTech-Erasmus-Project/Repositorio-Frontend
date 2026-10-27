@@ -10,8 +10,9 @@ import {
   ManagedUserSummary,
 } from 'src/app/core/interfaces/api-contracts';
 import { normalizeCollectionResponse } from 'src/app/core/utils/backend-response.utils';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import Swal from 'sweetalert2';
+import { isPageNotFoundError } from '../../shared/admin-managed-user.utils';
 
 /**
  * Lista estudiantes desde el panel administrativo con busqueda remota y
@@ -35,6 +36,7 @@ import Swal from 'sweetalert2';
 export class StudentComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly searchInput$ = new Subject<string>();
+  private listSubscription?: Subscription;
   @ViewChild('dt') table?: Table;
   @ViewChild('paginator', { static: true }) paginator?: Paginator;
 
@@ -75,7 +77,9 @@ export class StudentComponent implements OnInit {
   getStudentList(page: number = this.currentPage): void {
     this.isLoading = true;
 
-    this.administratorService
+    // Cancela la carga anterior: una respuesta vieja no debe pisar la última búsqueda.
+    this.listSubscription?.unsubscribe();
+    this.listSubscription = this.administratorService
       .getStudentList(page, this.searchTerm)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -87,19 +91,21 @@ export class StudentComponent implements OnInit {
             return;
           }
 
+          // `pageSize` se mantiene fijo (el backend pagina de 10 en 10). Antes se
+          // tomaba del número de resultados de una búsqueda y, al quitarla, el
+          // paginador calculaba páginas que no existen.
           this.currentPage = page;
           this.listStudent = normalizedResponse.items;
           this.totalRecords = normalizedResponse.total;
-
-          if (page === 1 && normalizedResponse.items.length > 0) {
-            this.pageSize = normalizedResponse.items.length;
-          }
-
           this.first = normalizedResponse.total === 0 ? 0 : (this.currentPage - 1) * this.pageSize;
           this.hasLoaded = true;
           this.refreshView();
         },
         error: (error: unknown) => {
+          if (page > 1 && isPageNotFoundError(error)) {
+            this.getStudentList(page - 1);
+            return;
+          }
           this.listStudent = [];
           this.totalRecords = 0;
           this.first = 0;
@@ -119,7 +125,9 @@ export class StudentComponent implements OnInit {
     this.searchInput$.next(value.trim());
   }
 
-  paginate(event: { page: number }): void {
+  paginate(event: { page: number; first: number }): void {
+    // `first` sigue al paginador para que una recuperación de página sí lo mueva.
+    this.first = event.first;
     void this.getStudentList(event.page + 1);
   }
 

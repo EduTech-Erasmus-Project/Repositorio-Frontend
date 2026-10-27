@@ -40,6 +40,14 @@ const routes: Routes = [
           // },
       },
       {
+        path: "public-profile",
+        loadChildren: () =>
+          import("./pages/public-profile/public-profile-edit.module").then(
+            (m) => m.PublicProfileEditModule
+          ),
+        canActivate: [TeacherGuard],
+      },
+      {
         path: "new-object",
         loadChildren: () =>
           import("./pages/loadOa/load-oa.module").then((m) => m.LoadOaModule),
