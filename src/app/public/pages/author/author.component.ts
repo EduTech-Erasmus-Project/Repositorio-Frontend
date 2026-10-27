@@ -106,9 +106,7 @@ export class AuthorComponent implements OnInit, OnDestroy {
     return initials.toUpperCase() || "U";
   });
 
-  readonly institution = computed(() =>
-    [this.author()?.university?.name, this.author()?.campus?.name].filter(Boolean).join(" · ")
-  );
+  readonly institution = computed(() => this.author()?.university_name?.trim() ?? "");
 
   readonly professions = computed(() =>
     (this.author()?.professions ?? []).map((profession) => profession.description).filter(Boolean)

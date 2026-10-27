@@ -38,8 +38,7 @@ describe("AuthorProfileCardComponent", () => {
     last_name: "Perez",
     email: "jperez@ups.edu.ec",
     image_url: null,
-    university: { id: 1, name: "Universidad Politecnica Salesiana" },
-    campus: { id: 2, name: "Cuenca" },
+    university_name: "Universidad Politecnica Salesiana",
     professions: [{ id: 4, description: "Ingeniero Civil" }],
     knowledge_areas: [{ id: 7, name_es: "Ingenieria", name_en: "Engineering" }],
     member_since: 2021,
@@ -81,7 +80,7 @@ describe("AuthorProfileCardComponent", () => {
 
     expect(element.querySelector("h2")?.textContent).toContain("Juan Perez");
     expect(element.querySelector(".author-profile-card-avatar-fallback")?.textContent).toContain("JP");
-    expect(element.textContent).toContain("Universidad Politecnica Salesiana · Cuenca");
+    expect(element.textContent).toContain("Universidad Politecnica Salesiana");
     expect(element.textContent).toContain("jperez@ups.edu.ec");
   });
 
@@ -90,7 +89,7 @@ describe("AuthorProfileCardComponent", () => {
 
     expect(element.textContent).toContain("Investigo sobre hidraulica.");
     expect(element.textContent).toContain("GIIT");
-    // La ubicacion no se muestra: la repiten la universidad y el campus.
+    // La ubicacion no se muestra: el perfil publico solo trae la universidad.
     expect(element.textContent).not.toContain("Cuenca, Ecuador");
     const linkLabels = Array.from(element.querySelectorAll(".author-profile-card-external")).map(
       (link) => link.getAttribute("href")

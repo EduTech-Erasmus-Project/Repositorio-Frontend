@@ -65,9 +65,7 @@ export class AuthorProfileCardComponent {
     return initials.toUpperCase() || "U";
   });
 
-  readonly institution = computed(() =>
-    [this.profile().university?.name, this.profile().campus?.name].filter(Boolean).join(" · ")
-  );
+  readonly institution = computed(() => this.profile().university_name?.trim() ?? "");
 
   readonly knowledgeAreas = computed(() => {
     const useEnglish = this.currentLang() === "en";
@@ -82,7 +80,7 @@ export class AuthorProfileCardComponent {
 
   readonly infoItems = computed<ProfileInfoItem[]>(() => {
     const profile = this.profile();
-    // Sin ubicacion: la universidad y el campus de la cabecera ya la indican.
+    // Sin ubicacion: el perfil publico solo muestra la universidad (cabecera).
     const items: Array<[ProfileVisibilityField | null, string, string | undefined]> = [
       ["faculty", "authorProfile.faculty", profile.faculty],
       ["research_group", "authorProfile.researchGroup", profile.research_group],

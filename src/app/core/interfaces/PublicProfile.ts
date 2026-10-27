@@ -76,11 +76,6 @@ export type OwnPublicProfileUpdate = Partial<
   field_visibility?: Partial<ProfileFieldVisibility>;
 };
 
-export interface NamedCatalogItem {
-  id: number;
-  name: string;
-}
-
 export interface PublicProfession {
   id: number;
   description: string;
@@ -102,8 +97,8 @@ export interface PublicAuthor {
   last_name: string;
   email: string;
   image_url: string | null;
-  university: NamedCatalogItem | null;
-  campus: NamedCatalogItem | null;
+  /** Universidad como texto. La ciudad y el pais no se publican. */
+  university_name: string;
   professions: PublicProfession[];
   knowledge_areas: PublicKnowledgeArea[];
   member_since: number;
