@@ -1,0 +1,7 @@
+@if (brand(); as icon) {
+  <svg class="link-type-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path [attr.d]="icon.path" [attr.fill]="icon.color"></path>
+  </svg>
+} @else {
+  <i class="link-type-icon link-type-icon--generic" [class]="genericIcon()" aria-hidden="true"></i>
+}

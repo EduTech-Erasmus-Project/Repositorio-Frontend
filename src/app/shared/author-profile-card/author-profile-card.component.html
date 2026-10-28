@@ -197,6 +197,7 @@
               target="_blank"
               rel="noopener noreferrer"
             >
+              <app-link-type-icon [type]="link.type"></app-link-type-icon>
               <span>{{ 'authorProfile.linkTypes.' + link.type | translate }}</span>
               <i class="pi pi-external-link" aria-hidden="true"></i>
               <span class="author-profile-card-sr-only">{{ 'authorProfile.opensNewTab' | translate }}</span>
