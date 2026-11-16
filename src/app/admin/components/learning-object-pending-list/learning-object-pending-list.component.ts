@@ -12,8 +12,6 @@ import { Table } from "primeng/table";
 import { firstValueFrom } from "rxjs";
 import * as moment from "moment";
 import Swal from "sweetalert2";
-import { getHttpErrorMessage } from "src/app/core/utils/http-error.utils";
-import { normalizeMultilineMessage } from "src/app/core/utils/multiline-message.utils";
 import { ObjectLearning } from "src/app/core/interfaces/ObjectLearning";
 import { normalizeCollectionResponse } from "src/app/core/utils/backend-response.utils";
 import { LearningObjectService } from "src/app/services/learning-object.service";
@@ -21,6 +19,7 @@ import { AdministratorService } from "src/app/services/administrator.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { AdminComponent } from "../../admin.component";
 import { LearningObjects } from "../../models/evaluation.models";
+import { DELETE_MESSAGE_TEMPLATE } from "../../shared/learning-object-message-templates";
 
 /**
  * Administra el listado de objetos pendientes de aprobacion, incluyendo
@@ -57,6 +56,9 @@ export class LearningObjectPendingListComponent implements OnInit {
   public totalRecords = 0;
   public pageSize = 10;
   public first = 0;
+  public readonly deleteTemplate = DELETE_MESSAGE_TEMPLATE;
+  public deleteDialogVisible = false;
+  private deleteOaId: number | null = null;
   public form: FormGroup;
 
   constructor(
@@ -190,59 +192,34 @@ export class LearningObjectPendingListComponent implements OnInit {
     });
   }
 
-  /**
-   * Elimina un OA pendiente y usa el mensaje ingresado como motivo visible
-   * para el backend administrativo.
-   */
+  /** Abre el dialogo para eliminar el OA con el motivo para el docente. */
   public deleteLearningObject(oaId: number): void {
+    this.deleteOaId = oaId;
+    this.deleteDialogVisible = true;
+  }
+
+  /** Elimina el OA; el backend envia el mensaje como motivo al docente. */
+  public readonly removeLearningObject = async (message: string): Promise<void> => {
+    if (this.deleteOaId === null) {
+      return;
+    }
+    await firstValueFrom(
+      this.learningobjectService.deleteObjestTeacherAdmin(this.deleteOaId, { message })
+    );
+  };
+
+  public async onDeleted(): Promise<void> {
+    this.deleteOaId = null;
+    await this.loadLearningObjects();
     Swal.fire({
-      title: "Escriba la razón de la eliminación del objeto de aprendizaje.",
-      input: "textarea",
-      width: "min(42rem, calc(100vw - 2rem))",
-      inputAttributes: {
-        autocapitalize: "off",
-        rows: "9",
-        maxlength: "3000",
-        "aria-label": "Razón de eliminación del objeto de aprendizaje",
-      },
+      icon: "success",
+      title: "Se ha eliminado el objeto de aprendizaje.",
+      showConfirmButton: true,
+      width: "min(32rem, calc(100vw - 2rem))",
       customClass: {
-        popup: "admin-swal-popup admin-swal-popup--textarea",
-        input: "admin-swal-textarea",
+        popup: "admin-swal-popup",
         actions: "admin-swal-actions",
       },
-      showCancelButton: true,
-      confirmButtonText: "Aceptar",
-      showLoaderOnConfirm: true,
-      preConfirm: async (message) => {
-        const rawMessage = normalizeMultilineMessage(message);
-
-        if (!rawMessage.trim()) {
-          Swal.showValidationMessage(
-            "Error: No se ha proporcionado un mensaje para el autor."
-          );
-          return;
-        }
-
-        const data = { message: rawMessage };
-
-        try {
-          await firstValueFrom(this.learningobjectService.deleteObjestTeacherAdmin(oaId, data));
-          await this.loadLearningObjects();
-          Swal.fire({
-            icon: "success",
-            title: "Se ha eliminado el objeto de aprendizaje.",
-            showConfirmButton: true,
-            width: "min(32rem, calc(100vw - 2rem))",
-            customClass: {
-              popup: "admin-swal-popup",
-              actions: "admin-swal-actions",
-            },
-          });
-        } catch (error: unknown) {
-          Swal.showValidationMessage(`Error: ${getHttpErrorMessage(error)}`);
-        }
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
     });
   }
 

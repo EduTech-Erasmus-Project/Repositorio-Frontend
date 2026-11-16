@@ -68,6 +68,30 @@
         <button class="p-ml-2" (click)="onNotificate()" pButton icon="pi pi-bell" label="Notificar"></button>
 
       </div>
+
+      <app-learning-object-message-dialog
+        [(visible)]="notifyDialogVisible"
+        [template]="findingsTemplate"
+        [defaultOutcomeId]="statusUpdate ? 'approved' : 'not-approved'"
+        header="Notificar al autor"
+        description="Marque el resultado y las observaciones; el mensaje se arma solo y puede editarlo. Se envía por correo al docente."
+        submitLabel="Enviar notificación"
+        [submit]="sendNotification"
+        [formatError]="formatNotificationError"
+        (sent)="onNotified()"
+      ></app-learning-object-message-dialog>
+
+      <app-learning-object-message-dialog
+        [(visible)]="deleteDialogVisible"
+        [template]="deleteTemplate"
+        header="Eliminar objeto de aprendizaje"
+        description="Marque las observaciones; el mensaje se arma solo y puede editarlo. El OA se elimina definitivamente y el docente recibe este mensaje por correo."
+        submitLabel="Eliminar"
+        submitIcon="pi pi-trash"
+        submitSeverity="danger"
+        [submit]="deleteLearningObject"
+        (sent)="onDeleted()"
+      ></app-learning-object-message-dialog>
     </div>
   </div>
 </div>

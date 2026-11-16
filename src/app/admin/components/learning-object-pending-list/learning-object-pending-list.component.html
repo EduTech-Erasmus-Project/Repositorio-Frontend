@@ -134,3 +134,15 @@
   </div>
 </div>
 
+
+<app-learning-object-message-dialog
+  [(visible)]="deleteDialogVisible"
+  [template]="deleteTemplate"
+  header="Eliminar objeto de aprendizaje"
+  description="Marque las observaciones; el mensaje se arma solo y puede editarlo. El OA se elimina definitivamente y el docente recibe este mensaje por correo."
+  submitLabel="Eliminar"
+  submitIcon="pi pi-trash"
+  submitSeverity="danger"
+  [submit]="removeLearningObject"
+  (sent)="onDeleted()"
+></app-learning-object-message-dialog>

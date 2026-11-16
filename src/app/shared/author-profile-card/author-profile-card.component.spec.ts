@@ -6,6 +6,7 @@ import {
   AuthorProfileCardComponent,
   AuthorProfileCardData,
 } from "./author-profile-card.component";
+import { LinkTypeIconComponent } from "../link-type-icon/link-type-icon.component";
 
 @Pipe({
   name: "translate",
@@ -67,7 +68,12 @@ describe("AuthorProfileCardComponent", () => {
     translateMock = { currentLang: "es", onLangChange: new Subject() };
 
     await TestBed.configureTestingModule({
-      declarations: [AuthorProfileCardComponent, TranslatePipeMock, PTagStubComponent],
+      declarations: [
+        AuthorProfileCardComponent,
+        TranslatePipeMock,
+        PTagStubComponent,
+        LinkTypeIconComponent,
+      ],
       providers: [{ provide: LanguageService, useValue: { translate: translateMock } }],
     }).compileComponents();
 

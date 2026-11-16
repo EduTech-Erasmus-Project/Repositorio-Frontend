@@ -11,7 +11,6 @@ import { Table } from "primeng/table";
 import { firstValueFrom } from "rxjs";
 import Swal from "sweetalert2";
 import { getHttpErrorMessage } from "src/app/core/utils/http-error.utils";
-import { normalizeMultilineMessage } from "src/app/core/utils/multiline-message.utils";
 import { ObjectLearning } from "src/app/core/interfaces/ObjectLearning";
 import { UserCreated } from "src/app/core/interfaces/UserCreated";
 import { shouldDisplayLearningObjectMenu } from "src/app/core/utils/learning-object-preview";
@@ -20,6 +19,10 @@ import { AdministratorService } from "src/app/services/administrator.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { AdminComponent } from "../../admin.component";
 import { buildManagedAdminProfilePath } from "../../shared/admin-managed-user.utils";
+import {
+  DELETE_MESSAGE_TEMPLATE,
+  FINDINGS_MESSAGE_TEMPLATE,
+} from "../../shared/learning-object-message-templates";
 
 /**
  * Muestra el detalle administrativo de un OA pendiente o aprobado y concentra
@@ -65,6 +68,10 @@ export class LearningObjectDetailComponent implements OnInit {
     return this.autor?.id ? buildManagedAdminProfilePath("teacher", this.autor.id, "approved") : null;
   }
   public readMore = true;
+  public readonly findingsTemplate = FINDINGS_MESSAGE_TEMPLATE;
+  public readonly deleteTemplate = DELETE_MESSAGE_TEMPLATE;
+  public notifyDialogVisible = false;
+  public deleteDialogVisible = false;
   public buttonMenuBoolean = false;
   public youNeedMenu = false;
   public spinner = false;
@@ -161,131 +168,52 @@ export class LearningObjectDetailComponent implements OnInit {
     }
   }
 
-  /**
-   * Elimina el OA desde admin usando el mensaje de observacion exigido por el
-   * backend para registrar la razon del borrado.
-   */
+  /** Abre el dialogo para eliminar el OA con el motivo para el docente. */
   public onDelete(): void {
     if (!this.learningobjectdetail?.id) {
       return;
     }
+    this.deleteDialogVisible = true;
+  }
 
+  /** Elimina el OA; el backend envia el mensaje como motivo al docente. */
+  public readonly deleteLearningObject = async (message: string): Promise<void> => {
+    await firstValueFrom(
+      this.learningobjectService.deleteObjestTeacherAdmin(this.learningobjectdetail!.id!, {
+        message,
+      })
+    );
+  };
+
+  public onDeleted(): void {
+    this.navigateToSourceList();
     Swal.fire({
-      title: "Escriba la razón de la eliminación del objeto de aprendizaje.",
-      input: "textarea",
-      width: "min(42rem, calc(100vw - 2rem))",
-      inputAttributes: {
-        autocapitalize: "off",
-        rows: "9",
-        maxlength: "3000",
-        "aria-label": "Razón de eliminación del objeto de aprendizaje",
-      },
-      customClass: {
-        popup: "admin-swal-popup admin-swal-popup--textarea",
-        input: "admin-swal-textarea",
-        actions: "admin-swal-actions",
-      },
-      showCancelButton: true,
-      confirmButtonText: "Aceptar",
-      showLoaderOnConfirm: true,
-      preConfirm: async (message) => {
-        const rawMessage = normalizeMultilineMessage(message);
-
-        if (!rawMessage.trim()) {
-          Swal.showValidationMessage(
-            "Error: No se ha proporcionado un mensaje para el autor."
-          );
-          return;
-        }
-
-        const data = { message: rawMessage };
-
-        try {
-          await firstValueFrom(
-            this.learningobjectService.deleteObjestTeacherAdmin(
-              this.learningobjectdetail!.id!,
-              data
-            )
-          );
-          this.navigateToSourceList();
-          Swal.fire({
-            icon: "success",
-            title: "Se ha eliminado el objeto de aprendizaje.",
-            showConfirmButton: true,
-          });
-        } catch (error: unknown) {
-          Swal.showValidationMessage(`Error: ${getHttpErrorMessage(error)}`);
-        }
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
+      icon: "success",
+      title: "Se ha eliminado el objeto de aprendizaje.",
+      showConfirmButton: true,
     });
   }
 
-  /**
-   * Solicita un mensaje al administrador y lo envía al docente creador del OA.
-   */
-  public async onNotificate(): Promise<void> {
+  /** Abre el dialogo de hallazgos para el docente creador del OA. */
+  public onNotificate(): void {
     if (!this.learningobjectdetail?.id) {
       return;
     }
+    this.notifyDialogVisible = true;
+  }
 
-    const result = await Swal.fire({
-      title: "Escriba un mensaje para el autor.",
-      input: "textarea",
-      width: "min(42rem, calc(100vw - 2rem))",
-      inputAttributes: {
-        autocapitalize: "off",
-        rows: "10",
-        maxlength: "3000",
-        "aria-label": "Mensaje para notificar al autor del objeto de aprendizaje",
-      },
-      customClass: {
-        popup: "admin-swal-popup admin-swal-popup--textarea",
-        input: "admin-swal-textarea",
-        actions: "admin-swal-actions",
-      },
-      showCancelButton: true,
-      confirmButtonText: "Aceptar",
-      showLoaderOnConfirm: true,
-      preConfirm: async (message) => {
-        const rawMessage = normalizeMultilineMessage(message);
+  public readonly sendNotification = async (message: string): Promise<void> => {
+    await firstValueFrom(
+      this.learningobjectService.notificationObjectTeacherAdmin(this.learningobjectdetail!.id!, {
+        message,
+      })
+    );
+  };
 
-        if (!rawMessage.trim()) {
-          Swal.showValidationMessage(
-            "Error: Debe ingresar un mensaje para el autor."
-          );
-          return false;
-        }
+  public readonly formatNotificationError = (error: unknown): string =>
+    this.getNotificationErrorMessage(error);
 
-        if (rawMessage.length > 3000) {
-          Swal.showValidationMessage(
-            "Error: El mensaje no puede superar los 3000 caracteres."
-          );
-          return false;
-        }
-
-        try {
-          await firstValueFrom(
-            this.learningobjectService.notificationObjectTeacherAdmin(
-              this.learningobjectdetail!.id!,
-              { message: rawMessage }
-            )
-          );
-          return true;
-        } catch (error: unknown) {
-          Swal.showValidationMessage(
-            `Error: ${this.getNotificationErrorMessage(error)}`
-          );
-          return false;
-        }
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
-    });
-
-    if (!result.isConfirmed || !result.value) {
-      return;
-    }
-
+  public async onNotified(): Promise<void> {
     await Swal.fire({
       icon: "success",
       title: "Notificacion enviada",

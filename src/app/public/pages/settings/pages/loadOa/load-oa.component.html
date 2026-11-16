@@ -369,24 +369,28 @@
                         </div>
                       </div>
                       @if (is_adapted_oer == true) {
-                        <p class="adaptations-copy" id="adaptations-detection-help"
-                          >{{'newObject.form.adaptationsIs.description1'
-                          | translate}} <a
-                          class="adaptations-link"
-                        href="https://oeradap.edutech-project.org/">OER-ADAP</a></p>
+                        <p class="adaptations-copy" id="adaptations-detection-help">
+                          {{'newObject.form.adaptationsIs.description1' | translate}} 
+                          <a class="adaptations-link"
+                            href="https://oeradap.edutech-project.org/"
+                            target="_blank"
+                            rel="noopener noreferrer">OER-ADAP</a>
+                        </p>
                       }
                       @if (is_adapted_oer == false) {
-                        <p class="adaptations-copy" id="adaptations-detection-help"
-                          >{{'newObject.form.adaptationsIs.description2'|
-                          translate}} <a
-                          class="adaptations-link"
-                        href="https://oeradap.edutech-project.org/">OER-ADAP</a>
-                        {{'newObject.form.adaptationsIs.description3'|
-                        translate}} <a
-                        class="adaptations-link"
-                      href="https://lompads.edutech-project.org/#/">LOMPAD-WEB</a>
-                      {{'newObject.form.adaptationsIs.description4'|
-                    translate}}</p>
+                        <p class="adaptations-copy" id="adaptations-detection-help">
+                          {{'newObject.form.adaptationsIs.description2'| translate}} 
+                          <a class="adaptations-link"
+                            href="https://oeradap.edutech-project.org/" 
+                            target="_blank" 
+                            rel="noopener noreferrer">OER-ADAP</a>
+                          {{'newObject.form.adaptationsIs.description3'| translate}} 
+                          <a class="adaptations-link" 
+                            href="https://lompads.edutech-project.org/#/"
+                            target="_blank"
+                            rel="noopener noreferrer">LOMPAD-WEB</a>
+                          {{'newObject.form.adaptationsIs.description4'| translate}}
+                        </p>
                   }
                  </fieldset>
               </div>

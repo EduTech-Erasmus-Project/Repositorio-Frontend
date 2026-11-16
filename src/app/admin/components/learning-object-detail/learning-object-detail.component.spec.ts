@@ -14,6 +14,7 @@ describe("LearningObjectDetailComponent", () => {
   let fixture: ComponentFixture<LearningObjectDetailComponent>;
   let administratorServiceSpy: jasmine.SpyObj<AdministratorService>;
   let breadcrumbServiceSpy: jasmine.SpyObj<BreadcrumbService>;
+  let learningObjectServiceSpy: jasmine.SpyObj<LearningObjectService>;
   const routeQueryParams = { general_title: "historia", page: 3 };
 
   beforeEach(async () => {
@@ -22,6 +23,10 @@ describe("LearningObjectDetailComponent", () => {
       "updatePublicandPrivateLearningObject",
     ]);
     breadcrumbServiceSpy = jasmine.createSpyObj("BreadcrumbService", ["setItems"]);
+    learningObjectServiceSpy = jasmine.createSpyObj("LearningObjectService", [
+      "deleteObjestTeacherAdmin",
+      "notificationObjectTeacherAdmin",
+    ]);
 
     administratorServiceSpy.getLearningObject.and.returnValue(
       of({
@@ -42,7 +47,7 @@ describe("LearningObjectDetailComponent", () => {
         { provide: Router, useValue: jasmine.createSpyObj("Router", ["navigate"]) },
         { provide: ConfirmationService, useValue: jasmine.createSpyObj("ConfirmationService", ["confirm"]) },
         { provide: MessageService, useValue: jasmine.createSpyObj("MessageService", ["add"]) },
-        { provide: LearningObjectService, useValue: jasmine.createSpyObj("LearningObjectService", ["deleteObjestTeacherAdmin"]) },
+        { provide: LearningObjectService, useValue: learningObjectServiceSpy },
         { provide: AdminComponent, useValue: {} },
         {
           provide: ActivatedRoute,
@@ -101,5 +106,27 @@ describe("LearningObjectDetailComponent", () => {
 
     component.autor = null;
     expect(component.authorProfilePath).toBeNull();
+  });
+
+  it("debe abrir los dialogos y enviar el mensaje con el id del OA", async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    learningObjectServiceSpy.notificationObjectTeacherAdmin.and.returnValue(of({} as any));
+    learningObjectServiceSpy.deleteObjestTeacherAdmin.and.returnValue(of({} as any));
+
+    component.onNotificate();
+    component.onDelete();
+    expect(component.notifyDialogVisible).toBeTrue();
+    expect(component.deleteDialogVisible).toBeTrue();
+
+    await component.sendNotification("Hallazgos");
+    await component.deleteLearningObject("Motivo");
+
+    expect(learningObjectServiceSpy.notificationObjectTeacherAdmin).toHaveBeenCalledWith(15, {
+      message: "Hallazgos",
+    });
+    expect(learningObjectServiceSpy.deleteObjestTeacherAdmin).toHaveBeenCalledWith(15, {
+      message: "Motivo",
+    });
   });
 });

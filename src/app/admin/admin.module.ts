@@ -19,6 +19,7 @@ import { TeacherPendingComponent } from './components/teacher-pending/teacher-pe
 import { TeacherExpertProfileComponent } from './components/teacher-expert-profile/teacher-expert-profile.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LearningObjectDetailComponent } from './components/learning-object-detail/learning-object-detail.component';
+import { LearningObjectMessageDialogComponent } from './components/learning-object-message-dialog/learning-object-message-dialog.component';
 import { AdminProfileComponent } from './components/admin-profile/admin-profile.component';
 import { UpperCapilPipeComponent } from './pipes/upper.capilal.pipe';
 import { LearningObjectUploadListComponent } from './components/learning-object-upload-list/learning-object-upload-list.component';
@@ -82,6 +83,7 @@ import { IframeIntegratedMenuComponent } from "../public/components/iframe-integ
         EmailDomainsListComponent,
         EmailDomainsFormComponent,
         EmailServerFormComponent,
+        LearningObjectMessageDialogComponent,
     ],
     exports: [
         AdminComponent,
