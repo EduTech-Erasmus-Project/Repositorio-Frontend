@@ -158,17 +158,11 @@
       <div class="edit-object-form-grid">
         <div class="edit-object-form-grid__item">
           <div class="box content">
-            <div class="p-field p-fluid slider">
-              <label id="editAgeRangeLabel">{{'newObject.form.ageLabel' | translate}}:
-                {{ currentAgeRangeLabel }}</label>
-              <small class="edit-object-field-helper" id="editAgeRangeHelp">
-                {{'newObject.form.ageHelp' | translate}}
-              </small>
-              <p-slider [min]="5" [max]="150" formControlName="educational_typicalAgeRange"
-                name="educational_typicalAgeRange" [range]="true"
-                aria-labelledby="editAgeRangeLabel"
-                aria-describedby="editAgeRangeHelp">
-              </p-slider>
+            <div class="p-field">
+              <app-age-range-field
+                formControlName="educational_typicalAgeRange"
+                [level]="selectedEducationLevel"
+              ></app-age-range-field>
             </div>
           </div>
         </div>

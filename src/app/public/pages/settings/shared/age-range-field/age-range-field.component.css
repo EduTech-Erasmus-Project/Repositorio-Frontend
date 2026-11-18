@@ -1,0 +1,153 @@
+.age-range {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.age-range__legend {
+  margin-bottom: 0.5rem;
+  padding: 0;
+  font-weight: 600;
+}
+
+.age-range__status {
+  display: flex;
+  align-items: center;
+  min-height: 2.25rem;
+  margin-top: 0.5rem;
+}
+
+.age-range__source {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.age-range__help {
+  display: block;
+  margin-top: 0.35rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.age-range__inputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1.25rem;
+  margin-top: 0.75rem;
+}
+
+.age-range__input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.age-range__input label {
+  font-weight: 600;
+}
+
+/*
+ * Mismo aspecto y foco que los demas campos del formulario (variables del
+ * tema PrimeNG): borde gris, borde primario y halo suave al enfocar.
+ */
+.age-stepper {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--p-form-field-border-color, #cbd5e1);
+  border-radius: var(--p-form-field-border-radius, 6px);
+  background: var(--p-form-field-background, #fff);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.age-stepper:hover {
+  border-color: var(--p-form-field-hover-border-color, #94a3b8);
+}
+
+.age-stepper:has(.age-stepper__input:focus) {
+  border-color: var(--p-form-field-focus-border-color, #3b5b68);
+  box-shadow: var(--p-form-field-focus-ring-shadow, 0 0 0 0.2rem #bad1d9);
+}
+
+.age-stepper__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  min-height: 2.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--p-form-field-color, #334155);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.age-stepper__button:first-child {
+  border-radius: var(--p-form-field-border-radius, 6px) 0 0 var(--p-form-field-border-radius, 6px);
+}
+
+.age-stepper__button:last-child {
+  border-radius: 0 var(--p-form-field-border-radius, 6px) var(--p-form-field-border-radius, 6px) 0;
+}
+
+.age-stepper__button:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.age-stepper__button:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: none;
+  box-shadow: var(--p-form-field-focus-ring-shadow, 0 0 0 0.2rem #bad1d9);
+}
+
+.age-stepper__button:disabled {
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.age-stepper__input {
+  width: 3rem;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--p-form-field-color, #334155);
+  font: inherit;
+  text-align: right;
+}
+
+.age-stepper__unit {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.6rem 0 0.35rem;
+  color: #64748b;
+}
+
+.age-stepper:has(.age-stepper__input:disabled) {
+  background: var(--p-form-field-disabled-background, #e2e8f0);
+}
+
+.age-stepper:has(.age-stepper__input:disabled) .age-stepper__input,
+.age-stepper:has(.age-stepper__input:disabled) .age-stepper__unit {
+  color: #64748b;
+}
+
+.age-range__error {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.age-range__no-limit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+}
+
+.age-range__no-limit label {
+  cursor: pointer;
+}

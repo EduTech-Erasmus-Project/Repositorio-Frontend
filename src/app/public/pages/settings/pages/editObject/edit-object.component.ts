@@ -15,7 +15,6 @@ import { LanguageService } from "src/app/services/language.service";
 import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { focusFirstInvalidControl } from "src/app/core/utils/accessibility-focus";
 import {
-  DEFAULT_AGE_RANGE,
   OA_TITLE_MAX_LENGTH,
   OA_LANGUAGE_OPTIONS,
   REQUIRED_VALIDATORS,
@@ -23,7 +22,6 @@ import {
   controlHasError,
   controlInvalid,
   formatAgeRange,
-  getRangeLabel,
   mapCatalogOptions,
   parseAgeRange,
   resolveCatalogOptionValue,
@@ -64,6 +62,8 @@ export class EditObjectComponent implements OnInit {
 
   public preferencesData: Preference[];
   public educationLevels: EducationLevel[];
+  /** Catalogo completo (con edad tipica CINE) para proponer el rango de edad. */
+  private educationLevelCatalog: EducationLevel[] = [];
   public knowledgeArea: KnowledgeArea[];
   public licenses: SelectOption[];
 
@@ -162,6 +162,7 @@ export class EditObjectComponent implements OnInit {
       );
 
       this.preferencesData = mapCatalogOptions(preferences, "description") as Preference[];
+      this.educationLevelCatalog = educationLevels.values;
       this.educationLevels = mapCatalogOptions(educationLevels.values, "name") as EducationLevel[];
       this.knowledgeArea = mapCatalogOptions(knowledgeArea.values, "name") as KnowledgeArea[];
       this.licenses = mapCatalogOptions(licenses.values, "description");
@@ -202,19 +203,16 @@ export class EditObjectComponent implements OnInit {
       ],
       license: [resolveCatalogOptionValue(this.object?.license), REQUIRED_VALIDATORS],
       adaptation: [this.object?.adaptation || "yes", REQUIRED_VALIDATORS],
-      educational_typicalAgeRange: [
-        this.getRageAge(),
-        [Validators.required, Validators.min(5), Validators.max(150)],
-      ],
+      // El componente de edad valida que haya un rango posible.
+      educational_typicalAgeRange: [parseAgeRange(this.object?.educational_typicalAgeRange)],
       avatar: [null],
     });
   }
 
-  getRageAge(): [number, number] {
-    return parseAgeRange(
-      this.object?.educational_typicalAgeRange,
-      DEFAULT_AGE_RANGE
-    );
+  /** Nivel elegido en el formulario; da la edad que propone el rango de edad. */
+  get selectedEducationLevel(): EducationLevel | null {
+    const levelId = this.objectForm?.controls?.education_levels?.value;
+    return this.educationLevelCatalog.find((level) => level.id === levelId) ?? null;
   }
 
   getErrorFormRequired(formValue: string): boolean {
@@ -230,10 +228,6 @@ export class EditObjectComponent implements OnInit {
   getControlValueLength(formValue: string): number {
     const value = this.objectForm.get(formValue)?.value;
     return typeof value === "string" ? value.length : 0;
-  }
-
-  get currentAgeRangeLabel(): string {
-    return getRangeLabel(this.objectForm?.controls?.educational_typicalAgeRange?.value);
   }
 
   /**

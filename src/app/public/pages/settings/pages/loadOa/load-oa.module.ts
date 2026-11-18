@@ -5,7 +5,7 @@ import { LoadOaRoutingModule } from './load-oa-routing.module';
 import { LoadOaComponent } from './load-oa.component';
 import { SharedModule } from '../../../../../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { AgeRangeFieldComponent } from '../../shared/age-range-field/age-range-field.component';
 
 
 @NgModule({
@@ -14,7 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     LoadOaRoutingModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AgeRangeFieldComponent
   ]
 })
 export class LoadOaModule { }

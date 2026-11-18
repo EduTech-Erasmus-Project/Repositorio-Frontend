@@ -1,0 +1,128 @@
+<fieldset class="age-range" [attr.aria-describedby]="idPrefix + '-help'" [disabled]="disabled">
+  <legend class="age-range__legend">{{ 'newObject.form.ageLabel' | translate }}*</legend>
+
+  <small class="age-range__help" [id]="idPrefix + '-help'">{{ 'newObject.form.ageHelp' | translate }}</small>
+
+  <div class="age-range__inputs">
+    <div class="age-range__input">
+      <label [for]="idPrefix + '-min'">{{ 'newObject.form.ageMin' | translate }}</label>
+      <div class="age-stepper">
+        <button
+          type="button"
+          class="age-stepper__button"
+          [disabled]="!canStep('min', -1)"
+          [attr.aria-label]="'newObject.form.ageDecreaseMin' | translate"
+          [attr.aria-controls]="idPrefix + '-min'"
+          (click)="step('min', -1)"
+        ><i class="pi pi-minus" aria-hidden="true"></i></button>
+        <input
+          [id]="idPrefix + '-min'"
+          class="age-stepper__input"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          maxlength="2"
+          role="spinbutton"
+          [attr.aria-valuemin]="ageMin"
+          [attr.aria-valuemax]="boundMax('min')"
+          [attr.aria-valuenow]="min"
+          [attr.aria-valuetext]="min === null ? null : ('newObject.form.ageValueText' | translate: { value: min })"
+          [attr.aria-invalid]="invalidOrder"
+          [attr.aria-describedby]="invalidOrder ? idPrefix + '-error' : null"
+          [value]="displayValue('min')"
+          [disabled]="disabled"
+          (input)="onInput('min', $event)"
+          (keydown)="onKeydown('min', $event)"
+          (blur)="onBlur('min')"
+        />
+        <span class="age-stepper__unit" aria-hidden="true">{{ 'newObject.form.ageYears' | translate }}</span>
+        <button
+          type="button"
+          class="age-stepper__button"
+          [disabled]="!canStep('min', 1)"
+          [attr.aria-label]="'newObject.form.ageIncreaseMin' | translate"
+          [attr.aria-controls]="idPrefix + '-min'"
+          (click)="step('min', 1)"
+        ><i class="pi pi-plus" aria-hidden="true"></i></button>
+      </div>
+    </div>
+
+    <div class="age-range__input">
+      <label [for]="idPrefix + '-max'">{{ 'newObject.form.ageMax' | translate }}</label>
+      <div class="age-stepper">
+        <button
+          type="button"
+          class="age-stepper__button"
+          [disabled]="!canStep('max', -1)"
+          [attr.aria-label]="'newObject.form.ageDecreaseMax' | translate"
+          [attr.aria-controls]="idPrefix + '-max'"
+          (click)="step('max', -1)"
+        ><i class="pi pi-minus" aria-hidden="true"></i></button>
+        <input
+          [id]="idPrefix + '-max'"
+          class="age-stepper__input"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          maxlength="2"
+          role="spinbutton"
+          [attr.aria-valuemin]="ageMin"
+          [attr.aria-valuemax]="boundMax('max')"
+          [attr.aria-valuenow]="noUpperLimit ? null : max"
+          [attr.aria-valuetext]="max === null ? null : ('newObject.form.ageValueText' | translate: { value: max })"
+          [attr.aria-invalid]="invalidOrder"
+          [attr.aria-describedby]="invalidOrder ? idPrefix + '-error' : null"
+          [attr.placeholder]="noUpperLimit ? '—' : null"
+          [value]="displayValue('max')"
+          [disabled]="disabled || noUpperLimit"
+          (input)="onInput('max', $event)"
+          (keydown)="onKeydown('max', $event)"
+          (blur)="onBlur('max')"
+        />
+        <span class="age-stepper__unit" aria-hidden="true">{{ 'newObject.form.ageYears' | translate }}</span>
+        <button
+          type="button"
+          class="age-stepper__button"
+          [disabled]="!canStep('max', 1)"
+          [attr.aria-label]="'newObject.form.ageIncreaseMax' | translate"
+          [attr.aria-controls]="idPrefix + '-max'"
+          (click)="step('max', 1)"
+        ><i class="pi pi-plus" aria-hidden="true"></i></button>
+      </div>
+    </div>
+
+    <div class="age-range__no-limit">
+      <p-checkbox
+        [inputId]="idPrefix + '-no-limit'"
+        [binary]="true"
+        [ngModel]="noUpperLimit"
+        (ngModelChange)="onNoUpperLimitChange($event)"
+      ></p-checkbox>
+      <label [for]="idPrefix + '-no-limit'">{{ 'newObject.form.ageNoMax' | translate }}</label>
+    </div>
+  </div>
+
+  @if (invalidOrder) {
+    <small class="p-error age-range__error" [id]="idPrefix + '-error'" role="alert">{{ 'newObject.form.ageInvalid' | translate }}</small>
+  }
+
+  <div class="age-range__status" aria-live="polite">
+    @if (followsLevel) {
+      <span class="age-range__source">
+        <i class="pi pi-check-circle" aria-hidden="true"></i>
+        {{ 'newObject.form.ageFromLevel' | translate }}
+      </span>
+    } @else if (levelRange) {
+      <button
+        pButton
+        type="button"
+        class="p-button-text p-button-sm"
+        icon="pi pi-refresh"
+        [label]="'newObject.form.ageUseLevel' | translate"
+        (click)="useLevelAge()"
+      ></button>
+    } @else if (!value) {
+      <span class="age-range__source">{{ 'newObject.form.ageChooseLevel' | translate }}</span>
+    }
+  </div>
+</fieldset>

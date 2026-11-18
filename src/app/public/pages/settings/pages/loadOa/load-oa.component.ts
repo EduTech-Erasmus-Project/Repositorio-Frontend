@@ -26,7 +26,6 @@ import { FileUpload } from "primeng/fileupload";
 import { SelfQuestion } from "src/app/admin/models/evaluation.models";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
-  DEFAULT_AGE_RANGE,
   OA_TITLE_MAX_LENGTH,
   OA_LANGUAGE_OPTIONS,
   REQUIRED_VALIDATORS,
@@ -34,7 +33,6 @@ import {
   controlHasError,
   controlInvalid,
   formatAgeRange,
-  getRangeLabel,
   mapCatalogOptions,
   parseAgeRange,
   resolveCatalogOptionValue,
@@ -112,6 +110,8 @@ export class LoadOaComponent implements OnInit {
   public tag_count: TagOA | null = null;
   public preferencesData: Preference[] = [];
   public educationLevels: EducationLevel[] = [];
+  /** Catalogo completo (con edad tipica CINE) para proponer el rango de edad. */
+  private educationLevelCatalog: EducationLevel[] = [];
   public knowledgeArea: KnowledgeArea[] = [];
   public licenses: SelectOption[] = [];
   public img_preview_ref: boolean = false;
@@ -214,9 +214,16 @@ export class LoadOaComponent implements OnInit {
     );
 
     this.preferencesData = mapCatalogOptions(preferences, "description") as Preference[];
+    this.educationLevelCatalog = educationLevels.values;
     this.educationLevels = mapCatalogOptions(educationLevels.values, "name") as EducationLevel[];
     this.knowledgeArea = mapCatalogOptions(knowledgeArea.values, "name") as KnowledgeArea[];
     this.licenses = mapCatalogOptions(licenses.values, "description");
+  }
+
+  /** Nivel elegido en el formulario; da la edad que propone el rango de edad. */
+  get selectedEducationLevel(): EducationLevel | null {
+    const levelId = this.objectForm?.controls?.education_levels?.value;
+    return this.educationLevelCatalog.find((level) => level.id === levelId) ?? null;
   }
 
   /**
@@ -237,7 +244,8 @@ export class LoadOaComponent implements OnInit {
       img: [null, REQUIRED_VALIDATORS],
       sourceFile: [null],
       language: [resolveCatalogOptionValue(this.object?.general_language), REQUIRED_VALIDATORS],
-      age: [this.getRageAge(), [Validators.required]],
+      // El componente de edad valida que haya un rango posible.
+      age: [parseAgeRange(this.object?.educational_typicalAgeRange)],
       education_levels: [resolveCatalogOptionValue(this.object?.education_levels), REQUIRED_VALIDATORS],
       knowledge_area: [resolveCatalogOptionValue(this.object?.knowledge_area), REQUIRED_VALIDATORS],
       license: [resolveCatalogOptionValue(this.object?.license), REQUIRED_VALIDATORS],
@@ -245,9 +253,6 @@ export class LoadOaComponent implements OnInit {
     });
   }
 
-  getRageAge(): [number, number] {
-    return parseAgeRange(this.object?.educational_typicalAgeRange, DEFAULT_AGE_RANGE);
-  }
 
   /**
    * Procesa la respuesta del analizador del OA y habilita la segunda etapa del flujo.
@@ -757,10 +762,6 @@ export class LoadOaComponent implements OnInit {
     }
 
     return ids.join(" ");
-  }
-
-  get currentAgeRangeLabel(): string {
-    return getRangeLabel(this.objectForm?.controls?.age?.value);
   }
 
   get is_adapted_oer() {

@@ -16,7 +16,11 @@ export type CatalogLike = {
 
 export const PASSWORD_STRENGTH_PATTERN =
   "(?=\\D*\\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{8,30}";
-export const DEFAULT_AGE_RANGE: [number, number] = [5, 100];
+/** Limites del rango de edad del OA; la maxima 99 significa "sin limite". */
+export const AGE_MIN = 0;
+export const AGE_MAX = 99;
+/** Minima del deslizador anterior: `5-100` era el valor por defecto, no una eleccion. */
+const LEGACY_SLIDER_MIN = 5;
 export const OA_TITLE_MAX_LENGTH = 180;
 
 export const PERSON_NAME_VALIDATORS = [
@@ -69,43 +73,47 @@ export function resolveCatalogOptionValue(value: unknown) {
   return value;
 }
 
-export function parseAgeRange(
-  rawRange: string | null | undefined,
-  defaultRange: [number, number] = DEFAULT_AGE_RANGE
-): [number, number] {
-  if (!rawRange) {
-    return defaultRange;
+/**
+ * Lee el rango guardado (`"min-max"`). Devuelve `null` si no hay una edad
+ * elegida: vacio, otro formato, imposible o el `5-100` del deslizador
+ * anterior. Una maxima mayor a 99 pasa a 99 (sin limite), como en el
+ * comando `normalize_oa_age_ranges` del backend.
+ */
+export function parseAgeRange(rawRange: string | null | undefined): [number, number] | null {
+  const match = /^\s*(\d+)\s*-\s*(\d+)\s*$/.exec(rawRange ?? "");
+  if (!match) {
+    return null;
   }
 
-  const range = rawRange
-    .split("-")
-    .map((value) => Number.parseInt(value.trim(), 10))
-    .filter((value) => !Number.isNaN(value));
-
-  if (range.length !== 2 || range[0] > range[1]) {
-    return defaultRange;
+  const min = Number(match[1]);
+  const max = Number(match[2]);
+  if (min > max || min > AGE_MAX) {
+    return null;
+  }
+  if (max > AGE_MAX) {
+    return min === LEGACY_SLIDER_MIN ? null : [min, AGE_MAX];
   }
 
-  return [range[0], range[1]];
+  return [min, max];
 }
 
 export function formatAgeRange(range: [number, number] | number[] | null | undefined): string {
   if (!Array.isArray(range) || range.length !== 2) {
-    return `${DEFAULT_AGE_RANGE[0]}-${DEFAULT_AGE_RANGE[1]}`;
+    return "";
   }
 
   return `${range[0]}-${range[1]}`;
 }
 
-export function getRangeLabel(
-  range: [number, number] | number[] | null | undefined,
-  fallback: [number, number] = DEFAULT_AGE_RANGE
-): string {
-  if (!Array.isArray(range) || range.length !== 2) {
-    return `${fallback[0]} - ${fallback[1]}`;
+/** Edad tipica del nivel CINE como rango; sin maxima se usa 99 (sin limite). */
+export function levelAgeRange(
+  level: { typical_age_min?: number | null; typical_age_max?: number | null } | null | undefined
+): [number, number] | null {
+  if (level?.typical_age_min === null || level?.typical_age_min === undefined) {
+    return null;
   }
 
-  return `${range[0]} - ${range[1]}`;
+  return [level.typical_age_min, level.typical_age_max ?? AGE_MAX];
 }
 
 export function controlInvalid(control: AbstractControl | null | undefined): boolean {

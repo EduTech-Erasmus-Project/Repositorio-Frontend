@@ -6,6 +6,7 @@ import { EditObjectComponent } from './edit-object.component';
 import { SharedModule } from '../../../../../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from '../../components/components.module';
+import { AgeRangeFieldComponent } from '../../shared/age-range-field/age-range-field.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { ComponentsModule } from '../../components/components.module';
     EditObjectRoutingModule,
     SharedModule,
     ReactiveFormsModule,
-    ComponentsModule
+    ComponentsModule,
+    AgeRangeFieldComponent
   ]
 })
 export class EditObjectModule { }

@@ -323,17 +323,11 @@
               <div class="load-oa-form-grid">
                 <div class="load-oa-form-grid__item">
                   <div class="box content">
-                    <div class="p-field p-fluid slider">
-                      <p id="ageRangeLabel" class="load-oa-field-label">{{'newObject.form.ageLabel' | translate}}:
-                        {{ currentAgeRangeLabel }}</p>
-                      <small class="load-oa-field-helper" id="ageRangeHelp">
-                        {{'newObject.form.ageHelp' | translate}}
-                      </small>
-                      <p-slider [min]="5" [max]="150" formControlName="age"
-                        [range]="true"
-                        aria-labelledby="ageRangeLabel"
-                        aria-describedby="ageRangeHelp">
-                      </p-slider>
+                    <div class="p-field">
+                      <app-age-range-field
+                        formControlName="age"
+                        [level]="selectedEducationLevel"
+                      ></app-age-range-field>
                     </div>
                   </div>
                 </div>

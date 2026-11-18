@@ -77,21 +77,19 @@ class SelectControlStubComponent implements ControlValueAccessor {
 }
 
 @Component({
-    selector: "p-slider",
+    selector: "app-age-range-field",
     template: "",
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => SliderControlStubComponent),
+            useExisting: forwardRef(() => AgeRangeFieldStubComponent),
             multi: true,
         },
     ],
     standalone: false
 })
-class SliderControlStubComponent implements ControlValueAccessor {
-  @Input() min: number;
-  @Input() max: number;
-  @Input() range: boolean;
+class AgeRangeFieldStubComponent implements ControlValueAccessor {
+  @Input() level: unknown;
 
   writeValue(): void {}
   registerOnChange(): void {}
@@ -207,7 +205,7 @@ describe("EditObjectComponent", () => {
         TranslatePipeMock,
         UrlSanitizerPipeMock,
         SelectControlStubComponent,
-        SliderControlStubComponent,
+        AgeRangeFieldStubComponent,
         RadioButtonControlStubComponent,
       ],
       providers: [
